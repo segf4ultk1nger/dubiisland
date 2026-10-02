@@ -121,6 +121,9 @@
 	<PropertyGroup Condition="'$(PublishBuilding)' == 'true'">
 		<DefineConstants>$(DefineConstants);PublishBuilding</DefineConstants>
 	</PropertyGroup>
+	<PropertyGroup Condition="!Exists('$(MSBuildProjectDirectory)\secrets.g.cs')">
+		<DefineConstants>$(DefineConstants);SecretsNotGenerated</DefineConstants>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(IsMsix)' == 'true'">
 		<DefineConstants>$(DefineConstants);IsMsix</DefineConstants>
 	</PropertyGroup>

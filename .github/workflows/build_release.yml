@@ -33,7 +33,7 @@ jobs:
       matrix:
         trim_assets: ["false"]
         package: ["singleFile"]
-        arch: ["x64", "x86", "arm64"]
+        arch: ["x64", "x86"]
         include:
           - arch: "x64"
             trim_assets: "true"
@@ -54,7 +54,7 @@ jobs:
       - name: Install .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
 
       # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
       - name: Setup MSBuild.exe
@@ -112,7 +112,7 @@ jobs:
       - name: Install .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
 
       # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
       - name: Setup MSBuild.exe

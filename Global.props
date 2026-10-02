@@ -29,10 +29,10 @@
 	<PropertyGroup Condition="'$(Configuration)'=='Release_MSIX'">
 		<IsMsix>true</IsMsix>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(ClassIsland_PlatformTarget)'=='x64'">
+	<PropertyGroup Condition="'$(ClassIsland_PlatformTarget)'=='x64' Or '$(PlatformTarget)'=='x64'">
 		<DefineConstants>$(DefineConstants);PLATFORM_x64</DefineConstants>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(ClassIsland_PlatformTarget)'=='x86'">
+	<PropertyGroup Condition="'$(ClassIsland_PlatformTarget)'=='x86' Or '$(PlatformTarget)'=='x86'">
 		<DefineConstants>$(DefineConstants);PLATFORM_x86</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(ClassIsland_PlatformTarget)'=='arm64'">

@@ -2,7 +2,7 @@
 
 public static partial class GptSovitsSecrets
 {
-#if !PublishBuilding
+#if !PublishBuilding || SecretsNotGenerated
     public const string PrivateKey = "";
 
     public const string PrivateKeyPassPhrase = "";
