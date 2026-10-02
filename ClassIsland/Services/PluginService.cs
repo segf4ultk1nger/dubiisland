@@ -31,8 +31,6 @@ public class PluginService : IPluginService
 
     public static readonly string PluginConfigsFolderPath = Path.Combine(App.AppConfigPath, "Plugins");
 
-    internal static readonly Dictionary<string, PluginLoadContext> PluginLoadContexts = new();
-
     internal static List<PluginManifest> InstalledPlugins { get; } = [];
     
     internal static List<PluginManifest> UninstalledPlugins { get; } = [];
@@ -145,10 +143,8 @@ public class PluginService : IPluginService
             try
             {
                 var fullPath = Path.GetFullPath(Path.Combine(pluginDir, manifest.EntranceAssembly));
-                var loadContext = new PluginLoadContext(info, fullPath);
-                PluginLoadContexts[info.Manifest.Id] = loadContext;
-                var asm = loadContext.LoadFromAssemblyName(
-                    new AssemblyName(Path.GetFileNameWithoutExtension(fullPath)));
+                // net472 cannot unload assemblies loaded into the default context.
+                var asm = Assembly.LoadFrom(fullPath);
                 var entrance = asm.ExportedTypes.FirstOrDefault(x =>
                     x.BaseType == typeof(PluginBase) ||
                     x.GetCustomAttributes().FirstOrDefault(a => a.GetType() == typeof(PluginEntrance)) != null);

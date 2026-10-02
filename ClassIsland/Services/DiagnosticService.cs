@@ -6,8 +6,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Management;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Loader;
 using System.Threading.Tasks;
 using System.Windows;
 using ClassIsland.Core;
@@ -243,16 +243,14 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
             {
                 continue;
             }
-            var context = AssemblyLoadContext.GetLoadContext(declaringTypeAssembly);
-            if (context is not PluginLoadContext pluginLoadContext)
+
+            var plugin = MatchLoadedPlugin(declaringTypeAssembly);
+            if (plugin == null || plugins.Contains(plugin))
             {
                 continue;
             }
 
-            if (!plugins.Contains(pluginLoadContext.Info))
-            {
-                plugins.Add(pluginLoadContext.Info);
-            }
+            plugins.Add(plugin);
         }
 
         if (exception.InnerException != null)
@@ -261,6 +259,47 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
         }
 
         return plugins;
+    }
+
+    private static PluginInfo? MatchLoadedPlugin(Assembly assembly)
+    {
+        var location = assembly.Location;
+        var assemblyName = assembly.GetName().Name;
+        PluginInfo? nameMatch = null;
+        foreach (var plugin in IPluginService.LoadedPlugins)
+        {
+            if (LocationBelongsToPlugin(location, plugin.PluginFolderPath))
+            {
+                return plugin;
+            }
+
+            if (nameMatch == null && EntranceNameMatches(assemblyName, plugin))
+            {
+                nameMatch = plugin;
+            }
+        }
+
+        return nameMatch;
+    }
+
+    private static bool LocationBelongsToPlugin(string location, string folder)
+    {
+        if (string.IsNullOrEmpty(location) || string.IsNullOrEmpty(folder))
+        {
+            return false;
+        }
+
+        var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                   + Path.DirectorySeparatorChar;
+        return Path.GetFullPath(location).StartsWith(root, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool EntranceNameMatches(string? assemblyName, PluginInfo plugin)
+    {
+        var entranceName = Path.GetFileNameWithoutExtension(plugin.Manifest.EntranceAssembly);
+        return !string.IsNullOrEmpty(assemblyName)
+               && !string.IsNullOrEmpty(entranceName)
+               && string.Equals(assemblyName, entranceName, StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool DisableCorruptPlugins(List<PluginInfo> plugins)
