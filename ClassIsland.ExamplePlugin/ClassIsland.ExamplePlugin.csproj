@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12</LangVersion>
 	  <EnableDynamicLoading>true</EnableDynamicLoading>
 	  <Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>
 	  <CreateCipx>true</CreateCipx>

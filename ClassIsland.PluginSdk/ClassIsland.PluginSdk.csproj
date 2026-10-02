@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows7.0</TargetFramework>
+		<TargetFramework>net472</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<LangVersion>12</LangVersion>
 		<Title>ClassIsland Plugin SDK</Title>
 		<Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>
 	</PropertyGroup>
@@ -19,8 +20,8 @@
 
 	<ItemGroup>
 		<Folder Include="Properties\" />
-		<None Include="ClassIsland.PluginSdk.targets" Pack="True" PackagePath="build/net8.0" />
-		<None Include="generate-md5.ps1" Pack="True" PackagePath="build/net8.0" />
+		<None Include="ClassIsland.PluginSdk.targets" Pack="True" PackagePath="build/net472" />
+		<None Include="generate-md5.ps1" Pack="True" PackagePath="build/net472" />
 	</ItemGroup>
 
 	<ItemGroup>

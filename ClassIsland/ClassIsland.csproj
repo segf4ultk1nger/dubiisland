@@ -7,7 +7,6 @@
         <ApplicationIcon>Assets\AppLogo.ico</ApplicationIcon>
 <!--        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
         <UserSecretsId>0702af86-626c-4e4a-94e4-f506e4e2beb7</UserSecretsId>
-        <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
         <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
         <StartupObject></StartupObject>
         <AssemblyName>ClassIsland</AssemblyName>
@@ -15,7 +14,7 @@
 		<IsMsix>$(IsMsix)</IsMsix>
 		<Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-		<TargetFramework>net6.0-windows7.0</TargetFramework>
+		<TargetFramework>net472</TargetFramework>
 		<LangVersion>13.0</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Release_MSIX'">
@@ -28,24 +27,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug_MSIX' Or '$(Configuration)'=='Release_MSIX'">
       <IsMsix>true</IsMsix>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(IsMsix)'=='true'">
-        <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
-        <!-- <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
-        <EnableMsixTooling>true</EnableMsixTooling>
-        <TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
-        <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
-        <DefaultLanguage>zh-CN</DefaultLanguage>
-        <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
-        <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling> -->
-    </PropertyGroup>
-    <ItemGroup Condition="'$(IsMsix)'=='true'">
-        <AppxManifest Include="Package.appxmanifest">
-            <SubType>Designer</SubType>
-        </AppxManifest>
-    </ItemGroup>
-    <PropertyGroup Condition="'$(IsMsix)'!='true'">
-        <TargetFramework>net6.0-windows</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <None Remove="assets\documents\ChangeLog.md" />
