@@ -14,9 +14,6 @@ using ClassIsland.Shared.Models.Management;
 using ClassIsland.Shared.Protobuf.Enum;
 using ClassIsland.Helpers;
 using ClassIsland.Models.Authorize;
-using ClassIsland.Shared.Protobuf.AuditEvent;
-using ClassIsland.Shared.Protobuf.Client;
-using ClassIsland.Shared.Protobuf.Service;
 using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Logging;
@@ -106,7 +103,8 @@ public class ManagementService : IManagementService
                     Connection = new ServerlessConnection(Persist.ClientUniqueId, Settings.ClassIdentity ?? "", Settings.ManifestUrlTemplate);
                     break;
                 case ManagementServerKind.ManagementServer:
-                    Connection = new ManagementServerConnection(Settings, Persist.ClientUniqueId, false);
+                    Logger.LogWarning("管理服务器连接在此构建中不可用。");
+                    Connection = new ServerlessConnection(Persist.ClientUniqueId, Settings.ClassIdentity ?? "", Settings.ManifestUrlTemplate);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("", "无效的集控服务器类型。");
@@ -219,8 +217,8 @@ public class ManagementService : IManagementService
                 mf = await WebRequestHelper.GetJson<ManagementManifest>(new Uri(settings.ManifestUrlTemplate));
                 break;
             case ManagementServerKind.ManagementServer:
-                var connection = new ManagementServerConnection(settings, Persist.ClientUniqueId, true);
-                mf = await connection.RegisterAsync();
+                Logger.LogWarning("管理服务器连接在此构建中不可用。");
+                mf = await WebRequestHelper.GetJson<ManagementManifest>(new Uri(settings.ManifestUrlTemplate));
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(settings.ManagementServerKind), "无效的服务器类型。");
@@ -301,14 +299,6 @@ public class ManagementService : IManagementService
             AuthorizeLevel.Admin => await AuthorizeService.AuthenticateAsync(Fallback(CredentialConfig.AdminCredential)),
             _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
         };
-
-        if (level != AuthorizeLevel.None && IsManagementEnabled && Connection is ManagementServerConnection connection)
-        {
-            connection.LogAuditEvent(result ? AuditEvents.AuthorizeSuccess : AuditEvents.AuthorizeFailed, new AuthorizeEvent()
-            {
-                Level = (int)level
-            });
-        }
 
         return result;
 

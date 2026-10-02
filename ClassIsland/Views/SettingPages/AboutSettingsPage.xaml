@@ -166,9 +166,6 @@
                 <models:ContributionLabel Title="Google.Protobuf"
                                           Website="https://github.com/protocolbuffers/protobuf" 
                                           LicenseUrl="https://github.com/protocolbuffers/protobuf/blob/main/LICENSE"/>
-                <models:ContributionLabel Title="Grpc"
-                                          Website="https://github.com/grpc/grpc-dotnet"
-                                          LicenseUrl="https://github.com/grpc/grpc-dotnet/blob/master/LICENSE"/>
                 <models:ContributionLabel Title="Grpc.Tools"
                                           Website="https://github.com/grpc/grpc"
                                           LicenseUrl="https://github.com/grpc/grpc/blob/master/LICENSE"/>
