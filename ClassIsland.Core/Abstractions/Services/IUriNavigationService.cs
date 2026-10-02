@@ -1,5 +1,4 @@
 ﻿using ClassIsland.Core.Models.UriNavigation;
-using ClassIsland.Shared.IPC.Abstractions.Services;
 
 namespace ClassIsland.Core.Abstractions.Services;
 

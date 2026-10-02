@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -54,8 +55,6 @@ using ClassIsland.Core.Controls.Ruleset;
 using ClassIsland.Models.Rules;
 using ClassIsland.Models.Actions;
 using ClassIsland.Controls.RuleSettingsControls;
-using ClassIsland.Shared.IPC.Abstractions.Services;
-using dotnetCampus.Ipc.CompilerServices.GeneratedProxies;
 using ClassIsland.Controls.ActionSettingsControls;
 using ClassIsland.Controls.AuthorizeProvider;
 using ClassIsland.Core.Enums;
@@ -549,7 +548,6 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<IExactTimeService, ExactTimeService>();
                 //services.AddSingleton(typeof(ApplicationCommand), ApplicationCommand);
                 services.AddSingleton<IProfileAnalyzeService, ProfileAnalyzeService>();
-                services.AddSingleton<IIpcService, IpcService>();
                 services.AddSingleton<IAuthorizeService, AuthorizeService>();
                 services.AddSingleton<UriTriggerHandlerService>();
                 services.AddSingleton<SignalTriggerHandlerService>();
@@ -852,8 +850,7 @@ public partial class App : AppBase, IAppHost
                 });
             }
             AppStarted?.Invoke(this, EventArgs.Empty);
-            GetService<IIpcService>().IpcProvider.StartServer();
-            GetService<IIpcService>().JsonRoutedProvider.StartServer();
+            StartUriPipeServer();
             spanLoadMainWindow.Finish();
             transaction.Finish();
             SentrySdk.ConfigureScope(s => s.Transaction = null);
@@ -898,7 +895,6 @@ public partial class App : AppBase, IAppHost
         uriNavigationService.HandleAppNavigation("profile/import-excel", args => GetService<ExcelImportWindow>().Show());
         uriNavigationService.HandleAppNavigation("config-errors", args => GetService<ConfigErrorsWindow>().ShowDialog());
 
-        GetService<IIpcService>().IpcProvider.CreateIpcJoint<IFooService>(new FooService());
         try
         {
             await App.GetService<FileFolderService>().ProcessAutoBackupAsync();
@@ -967,6 +963,71 @@ public partial class App : AppBase, IAppHost
             Logger?.LogError(ex, "无法导航到 {}", uri);
             CommonDialog.ShowError($"无法导航到 {uri}：{ex.Message}");
         }
+    }
+
+    private void StartUriPipeServer()
+    {
+        var dispatcher = Dispatcher;
+        _ = Task.Run(() =>
+        {
+            while (!dispatcher.HasShutdownStarted)
+            {
+                NamedPipeServerStream? server = null;
+                try
+                {
+                    server = new NamedPipeServerStream(
+                        "ClassIsland.Uri",
+                        PipeDirection.In,
+                        NamedPipeServerStream.MaxAllowedServerInstances,
+                        PipeTransmissionMode.Byte,
+                        PipeOptions.Asynchronous);
+                    server.WaitForConnection();
+                    string? line;
+                    using (var reader = new StreamReader(
+                               server,
+                               new UTF8Encoding(encoderShouldEmitUTF8Identifier: false),
+                               detectEncodingFromByteOrderMarks: false,
+                               bufferSize: 1024,
+                               leaveOpen: true))
+                    {
+                        line = reader.ReadLine();
+                    }
+
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        continue;
+                    }
+
+                    var uriText = line;
+                    dispatcher.Invoke(() =>
+                    {
+                        var navigation = IAppHost.TryGetService<IUriNavigationService>();
+                        if (navigation == null)
+                        {
+                            return;
+                        }
+
+                        navigation.NavigateWrapped(new Uri(uriText));
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Logger?.LogDebug(ex, "无法接收第二实例 Uri。");
+                    Thread.Sleep(200);
+                }
+                finally
+                {
+                    try
+                    {
+                        server?.Dispose();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+        });
     }
 
     private void ProcessInstanceExisted()

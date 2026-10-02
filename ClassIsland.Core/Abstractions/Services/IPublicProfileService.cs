@@ -1,12 +1,10 @@
 using ClassIsland.Shared.Models.Profile;
-using dotnetCampus.Ipc.CompilerServices.Attributes;
 
-namespace ClassIsland.Shared.IPC.Abstractions.Services;
+namespace ClassIsland.Core.Abstractions.Services;
 
 /// <summary>
 /// 向其它进程公开的档案服务，用于管理ClassIsland档案信息。
 /// </summary>
-[IpcPublic(IgnoresIpcException = true)]
 public interface IPublicProfileService
 {
     /// <summary>

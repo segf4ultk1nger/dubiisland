@@ -151,9 +151,6 @@
                 <models:ContributionLabel Title="CommunityToolkit.Mvvm"
                                           Website="https://github.com/CommunityToolkit/dotnet" 
                                           LicenseUrl="https://github.com/CommunityToolkit/dotnet/blob/main/LICENSE"/>
-                <models:ContributionLabel Title="dotnetCampus.Ipc"
-                                          Website="https://github.com/dotnet-campus/dotnetCampus.Ipc" 
-                                          LicenseUrl="https://github.com/dotnet-campus/dotnetCampus.Ipc/blob/main/LICENSE"/>
                 <models:ContributionLabel Title="Downloader"
                                           Website="https://github.com/bezzad/Downloader" 
                                           LicenseUrl="https://github.com/bezzad/Downloader/blob/master/LICENSE"/>

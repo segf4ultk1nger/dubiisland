@@ -1,14 +1,12 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Profile;
-using dotnetCampus.Ipc.CompilerServices.Attributes;
 
-namespace ClassIsland.Shared.IPC.Abstractions.Services;
+namespace ClassIsland.Core.Abstractions.Services;
 
 /// <summary>
 /// 向其它进程公开的课程服务，用于存储当前课表状态与信息。
 /// </summary>
-[IpcPublic(IgnoresIpcException = true)]
 public interface IPublicLessonsService
 {
     /// <summary>

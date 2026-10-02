@@ -8,11 +8,8 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Models;
 using ClassIsland.Models.Rules;
 using ClassIsland.Shared.Enums;
-using ClassIsland.Shared.IPC;
-using ClassIsland.Shared.IPC.Abstractions.Services;
 using ClassIsland.Shared.Models.Profile;
 using CommunityToolkit.Mvvm.ComponentModel;
-using dotnetCampus.Ipc.CompilerServices.GeneratedProxies;
 using Microsoft.Extensions.Logging;
 
 namespace ClassIsland.Services;
@@ -222,12 +219,11 @@ public class LessonsService : ObservableRecipient, ILessonsService
     private ILogger<LessonsService> Logger { get; }
     private IExactTimeService ExactTimeService { get; }
     public IRulesetService RulesetService { get; }
-    public IIpcService IpcService { get; }
 
     private Profile Profile => ProfileService.Profile;
     private Settings Settings => SettingsService.Settings;
 
-    public LessonsService(SettingsService settingsService, IProfileService profileService, ILogger<LessonsService> logger, IExactTimeService exactTimeService, IRulesetService rulesetService, IIpcService ipcService)
+    public LessonsService(SettingsService settingsService, IProfileService profileService, ILogger<LessonsService> logger, IExactTimeService exactTimeService, IRulesetService rulesetService)
     {
         MainTimer.Tick += MainTimerOnTick;
         SettingsService = settingsService;
@@ -235,9 +231,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
         Logger = logger;
         ExactTimeService = exactTimeService;
         RulesetService = rulesetService;
-        IpcService = ipcService;
 
-        IpcService.IpcProvider.CreateIpcJoint<IPublicLessonsService>(this);
         RulesetService.RegisterRuleHandler("classisland.lessons.timeState", TimeStateHandler);
         RulesetService.RegisterRuleHandler("classisland.lessons.currentSubject", CurrentSubjectHandler);
         RulesetService.RegisterRuleHandler("classisland.lessons.nextSubject", NextSubjectHandler);
@@ -245,28 +239,6 @@ public class LessonsService : ObservableRecipient, ILessonsService
         CurrentTimeStateChanged += (sender, args) => RulesetService.NotifyStatusChanged();
         PropertyChanged += OnPropertyChanged;
         PropertyChanging += OnPropertyChanging;
-
-
-        CurrentTimeStateChanged += async (_, _) =>
-        {
-            Logger.LogInformation("发出时间状态改变事件。");
-            await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.CurrentTimeStateChangedNotifyId);
-        };
-        OnClass += async (_, _) =>
-        {
-            Logger.LogInformation("发出上课事件。");
-            await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnClassNotifyId);
-        };
-        OnBreakingTime += async (_, _) =>
-        {
-            Logger.LogInformation("发出下课事件。");
-            await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnBreakingTimeNotifyId);
-        };
-        OnAfterSchool += async (_, _) =>
-        {
-            Logger.LogInformation("发出放学事件。");
-            await IpcService.BroadcastNotificationAsync(IpcRoutedNotifyIds.OnAfterSchoolNotifyId);
-        };
 
         ProcessLessons();  // 防止在课程服务初始化后因没有更新课表获取到错误的信息
         StartMainTimer();

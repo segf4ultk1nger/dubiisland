@@ -1,11 +1,8 @@
-﻿using dotnetCampus.Ipc.CompilerServices.Attributes;
-
-namespace ClassIsland.Shared.IPC.Abstractions.Services;
+namespace ClassIsland.Core.Abstractions.Services;
 
 /// <summary>
 /// 向其它进程公开的 Uri 导航服务，用于在ClassIsland内部和外部通过uri进行导航。
 /// </summary>
-[IpcPublic(IgnoresIpcException = true)]
 public interface IPublicUriNavigationService
 {
     /// <summary>

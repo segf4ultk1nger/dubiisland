@@ -2,15 +2,15 @@
 using System;
 using System.CommandLine.NamingConventionBinder;
 using System.CommandLine;
+using System.IO;
+using System.IO.Pipes;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ClassIsland.Core;
 using ClassIsland.Core.Enums;
 using ClassIsland.Services;
-using ClassIsland.Shared.IPC;
-using ClassIsland.Shared.IPC.Abstractions.Services;
-using dotnetCampus.Ipc.CompilerServices.GeneratedProxies;
 using Sentry;
 using System.Diagnostics;
 
@@ -75,7 +75,7 @@ internal static class Program
             {
                 if (!string.IsNullOrWhiteSpace(App.ApplicationCommand.Uri))
                 {
-                    await ProcessUriNavigationAsync();
+                    ProcessUriNavigation();
                 }
             }
         }
@@ -152,14 +152,17 @@ internal static class Program
         app.Run();
         return;
 
-        static async Task ProcessUriNavigationAsync()
+        static void ProcessUriNavigation()
         {
             try
             {
-                var client = new IpcClient();
-                await client.Connect();
-                var uriSc = client.Provider.CreateIpcProxy<IPublicUriNavigationService>(client.PeerProxy!);
-                uriSc.Navigate(new Uri(App.ApplicationCommand.Uri));
+                using var client = new NamedPipeClientStream(".", "ClassIsland.Uri", PipeDirection.Out);
+                client.Connect(2000);
+                using var writer = new StreamWriter(client, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), 1024, leaveOpen: true)
+                {
+                    AutoFlush = true
+                };
+                writer.WriteLine(App.ApplicationCommand.Uri);
                 Environment.Exit(0);
             }
             catch
