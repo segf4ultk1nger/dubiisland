@@ -127,7 +127,7 @@ public partial class ThemesSettingsPage
     }
 
     [RelayCommand]
-    private void OpenContextMenu(ContextMenu? menu)
+    private void OpenContextMenu(System.Windows.Controls.ContextMenu? menu)
     {
         if (menu != null)
         {

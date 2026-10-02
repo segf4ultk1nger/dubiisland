@@ -11,10 +11,10 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Helpers;
 using ClassIsland.Core.Models;
 using ClassIsland.Core.Models.Plugin;
+using ClassIsland.Helpers;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Downloader;
 using Microsoft.Extensions.Logging;
 using Sentry;
 
@@ -112,34 +112,32 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
                     ((long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString());
                 Logger.LogDebug("正在刷新插件源：{}（{}）", indexInfo.Id, url);
                 var archive = Path.GetTempFileName();
-                var download = DownloadBuilder.New()
-                    .WithUrl(url)
-                    .WithFileLocation(archive)
-                    .WithConfiguration(new DownloadConfiguration()
-                    {
-                        Timeout = 10_000
-                    })
-                    .Build();
                 var i1 = i;
-                download.DownloadProgressChanged +=
-                    (sender, args) =>
-                        PluginSourceDownloadProgress = (args.ProgressPercentage / total) + (i1 / total * 100.0);
-                download.DownloadFileCompleted += (sender, args) =>
+                try
                 {
-                    if (args.Error != null)
-                    {
-                        throw new Exception($"无法加载插件源：{args.Error.Message}", args.Error);
-                    } 
-                    var indexFolderPath = Path.Combine(Services.PluginService.PluginsIndexPath, indexInfo.Id);
-                    if (Directory.Exists(indexFolderPath))
-                    {
-                        Directory.Delete(indexFolderPath, true);
-                    }
+                    await FileDownloadHelper.DownloadAsync(
+                        url,
+                        archive,
+                        report =>
+                        {
+                            var percentage = report.ProgressPercentage ?? 0;
+                            PluginSourceDownloadProgress = (percentage / total) + (i1 / total * 100.0);
+                        },
+                        timeout: TimeSpan.FromMilliseconds(10_000));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"无法加载插件源：{ex.Message}", ex);
+                }
 
-                    Directory.CreateDirectory(indexFolderPath);
-                    ZipFile.ExtractToDirectory(archive, indexFolderPath);
-                };
-                await download.StartAsync();
+                var indexFolderPath = Path.Combine(Services.PluginService.PluginsIndexPath, indexInfo.Id);
+                if (Directory.Exists(indexFolderPath))
+                {
+                    Directory.Delete(indexFolderPath, true);
+                }
+
+                Directory.CreateDirectory(indexFolderPath);
+                ZipFile.ExtractToDirectory(archive, indexFolderPath);
 
                 i++;
             }
@@ -211,11 +209,6 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
         };
         DownloadTasks[id] = task;
         var archive = Path.GetTempFileName() + ".tmp";
-        var download = DownloadBuilder.New()
-            .WithUrl(url)
-            .WithFileLocation(archive)
-            .WithConfiguration(new DownloadConfiguration())
-            .Build();
         transaction.SetTag("url", url);
         if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
         {
@@ -223,19 +216,37 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
         }
 
         var stopwatch = new Stopwatch();
-        download.DownloadFileCompleted += (sender, args) =>
+        try
         {
+            BindDownloadTasks();
+            stopwatch.Start();
+            long totalFileSize;
+            try
+            {
+                totalFileSize = await FileDownloadHelper.DownloadAsync(
+                    url,
+                    archive,
+                    report =>
+                    {
+                        if (report.ProgressPercentage is double percentage)
+                        {
+                            task.Progress = percentage;
+                        }
+                    },
+                    task.CancellationToken);
+            }
+            catch (Exception ex)
+            {
+                spanDownload.Finish(ex, SpanStatus.InternalError);
+                throw new Exception($"无法下载插件 {id}：{ex.Message}", ex);
+            }
+
             stopwatch.Stop();
-            transaction.SetExtra("download.size", download.TotalFileSize);
+            transaction.SetExtra("download.size", totalFileSize);
             var speed = stopwatch.Elapsed.TotalSeconds == 0
                 ? 0.0
-                : download.TotalFileSize / stopwatch.Elapsed.TotalSeconds;
+                : totalFileSize / stopwatch.Elapsed.TotalSeconds;
             transaction.SetExtra("download.bytesPerSecond", speed);
-            if (args.Error != null)
-            {
-                spanDownload.Finish(args.Error, SpanStatus.InternalError);
-                throw new Exception($"无法下载插件 {id}：{args.Error.Message}", args.Error);
-            }
             spanDownload.Finish(SpanStatus.Ok);
 
             var spanValidateChecksum = transaction.StartChild("validate");
@@ -243,18 +254,14 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
             spanValidateChecksum.Finish(SpanStatus.Ok);
 
             var spanMoveToCache = transaction.StartChild("moveToCache");
-            File.Move(archive, Path.Combine(Services.PluginService.PluginsPkgRootPath, id + ".cipx"), true);
+            var destination = Path.Combine(Services.PluginService.PluginsPkgRootPath, id + ".cipx");
+            if (File.Exists(destination))
+            {
+                File.Delete(destination);
+            }
+
+            File.Move(archive, destination);
             spanMoveToCache.Finish(SpanStatus.Ok);
-        };
-        download.DownloadProgressChanged += (sender, args) =>
-        {
-            task.Progress = args.ProgressPercentage;
-        };
-        try
-        {
-            BindDownloadTasks();
-            stopwatch.Start();
-            await download.StartAsync(task.CancellationToken);
             item.RestartRequired = true;
             if (MergedPlugins.TryGetValue(id, out var plugin))
             {

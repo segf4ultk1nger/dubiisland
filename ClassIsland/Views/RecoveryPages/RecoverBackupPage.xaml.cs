@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ClassIsland.Core.Controls;
+using ClassIsland.Helpers;
 using ClassIsland.Core.Controls.CommonDialog;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.RecoveryPages;
@@ -62,7 +63,7 @@ public partial class RecoverBackupPage : Page
         await Task.Run(() =>
         {
             if(Path.GetExtension(backupPath)==".zip"){
-                ZipFile.ExtractToDirectory(backupPath, App.AppRootFolderPath, true);
+                ZipExtractHelper.ExtractToDirectory(backupPath, App.AppRootFolderPath, true);
             }
             if(Directory.Exists(backupPath)){
                 FileFolderService.CopyFolder(backupPath, App.AppRootFolderPath, true);

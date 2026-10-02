@@ -327,7 +327,7 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
             {
                 var c = (Color)ColorConverter.ConvertFromString(i.Key);
                 ColorToHsv(c, out var h, out var s, out var v);
-                return (s + (v * (-(v - right) * (v - left) * 4))) * Math.Log2(i.Value);
+                return (s + (v * (-(v - right) * (v - left) * 4))) * Math.Log(i.Value, 2);
             })
             .ThenByDescending(i => i.Value)
             .ToList();

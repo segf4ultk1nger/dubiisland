@@ -1,4 +1,6 @@
+#if NETCOREAPP
 using System.Runtime.Versioning;
+#endif
 using System.Windows;
 
 [assembly: ThemeInfo(
@@ -14,4 +16,6 @@ using System.Windows;
 // [assembly: AssemblyFileVersion("1.4.3.1")]
 // [assembly: AssemblyTitle("ClassIsland")]
 // [assembly: AssemblyProduct("ClassIsland")]
+#if NETCOREAPP
 [assembly: SupportedOSPlatform("Windows")]
+#endif

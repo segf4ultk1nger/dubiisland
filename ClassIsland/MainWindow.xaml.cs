@@ -482,7 +482,7 @@ public partial class MainWindow : Window
         UpdateTheme();
         IAppHost.GetService<IXamlThemeService>().LoadAllThemes();
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在初始化托盘菜单");
-        var menu = (ContextMenu)FindResource("AppContextMenu");
+        var menu = (System.Windows.Controls.ContextMenu)FindResource("AppContextMenu");
         menu.DataContext = this;
         TaskBarIconService.MainTaskBarIcon.DataContext = this;
         TaskBarIconService.MainTaskBarIcon.ContextMenu = menu;

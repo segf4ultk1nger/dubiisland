@@ -262,7 +262,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
             var result = new CommonDialogBuilder()
                 .SetIconKind(CommonDialogIconKind.Hint)
                 .SetContent("此插件的部分必选依赖项未安装且无法从市场获取。如果继续安装此插件，此插件将可能无法工作。您要继续安装此插件吗？\n\n" +
-                            "未找到的必选依赖项：\n" + string.Join('\n', missingPlugins))
+                            "未找到的必选依赖项：\n" + string.Join("\n", missingPlugins))
                 .AddCancelAction()
                 .AddAction("继续", PackIconKind.ArrowRight)
                 .ShowDialog();

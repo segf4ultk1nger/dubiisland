@@ -53,7 +53,7 @@ public class WebRequestHelper
             {
                 innerException = ex;
                 logger?.LogWarning(ex, "Json GET 请求失败（第 {} 次重试）{}", i, uri);
-                retryTime *= 2;
+                retryTime = new TimeSpan(retryTime.Ticks * 2);
                 if (i < retries)
                 {
                     await Task.Run(() => cancellationToken.Value.WaitHandle.WaitOne(retryTime), cancellationToken.Value);

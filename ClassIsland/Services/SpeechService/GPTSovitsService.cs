@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using ClassIsland.Core;
+using ClassIsland.Helpers;
 using ClassIsland.Core.Abstractions.Services.SpeechService;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Shared.Abstraction.Services;
@@ -154,8 +155,11 @@ public class GptSoVitsService : ISpeechService
             using var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
             if (response.IsSuccessStatusCode)
             {
-                await using var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                await response.Content.CopyToAsync(fs, cancellationToken);
+                using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var body = await response.Content.ReadAsStreamAsync())
+                {
+                    await FileDownloadHelper.CopyToAsync(body, fs, cancellationToken);
+                }
                 Logger.LogDebug("语音生成并保存到：{FilePath}", filePath);
                 return true;
             }
@@ -205,7 +209,7 @@ public class GptSoVitsService : ISpeechService
             var player = CurrentWavePlayer = new DirectSoundOut();
             try
             {
-                await using var audio = new AudioFileReader(playInfo.FilePath);
+                using var audio = new AudioFileReader(playInfo.FilePath);
                 var volume = new VolumeSampleProvider(audio)
                 {
                     Volume = (float)SettingsService.Settings.SpeechVolume

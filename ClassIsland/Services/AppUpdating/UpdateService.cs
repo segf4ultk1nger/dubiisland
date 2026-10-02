@@ -24,12 +24,10 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Views;
-using Downloader;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sentry;
 using Application = System.Windows.Application;
-using DownloadProgressChangedEventArgs = Downloader.DownloadProgressChangedEventArgs;
 using File = System.IO.File;
 
 namespace ClassIsland.Services.AppUpdating;
@@ -40,7 +38,8 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
     private long _downloadedSize = 0;
     private long _totalSize = 0;
     private double _downloadSpeed = 0;
-    public IDownload? Downloader;
+    private CancellationTokenSource? _downloadCancellation;
+    private long _lastDownloadProgressElapsedMs;
     private bool _isCanceled = false;
     private Exception? _networkErrorException;
     private TimeSpan _downloadEtcSeconds = TimeSpan.Zero;
@@ -342,68 +341,64 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
             TotalSize = 0;
             DownloadedSize = 0;
             DownloadSpeed = 0;
-            DownloadStatusUpdateStopwatch.Start();
+            _lastDownloadProgressElapsedMs = 0;
+            DownloadStatusUpdateStopwatch.Restart();
             CurrentWorkingStatus = UpdateWorkingStatus.DownloadingUpdates;
-            transaction.SetExtra("download.url", downloadInfo.ArchiveDownloadUrls[Settings.SelectedUpdateMirrorV2]);
+            var downloadUrl = downloadInfo.ArchiveDownloadUrls[Settings.SelectedUpdateMirrorV2];
+            transaction.SetExtra("download.url", downloadUrl);
+            var destination = Path.Combine(UpdateTempPath, "update.zip");
+            _downloadCancellation = new CancellationTokenSource();
 
-            Downloader = DownloadBuilder.New()
-                .WithUrl(downloadInfo.ArchiveDownloadUrls[Settings.SelectedUpdateMirrorV2])
-                .Configure((c) =>
-                {
-                    c.ChunkCount = 32;
-                    c.ParallelCount = 32;
-                    c.ParallelDownload = true;
-                    //c.Timeout = 4096;
-                })
-                .WithDirectory(UpdateTempPath)
-                .WithFileName("update.zip")
-                .Build();
-            Downloader.DownloadProgressChanged += DownloaderOnDownloadProgressChanged;
-            Downloader.DownloadFileCompleted += (sender, args) =>
+            var totalFileSize = await FileDownloadHelper.DownloadAsync(
+                downloadUrl,
+                destination,
+                ReportDownloadProgress,
+                _downloadCancellation.Token);
+            DownloadedSize = totalFileSize;
+            if (TotalSize <= 0)
             {
-                DownloadStatusUpdateStopwatch.Stop();
-                transaction.SetExtra("download.size", Downloader.TotalFileSize);
-                var speed = DownloadStatusUpdateStopwatch.Elapsed.TotalSeconds == 0
-                    ? 0.0
-                    : Downloader.TotalFileSize / DownloadStatusUpdateStopwatch.Elapsed.TotalSeconds;
-                transaction.SetExtra("download.bytesPerSecond", speed);
-                DownloadStatusUpdateStopwatch.Reset();
-                if (IsCanceled)
-                {
-                    IsCanceled = false;
-                    spanDownload.Finish(SpanStatus.Cancelled);
-                    transaction.Finish(SpanStatus.Cancelled);
-                    return;
-                }
+                TotalSize = totalFileSize;
+            }
 
-                if (!File.Exists(Path.Combine(UpdateTempPath, @"update.zip")) || args.Error != null)
-                {
-                    //await RemoveDownloadedFiles();
-                    if (args.Error != null)
-                    {
-                        spanDownload.Finish(args.Error, SpanStatus.InternalError);
-                    }
-                    else
-                    {
-                        spanDownload.Finish(SpanStatus.InternalError);
-                    }
-                    throw new Exception("更新下载失败。", args.Error);
-                }
-                else
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        Settings.LastUpdateStatus = UpdateStatus.UpdateDownloaded;
-                    });
-                    spanDownload.Finish(SpanStatus.Ok);
-                    transaction.Finish(SpanStatus.Ok);
-                }
-            };
-            await Downloader.StartAsync();
+            var elapsed = DownloadStatusUpdateStopwatch.Elapsed.TotalSeconds;
+            DownloadStatusUpdateStopwatch.Stop();
+            DownloadStatusUpdateStopwatch.Reset();
+            transaction.SetExtra("download.size", totalFileSize);
+            var averageSpeed = elapsed == 0 ? 0.0 : totalFileSize / elapsed;
+            transaction.SetExtra("download.bytesPerSecond", averageSpeed);
+            if (IsCanceled)
+            {
+                IsCanceled = false;
+                spanDownload.Finish(SpanStatus.Cancelled);
+                transaction.Finish(SpanStatus.Cancelled);
+                await RemoveDownloadedFiles();
+                return;
+            }
+
+            if (!File.Exists(destination))
+            {
+                throw new Exception("更新下载失败。");
+            }
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Settings.LastUpdateStatus = UpdateStatus.UpdateDownloaded;
+            });
+            spanDownload.Finish(SpanStatus.Ok);
+            transaction.Finish(SpanStatus.Ok);
+        }
+        catch (Exception ex) when (IsCanceled || ex is OperationCanceledException)
+        {
+            IsCanceled = false;
+            spanDownload.Finish(SpanStatus.Cancelled);
+            transaction.Finish(SpanStatus.Cancelled);
+            Logger.LogInformation("应用更新下载已取消。");
+            await RemoveDownloadedFiles();
         }
         catch (Exception ex)
         {
             NetworkErrorException = ex;
+            spanDownload.Finish(ex, SpanStatus.InternalError);
             transaction.Finish(ex, SpanStatus.InternalError);
             Logger.LogError(ex, "下载应用更新失败。");
             await RemoveDownloadedFiles();
@@ -411,22 +406,30 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
         finally
         {
             CurrentWorkingStatus = UpdateWorkingStatus.Idle;
+            var cancellation = _downloadCancellation;
+            _downloadCancellation = null;
+            cancellation?.Dispose();
         }
     }
 
-    public async void StopDownloading()
+    public void StopDownloading()
     {
-        if (Downloader == null)
+        var cancellation = _downloadCancellation;
+        if (cancellation == null)
         {
             return;
         }
 
         Logger.LogInformation("应用更新下载停止。");
         IsCanceled = true;
-        Downloader.Pause();
-        Downloader.Dispose();
         CurrentWorkingStatus = UpdateWorkingStatus.Idle;
-        await RemoveDownloadedFiles();
+        try
+        {
+            cancellation.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
 
     public async Task RemoveDownloadedFiles()
@@ -442,15 +445,18 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
         await CheckUpdateAsync(isCancel:true);
     }
 
-    private void DownloaderOnDownloadProgressChanged(object? sender, DownloadProgressChangedEventArgs e)
+    private void ReportDownloadProgress(FileDownloadHelper.DownloadProgressReport report)
     {
-        if (DownloadStatusUpdateStopwatch.ElapsedMilliseconds < 250)
+        var elapsedMs = DownloadStatusUpdateStopwatch.ElapsedMilliseconds;
+        var finished = report.TotalBytes is long total && report.ReceivedBytes >= total;
+        if (!finished && elapsedMs - _lastDownloadProgressElapsedMs < 250)
             return;
-        DownloadStatusUpdateStopwatch.Restart();
-        TotalSize = e.TotalBytesToReceive;
-        DownloadedSize = e.ReceivedBytesSize;
-        DownloadSpeed = e.BytesPerSecondSpeed;
-        
+        _lastDownloadProgressElapsedMs = elapsedMs;
+        TotalSize = report.TotalBytes ?? 0;
+        DownloadedSize = report.ReceivedBytes;
+        var elapsedSeconds = DownloadStatusUpdateStopwatch.Elapsed.TotalSeconds;
+        DownloadSpeed = elapsedSeconds <= 0 ? 0 : report.ReceivedBytes / elapsedSeconds;
+
         DownloadEtcSeconds = TimeSpanHelper.FromSecondsSafe(DownloadSpeed == 0 ? 0 : (long)((TotalSize - DownloadedSize) / DownloadSpeed));
         Logger.LogInformation("Download progress changed: {}/{} ({}B/s)", TotalSize, DownloadedSize, DownloadSpeed);
     }
@@ -460,7 +466,7 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
         Logger.LogInformation("正在展开应用更新包。");
         await Task.Run(() =>
         {
-            ZipFile.ExtractToDirectory(Path.Combine(UpdateTempPath, @"./update.zip"), Path.Combine(UpdateTempPath, @"./extracted"), true);
+            ZipExtractHelper.ExtractToDirectory(Path.Combine(UpdateTempPath, @"./update.zip"), Path.Combine(UpdateTempPath, @"./extracted"), true);
         });
     }
 
@@ -472,13 +478,15 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
             return;
         }
 
-        await using var stream = File.OpenRead(Path.Combine(UpdateTempPath, @"./update.zip"));
-
-        // --- 修复开始 ---
-        // .NET 6 写法：先 Create 实例，再调用 ComputeHashAsync
-        using var sha256Alg = SHA256.Create();
-        var sha256Bytes = await sha256Alg.ComputeHashAsync(stream);
-        // --- 修复结束 ---
+        var updatePackage = Path.Combine(UpdateTempPath, @"./update.zip");
+        var sha256Bytes = await Task.Run(() =>
+        {
+            using (var stream = File.OpenRead(updatePackage))
+            using (var sha256Alg = SHA256.Create())
+            {
+                return sha256Alg.ComputeHash(stream);
+            }
+        });
 
         var str = FrameworkCompat.ToHexString(sha256Bytes);
 

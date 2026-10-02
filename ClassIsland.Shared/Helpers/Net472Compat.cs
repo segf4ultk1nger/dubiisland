@@ -139,6 +139,20 @@ public static class FrameworkCompat
     }
 
     /// <summary>
+    /// net472 <see cref="Dictionary{TKey,TValue}"/> has no TryAdd.
+    /// </summary>
+    public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+    {
+        if (dictionary.ContainsKey(key))
+        {
+            return false;
+        }
+
+        dictionary.Add(key, value);
+        return true;
+    }
+
+    /// <summary>
     /// net472 has no <c>string.Split(string)</c>.
     /// </summary>
     public static string[] Split(this string source, string separator)

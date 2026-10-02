@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.NotificationProviders;
 using ClassIsland.Core.Services.Registry;
@@ -116,7 +117,7 @@ public class NotificationHostService(SettingsService settingsService, ILogger<No
         foreach (var i in trace.GetFrames())
         {
             var type = i.GetMethod()?.DeclaringType;
-            if (type?.IsAssignableTo(typeof(INotificationProvider)) != true)
+            if (type == null || !typeof(INotificationProvider).IsAssignableFrom(type))
                 continue;
             var provider = (from p in NotificationProviders where p.ProviderInstance.GetType() == type select p).FirstOrDefault();
             if (provider == null)

@@ -246,22 +246,22 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
     public void CleanExpiredTempClassPlan()
     {
         var today = IAppHost.GetService<IExactTimeService>().GetCurrentLocalDateTime().Date;
-        foreach (var (key, _) in Profile.OrderedSchedules
+        foreach (var schedule in Profile.OrderedSchedules
                      .Where(x => x.Key < today)
                      .ToList())
         {
-            Profile.OrderedSchedules.Remove(key);
-            Logger.LogInformation("清理过期的课表预定：{}", key);
+            Profile.OrderedSchedules.Remove(schedule.Key);
+            Logger.LogInformation("清理过期的课表预定：{}", schedule.Key);
         }
 
         var orderedSchedules = Profile.OrderedSchedules.Select(x => x.Value.ClassPlanId).ToList();
 
-        foreach (var (key, _) in Profile.ClassPlans.Where(x => x.Value.IsOverlay).ToList())
+        foreach (var classPlan in Profile.ClassPlans.Where(x => x.Value.IsOverlay).ToList())
         {
-            if (orderedSchedules.Contains(key)) 
+            if (orderedSchedules.Contains(classPlan.Key))
                 continue;
-            Profile.ClassPlans.Remove(key);
-            Logger.LogInformation("清理没有被引用的过期临时层课表：{}", key);
+            Profile.ClassPlans.Remove(classPlan.Key);
+            Logger.LogInformation("清理没有被引用的过期临时层课表：{}", classPlan.Key);
         }
     }
 

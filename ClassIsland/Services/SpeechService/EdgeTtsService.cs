@@ -140,7 +140,7 @@ public class EdgeTtsService : ISpeechService
             var player = CurrentWavePlayer = new DirectSoundOut();
             try
             {
-                await using var audio = new AudioFileReader(playInfo.FilePath);
+                using var audio = new AudioFileReader(playInfo.FilePath);
                 var volume = new VolumeSampleProvider(audio)
                 {
                     Volume = (float)SettingsService.Settings.SpeechVolume

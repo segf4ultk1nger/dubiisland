@@ -151,9 +151,6 @@
                 <models:ContributionLabel Title="CommunityToolkit.Mvvm"
                                           Website="https://github.com/CommunityToolkit/dotnet" 
                                           LicenseUrl="https://github.com/CommunityToolkit/dotnet/blob/main/LICENSE"/>
-                <models:ContributionLabel Title="Downloader"
-                                          Website="https://github.com/bezzad/Downloader" 
-                                          LicenseUrl="https://github.com/bezzad/Downloader/blob/master/LICENSE"/>
                 <models:ContributionLabel Title="EPPlus"
                                           Website="https://github.com/EPPlusSoftware/EPPlus" 
                                           LicenseUrl="https://github.com/EPPlusSoftware/EPPlus/blob/develop8/license.md"/>

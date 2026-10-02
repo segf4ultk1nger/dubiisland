@@ -181,7 +181,7 @@ public partial class DebugPage : SettingsPageBase
         {
             ProfileAnalyzeService.Analyze();
             var obj = ProfileAnalyzeService.FindNextObjects(new AttachableObjectAddress(guid.ToLower(), i), settingsId);
-            CommonDialog.ShowInfo(string.Join('\n', obj));
+            CommonDialog.ShowInfo(string.Join("\n", obj));
         }
     }
     private void UIElement_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)

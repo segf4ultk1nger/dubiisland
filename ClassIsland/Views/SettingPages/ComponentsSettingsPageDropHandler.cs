@@ -30,6 +30,14 @@ public class ComponentsSettingsPageDropHandler : DependencyObject, IDropTarget
     //private IComponentsService ComponentsService { get; } = App.GetService<IComponentsService>();
 
 
+    public void DragEnter(IDropInfo dropInfo)
+    {
+    }
+
+    public void DragLeave(IDropInfo dropInfo)
+    {
+    }
+
     public void DragOver(IDropInfo dropInfo)
     {
         // TODO: 如果拖入的组件是当前组件的父组件，要拒绝拖入到子容器中。

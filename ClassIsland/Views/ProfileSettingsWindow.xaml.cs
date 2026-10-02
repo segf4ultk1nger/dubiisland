@@ -541,9 +541,9 @@ public partial class ProfileSettingsWindow : MyWindow
 
             var kvp = ((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem);
             MainViewModel.Profile.ClassPlans.Remove(kvp.Key);
-            foreach (var (key, _) in MainViewModel.Profile.OrderedSchedules.Where(x => x.Value.ClassPlanId == kvp.Key).ToList())
+            foreach (var schedule in MainViewModel.Profile.OrderedSchedules.Where(x => x.Value.ClassPlanId == kvp.Key).ToList())
             {
-                MainViewModel.Profile.OrderedSchedules.Remove(key);
+                MainViewModel.Profile.OrderedSchedules.Remove(schedule.Key);
             }
         }
         else
@@ -1199,7 +1199,7 @@ public partial class ProfileSettingsWindow : MyWindow
         {
             var r = new CommonDialogBuilder()
                 .SetIconKind(CommonDialogIconKind.Hint)
-                .SetContent("兼容性警告：以下课表无法导出到 CSES 格式：\n" + string.Join('\n', warnings) + "\n\n是否继续导出？")
+                .SetContent("兼容性警告：以下课表无法导出到 CSES 格式：\n" + string.Join("\n", warnings) + "\n\n是否继续导出？")
                 .AddCancelAction()
                 .AddAction("继续", PackIconKind.Check, true)
                 .ShowDialog(this);

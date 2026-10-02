@@ -13,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Threading;
 using ClassIsland.Controls.AttachedSettingsControls;
@@ -378,7 +377,8 @@ public partial class App : AppBase, IAppHost
         //    Resources["HarmonyOsSans"] = FindResource("BackendFontFamily");
         //}
 
-        BindingDiagnostics.BindingFailed += BindingDiagnosticsOnBindingFailed;
+        PresentationTraceSources.DataBindingSource.Listeners.Add(new BindingFailureTraceListener(this));
+        PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning;
 
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-CN");
         Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-CN");
@@ -1027,7 +1027,7 @@ public partial class App : AppBase, IAppHost
             var proc = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(FrameworkCompat.ProcessPath)).Where(x=>x.Id != FrameworkCompat.ProcessId);
             foreach (var i in proc)
             {
-                i.Kill(true);
+                i.Kill();
             }
 
             Process.Start(new ProcessStartInfo(FrameworkCompat.ProcessPath)
@@ -1101,15 +1101,45 @@ public partial class App : AppBase, IAppHost
         }
     }
 
-    private void BindingDiagnosticsOnBindingFailed(object? sender, BindingFailedEventArgs e)
+    private sealed class BindingFailureTraceListener : TraceListener
     {
-        if (e.EventType == TraceEventType.Verbose)
+        private readonly App _app;
+
+        public BindingFailureTraceListener(App app)
         {
-            Logger?.LogTrace($"{e.Message}");
+            _app = app;
         }
-        else
+
+        public override void Write(string message)
         {
-            Logger?.LogWarning($"{e.Message}");
+        }
+
+        public override void WriteLine(string message)
+        {
+            WriteMessage(TraceEventType.Warning, message);
+        }
+
+        public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message)
+        {
+            WriteMessage(eventType, message);
+        }
+
+        public override void TraceEvent(TraceEventCache eventCache, string source, TraceEventType eventType, int id, string format, params object[] args)
+        {
+            var message = args == null || args.Length == 0 ? format : string.Format(CultureInfo.InvariantCulture, format, args);
+            WriteMessage(eventType, message);
+        }
+
+        private void WriteMessage(TraceEventType eventType, string message)
+        {
+            if (eventType == TraceEventType.Verbose)
+            {
+                _app.Logger?.LogTrace(message);
+            }
+            else
+            {
+                _app.Logger?.LogWarning(message);
+            }
         }
     }
 

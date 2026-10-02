@@ -217,11 +217,21 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private void ButtonNavigateUp_OnClick(object sender, RoutedEventArgs e)
     {
-        if (!ViewModel.ChildrenComponentSettingsNavigationStack.TryPop(out var settings))
+        if (ViewModel.ChildrenComponentSettingsNavigationStack.Count == 0)
         {
             return;
         }
+
+        var settings = ViewModel.ChildrenComponentSettingsNavigationStack.Pop();
         SetCurrentSelectedComponentContainer(settings, true);
+    }
+
+    public void DragEnter(IDropInfo dropInfo)
+    {
+    }
+
+    public void DragLeave(IDropInfo dropInfo)
+    {
     }
 
     public new void DragOver(IDropInfo dropInfo)

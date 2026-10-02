@@ -13,10 +13,10 @@ using ClassIsland.Core.Helpers;
 using ClassIsland.Core.Models;
 using ClassIsland.Core.Models.Plugin;
 using ClassIsland.Core.Models.XamlTheme;
+using ClassIsland.Helpers;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Downloader;
 using Microsoft.Extensions.Logging;
 using Sentry;
 using YamlDotNet.Serialization;
@@ -252,11 +252,6 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
         };
         DownloadTasks[id] = task;
         var archive = Path.GetTempFileName() + ".tmp";
-        var download = DownloadBuilder.New()
-            .WithUrl(url)
-            .WithFileLocation(archive)
-            .WithConfiguration(new DownloadConfiguration())
-            .Build();
         transaction.SetTag("url", url);
         if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
         {
@@ -265,19 +260,37 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
 
         var stopwatch = new Stopwatch();
         var destFileName = Path.Combine(ThemesPkgRootPath, id + ".zip");
-        download.DownloadFileCompleted += (sender, args) =>
+        try
         {
+            BindDownloadTasks();
+            stopwatch.Start();
+            long totalFileSize;
+            try
+            {
+                totalFileSize = await FileDownloadHelper.DownloadAsync(
+                    url,
+                    archive,
+                    report =>
+                    {
+                        if (report.ProgressPercentage is double percentage)
+                        {
+                            task.Progress = percentage;
+                        }
+                    },
+                    task.CancellationToken);
+            }
+            catch (Exception ex)
+            {
+                spanDownload.Finish(ex, SpanStatus.InternalError);
+                throw new Exception($"无法下载主题 {id}：{ex.Message}", ex);
+            }
+
             stopwatch.Stop();
-            transaction.SetExtra("download.size", download.TotalFileSize);
+            transaction.SetExtra("download.size", totalFileSize);
             var speed = stopwatch.Elapsed.TotalSeconds == 0
                 ? 0.0
-                : download.TotalFileSize / stopwatch.Elapsed.TotalSeconds;
+                : totalFileSize / stopwatch.Elapsed.TotalSeconds;
             transaction.SetExtra("download.bytesPerSecond", speed);
-            if (args.Error != null)
-            {
-                spanDownload.Finish(args.Error, SpanStatus.InternalError);
-                throw new Exception($"无法下载主题 {id}：{args.Error.Message}", args.Error);
-            }
             spanDownload.Finish(SpanStatus.Ok);
 
             var spanValidateChecksum = transaction.StartChild("validate");
@@ -285,18 +298,13 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
             spanValidateChecksum.Finish(SpanStatus.Ok);
 
             var spanMoveToCache = transaction.StartChild("moveToCache");
-            File.Move(archive, destFileName, true);
+            if (File.Exists(destFileName))
+            {
+                File.Delete(destFileName);
+            }
+
+            File.Move(archive, destFileName);
             spanMoveToCache.Finish(SpanStatus.Ok);
-        };
-        download.DownloadProgressChanged += (sender, args) =>
-        {
-            task.Progress = args.ProgressPercentage;
-        };
-        try
-        {
-            BindDownloadTasks();
-            stopwatch.Start();
-            await download.StartAsync(task.CancellationToken);
             if (!Themes.Any(x => x.Manifest.Id == id && x.IsEnabled))
             {
                 InstallTheme(destFileName);

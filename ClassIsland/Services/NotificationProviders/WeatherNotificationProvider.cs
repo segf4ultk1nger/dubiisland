@@ -179,7 +179,7 @@ public class WeatherNotificationProvider : NotificationProviderBase<WeatherNotif
                 },
                 OverlayContent = new NotificationContent(new WeatherNotificationProviderControl(false, i, ts))
                 {
-                    Duration = ts * 2,
+                    Duration = new TimeSpan(ts.Ticks * 2),
                     SpeechContent = i.Detail,
 
                 }

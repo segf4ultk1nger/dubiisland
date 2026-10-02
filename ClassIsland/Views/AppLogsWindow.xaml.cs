@@ -129,7 +129,7 @@ public partial class AppLogsWindow : MyWindow
         try
         {
             var logs = MainListView.SelectedItems.OfType<object>().Select(i => i.ToString()!).ToList();
-            Clipboard.SetDataObject(string.Join('\n', logs));
+            Clipboard.SetDataObject(string.Join("\n", logs));
         }
         catch (Exception ex)
         {

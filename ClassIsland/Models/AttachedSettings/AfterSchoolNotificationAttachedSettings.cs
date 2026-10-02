@@ -35,6 +35,17 @@ public class AfterSchoolNotificationAttachedSettings : ObservableRecipient, IAtt
         }
     }
 
+    public int NotificationMsgDuration
+    {
+        get => _notificationMsgDuration;
+        set
+        {
+            if (value == _notificationMsgDuration) return;
+            _notificationMsgDuration = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool IsAttachSettingsEnabled
     {
         get => _isAttachSettingsEnabled;

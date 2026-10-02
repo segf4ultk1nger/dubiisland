@@ -67,7 +67,7 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
             {nameof(settings.DiagnosticMemoryKillFreqDay), settings.DiagnosticMemoryKillFreqDay.ToString("F3")}
         };
 
-        return string.Join('\n', from i in list select $"{i.Key}: {i.Value}");
+        return string.Join("\n", from i in list select $"{i.Key}: {i.Value}");
     }
 
     public static void BeginStartup()
@@ -100,7 +100,7 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
             // 3赋值
             var temp = tempPath;
 
-            var logs = string.Join('\n', AppLogService.Logs);
+            var logs = string.Join("\n", AppLogService.Logs);
             //await File.WriteAllTextAsync(Path.Combine(temp, "Logs.log"), logs);
             await FrameworkCompat.WriteAllTextAsync(Path.Combine(temp, "DiagnosticInfo.txt"), GetDiagnosticInfo());
             File.Copy(Path.Combine(App.AppRootFolderPath, "Settings.json"), Path.Combine(temp, "Settings.json"));

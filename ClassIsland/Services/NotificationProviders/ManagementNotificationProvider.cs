@@ -57,7 +57,7 @@ public class ManagementNotificationProvider : NotificationProviderBase
         ShowNotification(new NotificationRequest()
         {
             MaskContent = NotificationContent.CreateTwoIconsMask(payload.MessageMask, rightIcon:PackIconKind.Announcement),
-            OverlayContent = NotificationContent.CreateRollingTextContent(payload.MessageContent, TimeSpan.FromSeconds(payload.DurationSeconds) * payload.RepeatCounts, payload.RepeatCounts),
+            OverlayContent = NotificationContent.CreateRollingTextContent(payload.MessageContent, new TimeSpan(TimeSpan.FromSeconds(payload.DurationSeconds).Ticks * payload.RepeatCounts), payload.RepeatCounts),
             IsPriorityOverride = payload.IsEmergency,
             PriorityOverride = -1,
             RequestNotificationSettings =
