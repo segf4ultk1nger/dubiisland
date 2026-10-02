@@ -8,7 +8,11 @@
 <!--        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
         <UserSecretsId>0702af86-626c-4e4a-94e4-f506e4e2beb7</UserSecretsId>
         <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-        <StartupObject></StartupObject>
+        <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+        <StartupObject>ClassIsland.Program</StartupObject>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+        <AppConfig>App.config</AppConfig>
         <AssemblyName>ClassIsland</AssemblyName>
         <RootNamespace>ClassIsland</RootNamespace>
 		<IsMsix>$(IsMsix)</IsMsix>
@@ -17,6 +21,11 @@
 		<TargetFramework>net472</TargetFramework>
 		<LangVersion>13.0</LangVersion>
     </PropertyGroup>
+    <ItemGroup>
+        <!-- SDK props glob App.xaml before EnableDefaultApplicationDefinition is visible. Keep exactly one item so InitializeComponent is generated. -->
+        <ApplicationDefinition Remove="@(ApplicationDefinition)" />
+        <ApplicationDefinition Include="App.xaml" />
+    </ItemGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Release_MSIX'">
         <OutputType>WinExe</OutputType>
         <DebugType>embedded</DebugType>
