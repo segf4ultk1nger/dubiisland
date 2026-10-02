@@ -39,7 +39,7 @@ public partial class RollingTextTemplate : UserControl
         {
             From = -Description.ActualWidth,
             To = RootCanvas.ActualWidth,
-            Duration = Data.Duration / Math.Min(Data.RepeatCount, 1),
+            Duration = TimeSpan.FromTicks(Data.Duration.Ticks / Math.Min(Data.RepeatCount, 1)),
         };
         var storyboard = new Storyboard()
         {

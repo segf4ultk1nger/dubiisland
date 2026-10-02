@@ -725,7 +725,7 @@ public partial class ProfileSettingsWindow : MyWindow
         var subject = await new StreamReader(Application.GetResourceStream(new Uri("/Assets/default-subjects.json", UriKind.Relative))!.Stream).ReadToEndAsync();
         profile.Subjects = JsonSerializer.Deserialize<Profile>(subject)!.Subjects;
         var json = JsonSerializer.Serialize(profile);
-        await File.WriteAllTextAsync(path, json);
+        await FrameworkCompat.WriteAllTextAsync(path, json);
         RefreshProfiles();
     }
 
@@ -817,7 +817,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     public static async void OpenFromFile(string path)
     {
-        var o = JsonSerializer.Deserialize<Profile>(await File.ReadAllTextAsync(path));
+        var o = JsonSerializer.Deserialize<Profile>(await FrameworkCompat.ReadAllTextAsync(path));
         if (o == null)
         {
             return;
@@ -835,7 +835,7 @@ public partial class ProfileSettingsWindow : MyWindow
             }
         };
         pw.ShowDialog();
-        await File.WriteAllTextAsync(path, JsonSerializer.Serialize(o));
+        await FrameworkCompat.WriteAllTextAsync(path, JsonSerializer.Serialize(o));
         GC.Collect();
     }
 

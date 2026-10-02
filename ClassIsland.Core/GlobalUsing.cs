@@ -1,4 +1,6 @@
-﻿global using Windows.Win32.Foundation;
+﻿global using ClassIsland.Shared.Helpers;
+
+global using Windows.Win32.Foundation;
 global using Windows.Win32.Graphics.Dwm;
 global using Windows.Win32.UI.WindowsAndMessaging;
 

@@ -16,10 +16,10 @@ public static class FilePathExtensions
     {
         path = DriveInfo.GetDrives()
             .Where(x => x.DriveType == DriveType.Fixed)
-            .Aggregate(path, (current, drive) => current.Replace(drive.Name, $"{drive.VolumeLabel} ({drive.Name[..^1]}) > "));
+            .Aggregate(path, (current, drive) => current.Replace(drive.Name, $"{drive.VolumeLabel} ({drive.Name.Substring(0, drive.Name.Length - 1)}) > "));
         path = path.Replace(@"\", " > ").Replace("/", " > ");
         if (path.EndsWith(" > "))
-            path = path[..^3];
+            path = path.Substring(0, path.Length - 3);
         return path;
     }
 }

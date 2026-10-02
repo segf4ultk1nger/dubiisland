@@ -222,7 +222,7 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
         {
             return;
         }
-        var s = Environment.ProcessPath!;
+        var s = FrameworkCompat.ProcessPath;
         var t = target;
         Console.WriteLine(Path.GetFullPath(t));
         Console.WriteLine(Path.GetDirectoryName(Path.GetFullPath(t)));
@@ -480,10 +480,7 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
         var sha256Bytes = await sha256Alg.ComputeHashAsync(stream);
         // --- 修复结束 ---
 
-        // 优化：.NET 5+ 其实已经有 Convert.ToHexString 了，比 BitConverter + Replace 更快且不分配多余字符串
-        var str = Convert.ToHexString(sha256Bytes);
-        // 或者保持你原来的写法：
-        // var str = BitConverter.ToString(sha256Bytes).Replace("-", "");
+        var str = FrameworkCompat.ToHexString(sha256Bytes);
 
         Logger.LogDebug("更新文件哈希：{}", str);
         if (!string.Equals(str, Settings.UpdateArtifactHash, StringComparison.OrdinalIgnoreCase)) // 推荐用 OrdinalIgnoreCase
@@ -513,11 +510,7 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
             Process.Start(new ProcessStartInfo()
             {
                 FileName = Path.Combine(UpdateTempPath, @"extracted/ClassIsland.exe"),
-                ArgumentList =
-                {
-                    "-urt", Environment.ProcessPath!,
-                    "-m", "true"
-                }
+                Arguments = FrameworkCompat.JoinArguments("-urt", FrameworkCompat.ProcessPath, "-m", "true")
             });
             AppBase.Current.Stop();
             spanReboot.Finish(SpanStatus.Ok);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,10 +50,10 @@ public partial class PasswordAuthorizeProvider
     private void UpdatePassword()
     {
         var password = PasswordBox.Password;
-        var saltBytes = RandomNumberGenerator.GetBytes(16).ToList();
+        var saltBytes = FrameworkCompat.GetRandomBytes(16).ToList();
         var passwordBytes = Encoding.UTF8.GetBytes(password).ToList();
         passwordBytes.AddRange(saltBytes);
-        var hash = SHA256.HashData(passwordBytes.ToArray());
+        var hash = FrameworkCompat.Sha256(passwordBytes.ToArray());
         Settings.PasswordSalt = saltBytes.ToArray();
         Settings.PasswordHash = Convert.ToBase64String(hash);
     }
@@ -70,7 +69,7 @@ public partial class PasswordAuthorizeProvider
         var saltBytes = Settings.PasswordSalt;
         var passwordBytes = Encoding.UTF8.GetBytes(password).ToList();
         passwordBytes.AddRange(saltBytes);
-        var hash = SHA256.HashData(passwordBytes.ToArray());
+        var hash = FrameworkCompat.Sha256(passwordBytes.ToArray());
         if (Convert.ToBase64String(hash) == Settings.PasswordHash)
         {
             CompleteAuthorize();

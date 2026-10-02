@@ -57,7 +57,7 @@ public static class ChecksumHelper
             // 调用 MD5 实例的 ComputeHash 方法，它接受 Stream
             var md5 = md5Hasher.ComputeHash(stream);
 
-            var md5Hex = Convert.ToHexString(md5);
+            var md5Hex = FrameworkCompat.ToHexString(md5);
 
             // 比较 Hex 字符串时，使用 OrdinalIgnoreCase 比 CurrentCultureIgnoreCase 更快且更准确
             return string.Compare(checksum, md5Hex, StringComparison.OrdinalIgnoreCase) == 0;

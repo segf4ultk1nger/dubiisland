@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
 namespace ClassIsland.Shared;
 
@@ -46,5 +45,3 @@ public interface IAppHost
         return (T?)Host?.Services.GetService(typeof(T));
     }
 }
-
-#endif

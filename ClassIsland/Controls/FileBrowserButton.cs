@@ -37,7 +37,7 @@ public class FileBrowserButton : Button
     }
 
     public static readonly DependencyProperty StartFolderProperty = DependencyProperty.Register(
-        nameof(StartFolder), typeof(string), typeof(FileBrowserButton), new PropertyMetadata(Environment.ProcessPath));
+        nameof(StartFolder), typeof(string), typeof(FileBrowserButton), new PropertyMetadata(FrameworkCompat.ProcessPath));
 
     public string StartFolder
     {

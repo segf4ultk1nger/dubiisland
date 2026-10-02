@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageTags>classisland</PackageTags>
     <Description>ClassIsland 的核心共享库。</Description>
-	  <LangVersion>12</LangVersion>
+	  <LangVersion>preview</LangVersion>
 	  <Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>
   </PropertyGroup>
 
@@ -16,6 +16,10 @@
     <Folder Include="Helpers\" />
     <Folder Include="Attributes\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

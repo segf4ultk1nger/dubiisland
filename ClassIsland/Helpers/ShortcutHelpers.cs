@@ -16,6 +16,6 @@ public static class ShortcutHelpers
             return;
         }
 
-        await File.WriteAllTextAsync(desktopPath, await new StreamReader(stream.Stream).ReadToEndAsync());
+        await FrameworkCompat.WriteAllTextAsync(desktopPath, await new StreamReader(stream.Stream).ReadToEndAsync());
     }
 }

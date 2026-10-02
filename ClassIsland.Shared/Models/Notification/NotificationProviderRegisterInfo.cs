@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using ClassIsland.Shared.Abstraction.Models.Notification;
 using ClassIsland.Shared.Interfaces;
@@ -54,4 +53,3 @@ public class NotificationProviderRegisterInfo(INotificationProvider providerInst
         set => SetProperty(ref _providerSettings, value);
     }
 }
-#endif

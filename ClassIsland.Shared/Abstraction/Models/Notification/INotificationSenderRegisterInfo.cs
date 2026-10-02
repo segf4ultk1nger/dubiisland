@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using ClassIsland.Shared.Interfaces;
+﻿using ClassIsland.Shared.Interfaces;
 using System.ComponentModel;
 using ClassIsland.Shared.Models.Notification;
 
@@ -35,4 +34,3 @@ public interface INotificationSenderRegisterInfo : INotifyPropertyChanged, INoti
     /// </summary>
     NotificationSettings ProviderSettings { get; set; }
 }
-#endif

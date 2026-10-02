@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -10,7 +11,7 @@ internal static class Program
     [STAThread]
     private static int Main(string[] args)
     {
-        var root = Path.GetFullPath(Path.GetDirectoryName(Environment.ProcessPath) ?? "");
+        var root = Path.GetFullPath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "");
         var installation = Directory.GetDirectories(root)
             .Where(x => Path.GetFileName(x).StartsWith("app") && !File.Exists(Path.Combine(x, ".destroy")))
             .OrderBy(x => File.Exists(Path.Combine(x, ".current")) ? 1 : 0)
@@ -39,12 +40,31 @@ internal static class Program
             FileName = Path.Combine(Path.Combine(installation, "ClassIsland.exe")),
             WorkingDirectory = root
         };
-        foreach (var i in args)
-        {
-            startInfo.ArgumentList.Add(i);
-        }
+        startInfo.Arguments = JoinArguments(args);
         Process.Start(startInfo);
 
         return 0;
+    }
+
+    private static string JoinArguments(string[] args)
+    {
+        return string.Join(" ", args.Select(QuoteArgument));
+    }
+
+    private static string QuoteArgument(string arg)
+    {
+        if (arg.Length != 0 && arg.IndexOf(' ') < 0 && arg.IndexOf('\t') < 0 && arg.IndexOf('"') < 0)
+        {
+            return arg;
+        }
+
+        var escaped = arg.Replace("\"", "\\\"");
+        var trailingSlashes = 0;
+        for (var i = arg.Length - 1; i >= 0 && arg[i] == '\\'; i--)
+        {
+            trailingSlashes++;
+        }
+
+        return "\"" + escaped + new string('\\', trailingSlashes) + "\"";
     }
 }

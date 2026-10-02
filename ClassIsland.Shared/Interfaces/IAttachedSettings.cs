@@ -15,8 +15,6 @@ public interface IAttachedSettings
         set;
     }
 
-#if !NETFRAMEWORK
-    
     /// <summary>
     /// 判断指定的<see cref="IAttachedSettings"/>是否启用。
     /// </summary>
@@ -36,5 +34,4 @@ public interface IAttachedSettings
             _ => false
         };
     }
-#endif
 }

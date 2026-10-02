@@ -432,7 +432,7 @@ public partial class App : AppBase, IAppHost
         try
         {
             var testWritePath = Path.Combine(AppRootFolderPath, "./.test-write");
-            await File.WriteAllTextAsync(testWritePath, "");
+            await FrameworkCompat.WriteAllTextAsync(testWritePath, "");
             File.Delete(testWritePath);
         }
         catch (Exception ex)
@@ -453,7 +453,7 @@ public partial class App : AppBase, IAppHost
 
         var startupCountFilePath = Path.Combine(AppRootFolderPath, ".startup-count");
         var startupCount = File.Exists(startupCountFilePath)
-            ? (int.TryParse(await File.ReadAllTextAsync(startupCountFilePath), out var count) ? count + 1 : 1)
+            ? (int.TryParse(await FrameworkCompat.ReadAllTextAsync(startupCountFilePath), out var count) ? count + 1 : 1)
             : 1;
         if (startupCount >= 5 && ApplicationCommand is { Recovery: false, Quiet: false })
         {
@@ -482,7 +482,7 @@ public partial class App : AppBase, IAppHost
         }
 
         
-        await File.WriteAllTextAsync(startupCountFilePath, startupCount.ToString());
+        await FrameworkCompat.WriteAllTextAsync(startupCountFilePath, startupCount.ToString());
         AppDomain.CurrentDomain.ProcessExit += CurrentDomainOnProcessExit;
 
         var spanProcessUpdate = spanPreInit.StartChild("startup-process-update");
@@ -494,7 +494,7 @@ public partial class App : AppBase, IAppHost
             Process.Start(new ProcessStartInfo()
             {
                 FileName = ApplicationCommand.UpdateReplaceTarget,
-                ArgumentList = { "-udt", Environment.ProcessPath!, "-m", "true" }
+                Arguments = FrameworkCompat.JoinArguments("-udt", FrameworkCompat.ProcessPath, "-m", "true")
             });
             Stop();
             return;
@@ -979,15 +979,15 @@ public partial class App : AppBase, IAppHost
         }
         try
         {
-            var proc = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Environment.ProcessPath)).Where(x=>x.Id != Environment.ProcessId);
+            var proc = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(FrameworkCompat.ProcessPath)).Where(x=>x.Id != FrameworkCompat.ProcessId);
             foreach (var i in proc)
             {
                 i.Kill(true);
             }
 
-            Process.Start(new ProcessStartInfo(Environment.ProcessPath ?? "")
+            Process.Start(new ProcessStartInfo(FrameworkCompat.ProcessPath)
             {
-                ArgumentList = { "-m" }
+                Arguments = FrameworkCompat.JoinArguments("-m")
             });
         }
         catch (Exception e)
@@ -1134,15 +1134,11 @@ public partial class App : AppBase, IAppHost
     public override void Restart(string[] parameters)
     {
         Stop();
-        var path = Environment.ProcessPath;
-        if (path == null)
-            return;
-        var replaced = path.Replace(".dll", ".exe");
-        var startInfo = new ProcessStartInfo(replaced);
-        foreach (var i in parameters)
+        var replaced = FrameworkCompat.ProcessPath.Replace(".dll", ".exe");
+        var startInfo = new ProcessStartInfo(replaced)
         {
-            startInfo.ArgumentList.Add(i);
-        }
+            Arguments = FrameworkCompat.JoinArguments(parameters)
+        };
         Process.Start(startInfo);
     }
 }

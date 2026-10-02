@@ -1,5 +1,3 @@
-#if !NETFRAMEWORK
-
 namespace ClassIsland.Shared.Interfaces;
 
 /// <summary>
@@ -36,4 +34,3 @@ public interface INotificationProvider
     /// </summary>
     public static readonly Uri DefaultNotificationSoundUri = new Uri("pack://application:,,,/ClassIsland;component/Assets/Media/Notification/1.wav");
 }
-#endif

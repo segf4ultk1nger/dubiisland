@@ -189,7 +189,7 @@ public partial class SettingsWindowNew : MyWindow
             var countRaw = collection.Count;
             for (var i = 0; i < countRaw; i++)
             {
-                var randomIndex = Random.Shared.Next(0, collection.Count - 1);
+                var randomIndex = SharedRandom.Next(0, collection.Count - 1);
                 ViewModel.EchoCaveTexts.Add(collection[randomIndex]);
                 collection.RemoveAt(randomIndex);
             }
@@ -407,7 +407,8 @@ public partial class SettingsWindowNew : MyWindow
     {
         if (uri.Segments.Length > 2)
         {
-            var uriSegment = uri.Segments[2].EndsWith('/') ? uri.Segments[2][..^1] : uri.Segments[2];
+            var segment = uri.Segments[2];
+            var uriSegment = segment.EndsWith("/") ? segment.Substring(0, segment.Length - 1) : segment;
             Open(uriSegment, uri);
         }
         else if (uri.Segments.Length == 2)
@@ -698,7 +699,7 @@ public partial class SettingsWindowNew : MyWindow
     private void BeginRotateEffect()
     {
         var sb = new Storyboard();
-        var daX = new DoubleAnimation(0, Random.Shared.Next(0, 3600) / 10.0, TimeSpan.FromSeconds(1))
+        var daX = new DoubleAnimation(0, SharedRandom.Next(0, 3600) / 10.0, TimeSpan.FromSeconds(1))
         {
             EasingFunction = new CircleEase()
         };

@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -246,4 +245,3 @@ public class NotificationRequest : ObservableRecipient
     /// </summary>
     public event EventHandler? Completed;
 }
-#endif

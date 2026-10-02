@@ -491,7 +491,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
                 {
                     using var shortcut = new WindowsShortcut
                     {
-                        Path = Environment.ProcessPath,
+                        Path = FrameworkCompat.ProcessPath,
                         WorkingDirectory = Environment.CurrentDirectory
                     };
                     shortcut.Save(path);

@@ -158,7 +158,7 @@ public class FileFolderService(SettingsService settingsService, ILogger<FileFold
                 {
                     foreach (var file in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
                     {
-                        var relativePath = Path.GetRelativePath(rootPath, file);
+                        var relativePath = FrameworkCompat.GetRelativePath(rootPath, file);
                         archive.CreateEntryFromFile(file, relativePath);
                     }
                 }

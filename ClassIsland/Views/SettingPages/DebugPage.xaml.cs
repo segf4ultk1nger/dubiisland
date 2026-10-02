@@ -120,7 +120,7 @@ public partial class DebugPage : SettingsPageBase
         if (!ViewModel.IsTargetDateTimeLoaded) return;
 
         DateTime now = ExactTimeService.GetCurrentLocalDateTime();
-        DateTime tar = DateOnly.FromDateTime(now).ToDateTime(TimeOnly.FromDateTime(ViewModel.TargetTime));
+        DateTime tar = now.Date + ViewModel.TargetTime.TimeOfDay;
 
         SettingsService.Settings.DebugTimeOffsetSeconds += Math.Round((tar - now).TotalSeconds);
     }
@@ -168,7 +168,7 @@ public partial class DebugPage : SettingsPageBase
     {
         ProfileAnalyzeService.Analyze();
         var result = ProfileAnalyzeService.DumpMermaidGraph();
-        await File.WriteAllTextAsync(Path.Combine(App.AppRootFolderPath, "Profile-dump.mmd"), result);
+        await FrameworkCompat.WriteAllTextAsync(Path.Combine(App.AppRootFolderPath, "Profile-dump.mmd"), result);
         CommonDialog.ShowInfo($"转储成功。已保存到 {Path.GetFullPath(Path.Combine(App.AppRootFolderPath, "Profile-dump.mmd"))} 。");
     }
 

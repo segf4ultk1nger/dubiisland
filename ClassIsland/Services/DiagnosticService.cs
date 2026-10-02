@@ -102,7 +102,7 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
 
             var logs = string.Join('\n', AppLogService.Logs);
             //await File.WriteAllTextAsync(Path.Combine(temp, "Logs.log"), logs);
-            await File.WriteAllTextAsync(Path.Combine(temp, "DiagnosticInfo.txt"), GetDiagnosticInfo());
+            await FrameworkCompat.WriteAllTextAsync(Path.Combine(temp, "DiagnosticInfo.txt"), GetDiagnosticInfo());
             File.Copy(Path.Combine(App.AppRootFolderPath, "Settings.json"), Path.Combine(temp, "Settings.json"));
             var profile = App.GetService<IProfileService>().CurrentProfilePath;
             Directory.CreateDirectory(Path.Combine(temp, "Profiles/"));

@@ -21,7 +21,7 @@ internal class UriNavigationNode(string name)
         if (!Children.TryGetValue(paths[0], out var node))
             return false;
 
-        return paths.Length <= 1 || node.Contains(paths[1..]);
+        return paths.Length <= 1 || node.Contains(Slice(paths, 1));
     }
 
     public UriNavigationNode AddNode(string path, Action<UriNavigationEventArgs> onNavigated)
@@ -51,7 +51,7 @@ internal class UriNavigationNode(string name)
             Children[paths[0]] = new UriNavigationNode(paths[0]);
         }
 
-        return Children[paths[0]].AddNode(paths[1..], onNavigated);
+        return Children[paths[0]].AddNode(Slice(paths, 1), onNavigated);
     }
 
     public UriNavigationNode GetNode(string path, out string[] children)
@@ -65,10 +65,23 @@ internal class UriNavigationNode(string name)
         children = [];
         if (paths.Length <= 0)
             throw new ArgumentException("给定的节点不存在。");
-        children = paths[..];
+        children = (string[])paths.Clone();
         if (!Children.TryGetValue(paths[0], out var node))
             return this;
 
-        return paths.Length <= 1 ? node : node.GetNode(paths[1..], out children);
+        return paths.Length <= 1 ? node : node.GetNode(Slice(paths, 1), out children);
+    }
+
+    private static string[] Slice(string[] paths, int start)
+    {
+        var length = paths.Length - start;
+        if (length <= 0)
+        {
+            return Array.Empty<string>();
+        }
+
+        var rest = new string[length];
+        Array.Copy(paths, start, rest, 0, length);
+        return rest;
     }
 }

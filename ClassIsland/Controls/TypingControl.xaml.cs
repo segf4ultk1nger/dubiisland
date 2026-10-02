@@ -78,7 +78,7 @@ public partial class TypingControl : UserControl
             await Task.Delay(TimeSpan.FromMilliseconds(150));
             for (int i = 0; i < Text.Length; i++)
             {
-                DisplayingText = Text[..i] + ((i / 10) % 2 == 0 ? "_" : "");
+                DisplayingText = Text.Substring(0, i) + ((i / 10) % 2 == 0 ? "_" : "");
                 await Task.Delay(TimeSpan.FromMilliseconds(40));
             }
         }

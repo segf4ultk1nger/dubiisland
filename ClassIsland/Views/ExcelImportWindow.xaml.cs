@@ -421,9 +421,6 @@ public partial class ExcelImportWindow : MyWindow
 
     private TimeLayoutItem? ParseTimeLayoutItem(string? text)
     {
-        var baseTime = DateTime.Now.Date;
-        var baseDateOnly = new DateOnly(baseTime.Year, baseTime.Month, baseTime.Day);
-
         if (text == null) return null;
         var matches = Regex.Matches(text, "\\d+"); // 匹配数字
         if (matches.Count is not (4 or 6))  // 格式不符合
@@ -448,20 +445,17 @@ public partial class ExcelImportWindow : MyWindow
                 s2 = int.Parse(matches[5].Value);
                 break;
         }
-        // 保存结果
+        var baseDate = DateTime.Now.Date;
         var result = new TimeLayoutItem()
         {
-            StartSecond = baseDateOnly.ToDateTime(new TimeOnly(h1, m1, s1)),
-            EndSecond = baseDateOnly.ToDateTime(new TimeOnly(h2, m2, s2))
+            StartSecond = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, h1, m1, s1),
+            EndSecond = new DateTime(baseDate.Year, baseDate.Month, baseDate.Day, h2, m2, s2)
         };
         return result;
     }
 
     private void LoadTimeLayoutFromCurrentSelection()
     {
-        var baseTime = DateTime.Now.Date;
-        var baseDateOnly = new DateOnly(baseTime.Year, baseTime.Month, baseTime.Day);
-
         var selection = ViewModel.TimePointSourcePosition;
         var timeLayout = ViewModel.SelectedTimeLayout;
         var auto = ViewModel.TimeLayoutImportSource != 2;

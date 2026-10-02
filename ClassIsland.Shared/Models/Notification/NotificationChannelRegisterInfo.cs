@@ -1,5 +1,4 @@
-﻿#if !NETFRAMEWORK
-using ClassIsland.Shared.Abstraction.Models.Notification;
+﻿using ClassIsland.Shared.Abstraction.Models.Notification;
 using ClassIsland.Shared.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
@@ -48,4 +47,3 @@ public class NotificationChannelRegisterInfo(INotificationProvider providerInsta
         set => SetProperty(ref _providerSettings, value);
     }
 }
-#endif

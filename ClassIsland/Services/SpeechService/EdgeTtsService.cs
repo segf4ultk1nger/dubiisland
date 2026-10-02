@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +49,7 @@ public class EdgeTtsService : ISpeechService
     private string GetCachePath(string text)
     {
         var data = Encoding.UTF8.GetBytes(text);
-        var md5 = MD5.HashData(data);
+        var md5 = FrameworkCompat.Md5(data);
         var md5String = md5.Aggregate("", (current, t) => current + t.ToString("x2"));
         var path = Path.Combine(EdgeTtsCacheFolderPath, SettingsService.Settings.EdgeTtsVoiceName, $"{md5String}");
         var directory = Path.GetDirectoryName(path);

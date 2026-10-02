@@ -25,14 +25,14 @@ public partial class HomePage : Page
     private void ContinueWithArguments(string[] args)
     {
         AppBase.Current.Stop();
-        var path = Environment.ProcessPath;
-        var replaced = path!.Replace(".dll", ".exe");
-        var startInfo = new ProcessStartInfo(replaced);
-        startInfo.ArgumentList.Add("-m");
-        foreach (var arg in args)
+        var replaced = FrameworkCompat.ProcessPath.Replace(".dll", ".exe");
+        var all = new string[args.Length + 1];
+        all[0] = "-m";
+        args.CopyTo(all, 1);
+        var startInfo = new ProcessStartInfo(replaced)
         {
-            startInfo.ArgumentList.Add(arg);
-        }
+            Arguments = FrameworkCompat.JoinArguments(all)
+        };
         Process.Start(startInfo);
     }
 

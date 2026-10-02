@@ -147,6 +147,6 @@ public class WindowRuleService : IWindowRuleService
         uint pid = 0;
         GetWindowThreadProcessId(ForegroundHwnd, &pid);
         var process = Process.GetProcessById((int)pid);
-        return process.Id == Environment.ProcessId;
+        return process.Id == FrameworkCompat.ProcessId;
     }
 }

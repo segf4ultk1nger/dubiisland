@@ -88,7 +88,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
             {
                 "https" or "http" => await new HttpClient().GetStringAsync(uri,
                     DocumentLoadingCancellationTokenSource.Token),
-                "file" => await File.ReadAllTextAsync(path, DocumentLoadingCancellationTokenSource.Token),
+                "file" => await FrameworkCompat.ReadAllTextAsync(path, DocumentLoadingCancellationTokenSource.Token),
                 _ => ""
             };
         }

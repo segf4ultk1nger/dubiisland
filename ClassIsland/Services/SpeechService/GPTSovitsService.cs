@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -48,7 +47,7 @@ public class GptSoVitsService : ISpeechService
     private string GetCachePath(string text)
     {
         var data = Encoding.UTF8.GetBytes(text);
-        var md5 = MD5.HashData(data);
+        var md5 = FrameworkCompat.Md5(data);
         var md5String = md5.Aggregate("", (current, t) => current + t.ToString("x2"));
         var path = Path.Combine(GPTSoVITSCacheFolderPath, SettingsService.Settings.GptSoVitsSpeechSettings.GptSoVitsVoiceName, $"{md5String}.wav");
         var directory = Path.GetDirectoryName(path);
@@ -123,7 +122,7 @@ public class GptSoVitsService : ISpeechService
             var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             var signData = new
             {
-                ContentSHA256 = SHA256.HashData(Encoding.UTF8.GetBytes(text)),
+                ContentSHA256 = FrameworkCompat.Sha256(Encoding.UTF8.GetBytes(text)),
                 Timestamp = Convert.ToInt64(ts.TotalMilliseconds)
             };
             var sign = await pgp.SignAsync(JsonSerializer.Serialize(signData));
