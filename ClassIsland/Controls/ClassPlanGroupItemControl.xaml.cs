@@ -9,8 +9,8 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Models.Profile;
+using ClassIsland.Core.Services;
 using ClassIsland.Views;
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.Controls;
 
@@ -51,7 +51,7 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
 
     private IProfileService ProfileService { get; } = App.GetService<IProfileService>();
 
-    private readonly Guid _parentDialogId;
+    private readonly string _parentDialogId;
     private bool _isProtected = false;
 
     public bool IsProtected
@@ -79,7 +79,7 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
     public ClassPlanGroupItemControl()
     {
         InitializeComponent();
-        _parentDialogId = App.GetService<ProfileSettingsWindow>().ViewModel.DialogHostId;
+        _parentDialogId = App.GetService<ProfileSettingsWindow>().ViewModel.DialogHostId.ToString();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -125,7 +125,7 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
 
     private async void MenuItemDisband_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await DialogHost.Show(FindResource("DisbandConfirmDialog"), _parentDialogId);
+        var r = await DialogService.ShowAsync(FindResource("DisbandConfirmDialog"), _parentDialogId);
         if (r as bool? != true)
         {
             return;
@@ -136,7 +136,7 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
 
     private async void MenuItemDelete_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await DialogHost.Show(FindResource("DeleteConfirmDialog"), _parentDialogId);
+        var r = await DialogService.ShowAsync(FindResource("DeleteConfirmDialog"), _parentDialogId);
         if (r as bool? != true)
         {
             return;

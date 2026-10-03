@@ -7,9 +7,8 @@ using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Core.Controls;
 using ClassIsland.Shared.Models.Profile;
 using ClassIsland.Services;
+using ClassIsland.Core.Services;
 using ClassIsland.ViewModels;
-
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.Views;
 
@@ -76,7 +75,7 @@ public partial class ClassChangingWindow : MyWindow
         var key = l[0].Key;
         if (!ViewModel.WriteToSourceClassPlan && !ClassPlan.IsOverlay && ProfileService.Profile.OverlayClassPlanId != null)
         {
-            var r = (bool?)await DialogHost.Show(FindResource("OverwriteConfirm"), ViewModel.DialogIdentifier);
+            var r = (bool?)await DialogService.ShowAsync(FindResource("OverwriteConfirm"), ViewModel.DialogIdentifier.ToString());
             if (r != true)
             {
                 return;

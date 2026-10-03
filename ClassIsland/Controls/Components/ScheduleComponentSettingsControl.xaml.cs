@@ -4,8 +4,9 @@ using System.Windows;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Controls;
+using ClassIsland.Core.Services;
 using ClassIsland.Services;
-using MaterialDesignThemes.Wpf;
+using MahApps.Metro.Controls;
 
 namespace ClassIsland.Controls.Components;
 
@@ -24,7 +25,8 @@ public partial class ScheduleComponentSettingsControl
 
     private async void ButtonImportLegacySettings_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await this.ShowDialog(FindResource("MigrateConfirm")) as bool? ?? false;
+        DialogService.TryGetIdentifier(Window.GetWindow(this) as MetroWindow, out var dialogIdentifier);
+        var r = await DialogService.ShowAsync(FindResource("MigrateConfirm"), dialogIdentifier) as bool? ?? false;
         if (!r)
         {
             return;

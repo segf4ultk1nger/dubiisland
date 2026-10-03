@@ -20,9 +20,8 @@ using ClassIsland.Core.Converters;
 using ClassIsland.Core.Models.Theming;
 using ClassIsland.Shared.Models.Profile;
 using ClassIsland.Models;
+using ClassIsland.Core.Services;
 using ClassIsland.ViewModels;
-
-using MaterialDesignThemes.Wpf;
 
 using OfficeOpenXml;
 
@@ -122,7 +121,7 @@ public partial class ExcelImportWindow : MyWindow
 
     private async Task<object?> ShowDialog(string key)
     {
-        return await DialogHost.Show(FindResource(key), ViewModel.DialogId);
+        return await DialogService.ShowAsync(FindResource(key), ViewModel.DialogId.ToString());
     }
 
     ~ExcelImportWindow()

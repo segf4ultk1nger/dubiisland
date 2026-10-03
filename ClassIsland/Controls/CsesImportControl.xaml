@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="ClassIsland.Controls.CsesImportControl"
+<UserControl x:Class="ClassIsland.Controls.CsesImportControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -51,7 +52,7 @@
                                          Filter="CSES 课表文件(*.yml, *.yaml)|*.yml;*.yaml"/>
             </Grid>
             <WrapPanel HorizontalAlignment="Right">
-                <Button Content="取消"  Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >
+                <Button Content="取消"  Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False

@@ -10,9 +10,8 @@ using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Core.Controls;
 using ClassIsland.Helpers;
 using ClassIsland.Services;
+using ClassIsland.Core.Services;
 using ClassIsland.ViewModels;
-
-using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Logging;
 
@@ -103,11 +102,11 @@ public partial class WelcomeWindow : MyWindow
         }
 
         e.Cancel = true;
-        if (DialogHost.IsDialogOpen(ViewModel.DialogId))
+        if (DialogService.IsOpen(ViewModel.DialogId.ToString()))
         {
             return;
         }
-        var r = await DialogHost.Show(FindResource("ExitAppConfirmDialog"), ViewModel.DialogId);
+        var r = await DialogService.ShowAsync(FindResource("ExitAppConfirmDialog"), ViewModel.DialogId.ToString());
         if ((bool?)r == true)
         {
             ViewModel.IsExitConfirmed = true;
@@ -134,7 +133,7 @@ public partial class WelcomeWindow : MyWindow
 
     private async void ButtonJoinManagementOnClick(object sender, RoutedEventArgs e)
     {
-        await DialogHost.Show(new JoinManagementDialog(), ViewModel.DialogId);
+        await DialogService.ShowAsync(new JoinManagementDialog(), ViewModel.DialogId.ToString());
     }
 
     private async void FrameworkElement_OnLoaded(object sender, RoutedEventArgs e)

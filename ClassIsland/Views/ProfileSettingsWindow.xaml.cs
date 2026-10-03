@@ -26,6 +26,7 @@ using ClassIsland.Services;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Extensions;
 using ClassIsland.Shared.Models.Action;
+using ClassIsland.Core.Services;
 using ClassIsland.ViewModels;
 using CommunityToolkit.Mvvm.Input;
 using CsesSharp;
@@ -403,7 +404,7 @@ public partial class ProfileSettingsWindow : MyWindow
             return;
         }
 
-        var r = (bool?)await DialogHost.Show(FindResource("DeleteTimeLayoutConfirm"), dialogIdentifier: ViewModel.DialogHostId);
+        var r = (bool?)await DialogService.ShowAsync(FindResource("DeleteTimeLayoutConfirm"), ViewModel.DialogHostId.ToString());
         if (r == true)
         {
             SentrySdk.Metrics.Increment(eventName, tags: new Dictionary<string, string>
@@ -458,7 +459,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonSubject_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = (bool?)await DialogHost.Show(FindResource("DeleteSubjectConfirm"),dialogIdentifier: ViewModel.DialogHostId);
+        var r = (bool?)await DialogService.ShowAsync(FindResource("DeleteSubjectConfirm"), ViewModel.DialogHostId.ToString());
         if (r == true)
         {
             SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.subject.remove", tags: new Dictionary<string, string>
@@ -533,7 +534,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonDeleteClassPlan_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = (bool?)await DialogHost.Show(FindResource("DeleteClassPlanConfirm"), dialogIdentifier: ViewModel.DialogHostId);
+        var r = (bool?)await DialogService.ShowAsync(FindResource("DeleteClassPlanConfirm"), ViewModel.DialogHostId.ToString());
         if (r == true)
         {
             SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.classPlan.remove", tags: new Dictionary<string, string>
@@ -721,7 +722,7 @@ public partial class ProfileSettingsWindow : MyWindow
     {
         SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.profile.create");
         ViewModel.CreateProfileName = "";
-        var r = await DialogHost.Show(FindResource("CreateProfileDialog"), ViewModel.DialogHostId);
+        var r = await DialogService.ShowAsync(FindResource("CreateProfileDialog"), ViewModel.DialogHostId.ToString());
         Debug.WriteLine(r);
 
         var path = Path.Combine(Services.ProfileService.ProfilePath, $"{r}.json");
@@ -758,7 +759,7 @@ public partial class ProfileSettingsWindow : MyWindow
     {
         SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.profile.rename");
         ViewModel.RenameProfileName = Path.GetFileNameWithoutExtension(ViewModel.SelectedProfile);
-        var r = await DialogHost.Show(FindResource("RenameProfileDialog"), ViewModel.DialogHostId);
+        var r = await DialogService.ShowAsync(FindResource("RenameProfileDialog"), ViewModel.DialogHostId.ToString());
         Debug.WriteLine(r);
 
         var raw = Path.Combine(Services.ProfileService.ProfilePath, $"{ViewModel.SelectedProfile}");
@@ -792,7 +793,7 @@ public partial class ProfileSettingsWindow : MyWindow
             ViewModel.MessageQueue.Enqueue("无法删除已加载或将要加载的档案。");
             return;
         }
-        var r = await DialogHost.Show(FindResource("DeleteProfileDialog"), ViewModel.DialogHostId);
+        var r = await DialogService.ShowAsync(FindResource("DeleteProfileDialog"), ViewModel.DialogHostId.ToString());
         Debug.WriteLine(r);
 
         if ((bool?)r == true)
@@ -1154,7 +1155,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonUnTrustedProfile_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await DialogHost.Show(FindResource("ProfileTrustWarning"), ViewModel.DialogHostId);
+        var r = await DialogService.ShowAsync(FindResource("ProfileTrustWarning"), ViewModel.DialogHostId.ToString());
         if (r as bool? != true)
         {
             return;
@@ -1172,7 +1173,7 @@ public partial class ProfileSettingsWindow : MyWindow
     private async void MenuItemImportFromCses_OnClick(object sender, RoutedEventArgs e)
     {
         ViewModel.IsProfileImportMenuOpened = false;
-        var r = await DialogHost.Show(new CsesImportControl(), ViewModel.DialogHostId);
+        var r = await DialogService.ShowAsync(new CsesImportControl(), ViewModel.DialogHostId.ToString());
         if (r as bool? == true)
         {
             ViewModel.MessageQueue.Enqueue("成功导入了 CSES 课表。");

@@ -9,8 +9,8 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Extensions;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Models.Profile;
+using ClassIsland.Core.Services;
 using CsesSharp;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 
 namespace ClassIsland.Controls;
@@ -75,7 +75,7 @@ public partial class CsesImportControl : UserControl
                 }
                 ConfigureFileHelper.SaveConfig(path, profile);
             }
-            DialogHost.CloseDialogCommand.Execute(true, this);
+            DialogService.CloseDialogCommand.Execute(true, this);
         }
         catch (Exception exception)
         {

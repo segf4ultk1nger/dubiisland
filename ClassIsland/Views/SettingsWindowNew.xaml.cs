@@ -22,6 +22,7 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums.SettingsWindow;
+using ClassIsland.Core.Services;
 using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using ClassIsland.ViewModels;
@@ -449,9 +450,9 @@ public partial class SettingsWindowNew : MyWindow
 
     private async void ShowRestartDialog()
     {
-        if (DialogHost.IsDialogOpen(SettingsPageBase.DialogHostIdentifier))
+        if (DialogService.IsOpen(SettingsPageBase.DialogHostIdentifier))
             return;
-        var r = await DialogHost.Show(FindResource("RestartDialog"), SettingsPageBase.DialogHostIdentifier);
+        var r = await DialogService.ShowAsync(FindResource("RestartDialog"), SettingsPageBase.DialogHostIdentifier);
         if (r as bool? != true)
             return;
         AppBase.Current.Restart();

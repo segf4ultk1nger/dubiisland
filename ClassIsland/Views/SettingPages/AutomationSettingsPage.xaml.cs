@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Services;
@@ -121,7 +122,7 @@ public partial class AutomationSettingsPage
         if (FindResource("CreateProfileDialog") is not FrameworkElement content)
             return;
         content.DataContext = this;
-        var r = await DialogHost.Show(content, DialogHostIdentifier);
+        var r = await DialogService.ShowAsync(content, DialogHostIdentifier);
         Debug.WriteLine(r);
 
         var path = Path.Combine(Services.AutomationService.AutomationConfigsFolderPath,

@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using ClassIsland.Core.Abstractions.Controls;
+using ClassIsland.Core.Services;
 using ClassIsland.Views;
-using MaterialDesignThemes.Wpf;
+using MahApps.Metro.Controls;
 
 namespace ClassIsland.Controls.ActionSettingsControls;
 
@@ -41,8 +41,8 @@ public partial class NotificationActionSettingsControl
         else
         {
             IsShowInDialog = true;
-            var dialogHost = VisualTreeUtils.FindParentVisuals<DialogHost>(this).FirstOrDefault();
-            dialogHost?.ShowDialog(drawer);
+            if (Window.GetWindow(this) is MetroWindow window && DialogService.TryGetIdentifier(window, out var identifier))
+                _ = DialogService.ShowAsync(drawer, identifier);
         }
     }
 }

@@ -11,6 +11,7 @@ using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Models;
 using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Controls.Ruleset;
 using ClassIsland.Core.Enums.SettingsWindow;
@@ -107,7 +108,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         if (FindResource("CreateProfileDialog") is not FrameworkElement content)
             return;
         content.DataContext = this;
-        var r = await DialogHost.Show(content, DialogHostIdentifier);
+        var r = await DialogService.ShowAsync(content, DialogHostIdentifier);
         Debug.WriteLine(r);
 
         var path = Path.Combine(ClassIsland.Services.ComponentsService.ComponentSettingsPath,

@@ -1,7 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.Core.Abstractions.Controls;
 
@@ -11,7 +10,7 @@ namespace ClassIsland.Core.Abstractions.Controls;
 public abstract class SettingsPageBase : Page
 {
     /// <summary>
-    /// 设置窗口的<see cref="DialogHost"/>的标识符。
+    /// 设置窗口对话框的标识符。
     /// </summary>
     public static readonly string DialogHostIdentifier = "SettingsWindowV2";
 
