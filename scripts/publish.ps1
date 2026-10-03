@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
   发布 LegacyIsland（ClassIsland.exe）：Release + Costura 单文件 → 打 zip → 上传 fuckingfast。
