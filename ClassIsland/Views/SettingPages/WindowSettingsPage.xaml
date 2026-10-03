@@ -144,7 +144,7 @@
 
             <!-- 窗口层级 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.LayersOutline}" Header="窗口层级"
-                                    Description="窗口在屏幕上的层级。置底则会显示在所有窗口的后方，置顶则将显示在所有窗口的前方。">
+                                    Description="窗口层级；置底显示在所有窗口后方，置顶在前方。">
                 <ci:SettingsCard.Switcher>
                     <ComboBox SelectedIndex="{Binding SettingsService.Settings.WindowLayer, Mode=TwoWay}"
                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
@@ -167,7 +167,7 @@
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveDown}"
                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="指针移入淡化"
-                                                  Description="启用后，在鼠标移入或触屏点击主界面区域时，将淡化主界面。"
+                                                  Description="鼠标移入或触屏点击主界面时淡化主界面。"
                                                   IsOn="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=TwoWay}"
                                                   Margin="-12 0" />
                     </Expander.Header>
@@ -202,7 +202,7 @@
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.Input}"
                                                     IsCompact="True"
                                                    Header="使用原始输入"
-                                                   Description="启用后，ClassIsland 将使用 RawInput 接收鼠标/触屏事件，而不是轮询获取光标位置。这允许应用辨别鼠标和触摸事件，并分别做出更适宜的响应。如果出现不兼容的问题，请尝试禁用此选项。"
+                                                   Description="用 RawInput 接收鼠标/触屏事件，可区分二者；不兼容时禁用。"
                                                    IsOn="{Binding SettingsService.Settings.UseRawInput, Mode=TwoWay}"
                                                    Margin="0 0 0 6" />
                             <!-- 触屏点击后自动恢复 -->
@@ -210,7 +210,7 @@
                                                        IsCompact="True"
                                                        Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                        Header="触屏点击后自动恢复时间"
-                                                       Description="启用后，触屏点击主界面区域后将在一定时间后自动恢复主界面显示。设置为0为禁用。"
+                                                       Description="触屏点击主界面后自动恢复显示；0为禁用。"
                                                        Margin="0 0 0 6">
                                 <ci:SettingsControl.Switcher>
                                     <ComboBox
@@ -231,7 +231,7 @@
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveUp}"
                                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="反转指针移入淡化"
-                                                Description="启用后，将默认淡化主界面，使主界面仅在鼠标移入时显示。此开关不影响隐藏主界面。"
+                                                Description="默认淡化主界面，仅鼠标移入时显示；不影响隐藏。"
                                                 IsOn="{Binding SettingsService.Settings.IsMouseInFadingReversed, Mode=TwoWay}"
                                                 Margin="0 6 0 0" />
 
@@ -243,14 +243,14 @@
             <!-- 兼容透明模式 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
                              Header="兼容透明模式"
-                             Description="若启用，应用将使用资源占用更高的备选方法（AllowTransparency）而非默认方法（WindowChrome）实现窗口透明，且不支持全屏提醒特效等功能。可能会解决叠加异常、黑底等部分显示问题。"
+                             Description="改用 AllowTransparency 实现透明，占用更高，不支持全屏提醒特效。"
                              IsOn="{Binding SettingsService.Settings.IsCompatibleWindowTransparentEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             
             <!-- 使用原始屏幕尺寸 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.DockWindow}"
                                    Header="使用原始屏幕尺寸"
-                                   Description="若启用，主界面调整位置时将忽略系统工作区设置（通常包括任务栏和部分顶栏应用）。"
+                                   Description="主界面调整位置时忽略系统工作区（任务栏等）。"
                                    IsOn="{Binding SettingsService.Settings.IsIgnoreWorkAreaEnabled, Mode=TwoWay}"
                                    Margin="0 0 0 6" />
 

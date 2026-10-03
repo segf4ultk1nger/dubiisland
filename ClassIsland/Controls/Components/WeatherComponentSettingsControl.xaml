@@ -50,7 +50,7 @@
                     </ci:SettingsCard.Switcher>
                 </ci:SettingsCard>
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AlertCircleCheckOutline}" Header="显示预警信号"
-                                 Description="启用后，预警将以图标形式显示在天气组件上。"
+                                 Description="以图标形式显示天气预警。"
                                  Margin="0 0 0 6"
                                  IsOn="{Binding Settings.ShowAlerts, Mode=TwoWay}"/>
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MessageAlertOutline}"
@@ -68,7 +68,7 @@
                     </ci:SettingsCard.Switcher>
                 </ci:SettingsCard>
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.WeatherPouring}" Header="显示降水提示"
-                                 Description="启用后，将显示降水即将到来的时间和降水剩余时间。正数代表降水即将到来的时间，负数代表剩余时间。"
+                                 Description="显示降水的到来或剩余时间，正数为即将到来，负数为剩余。"
                                  IsOn="{Binding Settings.ShowRainTime, Mode=TwoWay}"/>
             </StackPanel>
         </ScrollViewer>

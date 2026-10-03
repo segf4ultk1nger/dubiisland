@@ -52,7 +52,7 @@
                 </controls1:SettingsCard>
                 
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Ruler}" Header="紧凑模式"
-                                        Description="启用后，将隐藏“距离”、“还有”和“仅剩”。"
+                                        Description="隐藏“距离”“还有”“仅剩”。"
                                         IsOn="{Binding Settings.IsCompactModeEnabled, Mode=TwoWay}"/>
                 
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.LinkVariant}" Header="倒计时连接词"
@@ -68,7 +68,7 @@
                 </controls1:SettingsCard>
 
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteOutline}" Header="倒计时连接词使用强调颜色"
-                                        Description="启用后，倒计时连接词颜色与字体颜色一致，否则为默认颜色。"
+                                        Description="连接词颜色与字体颜色一致。"
                                         IsOn="{Binding Settings.IsConnectorColorEmphasized, Mode=TwoWay}" />
             </StackPanel>
         </Grid>

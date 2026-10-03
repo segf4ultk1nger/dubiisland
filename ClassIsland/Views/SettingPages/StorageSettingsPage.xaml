@@ -65,7 +65,7 @@
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.AutoMode}"
                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="启用自动备份"
-                                                  Description="启用后，ClassIsland 将每隔一段时间自动备份当前的档案和配置文件。"
+                                                  Description="每隔一段时间自动备份档案和配置文件。"
                                                   IsOn="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=TwoWay}"
                                                   Margin="-12 0" />
                     </Expander.Header>
@@ -88,7 +88,7 @@
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ArchiveArrowUpOutline}"
                                             Header="自动备份上限"
                                             IsCompact="True"
-                                            Description="最多允许存在的自动备份上限。当自动备份数量达到上限时，将覆盖最旧的备份。设置为 0 则为无上限。"
+                                            Description="自动备份数量上限；达到后覆盖最旧备份，0为无上限。"
                                             Margin="0 0 0 6">
                             <ci:SettingsControl.Switcher>
                                 <TextBox
@@ -113,7 +113,7 @@
                 <StackPanel>
                     <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.BackupRestore}"
                                         Header="手动备份"
-                                        Description="进行手动备份。备份的内容包括 Config/ 文件夹内的配置文件、 Profiles/ 文件夹内的档案文件和 Settings.json 设置文件。手动备份产生的备份文件不会被自动清除。"
+                                        Description="备份 Config/、Profiles/ 和 Settings.json，不会被自动清除。"
                                         Margin="0 0 0 6"
                                         HasSwitcher="False"/>
                     <WrapPanel>

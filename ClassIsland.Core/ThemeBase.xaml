@@ -82,11 +82,20 @@
     <Style TargetType="StackPanel" x:Key="SettingsPageStackPanelStyle">
         <Setter Property="Margin" Value="12" />
         <Setter Property="MaxWidth" Value="750" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
         <Style.Resources>
             <Style TargetType="controls:SettingsCard">
                 <Setter Property="Margin" Value="0 0 0 6" />
             </Style>
         </Style.Resources>
+    </Style>
+
+    <!-- 设置页面分组标题（Windows 10 设置风格） -->
+    <Style TargetType="controls:IconText" x:Key="SettingsSectionHeaderStyle">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="IconSize" Value="18" />
+        <Setter Property="Margin" Value="0 8 0 10" />
     </Style>
 
     <converters:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />

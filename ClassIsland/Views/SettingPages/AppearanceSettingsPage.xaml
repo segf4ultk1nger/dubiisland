@@ -43,7 +43,7 @@
             <!--背景颜色-->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatColorFill}"
                                     Header="背景颜色"
-                                    Description="主界面背景颜色，禁用时将根据应用主题自动选择颜色。"
+                                    Description="主界面背景颜色，禁用时随主题自动选择。"
                                     Margin="0 0 0 6">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -69,7 +69,7 @@
             </controls1:SettingsCard>
             <!-- 圆角半径 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BorderRoundCorners}" Header="圆角半径"
-                                    Description="主界面圆角半径，调至最大数值时左右边缘为半圆。">
+                                    Description="主界面圆角半径，最大时左右边缘为半圆。">
                 <controls1:SettingsCard.Switcher>
                     <Slider Grid.Column="1" Grid.Row="0" Width="180" Minimum="0" Maximum="20"
                             Value="{Binding SettingsService.Settings.RadiusX}"
@@ -242,7 +242,7 @@
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.RefreshAuto}"
                                                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                               Header="启用自动提取主题色"
-                                                                              Description="若启用，将会在每分钟刷新一次壁纸主题色，适用于会随时间大幅变化主题色的动态壁纸。"
+                                                                              Description="每分钟刷新一次壁纸主题色，适用于动态壁纸。"
                                                                               IsOn="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=TwoWay}"
                                                                               Margin="-12 0" />
                         </Expander.Header>
@@ -251,7 +251,7 @@
                             <!-- 自动提取主题色间隔 -->
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}"
                                                                               Header="自动提取主题色间隔"
-                                                                              Description="自动从壁纸提取主题色时间隔的时间，建议根据动态壁纸更新速度按需设置，不宜低于10秒。">
+                                                                              Description="自动提取壁纸主题色的间隔，不宜低于10秒。">
                                 <controls1:SettingsControl.Switcher>
                                     <Grid>
                                         <controls1:NumbericTextBox MaxValue="36000" MinValue="0"
@@ -268,17 +268,17 @@
 
                 <!-- 兼容模式 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CogOutline}" Header="启用兼容模式"
-                                                               Description="若启用，将从注册表提取壁纸，而非桌面句柄。不兼容动态壁纸。可能会解决一些与壁纸提取相关的玄学问题。"
+                                                               Description="从注册表而非桌面句柄提取壁纸；不兼容动态壁纸。"
                                                                IsOn="{Binding SettingsService.Settings.IsFallbackModeEnabled, Mode=TwoWay}" />
 
                 <!-- 实验性取色算法 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FlaskOutline}" Header="实验性取色算法"
-                                        Description="启用后将使用实验性的取色算法进行取色，取色性能更好。"
+                                        Description="使用实验性取色算法，取色性能更好。"
                                         IsOn="{Binding SettingsService.Settings.UseExperimentColorPickingMethod, Mode=TwoWay}" />
                 <!-- 壁纸层窗口类名 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.WindowMaximize}" Header="壁纸层窗口类名"
                                                                Visibility="{Binding SettingsService.Settings.IsFallbackModeEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisConverter}}"
-                                                               Description="获取壁纸时要寻找的壁纸窗口的类名，留空将使用默认类名Progman。当需要从动态壁纸软件（如Wallpaper Engine等）获取壁纸时，请修改此选项为对应壁纸软件的壁纸窗口类名，以正确获取壁纸。若此栏未填写正确，将无法正常获取壁纸。">
+                                                               Description="壁纸窗口类名，默认Progman；动态壁纸需填对应软件的窗口类名。">
                     <controls1:SettingsCard.Switcher>
                         <DockPanel Width="150">
                             <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
@@ -294,7 +294,7 @@
                 <!-- 取色亮度波峰 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰"
                                         Visibility="{Binding SettingsService.Settings.UseExperimentColorPickingMethod, Converter={StaticResource InverseBoolToVisConverter}}"
-                                        Description="取色时为亮度更接近此值的颜色赋予更高的权重，修改此值会影响到取色结果中整体颜色的亮度和准确性，请谨慎修改。（默认值：0.6）">
+                                        Description="取色时亮度越接近此值的颜色权重越高；默认值0.6。">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
                             <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="150"
@@ -363,7 +363,7 @@
                     </Grid>
                 </Border>
                 <!-- 自动提取主题色 -->
-                <controls1:SettingsCard Margin="0 6" IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔" Description="自动从屏幕上提取主题色时间隔的时间，建议设为10秒左右。">
+                <controls1:SettingsCard Margin="0 6" IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔" Description="自动提取屏幕主题色的间隔，建议10秒左右。">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
                             <controls1:NumbericTextBox MaxValue="300" MinValue="0" Width="100" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Style="{StaticResource MahApps.Styles.TextBox}"
@@ -372,7 +372,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 取色亮度波峰 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰" Description="取色时为亮度更接近此值的颜色赋予更高的权重。（默认值：0.6）">
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰" Description="取色时亮度越接近此值的颜色权重越高；默认值0.6。">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
                             <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="100" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Style="{StaticResource MahApps.Styles.TextBox}"
@@ -415,7 +415,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatLineWeight}" Header="自定义字重"
-                                                           Description="自定义主界面显示的字体的字重，需要对应字体支持。">
+                                                           Description="主界面字体字重，需字体支持。">
                 <controls1:SettingsCard.Switcher>
                     <Grid>
                         <ComboBox

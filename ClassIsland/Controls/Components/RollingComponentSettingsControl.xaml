@@ -64,7 +64,7 @@
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TimerPauseOutline}"
                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="定时暂停"
-                                                  Description="启用后，将在滚动到指定位置后暂停滚动一段时间"
+                                                  Description="滚动到指定位置后暂停一段时间。"
                                                   IsOn="{Binding Settings.IsPauseEnabled, Mode=TwoWay}"
                                                   Margin="-12 0" />
                     </Expander.Header>
@@ -105,7 +105,7 @@
             <!-- 满足规则时停止 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
                              Header="满足规则时停止"
-                             Description="在指定规则满足时停止滚动。停止时会停止滚动，并回到初始位置。"
+                             Description="规则满足时停止滚动并回到初始位置。"
                              Margin="0 0 0 6">
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">

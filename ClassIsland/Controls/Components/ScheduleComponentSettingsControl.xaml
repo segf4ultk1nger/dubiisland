@@ -69,7 +69,7 @@
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TableSearch}"
                                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="显示时间点附加信息"
-                                                Description="在当前的时间点上显示当前时间点的附加信息。"
+                                                Description="显示当前时间点的附加信息。"
                                                 IsOn="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}"
                                                 Margin="-12 0" />
                         </Expander.Header>
@@ -155,7 +155,7 @@
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockEnd}"
                                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="时间点结束倒计时"
-                                                Description="在当前时间点将要结束时显示倒计时。"
+                                                Description="时间点结束前显示倒计时。"
                                                 IsOn="{Binding Settings.IsCountdownEnabled, Mode=TwoWay}"
                                                 Margin="-12 0" />
                         </Expander.Header>
@@ -188,19 +188,19 @@
                 <!-- 上课时仅显示当前课程 -->
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
                                  Header="上课时仅显示当前课程"
-                                 Description="在处于上课类型的时间点时，只显示当前时间点。"
+                                 Description="上课时间点只显示当前时间点。"
                                  IsOn="{Binding Settings.ShowCurrentLessonOnlyOnClass, Mode=TwoWay}"
                                  Margin="0 0 0 6" />
                 <!-- 不显示已结束的课程 -->
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
                  Header="不显示已结束的课程"
-                 Description="隐藏已结束的课程，只显示当前课程与暂未开始的课程。"
+                 Description="隐藏已结束课程，仅显示当前及未开始课程。"
                  IsOn="{Binding Settings.HideFinishedClass, Mode=TwoWay}"
                  Margin="0 0 0 6" />
                 <!-- 标记换课课程 -->
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.SwapHorizontal}"
                                  Header="标记换课课程"
-                                 Description="将临时层中的换课课程以高亮色标记，仅支持使用“换课”修改的课程。"
+                                 Description="高亮标记临时层中通过“换课”修改的课程。"
                                  IsOn="{Binding Settings.HighlightChangedClass, Mode=TwoWay}"
                                  Margin="0 0 0 6" />
                 <!-- 课程表文本间距 -->
@@ -225,7 +225,7 @@
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.FileChartOutline}"
                                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="无课程时显示占位符"
-                                                Description="当当前没有加载课表或当日所有课程都已结束且不显示第二日课程时，显示指定的占位符。"
+                                                Description="无课表或当日课程结束且不显示次日课表时显示占位符。"
                                                 IsOn="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=TwoWay}"
                                                 Margin="-12 0" />
                         </Expander.Header>

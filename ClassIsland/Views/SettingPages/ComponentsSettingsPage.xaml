@@ -370,7 +370,7 @@
                                         <!-- 按规则隐藏 -->
                                         <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.HideOutline}"
                                                                 Header="按规则隐藏"
-                                                                Description="在指定规则满足时，自动隐藏此组件。注意此处的隐藏不会释放组件资源。"
+                                                                Description="规则满足时自动隐藏组件，不释放组件资源。"
                                                                 Margin="0 0 0 6">
                                             <controls2:SettingsCard.Switcher>
                                                 <StackPanel Orientation="Horizontal">
@@ -396,7 +396,7 @@
                                                     <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.FontSize}"
                                                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                                Header="字体大小"
-                                                                               Description="调整组件上各类字体的大小，将覆盖在【外观】中的设置。"
+                                                                               Description="调整组件字体大小，覆盖【外观】设置。"
                                                                                IsOn="{Binding IsResourceOverridingEnabled, Mode=TwoWay}"
                                                                                Margin="-12 0" />
                                                 </Expander.Header>
@@ -448,7 +448,7 @@
                                         <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.FormatColorFill}"
                                                                 Header="字体颜色"
                                                                 IsOn="True"
-                                                                Description="调整字体颜色，将覆盖在【外观】中的设置。"
+                                                                Description="调整字体颜色，覆盖【外观】设置。"
                                                                 Margin="0 0 0 6">
                                             <controls2:SettingsCard.Switcher>
                                                 <StackPanel Orientation="Horizontal">
@@ -467,7 +467,7 @@
                                         <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.AlignHorizontalCenter}"
                                                                Header="对齐方式"
                                                                IsOn="True"
-                                                               Description="指定组件在显示容器中对齐的方式。"
+                                                               Description="设置组件在容器中的对齐方式。"
                                                                Margin="0 0 0 6">
                                             <controls2:SettingsCard.Switcher>
                                                 <Grid>
@@ -498,7 +498,7 @@
                                         <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.PinOutline}"
                                                                Header="固定宽度"
                                                                IsOn="True"
-                                                               Description="启用后，组件将使用固定宽度，不会自动适应内容宽度。"
+                                                               Description="组件使用固定宽度，不自动适应内容。"
                                                                Margin="0 0 0 6">
                                             <controls2:SettingsCard.Switcher>
                                                 <StackPanel Orientation="Horizontal">

@@ -11,7 +11,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <mah:ToggleSwitch x:Key="ToggleButton" OnContent="" OffContent="" IsOn="{Binding IsOn, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
+        <mah:ToggleSwitch x:Key="ToggleButton" OnContent="开" OffContent="关" MinWidth="0"
+                          IsOn="{Binding IsOn, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
         <!-- Header TextBlock style -->
         <Style TargetType="TextBlock" x:Key="HeaderTextBlockStyle">
             <Style.Triggers>
@@ -22,32 +23,20 @@
             </Style.Triggers>
             <Setter Property="FontSize" Value="14"/>
         </Style>
-        <!-- Description TextBlock style -->
+        <!-- Description TextBlock style（与标题同字号，仅用透明度区分主次） -->
         <Style TargetType="TextBlock" x:Key="DescriptionTextBlockStyle">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsCompact, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
                              Value="True">
-                    <Setter Property="FontSize" Value="10"/>
+                    <Setter Property="FontSize" Value="13"/>
                 </DataTrigger>
             </Style.Triggers>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
     </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <!-- icon -->
-        <controls:IconText IconSize="18" Grid.Column="0"
-                                 Margin="0 0 6 0"
-                                 VerticalAlignment="Center"
-                                 Kind="{Binding IconGlyph, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}" />
-
-        <!-- text -->
-        <StackPanel VerticalAlignment="Center"
-                    Grid.Column="1">
+        <!-- 标题 / 描述 / 控件，垂直堆叠左对齐（Windows 10 设置风格） -->
+        <StackPanel>
 
             <TextBlock TextWrapping="Wrap" 
                        Text="{Binding Header, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
@@ -58,27 +47,24 @@
                        Style="{StaticResource DescriptionTextBlockStyle}"
                        Text="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
 
+            <!-- switcher -->
+            <ContentPresenter
+                Visibility="{Binding HasSwitcher, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                Margin="0 8 0 0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <ContentPresenter.Style>
+                    <Style TargetType="ContentPresenter">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Switcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}" 
+                                         Value="{x:Null}">
+                                <Setter Property="Content" Value="{StaticResource ToggleButton}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                        <Setter Property="Content" Value="{Binding Switcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
+                    </Style>
+                </ContentPresenter.Style>
+            </ContentPresenter>
         </StackPanel>
-
-        <!-- switcher -->
-        <ContentPresenter
-            Visibility="{Binding HasSwitcher, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
-            Grid.Column="2"
-            Margin="6 0 0 0"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Stretch">
-            <ContentPresenter.Style>
-                <Style TargetType="ContentPresenter">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Switcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}" 
-                                     Value="{x:Null}">
-                            <Setter Property="Content" Value="{StaticResource ToggleButton}"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                    <Setter Property="Content" Value="{Binding Switcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
-                </Style>
-            </ContentPresenter.Style>
-            
-        </ContentPresenter>
     </Grid>
 </UserControl>

@@ -54,7 +54,7 @@
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockEnd}"
                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在课前准备时发出提醒"
-                                                      Description="在上课前一段时间发出醒目提醒，提示做好上课准备。"
+                                                      Description="课前一段时间发出醒目提醒，提示准备上课。"
                                                       IsOn="{Binding Settings.IsClassOnPreparingNotificationEnabled, Mode=TwoWay}"
                                                       Margin="-12 0" />
                         </Expander.Header>
@@ -65,7 +65,7 @@
                                       IsChecked="{Binding Settings.IsSpeechEnabledOnClassPreparing}"/>
                             <!-- 室内课程课前提醒时间 -->
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAlertOutline}" Header="室内课程课前提醒时间"
-                                                      Description="在室内课程的上课前指定时间进行上课提醒。"
+                                                      Description="室内课程课前指定时间发出上课提醒。"
                                                       IsCompact="True"
                                                       Margin="0 0 0 6">
                                 <controls1:SettingsControl.Switcher>
@@ -80,7 +80,7 @@
                             </controls1:SettingsControl>
                             <!-- 室外课程课前提醒时间 -->
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAlertOutline}" Header="室外课程课前提醒时间"
-                                                      Description="在室外课程的上课前指定时间进行上课提醒。"
+                                                      Description="室外课程课前指定时间发出上课提醒。"
                                                       IsCompact="True"
                                                       Margin="0 0 0 6">
                                 <controls1:SettingsControl.Switcher>
@@ -129,7 +129,7 @@
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.BookOutline}"
                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在上课时发出提醒"
-                                                      Description="在上课时发出醒目提醒，提示已经上课。"
+                                                      Description="上课时发出醒目提醒，提示已上课。"
                                                       IsOn="{Binding Settings.IsClassOnNotificationEnabled, Mode=TwoWay}"
                                                       Margin="-12 0" />
                         </Expander.Header>
@@ -157,7 +157,7 @@
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}"
                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在下课时发出提醒"
-                                                      Description="在下课时发出醒目提醒，提示已经下课。"
+                                                      Description="下课时发出醒目提醒，提示已下课。"
                                                       IsOn="{Binding Settings.IsClassOffNotificationEnabled, Mode=TwoWay}"
                                                       Margin="-12 0" />
                         </Expander.Header>
@@ -179,7 +179,7 @@
                 <!-- 显示教科任老师名字 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Teacher}"
                                        Header="显示科任老师名字"
-                                       Description="在显示课程相关的提醒时同时展示并播报对应科任老师的名字"
+                                       Description="显示课程提醒时展示并播报科任老师名字。"
                                        IsOn="{Binding Settings.ShowTeacherName, Mode=TwoWay}"
                                        Margin="0 0 0 6" />
             </StackPanel>

@@ -690,7 +690,7 @@
                                     <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Web}"
                                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                Header="更新镜像源" HasSwitcher="False"
-                                                               Description="从指定的镜像源下载应用更新，一定程度上可以解决在部分网络环境下更新受阻的问题。"
+                                                               Description="从指定镜像源下载更新，可缓解部分网络环境更新受阻问题。"
                                                                Margin="-12 0" />
                                 </Expander.Header>
                                 <StackPanel Margin="36 0 64 12">
@@ -779,7 +779,7 @@
                                     <controls1:SettingsControl IsCompact="True"
                                                                IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}"
                                                                Header="自动选择镜像源"
-                                                               Description="自动选择延迟最低的镜像源下载更新。"
+                                                               Description="自动选择延迟最低的镜像源。"
                                                                IsOn="{Binding SettingsService.Settings.IsAutoSelectUpgradeMirror, Mode=TwoWay}" />
                                 </StackPanel>
                             </Expander>

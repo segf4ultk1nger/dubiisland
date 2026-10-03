@@ -120,7 +120,7 @@
             <!-- 时间流速 -->
             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.ClockFast}"
                                        Header="时间流速"
-                                       Description="持续调整时间偏移，以控制时间流速。"
+                                       Description="持续调整时间偏移，控制时间流速。"
                                        Margin="0 13 0 0">
                 <controls2:SettingsControl.Switcher>
                     <Grid HorizontalAlignment="Stretch">

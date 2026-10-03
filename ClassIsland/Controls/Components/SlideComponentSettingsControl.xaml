@@ -50,7 +50,7 @@
             <!-- 满足规则时暂停 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Pause}"
                              Header="满足规则时暂停"
-                             Description="在指定规则满足时暂停轮播，暂停会保留当前轮播到的组件。"
+                             Description="规则满足时暂停轮播，保留当前组件。"
                              Margin="0 0 0 6">
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -67,7 +67,7 @@
             <!-- 满足规则时停止 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
                              Header="满足规则时停止"
-                             Description="在指定规则满足时停止轮播。停止时会停止轮播，并回到第一个组件。如果此处的规则和暂停规则同时满足，会停止轮播而不是暂停。"
+                             Description="规则满足时停止轮播并回到首个组件，优先于暂停规则。"
                              Margin="0 0 0 6">
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -84,14 +84,14 @@
             <!-- 启用动画 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AnimationPlayOutline}"
                              Header="启用动画"
-                             Description="启用后，将在切换组件时播放过渡动画。"
+                             Description="切换组件时播放过渡动画。"
                              Visibility="{Binding Settings.UseOldPresentingBehavior, Converter={StaticResource InverseBoolToVisConverter}}"
                              IsOn="{Binding Settings.IsAnimationEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 使用旧版轮播行为 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.UndoVariant}"
                                Header="使用旧版轮播行为"
-                               Description="启用后，将使用旧版的轮播行为，只在轮播到对应组件时加载组件内容。如果当前的轮播组件出现问题，可尝试启用此选项回滚到旧版的行为。"
+                               Description="轮播到对应组件时才加载内容；组件异常时可回滚旧版行为。"
                                IsOn="{Binding Settings.UseOldPresentingBehavior, Mode=TwoWay}"
                                Margin="0 0 0 6" />
         </StackPanel>

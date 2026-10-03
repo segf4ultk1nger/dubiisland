@@ -90,7 +90,7 @@
                         <!-- 自动化开关 -->
                         <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ScriptTextOutline}"
                                          Header="启用自动化"
-                                         Description="自动化是一种在自定义规则满足时做出行动的功能。"
+                                         Description="规则满足时执行行动。"
                                          Margin="6 12">
                             <ci:SettingsCard.Switcher>
                                 <StackPanel Orientation="Horizontal">

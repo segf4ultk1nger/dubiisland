@@ -147,7 +147,7 @@
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Earth}"
                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="天气位置"
-                                                  Description="设置 ClassIsland 用于查询天气的位置信息及获取这些位置信息的方式。"
+                                                  Description="设置查询天气的位置及定位方式。"
                                                   Margin="-12 0">
                             <controls1:SettingsControl.Switcher>
                                 <Grid>
@@ -169,7 +169,7 @@
                     <StackPanel Margin="36 0 48 12">
                         <!-- 城市选择 -->
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.HomeCityOutline}" Header="城市选择"
-                                                Description="选择当前所在的城市，以用于天气查询。"
+                                                Description="选择用于天气查询的城市。"
                                                 Margin="0 0 0 6"
                                                 IsCompact="True">
                             <controls1:SettingsControl.Switcher>
@@ -261,7 +261,7 @@
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}"
                                                    Header="自动获取位置"
                                                    IsCompact="True"
-                                                   Description="启用后，将在应用每次启动时自动更新位置信息。"
+                                                   Description="每次启动应用时自动更新位置。"
                                                    IsOn="{Binding SettingsService.Settings.AutoRefreshWeatherLocation, Mode=TwoWay}"
                                                    Margin="0 0 0 6" />
                         </StackPanel>
@@ -278,7 +278,7 @@
                                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                    Header="排除的气象预警"
                                                    HasSwitcher="False"
-                                                   Description="包含以下字符串的预警将不会显示，一行一条排除项。"
+                                                   Description="包含以下字符串的预警不显示，一行一条。"
                                                    Margin="-12 0" />
                     </Expander.Header>
                     <Grid Margin="36 0 48 12">
@@ -295,7 +295,7 @@
             <!-- 天气图标包 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.WeatherPartlyCloudy}"
                                     Header="天气图标包"
-                                    Description="调整在显示天气类型时使用的图标外观。"
+                                    Description="调整天气类型图标的显示外观。"
                                     Margin="0 0 0 6"
                                     IsOn="{Binding SettingsService.Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}">
                 <controls1:SettingsCard.Switcher>

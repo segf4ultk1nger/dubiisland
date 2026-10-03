@@ -46,18 +46,18 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LightningBoltOutline}" Text="行为" Margin="0 0 0 8" />
+            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LightningBoltOutline}" Text="行为" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 开机自启 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutomaticStart}" Header="开机自启"
-                                                           Description="在您的系统启动时自动运行本应用。"
+                                                           Description="系统启动时自动运行本应用。"
                                                            IsOn="{Binding SettingsService.Settings.IsAutoStartEnabled, Mode=TwoWay}" />
             <!-- 注册 Url 协议 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Code}" Header="注册 Url 协议"
-                                    Description="允许第三方应用或网页通过 Url 协议 classisland:// 调用本应用的部分功能，详见帮助文档。"
+                                    Description="允许第三方应用或网页通过 classisland:// 调用本应用功能。"
                                     IsOn="{Binding SettingsService.Settings.IsUrlProtocolRegistered, Mode=TwoWay}" />
             <!-- 学期开始时间 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CalendarOutline}" Header="学期开始时间"
-                                    Description="此时间将作为学期的第一天，用于多周轮换课表的计算。应设为一周的第一天。">
+                                    Description="作为学期的第一天，用于多周轮换课表计算，应设为一周的第一天。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <DatePicker SelectedDate="{Binding SettingsService.Settings.SingleWeekStartTime}"
@@ -95,7 +95,7 @@
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.HideOutline}"
                                                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                           Header="隐藏窗口" HasSwitcher="False"
-                                                                          Description="将在以下选定的情况隐藏主界面，以防止遮挡屏幕影响授课。"
+                                                                          Description="在以下情况隐藏主界面，避免遮挡屏幕。"
                                                                           Margin="-12 0" />
                     </Expander.Header>
                     <TabControl Margin="36 0 64 12" HorizontalContentAlignment="Left"
@@ -131,7 +131,7 @@
             <!-- 点击托盘图标行为 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CursorDefaultClickOutline}"
                                                            Header="点击托盘图标行为"
-                                                           Description="鼠标左键点击/触屏单击本应用托盘图标时进行的操作。无论此设置处于何种选项，鼠标右键点击/触屏长按托盘图标总是会打开主菜单。"
+                                                           Description="左键单击托盘图标的操作；右键始终打开主菜单。"
                                                            IsOn="{Binding SettingsService.Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}">
                 <controls1:SettingsCard.Switcher>
                     <Grid>
@@ -236,7 +236,7 @@
             </Border>
 
             <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClockOutline}" Text="时钟" Margin="0 0 0 8" />
+            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClockOutline}" Text="时钟" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 使用精确时间 -->
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
@@ -246,7 +246,7 @@
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.TimerSyncOutline}"
                                                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                           Header="使用精确时间"
-                                                                          Description="启用后，应用将使用从指定服务器同步的精确时间，而不是使用系统时间。"
+                                                                          Description="使用从指定服务器同步的时间，而非系统时间。"
                                                                           IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}"
                                                                           Margin="-12 0" />
                     </Expander.Header>
@@ -299,7 +299,7 @@
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockArrow}"
                                                    Header="时间偏移"
                                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                   Description="设定课程时间与实际时间的偏移值。增大偏移以抵消铃声提前，减小偏移以抵消铃声滞后。"
+                                                   Description="课程时间相对实际时间的偏移；增大以抵消铃声提前，减小以抵消滞后。"
                                                    IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}"
                                                    Margin="-12 0">
                             <controls1:SettingsControl.Switcher>
@@ -314,7 +314,7 @@
                     <StackPanel Margin="36 0 48 12">
                         <!-- 自动时间偏移 -->
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAutoOutline}" Header="自动时间偏移"
-                                                                       Description="若启用，每天自动以设定的增量值调整时间偏移量。">
+                                                                       Description="每天自动按设定的增量值调整时间偏移。">
                             <controls1:SettingsControl.Switcher>
                                 <DockPanel Width="150">
                                     <ToggleButton DockPanel.Dock="Right" Margin="8 0 0 0" IsChecked="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"/>
@@ -336,7 +336,7 @@
             </Border>
             <Separator Margin="0 16 0 8" 
                        Visibility="{Binding SettingsService.Settings.ShowComponentsMigrateTip, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WindowRestore}" Text="显示" Margin="0 0 0 8" 
+            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WindowRestore}" Text="显示" Style="{StaticResource SettingsSectionHeaderStyle}" 
                                 Visibility="{Binding SettingsService.Settings.ShowComponentsMigrateTip, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             <!-- 简略信息 -->
             <Border Padding="14" 
@@ -371,29 +371,29 @@
                 </Grid>
             </Border>
             <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="高级" Margin="0 0 0 8" />
+            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="高级" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 自动禁用异常插件 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PuzzleRemoveOutline}"
                                     Header="自动禁用异常插件"
-                                    Description="启用后，ClassIsland 将自动禁用导致应用崩溃的插件，以避免异常插件进一步影响后续使用。"
+                                    Description="自动禁用导致应用崩溃的插件。"
                                     IsOn="{Binding SettingsService.Settings.AutoDisableCorruptPlugins, Mode=TwoWay}"
                                     Margin="0 0 0 6" />
             <!-- 禁用过渡动画 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AnimationPlayOutline}"
                                    Header="禁用过渡动画"
-                                   Description="此选项将禁用部分控件的过渡动画，以提升性能和操作效率。"
+                                   Description="禁用部分控件的过渡动画，提升性能和操作效率。"
                                    IsOn="{Binding SettingsService.Settings.IsTransientDisabled, Mode=TwoWay}"
                                    Margin="0 0 0 6" />
             <!-- 禁用动画等待 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.TimerAlertOutline}"
                                     Header="禁用动画等待"
-                                    Description="默认情况下 ClassIsland 在进行阻塞 UI 线程的操作时，会确保动画播放完成。启用此选项后将不会等待动画播放完成，可以一定程度上地提升加载速度。"
+                                    Description="阻塞 UI 线程时不等动画播完，提升加载速度。"
                                     IsOn="{Binding SettingsService.Settings.IsWaitForTransientDisabled, Mode=TwoWay}"
                                     Margin="0 0 0 6" />
             <!-- 教学安全模式 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CarBrakeAlert}"
                                     Header="教学安全模式"
-                                    Description="启用后，如果 ClassIsland 发生意外崩溃，将自动按照右侧选择的方法处理崩溃，以确保教学不受到影响。如果发生的是不可忽略的异常，应用将自动退出。您可以在日志目录查看崩溃详情。"
+                                    Description="崩溃时按右侧方式处理，保证教学不受影响；不可忽略的异常将直接退出应用。"
                                     Margin="0 0 0 6">
                 <controls1:SettingsCard.Switcher>
                     <DockPanel>

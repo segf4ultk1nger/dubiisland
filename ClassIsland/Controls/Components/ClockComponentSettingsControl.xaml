@@ -25,7 +25,7 @@
 
             <controls:SettingsCard IconGlyph="{x:Static controls:IconGlyphs.ClockDigital}"
                                    Header="显示秒数"
-                                   Description="启用后，时钟将显示精准到秒的时间。"
+                                   Description="时钟显示到秒。"
                                    IsOn="{Binding Settings.ShowSeconds, Mode=TwoWay}" />
 
             <controls:SettingsCard IconGlyph="{x:Static controls:IconGlyphs.CameraTimer}"
