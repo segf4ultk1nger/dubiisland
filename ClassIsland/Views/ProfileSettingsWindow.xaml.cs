@@ -50,6 +50,8 @@ public partial class ProfileSettingsWindow : MyWindow
 {
     public static RoutedUICommand OpenTimeLayoutItemEditorCommand = new RoutedUICommand();
 
+    public static readonly RoutedUICommand OpenDrawerCommand = new();
+
     public static RoutedUICommand RemoveSelectedTimeLayoutItemCommand = new RoutedUICommand();
 
     public IHangService HangService { get; } = App.GetService<IHangService>();
@@ -157,7 +159,7 @@ public partial class ProfileSettingsWindow : MyWindow
         {
             {"key", key}
         });
-        DrawerHost.OpenDrawerCommand.Execute(null, MyDrawerHost);
+        ViewModel.IsDrawerOpen = true;
     }
 
     public void OpenTimeLayoutEdit(string? key="")
@@ -561,8 +563,15 @@ public partial class ProfileSettingsWindow : MyWindow
         ViewModel.DrawerContent = FindResource("ClassPlanRulesEditor");
     }
 
-    private void DrawerHost_OnDrawerClosing(object? sender, DrawerClosingEventArgs e)
+    private void OpenDrawerCommand_OnExecuted(object sender, ExecutedRoutedEventArgs e)
     {
+        ViewModel.IsDrawerOpen = true;
+    }
+
+    private void DrawerHost_OnDrawerClosing(object? sender, RoutedEventArgs e)
+    {
+        if (MyDrawerHost.IsOpen)
+            return;
         var timeLayoutItemEdit = FindResource("TimePointEditor");
         if (ViewModel.DrawerContent == timeLayoutItemEdit && ViewModel.SelectedTimePoint != null)
         {

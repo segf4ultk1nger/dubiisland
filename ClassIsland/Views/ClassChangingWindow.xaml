@@ -16,6 +16,7 @@
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         mc:Ignorable="d"
         Title="换课" 
+        ShowTitleBar="True"
         Height="250" Width="600"
         MinWidth="730"
         MinHeight="230"
@@ -301,9 +302,7 @@
             </StackPanel>
 
             <!-- AppBar -->
-            <materialDesign:ColorZone Grid.Row="0" Mode="PrimaryMid"
-                                      Padding="16"
-                                      materialDesign:ElevationAssist.Elevation="Dp4">
+            <Grid Grid.Row="0" Margin="8 4">
                 <StackPanel Orientation="Horizontal" Margin="4 0">
                     <StackPanel.Resources>
                         <Style TargetType="materialDesign:Chip" BasedOn="{StaticResource MaterialDesignOutlineChip}">
@@ -317,9 +316,6 @@
                             <Setter Property="Margin" Value="0 -8 6 -8" />
                         </Style>
                     </StackPanel.Resources>
-                    <TextBlock Text="换课" Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" Margin="0,0,16,0" />
                     <materialDesign:Chip
                         ToolTip="要换课的课表"
                         Click="ButtonTemporaryClassPlan_OnClick">
@@ -365,7 +361,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </StackPanel>
-            </materialDesign:ColorZone>
+            </Grid>
 
             <!-- Loading -->
             <Border Grid.Row="0" Grid.RowSpan="4"

@@ -10,6 +10,7 @@ using Windows.Win32.Graphics.Dwm;
 using ClassIsland.Shared;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Theming;
+using MahApps.Metro.Controls;
 using Adorner = System.Windows.Forms.Design.Behavior.Adorner;
 
 namespace ClassIsland.Core.Controls;
@@ -17,7 +18,7 @@ namespace ClassIsland.Core.Controls;
 /// <summary>
 /// 通用窗口基类
 /// </summary>
-public class MyWindow : Window
+public class MyWindow : MetroWindow
 {
     private bool _isAdornerAdded;
 

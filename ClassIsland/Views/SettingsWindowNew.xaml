@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:controls="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:controls1="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
         xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
         xmlns:controls2="clr-namespace:ClassIsland.Controls"
@@ -27,6 +28,7 @@
         mc:Ignorable="d"
         MinWidth="560"
         Title="应用设置" Height="550" Width="1200"
+        ShowTitleBar="True"
         SizeChanged="SettingsWindowNew_OnSizeChanged"
         Closing="SettingsWindowNew_OnClosing">
     <controls:MyWindow.Resources>
@@ -156,12 +158,94 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <converters1:SettingsWindowIsFirstGroupConverter x:Key="SettingsWindowIsFirstGroupConverter" />
+        <DataTemplate x:Key="SettingsNavigationListTemplate">
+            <Grid Width="250">
+                <ListBox ItemsSource="{Binding Source={StaticResource NavigationCollectionViewSource}}"
+                         SelectedItem="{Binding ViewModel.SelectedPageInfo}"
+                         SelectionChanged="NavigationListBox_OnSelectionChanged"
+                         Style="{StaticResource MaterialDesignNavigationPrimaryListBox}"
+                         IsSynchronizedWithCurrentItem="False"
+                         IsEnabled="{Binding ViewModel.IsNavigating, Converter={StaticResource InvertBooleanConverter}}"
+                         ItemContainerStyle="{StaticResource MaterialDesignYouPrimaryNavigationListBoxItemStyle}">
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                <StackPanel>
+                                                    <Separator Height="0.5"
+                                                               Margin="0 4 0 4"
+                                                               Visibility="{Binding Converter={StaticResource SettingsWindowIsFirstGroupConverter}, Mode=OneWay, ConverterParameter={StaticResource NavigationCollectionViewSource}}"/>
+                                                    <ItemsPresenter />
+                                                </StackPanel>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Separator/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon VerticalAlignment="Center"
+                                                         Width="18" Height="18">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Style.Triggers>
+                                                <!-- TODO: 添加对BitmapImage支持 -->
+                                                <DataTrigger
+                                                    Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}"
+                                                    Value="True">
+                                                    <Setter Property="Kind"
+                                                            Value="{Binding SelectedPackIcon}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Kind"
+                                                    Value="{Binding UnSelectedPackIcon}" />
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                           Margin="12 0 0 0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsVirtualizingWhenGrouping="True"
+                                                    IsVirtualizing="True"
+                                                    IsContainerVirtualizable="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+        </DataTemplate>
     </controls:MyWindow.Resources>
     <controls:MyWindow.CommandBindings>
         <CommandBinding Command="{x:Static controls1:SettingsPageBase.OpenDrawerCommand}" Executed="CommandBindingOpenDrawer_OnExecuted"/>
         <CommandBinding Command="{x:Static controls1:SettingsPageBase.CloseDrawerCommand}" Executed="CommandBindingCloseDrawer_OnExecuted"/>
         <CommandBinding Command="{x:Static controls1:SettingsPageBase.RequestRestartCommand}" Executed="CommandBindingRestartApp_OnExecuted"></CommandBinding>
     </controls:MyWindow.CommandBindings>
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button ToolTip="返回"
+                    Click="ButtonGoBack_OnClick"
+                    Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Content="{materialDesign:PackIcon ArrowLeft, Size=16}" />
+            <Button ToolTip="导航栏"
+                    Visibility="{Binding ViewModel.IsViewCompressed, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Click="ButtonBaseToggleNavigationDrawer_OnClick"
+                    Content="{materialDesign:PackIcon Menu, Size=16}" />
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
     <Grid x:Name="RootGrid">
         <Grid.LayoutTransform>
             <TransformGroup>
@@ -172,97 +256,23 @@
             </TransformGroup>
         </Grid.LayoutTransform>
         <materialDesign:DialogHost Identifier="{x:Static controls1:SettingsPageBase.DialogHostIdentifier}">
-            <materialDesign:DrawerHost IsRightDrawerOpen="{Binding ViewModel.IsDrawerOpen}"
-                                       RightDrawerContent="{Binding ViewModel.DrawerContent}">
+            <Grid>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ViewModel.IsNavigationDrawerOpened}"
-                                               Grid.Row="1">
-                        <materialDesign:DrawerHost.Style>
-                            <Style TargetType="materialDesign:DrawerHost">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ViewModel.IsViewCompressed}" Value="True">
-                                        <Setter Property="OpenMode" Value="Modal" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                                <Setter Property="OpenMode" Value="Standard" />
-                            </Style>
-                        </materialDesign:DrawerHost.Style>
-                        <materialDesign:DrawerHost.LeftDrawerContent>
-                            <!-- 导航栏 -->
-                            <Grid Width="250">
-                                <ListBox ItemsSource="{Binding Source={StaticResource NavigationCollectionViewSource}}"
-                                         SelectedItem="{Binding ViewModel.SelectedPageInfo}"
-                                         SelectionChanged="NavigationListBox_OnSelectionChanged"
-                                         Style="{StaticResource MaterialDesignNavigationPrimaryListBox}"
-                                         IsEnabled="{Binding ViewModel.IsNavigating, Converter={StaticResource InvertBooleanConverter}}"
-                                         ItemContainerStyle="{StaticResource MaterialDesignYouPrimaryNavigationListBoxItemStyle}">
-                                    <ListBox.GroupStyle>
-                                        <GroupStyle>
-                                            <GroupStyle.ContainerStyle>
-                                                <Style TargetType="{x:Type GroupItem}">
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                                <StackPanel>
-                                                                    <Separator Height="0.5" 
-                                                                               Margin="0 4 0 4"
-                                                                               Visibility="{Binding Converter={StaticResource SettingsWindowIsFirstGroupConverter}, Mode=OneWay, ConverterParameter={StaticResource NavigationCollectionViewSource}}"/>
-                                                                    <ItemsPresenter />
-                                                                </StackPanel>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </GroupStyle.ContainerStyle>
-                                            <GroupStyle.HeaderTemplate>
-                                                <DataTemplate>
-                                                    <Separator/>
-                                                </DataTemplate>
-                                            </GroupStyle.HeaderTemplate>
-                                        </GroupStyle>
-                                    </ListBox.GroupStyle>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon VerticalAlignment="Center"
-                                                                         Width="18" Height="18">
-                                                    <materialDesign:PackIcon.Style>
-                                                        <Style TargetType="materialDesign:PackIcon">
-                                                            <Style.Triggers>
-                                                                <!-- TODO: 添加对BitmapImage支持 -->
-                                                                <DataTrigger
-                                                                    Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}"
-                                                                    Value="True">
-                                                                    <Setter Property="Kind"
-                                                                            Value="{Binding SelectedPackIcon}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                            <Setter Property="Kind"
-                                                                    Value="{Binding UnSelectedPackIcon}" />
-                                                        </Style>
-                                                    </materialDesign:PackIcon.Style>
-                                                </materialDesign:PackIcon>
-                                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
-                                                           Margin="12 0 0 0" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel IsVirtualizingWhenGrouping="True"
-                                                                    IsVirtualizing="True"
-                                                                    IsContainerVirtualizable="True"/>
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                </ListBox>
-                            </Grid>
-                        </materialDesign:DrawerHost.LeftDrawerContent>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ContentControl Grid.Column="0"
+                                        Content="{Binding}"
+                                        ContentTemplate="{StaticResource SettingsNavigationListTemplate}"
+                                        Visibility="{Binding ViewModel.IsViewCompressed, Converter={StaticResource InverseBoolToVisConverter}}"/>
                         <!-- 页面内容 -->
-                        <Grid>
+                        <Grid Grid.Column="1">
                             <Grid
                                 HorizontalAlignment="Left"
                                         VerticalAlignment="Bottom"
@@ -308,48 +318,8 @@
                             </Frame>
                             <windows:AsyncBox LoadingViewType="controls2:LoadingMask" x:Name="LoadingAsyncBox"/>
                         </Grid>
-                    </materialDesign:DrawerHost>
-                    <materialDesign:ColorZone Grid.Column="0" Grid.Row="0" Padding="16"
-                                              Mode="PrimaryMid"
-                                              materialDesign:ElevationAssist.Elevation="Dp4"
-                                              Margin="0 0 0 4">
-                        <Grid Margin="4 0 4 0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <!--<ToggleButton Grid.Column="0"
-                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />-->
-                            <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center"
-                                        Margin="0 -16">
-                                <Button ToolTip="返回"
-                                        Margin="0 0 16 0"
-                                        VerticalAlignment="Center"
-                                        Padding="0"
-                                        Click="ButtonGoBack_OnClick"
-                                        Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Content="{materialDesign:PackIcon ArrowLeft, Size=24}" />
-                                <Button ToolTip="导航栏"
-                                        Margin="0 0 16 0"
-                                        VerticalAlignment="Center"
-                                        Padding="0"
-                                        Visibility="{Binding ViewModel.IsViewCompressed, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Click="ButtonBaseToggleNavigationDrawer_OnClick"
-                                        Content="{materialDesign:PackIcon Menu, Size=24}" />
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal" Grid.Column="1">
-
-                                <TextBlock Text="应用设置"
-                                           Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                           HorizontalAlignment="Left"
-                                           Margin="0 0 0 0"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    </Grid>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="8 4">
                                 <StackPanel.Resources>
                                     <Style TargetType="materialDesign:Chip"
                                            BasedOn="{StaticResource MaterialDesignOutlineChip}">
@@ -364,7 +334,7 @@
                                         <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}" />
                                         <Setter Property="IconBackground"
                                                 Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                        <Setter Property="Margin" Value="0 -8 6 -8" />
+                                        <Setter Property="Margin" Value="0 0 6 0" />
                                     </Style>
                                 </StackPanel.Resources>
                                 <materialDesign:Chip
@@ -392,7 +362,7 @@
                                            Margin="8 0 0 0"
                                            VerticalAlignment="Center"
                                            ToolTip="应用版本" />
-                                <materialDesign:PopupBox Margin="8 0 -8 0" ToolTip="更多选项…" StaysOpen="False"
+                                <materialDesign:PopupBox Margin="8 0 0 0" ToolTip="更多选项…" StaysOpen="False"
                                                          IsPopupOpen="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}">
                                     <StackPanel>
                                         <StackPanel>
@@ -447,11 +417,26 @@
 
                                     </StackPanel>
                                 </materialDesign:PopupBox>
-                            </StackPanel>
-                        </Grid>
-                    </materialDesign:ColorZone>
+                    </StackPanel>
                 </Grid>
-            </materialDesign:DrawerHost>
+                <mah:FlyoutsControl>
+                    <mah:Flyout Position="Left"
+                                Width="250"
+                                IsModal="True"
+                                TitleVisibility="Collapsed"
+                                IsOpen="{Binding ViewModel.IsNavigationDrawerOpened, Mode=TwoWay}">
+                        <ContentControl Content="{Binding}"
+                                        ContentTemplate="{StaticResource SettingsNavigationListTemplate}"/>
+                    </mah:Flyout>
+                    <mah:Flyout Position="Right"
+                                Width="420"
+                                IsModal="True"
+                                TitleVisibility="Collapsed"
+                                IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}">
+                        <ContentControl Content="{Binding ViewModel.DrawerContent}"/>
+                    </mah:Flyout>
+                </mah:FlyoutsControl>
+            </Grid>
         </materialDesign:DialogHost>
         <materialDesign:Snackbar MessageQueue="{Binding ViewModel.SnackbarMessageQueue}"
                                  VerticalAlignment="Bottom"

@@ -12,6 +12,7 @@ namespace ClassIsland.ViewModels;
 public class ProfileSettingsViewModel : ObservableRecipient
 {
     private object _drawerContent = new();
+    private bool _isDrawerOpen;
     private bool _isClassPlansEditing = false;
     private SnackbarMessageQueue _messageQueue = new();
     private ObservableCollection<string> _profiles = new();
@@ -56,6 +57,17 @@ public class ProfileSettingsViewModel : ObservableRecipient
         {
             if (Equals(value, _drawerContent)) return;
             _drawerContent = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsDrawerOpen
+    {
+        get => _isDrawerOpen;
+        set
+        {
+            if (value == _isDrawerOpen) return;
+            _isDrawerOpen = value;
             OnPropertyChanged();
         }
     }

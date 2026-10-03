@@ -33,6 +33,7 @@
                    TextElement.FontSize="14"
                    FontFamily="{StaticResource HarmonyOsSans}"
                    Title="档案编辑"
+                   ShowTitleBar="True"
                    d:DataContext="{d:DesignInstance local:ProfileSettingsWindow}"
                    Icon="/Assets/AppLogo.ico"
                    Closing="ProfileSettingsWindow_OnClosing"
@@ -43,10 +44,18 @@
                    Drop="ProfileSettingsWindow_OnDrop"
                    Button.Click="GlobalUpdated"
                    ListBox.SelectionChanged="GlobalUpdated">
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button ToolTip="保存当前档案。"
+                    Click="ButtonSave_OnClick"
+                    Content="{materialDesign:PackIcon ContentSave, Size=16}"/>
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
     <controls1:MyWindow.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveProfileCommand}"/>
     </controls1:MyWindow.InputBindings>
     <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}" Executed="OpenDrawerCommand_OnExecuted"/>
         <CommandBinding Command="{x:Static local:ProfileSettingsWindow.OpenTimeLayoutItemEditorCommand}" Executed="ButtonEditTimePoint_OnClick"/>
         <CommandBinding Command="{x:Static local:ProfileSettingsWindow.RemoveSelectedTimeLayoutItemCommand}" Executed="ButtonRemoveTimePoint_OnClick"/>
     </Window.CommandBindings>
@@ -715,9 +724,7 @@
     <Grid>
 
         <materialDesign:DialogHost Identifier="{Binding ViewModel.DialogHostId, Mode=OneWay}">
-            <materialDesign:DrawerHost RightDrawerContent="{Binding ViewModel.DrawerContent, Mode=OneWay}"
-                                       DrawerClosing="DrawerHost_OnDrawerClosing"
-                                       x:Name="MyDrawerHost">
+            <Grid>
                 <!-- Content -->
                 <Grid>
                     <Grid.RowDefinitions>
@@ -749,7 +756,7 @@
                                             <controls1:IconText Kind="Add" Text="添加"/>
                                         </Button>
                                         <Button Click="ButtonDuplicateClassPlan_OnClick" ToolTip="复制选中的课表。"
-                                                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}">
+                                                Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
                                             <Button.Style>
                                                 <Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
                                                     <Setter Property="IsEnabled" Value="{Binding SelectedItem.Value.IsOverlay, Converter={StaticResource BooleanToBooleanReConverter}, ElementName=ListViewClassPlans}"/>
@@ -1016,7 +1023,7 @@
                                             <controls:IconText Kind="Add" Text="DebugAddNew"/>
                                         </Button>-->
                                             <Button Click="ButtonClassPlanInfoEdit_OnClick" ToolTip="查看并编辑课表的基本信息。"
-                                                    Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}">
+                                                    Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
                                                 <controls1:IconText Kind="InfoOutline" Text="课表信息" />
                                             </Button>
                                             <Button Click="ButtonClassPlanDetails_OnClick" 
@@ -1136,7 +1143,7 @@
                                                                        Margin="4 0 0 0" >
                                                                 <Run Text="您还没有为此课表设置时间表。在编排课程之前，您需要在"/>
                                                                 <Hyperlink Click="ButtonClassPlanInfoEdit_OnClick"
-                                                                           Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}">【课表信息】</Hyperlink>
+                                                                           Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">【课表信息】</Hyperlink>
                                                                 <Run Text="中为本课表设置一个时间表。"/>
                                                             </TextBlock>
                                                         </DockPanel>
@@ -1332,11 +1339,11 @@
                                     <!-- 时间表操作 -->
                                     <ToolBar Grid.Row="0" ToolBarTray.IsLocked="True" IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}}">
                                         <Button Click="ButtonAddTimeLayout_OnClick" ToolTip="新建时间表。"
-                                                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}">
+                                                Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
                                             <controls1:IconText Kind="Add" Text="添加"/>
                                         </Button>
                                         <Button Click="ButtonDuplicateTimeLayout_OnClick" ToolTip="复制选中的时间表。"
-                                                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}">
+                                                Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
                                             <Button.Style>
                                                 <Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
                                                     <Style.Triggers>
@@ -2511,8 +2518,7 @@
                     </Border>
 
                     <!-- AppBar -->
-                    <materialDesign:ColorZone Grid.Row="0" Padding="16" Mode="PrimaryMid"
-                                              materialDesign:ElevationAssist.Elevation="Dp4">
+                    <Grid Grid.Row="0" Margin="8 4">
                         <Grid Margin="4 0 4 0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -2525,20 +2531,11 @@
                                     <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
                                     <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}"/>
                                     <Setter Property="IconBackground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
-                                    <Setter Property="Margin" Value="0 -8 6 -8"/>
+                                    <Setter Property="Margin" Value="0 0 6 0"/>
                                 </Style>
                             </Grid.Resources>
                             <StackPanel Grid.Column="0" 
                                         Orientation="Horizontal" HorizontalAlignment="Left">
-                                <TextBlock Text="档案编辑" Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" Margin="0,0,16,0"/>
-                                <Button ToolTip="保存当前档案。" 
-                                        Click="ButtonSave_OnClick"
-                                        VerticalAlignment="Center"
-                                        Margin="0 -16 8 -16"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Content="{materialDesign:PackIcon ContentSave, Size=18}"/>
                                 <materialDesign:Chip
                                     Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
                                     ToolTip="档案"
@@ -2564,7 +2561,7 @@
                                 <materialDesign:Chip
                                     Visibility="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource InverseBoolToVisConverter}, Mode=OneWay}"
                                     Click="ButtonTemporaryClassPlan_OnClick"
-                                    Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                                    Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}"
                                     ToolTip="当前启用的课表">
                                     <materialDesign:Chip.Style>
                                         <Style TargetType="materialDesign:Chip" BasedOn="{StaticResource MaterialDesignOutlineChip}">
@@ -2586,7 +2583,7 @@
                                             <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
                                             <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}"/>
                                             <Setter Property="IconBackground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
-                                            <Setter Property="Margin" Value="0 -8 6 -8"/>
+                                            <Setter Property="Margin" Value="0 0 6 0"/>
 
                                             <Setter Property="Icon" Value="{materialDesign:PackIcon FileDocumentMultipleOutline}"/>
                                         </Style>
@@ -2752,7 +2749,7 @@
                                 </Grid>
                             </StackPanel>
                         </Grid>
-                    </materialDesign:ColorZone>
+                    </Grid>
 
                     <materialDesign:ColorZone Background="#17800080"
                                               Grid.Row="1"
@@ -2781,7 +2778,18 @@
                         </Grid>
                     </materialDesign:ColorZone>
                 </Grid>
-            </materialDesign:DrawerHost>
+                <mah:FlyoutsControl>
+                    <mah:Flyout x:Name="MyDrawerHost"
+                                Position="Right"
+                                Width="360"
+                                IsModal="True"
+                                TitleVisibility="Collapsed"
+                                IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}"
+                                IsOpenChanged="DrawerHost_OnDrawerClosing">
+                        <ContentControl Content="{Binding ViewModel.DrawerContent, Mode=OneWay}"/>
+                    </mah:Flyout>
+                </mah:FlyoutsControl>
+            </Grid>
         </materialDesign:DialogHost>
         <Grid Visibility="{Binding ViewModel.IsDragEntering, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Border Background="{DynamicResource MaterialDesignBackground}"

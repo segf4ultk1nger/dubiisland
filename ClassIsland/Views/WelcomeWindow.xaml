@@ -23,7 +23,8 @@
                    TextElement.FontWeight="Regular"
                    TextElement.FontSize="14"
                    FontFamily="{StaticResource HarmonyOsSans}"
-                   Title="ClassIsland"
+                   Title="ClassIsland 设置向导"
+                   ShowTitleBar="True"
                    d:DataContext="{d:DesignInstance local:WelcomeWindow}"
                    Icon="/Assets/AppLogo.ico"
                    WindowStartupLocation="CenterScreen"
@@ -80,41 +81,20 @@
             <materialDesign:DialogHost Identifier="{Binding ViewModel.DialogId, Mode=OneWay}" 
                                        Loaded="FrameworkElement_OnLoaded"
                                        Foreground="{DynamicResource MaterialDesignBody}">
-                <Grid Margin="16">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <materialDesign:ColorZone Grid.Column="0" Grid.Row="0" Padding="16" Mode="PrimaryMid"
-                                              materialDesign:ElevationAssist.Elevation="Dp4"
-                                              Margin="-16 -16 -16 16">
-                        <Grid Margin="4 0 4 0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <!--<ToggleButton Grid.Column="0"
-                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />-->
-                            <!--<Button ToolTip="导航栏"
-                                VerticalAlignment="Center"
-                                Padding="0"
-                                Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                Content="{materialDesign:PackIcon Menu, Size=24}"/>-->
-                            <TextBlock Grid.Column="0" Text="ClassIsland 设置向导"
-                                       Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                                       HorizontalAlignment="Left"
-                                       Margin="0 0 0 0"
-                                       VerticalAlignment="Center" />
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <ListBox
+                    <ListBox Grid.Row="0"
                                     IsHitTestVisible="False"
                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                     VerticalContentAlignment="Stretch"
                                     IsTabStop="False"
                                     SelectedIndex="{Binding ViewModel.SlideIndex, Mode=TwoWay}"
                                     materialDesign:ListBoxItemAssist.ShowSelection="False"
-                                    Margin="6 -15 0 -15">
+                                    Margin="8 4">
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal" IsItemsHost="True" />
@@ -164,24 +144,10 @@
                                     <system:String>外观</system:String>
                                     <system:String>系统</system:String>
                                     <system:String>完成</system:String>
-                                </ListBox>
-                            </StackPanel>
-                            <!--<Button Grid.Column="1" Style="{StaticResource MaterialDesignFlatButton}"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Margin="0 -4"
-                                    Visibility="{Binding ViewModel.IsLicenseAgreed, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    FontWeight="Medium"
-                                    Click="ButtonSkip_OnClick"
-                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
-                                    materialDesign:RippleAssist.Feedback="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}">
-                                跳过
-                            </Button>-->
-                        </Grid>
-                    </materialDesign:ColorZone>
+                    </ListBox>
 
                     <materialDesign:Transitioner Grid.Row="1"
+                                                 Margin="16"
                                                  AutoApplyTransitionOrigins="True"
                                                  SelectedIndex="{Binding ViewModel.SlideIndex, Mode=TwoWay}">
                         <!-- 欢迎 -->

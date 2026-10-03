@@ -353,13 +353,14 @@ public partial class SettingsWindowNew : MyWindow
 
     private void SettingsWindowNew_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
+        var wasCompressed = ViewModel.IsViewCompressed;
         ViewModel.IsViewCompressed = Width < 800;
         if (WindowState == WindowState.Maximized)
             ViewModel.IsViewCompressed = false;
         if (!ViewModel.IsViewCompressed)
-        {
+            ViewModel.IsNavigationDrawerOpened = false;
+        else if (!wasCompressed)
             ViewModel.IsNavigationDrawerOpened = true;
-        }
     }
 
     private void ButtonBaseToggleNavigationDrawer_OnClick(object sender, RoutedEventArgs e)

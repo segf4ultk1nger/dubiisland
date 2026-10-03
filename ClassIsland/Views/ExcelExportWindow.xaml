@@ -12,6 +12,7 @@
         xmlns:behaviors="clr-namespace:ClassIsland.Behaviors"
         mc:Ignorable="d"
         Title="导出到 Excel 表格" Height="700" Width="1400"
+        ShowTitleBar="True"
         WindowState="Maximized"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
