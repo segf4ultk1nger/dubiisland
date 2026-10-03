@@ -1,0 +1,14 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+      MahApps.Brushes.* are frozen, so these aliases bind to the color keys those brushes are built from.
+      ThemeManager replaces the color resources on each swap and DynamicResource updates the brushes.
+    -->
+    <SolidColorBrush x:Key="MaterialDesignPaper" Color="{DynamicResource MahApps.Colors.ThemeBackground}" />
+    <SolidColorBrush x:Key="MaterialDesignBody" Color="{DynamicResource MahApps.Colors.ThemeForeground}" />
+    <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="{DynamicResource MahApps.Colors.Gray2}" />
+    <SolidColorBrush x:Key="MaterialDesignDivider" Color="{DynamicResource MahApps.Colors.Gray7}" />
+    <SolidColorBrush x:Key="MaterialDesignSelection" Color="{DynamicResource MahApps.Colors.Highlight}" />
+    <SolidColorBrush x:Key="MaterialDesignCardBackground" Color="{DynamicResource MahApps.Colors.ThemeBackground}" />
+    <SolidColorBrush x:Key="MaterialDesignToolBarBackground" Color="{DynamicResource MahApps.Colors.ThemeBackground}" />
+</ResourceDictionary>

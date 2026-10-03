@@ -5,7 +5,10 @@ using System.Windows;
 using System.Windows.Media;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Theming;
+using ControlzExThemeManager = ControlzEx.Theming.ThemeManager;
+using ControlzExRuntimeThemeGenerator = ControlzEx.Theming.RuntimeThemeGenerator;
 
+using MahApps.Metro.Theming;
 using MaterialDesignThemes.Wpf;
 
 using Microsoft.Extensions.Hosting;
@@ -16,6 +19,10 @@ namespace ClassIsland.Services;
 
 public class ThemeService : IHostedService, IThemeService
 {
+    private const string MahAppsMaterialAliasesUriString =
+        "pack://application:,,,/ClassIsland.Core;component/Themes/MahAppsMaterialAliases.xaml";
+
+    private static readonly Uri MahAppsMaterialAliasesUri = new(MahAppsMaterialAliasesUriString);
     public async Task StartAsync(CancellationToken cancellationToken)
     {
     }
@@ -89,15 +96,20 @@ public class ThemeService : IHostedService, IThemeService
         theme.SetSecondaryColor(secondary);
         var lastTheme = paletteHelper.GetTheme();
 
+        var mahAppsBaseColor = theme.GetBaseTheme() == BaseTheme.Light
+            ? ControlzExThemeManager.BaseColorLight
+            : ControlzExThemeManager.BaseColorDark;
         if (lastPrimary == theme.PrimaryMid.Color &&
             lastSecondary == theme.SecondaryMid.Color &&
-            lastBaseTheme == theme.GetBaseTheme())
+            lastBaseTheme == theme.GetBaseTheme() &&
+            MahAppsThemeMatches(mahAppsBaseColor, primary))
         {
             return;
         }
 
 
         paletteHelper.SetTheme(theme);
+        ApplyMahAppsTheme(mahAppsBaseColor, primary);
         CurrentTheme = theme;
         Logger.LogInformation("设置主题：{}", theme);
         CurrentRealThemeMode = theme.GetBaseTheme() == BaseTheme.Light ? 0 : 1;
@@ -116,5 +128,52 @@ public class ThemeService : IHostedService, IThemeService
                 new Uri("pack://application:,,,/ClassIsland;component/Themes/DarkTheme.xaml")
         };
         Application.Current.Resources.MergedDictionaries[0] = resource;
+        EnsureMahAppsMaterialAliasesLast();
+    }
+
+    private static bool MahAppsThemeMatches(string baseColorScheme, Color primary)
+    {
+        if (Application.Current == null)
+        {
+            return false;
+        }
+
+        var detected = ControlzExThemeManager.Current.DetectTheme(Application.Current);
+        return detected != null
+               && detected.BaseColorScheme == baseColorScheme
+               && detected.PrimaryAccentColor == primary;
+    }
+
+    private static void ApplyMahAppsTheme(string baseColorScheme, Color primary)
+    {
+        // Registers the MahApps library theme provider. GenerateRuntimeTheme(base, accent)
+        // has no secondary-color parameter, so the primary color is the accent.
+        _ = MahAppsLibraryThemeProvider.DefaultInstance;
+        var runtimeTheme = ControlzExRuntimeThemeGenerator.Current.GenerateRuntimeTheme(baseColorScheme, primary);
+        if (runtimeTheme == null || Application.Current == null)
+        {
+            return;
+        }
+
+        ControlzExThemeManager.Current.ChangeTheme(Application.Current, runtimeTheme);
+    }
+
+    private static void EnsureMahAppsMaterialAliasesLast()
+    {
+        var dictionaries = Application.Current.Resources.MergedDictionaries;
+        for (var i = dictionaries.Count - 1; i >= 0; i--)
+        {
+            var source = dictionaries[i].Source;
+            if (source != null &&
+                string.Equals(source.OriginalString, MahAppsMaterialAliasesUriString, StringComparison.OrdinalIgnoreCase))
+            {
+                dictionaries.RemoveAt(i);
+            }
+        }
+
+        dictionaries.Add(new ResourceDictionary
+        {
+            Source = MahAppsMaterialAliasesUri
+        });
     }
 }
