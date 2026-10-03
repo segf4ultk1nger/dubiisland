@@ -38,6 +38,4 @@ public class ApplicationCommand
 
     public bool Diagnostic { get; set; } = false;
     public bool Safe { get; set; } = false;
-
-    public bool SkipOobe { get; set; } = false;
 }

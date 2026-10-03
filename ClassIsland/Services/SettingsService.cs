@@ -72,8 +72,8 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
                 Settings.PropertyChanged += (sender, args) => SettingsChanged(args.PropertyName!);
             }
 
-            // 当还没有初始化应用且启用集控时，从集控拉取设置。
-            if (ManagementService.IsManagementEnabled && !Settings.IsWelcomeWindowShowed)
+            // 启用集控时，从集控拉取设置。
+            if (ManagementService.IsManagementEnabled)
             {
                 await LoadManagementSettingsAsync();
             }

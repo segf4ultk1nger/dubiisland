@@ -93,12 +93,12 @@
                 <converters1:BooleanAndToVisibilityMultiConverter x:Key="BooleanAndToVisibilityMultiConverter" />
                 <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}" />
             </ContextMenu.Resources>
-            <MenuItem Header="LegacyIsland" Click="MenuItemAbout_OnClick" IsEnabled="{Binding ViewModel.Settings.IsWelcomeWindowShowed}">
+            <MenuItem Header="LegacyIsland" Click="MenuItemAbout_OnClick">
                 <MenuItem.Icon>
                     <Image Source="/Assets/AppLogo.png" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="更新可用…" Click="MenuItemUpdates_OnClick" IsEnabled="{Binding ViewModel.Settings.IsWelcomeWindowShowed}">
+            <MenuItem Header="更新可用…" Click="MenuItemUpdates_OnClick">
                 <MenuItem.Icon>
                     <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.UploadOutline}"/>
                 </MenuItem.Icon>
@@ -112,8 +112,7 @@
                     </Style>
                 </MenuItem.Style>
             </MenuItem>
-            <MenuItem Header="帮助…" Click="MenuItemHelps_OnClick" 
-                      Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <MenuItem Header="帮助…" Click="MenuItemHelps_OnClick">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="QuestionFill" Width="16" Height="16"/>
                 </MenuItem.Icon>
@@ -126,7 +125,6 @@
                 <MenuItem.Visibility>
                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
                         <Binding Path="ViewModel.Settings.IsMainWindowVisible" Mode="OneWay" Converter="{StaticResource InvertBooleanConverter}" />
-                        <Binding Path="ViewModel.Settings.IsWelcomeWindowShowed" Mode="OneWay"/>
                     </MultiBinding>
                 </MenuItem.Visibility>
             </MenuItem>
@@ -137,30 +135,28 @@
                 <MenuItem.Visibility>
                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
                         <Binding Path="ViewModel.Settings.IsMainWindowVisible" Mode="OneWay"/>
-                        <Binding Path="ViewModel.Settings.IsWelcomeWindowShowed" Mode="OneWay"/>
                     </MultiBinding>
                 </MenuItem.Visibility>
             </MenuItem>
             <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.NotificationClearAll}}" Header="清除全部提醒" Click="MenuItemClearAllNotifications_OnClick">
                 <MenuItem.Visibility>
                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
-                        <Binding Path="ViewModel.Settings.IsWelcomeWindowShowed" Mode="OneWay"/>
                         <Binding Path="ViewModel.IsOverlayOpened" Mode="OneWay"/>
                     </MultiBinding>
                 </MenuItem.Visibility>
             </MenuItem>
-            <Separator Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <MenuItem Header="编辑档案…" Click="ButtonSettings_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Separator/>
+            <MenuItem Header="编辑档案…" Click="ButtonSettings_OnClick">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="BallPenFill" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="应用设置…" Click="MenuItemSettings_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <MenuItem Header="应用设置…" Click="MenuItemSettings_OnClick">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="Settings4Fill" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="加载临时课表…" Click="MenuItemTemporaryClassPlan_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <MenuItem Header="加载临时课表…" Click="MenuItemTemporaryClassPlan_OnClick">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="GitRepositoryCommitsFill" Width="16" Height="16"/>
                 </MenuItem.Icon>
@@ -173,11 +169,10 @@
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
-                        <Setter Property="Visibility" Value="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Style>
                 </MenuItem.Style>
             </MenuItem>
-            <Separator Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Separator/>
             <MenuItem Header="重启" Click="MenuItemRestartApp_OnClick">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="RestartLine" Width="16" Height="16"/>
@@ -192,9 +187,6 @@
             <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.BugOutline}}" Header="调试"
                       Visibility="{Binding ViewModel.Settings.IsDebugEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <MenuItem Header="SizeToContentTest" Click="ButtonResizeDebug_OnClick"/>
-                <Separator/>
-                <MenuItem Header="WelcomeWindow" Click="MenuItemDebugWelcomeWindow_OnClick"/>
-                <MenuItem Header="WelcomeWindow (Full)" Click="MenuItemDebugWelcomeWindow2_OnClick"/>
                 <Separator/>
                 <MenuItem Header="FitSize" Click="MenuItemDebugFitSize_OnClick"/>
             </MenuItem>

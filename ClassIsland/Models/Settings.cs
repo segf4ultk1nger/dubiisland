@@ -60,7 +60,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _isDebugEnabled = false;
     private string _selectedProfile = "Default.json";
     private bool _isMainWindowVisible = true;
-    private bool _isWelcomeWindowShowed = false;
     private Dictionary<string, string> _releaseChannels = new()
     {
     };
@@ -236,17 +235,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isMainWindowVisible) return;
             _isMainWindowVisible = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsWelcomeWindowShowed
-    {
-        get => _isWelcomeWindowShowed;
-        set
-        {
-            if (value == _isWelcomeWindowShowed) return;
-            _isWelcomeWindowShowed = value;
             OnPropertyChanged();
         }
     }

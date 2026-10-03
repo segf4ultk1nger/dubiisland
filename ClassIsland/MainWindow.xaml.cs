@@ -496,37 +496,6 @@ public partial class MainWindow : Window
             AutoSetNotificationEffectRenderingScale();
         }
 
-        if (App.ApplicationCommand.SkipOobe)
-        {
-            ViewModel.Settings.IsWelcomeWindowShowed = true;
-            SettingsService.SaveSettings("Skipped OOBE via command-line.");
-        }
-
-        if (!ViewModel.Settings.IsWelcomeWindowShowed)
-        {
-            if (ViewModel.Settings.IsSplashEnabled)
-            {
-                App.GetService<ISplashService>().EndSplash();
-            }
-            var w = new WelcomeWindow()
-            {
-                ViewModel =
-                {
-                    Settings = ViewModel.Settings
-                }
-            };
-            var r = w.ShowDialog();
-            if (r == false)
-            {
-                ViewModel.IsClosing = true;
-                Close();
-            }
-            else
-            {
-                ViewModel.Settings.IsWelcomeWindowShowed = true;
-            }
-        }
-
         UriNavigationService.HandleAppNavigation("class-swap", args => OpenClassSwapWindow());
 
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在初始化输入");
@@ -1034,17 +1003,6 @@ public partial class MainWindow : Window
     private void MenuItemAbout_OnClick(object sender, RoutedEventArgs e)
     {
         App.GetService<SettingsWindowNew>().Open("about");
-    }
-
-    private void MenuItemDebugWelcomeWindow_OnClick(object sender, RoutedEventArgs e)
-    {
-        var ww = new WelcomeWindow();
-        ww.ShowDialog();
-    }
-
-    private void MenuItemDebugWelcomeWindow2_OnClick(object sender, RoutedEventArgs e)
-    {
-        ViewModel.Settings.IsWelcomeWindowShowed = false;
     }
 
     private void MenuItemHelps_OnClick(object sender, RoutedEventArgs e)
