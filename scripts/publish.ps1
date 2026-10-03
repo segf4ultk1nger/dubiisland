@@ -92,13 +92,7 @@ Write-Host "=== Build (Release, $Arch, Costura) ==="
 if ($LASTEXITCODE -ne 0) { throw "Build failed" }
 $exe = Get-TargetPath -Project $Proj -Configuration Release -Arch $Arch
 if (-not (Test-Path $exe)) { throw "Missing $exe" }
-Copy-Item -LiteralPath $exe -Destination (Join-Path $Dist 'ClassIsland.exe')
-
-# net472 仍然需要 app.config 里的绑定重定向，Costura 会处理程序集解析，但配置文件还是随包带上更稳。
-$exeConfig = "$exe.config"
-if (Test-Path -LiteralPath $exeConfig) {
-    Copy-Item -LiteralPath $exeConfig -Destination (Join-Path $Dist 'ClassIsland.exe.config')
-}
+Copy-Item -LiteralPath $exe -Destination (Join-Path $Dist 'LegacyIsland.exe')
 
 $versionSource = Join-Path $Root 'Global.props'
 $versionText = Get-Content -Raw -LiteralPath $versionSource
@@ -108,7 +102,7 @@ if ($versionText -notmatch '<LegacyIslandBaseVersion[^>]*>([^<]+)</LegacyIslandB
 $version = $Matches[1].Trim()
 $zipName = "LegacyIsland-$version-SIFWARE.$Channel.zip"
 if ($Test) {
-    $realtime = (Get-Item -LiteralPath (Join-Path $Dist 'ClassIsland.exe')).VersionInfo.ProductVersion
+    $realtime = (Get-Item -LiteralPath (Join-Path $Dist 'LegacyIsland.exe')).VersionInfo.ProductVersion
     if ($realtime) { $zipName = "LegacyIsland-$version-SIFWARE.$Channel.$($realtime -replace '\+', '.').zip" }
 }
 
@@ -120,7 +114,7 @@ if ($Test) {
     if (-not $zipPassword) { throw "Empty zip password: $passwordFile" }
 
     $sevenZip = Get-SevenZip
-    $names = @('ClassIsland.exe', 'ClassIsland.exe.config') | Where-Object { Test-Path -LiteralPath (Join-Path $Dist $_) }
+    $names = @('LegacyIsland.exe')
     Push-Location $Dist
     try {
         & $sevenZip a -tzip -y "-p$zipPassword" -mem=AES256 "$zipPath" @names
@@ -130,10 +124,7 @@ if ($Test) {
         Pop-Location
     }
 } else {
-    $pack = @((Join-Path $Dist 'ClassIsland.exe'))
-    if (Test-Path -LiteralPath (Join-Path $Dist 'ClassIsland.exe.config')) {
-        $pack += (Join-Path $Dist 'ClassIsland.exe.config')
-    }
+    $pack = @((Join-Path $Dist 'LegacyIsland.exe'))
     Compress-Archive -LiteralPath $pack -DestinationPath $zipPath -Force
 }
 
