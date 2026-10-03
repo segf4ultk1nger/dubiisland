@@ -33,7 +33,7 @@
                     <Run Text="更多信息请见">
                     </Run>
                     <Hyperlink Click="HyperlinkMsAppCenter_OnClick">
-                        《ClassIsland 隐私政策》
+                        《LegacyIsland 隐私政策》
                     </Hyperlink>
                     。
                 </TextBlock>

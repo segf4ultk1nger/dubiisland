@@ -14,7 +14,7 @@
                 <Run Text="加入管理"/>
             </TextBlock>
             <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
-                <Run Text="将当前ClassIsland实例连接到管理组织。"></Run>
+                <Run Text="将当前LegacyIsland实例连接到管理组织。"></Run>
             </TextBlock>
             <Grid Margin="0 6 0 0">
                 <Grid.ColumnDefinitions>

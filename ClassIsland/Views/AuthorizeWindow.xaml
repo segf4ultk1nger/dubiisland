@@ -22,7 +22,7 @@
         MaxHeight="700"
         Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
-        Title="ClassIsland" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+        Title="LegacyIsland" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:MyWindow.CommandBindings>
         <CommandBinding Command="{x:Static ci:AuthorizeProviderControlBase.CompleteAuthorizeCommand}" Executed="CommandBindingCompleteAuthorize_OnExecuted"></CommandBinding>
     </ci:MyWindow.CommandBindings>

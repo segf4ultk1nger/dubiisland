@@ -650,7 +650,7 @@ public partial class SettingsWindowNew : MyWindow
     {
         var result = new CommonDialogBuilder()
             .SetIconKind(CommonDialogIconKind.Hint)
-            .SetContent("警告！ClassIsland 开发者不对应用接下来的行为造成的任何后果负责，并且不接受有关这些行为的任何 Bug 反馈。您确定要继续吗？")
+            .SetContent("警告！LegacyIsland 开发者不对应用接下来的行为造成的任何后果负责，并且不接受有关这些行为的任何 Bug 反馈。您确定要继续吗？")
             .AddAction("OK", IconGlyphs.HandOkay)
             .AddAction("搞定", IconGlyphs.ThumbUpOutline)
             .AddAction("继续", IconGlyphs.ArrowRight)

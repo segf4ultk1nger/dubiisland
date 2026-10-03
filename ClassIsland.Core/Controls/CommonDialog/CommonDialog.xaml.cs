@@ -193,5 +193,5 @@ public partial class CommonDialog : MyWindow, INotifyPropertyChanged
     );
 
     public static int ShowDialog(string message, BitmapImage icon, double iconWidth,
-        double iconHeight) => ShowDialog("ClassIsland", message, icon, iconWidth, iconHeight);
+        double iconHeight) => ShowDialog("LegacyIsland", message, icon, iconWidth, iconHeight);
 }

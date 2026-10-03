@@ -17,7 +17,7 @@
                    mc:Ignorable="d"
                    WindowStartupLocation="CenterScreen"
                    Icon="/Assets/AppLogo.ico"
-                   Title="ClassIsland 崩溃报告" Height="450" Width="800">
+                   Title="LegacyIsland 崩溃报告" Height="450" Width="800">
     <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -38,7 +38,7 @@
                                  Foreground="#EE2222" />
 
         <TextBlock Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" FontSize="14">
-            <Run Text="ClassIsland 碰到了严重错误而无法正常运行。您可以保存下方的错误信息并向他人寻求帮助。如果您认为这是由软件本身的错误所致，请点击下方“反馈问题”按钮。"/>
+            <Run Text="LegacyIsland 碰到了严重错误而无法正常运行。您可以保存下方的错误信息并向他人寻求帮助。如果您认为这是由软件本身的错误所致，请点击下方“反馈问题”按钮。"/>
         </TextBlock>
         <TextBox Grid.Column="1"
                  x:Name="TextBoxCrashInfo" Grid.Row="2" 
@@ -94,7 +94,7 @@
         <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="-12 -12 -12 8" Padding="16" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <TextBlock Text="ClassIsland 发生错误 ヽ(*。>Д&lt;)o゜" Style="{StaticResource Headline6TextBlock}"
+                    <TextBlock Text="LegacyIsland 发生错误 ヽ(*。>Д&lt;)o゜" Style="{StaticResource Headline6TextBlock}"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center"
                                Margin="0 0 16 0"/>

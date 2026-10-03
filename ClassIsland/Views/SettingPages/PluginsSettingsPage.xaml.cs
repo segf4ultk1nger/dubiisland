@@ -159,7 +159,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
         {
             Title = "打包插件",
             FileName = ViewModel.SelectedPluginInfo.Manifest.Id + IPluginService.PluginPackageExtension,
-            Filter = $"ClassIsland 插件包(*{IPluginService.PluginPackageExtension})|*{IPluginService.PluginPackageExtension}"
+            Filter = $"LegacyIsland 插件包(*{IPluginService.PluginPackageExtension})|*{IPluginService.PluginPackageExtension}"
         };
         if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             return;
@@ -195,7 +195,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
         var dialog = new OpenFileDialog()
         {
             Title = "从本地安装插件",
-            Filter = $"ClassIsland 插件包(*{IPluginService.PluginPackageExtension})|*{IPluginService.PluginPackageExtension}"
+            Filter = $"LegacyIsland 插件包(*{IPluginService.PluginPackageExtension})|*{IPluginService.PluginPackageExtension}"
         };
         if (dialog.ShowDialog() != true)
             return;

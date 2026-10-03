@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageTags>classisland;ipc;grpc;addin;plugin</PackageTags>
-    <Description>用于的客户端与 ClassIsland 应用进行跨进程通信库。</Description>
+    <Description>用于的客户端与 LegacyIsland 应用进行跨进程通信库。</Description>
 	  <LangVersion>12</LangVersion>
 
 	  <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>

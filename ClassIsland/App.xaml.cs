@@ -295,7 +295,7 @@ public partial class App : AppBase, IAppHost
             var crashInfo = e.ToString();
             if (plugins.Count > 0)
             {
-                var pluginsWarning = "此问题可能由以下插件引起，请在向 ClassIsland 开发者反馈问题前先向以下插件的开发者反馈此问题：\n"
+                var pluginsWarning = "此问题可能由以下插件引起，请在向 LegacyIsland 开发者反馈问题前先向以下插件的开发者反馈此问题：\n"
                                      + string.Join("\n", plugins.Select(x => $"- {x.Manifest.Name} [{x.Manifest.Id}]"))
                                      + (disabled
                                          ? "\n以上异常插件已自动禁用，重启应用后生效。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。"
@@ -337,7 +337,7 @@ public partial class App : AppBase, IAppHost
                 break;
             case 2:
                 Logger?.LogInformation("因教学安全模式设定，应用将忽略异常并显示一条通知");
-                IAppHost.Host?.Services.GetService<ITaskBarIconService>()?.ShowNotification("崩溃报告", $"ClassIsland 发生了一个无法处理的错误：{e.Message}");
+                IAppHost.Host?.Services.GetService<ITaskBarIconService>()?.ShowNotification("崩溃报告", $"LegacyIsland 发生了一个无法处理的错误：{e.Message}");
                 break;
             case 3:
                 Logger?.LogInformation("因教学安全模式设定，应用将直接忽略异常");
@@ -395,7 +395,7 @@ public partial class App : AppBase, IAppHost
         // 检测临时目录
         if (Environment.CurrentDirectory.Contains(Path.GetTempPath()))
         {
-            CommonDialog.ShowHint("ClassIsland正在临时目录下运行，应用设置、课表等数据很可能无法保存，或在应用退出后被自动删除。在使用本应用前，请务必将本应用解压到一个适合的位置。");
+            CommonDialog.ShowHint("LegacyIsland正在临时目录下运行，应用设置、课表等数据很可能无法保存，或在应用退出后被自动删除。在使用本应用前，请务必将本应用解压到一个适合的位置。");
             Environment.Exit(0);
             return;
         }
@@ -403,7 +403,7 @@ public partial class App : AppBase, IAppHost
         // 检测桌面文件夹
         if (Environment.CurrentDirectory == Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) && !Settings.IsWelcomeWindowShowed)
         {
-            var r = CommonDialog.ShowHint("ClassIsland正在桌面上运行，应用设置、课表等数据将会直接存放到桌面上。在使用本应用前，请将本应用移动到一个单独的文件夹中。");
+            var r = CommonDialog.ShowHint("LegacyIsland正在桌面上运行，应用设置、课表等数据将会直接存放到桌面上。在使用本应用前，请将本应用移动到一个单独的文件夹中。");
             if (r == 0)
             {
                 Environment.Exit(0);
@@ -420,7 +420,7 @@ public partial class App : AppBase, IAppHost
         }
         catch (Exception ex)
         {
-            CommonDialog.ShowError($"ClassIsland无法写入当前目录：{ex.Message}\n\n请将本软件解压到一个合适的位置后再运行。");
+            CommonDialog.ShowError($"LegacyIsland无法写入当前目录：{ex.Message}\n\n请将本软件解压到一个合适的位置后再运行。");
             Environment.Exit(0);
             return;
         }
@@ -429,7 +429,7 @@ public partial class App : AppBase, IAppHost
         DwmIsCompositionEnabled(out var isDwmEnabled);
         if (!isDwmEnabled)
         {
-            CommonDialog.ShowError("运行ClassIsland需要开启Aero效果。请在【控制面板】->【个性化】中启用Aero主题，然后再尝试运行ClassIsland。");
+            CommonDialog.ShowError("运行LegacyIsland需要开启Aero效果。请在【控制面板】->【个性化】中启用Aero主题，然后再尝试运行LegacyIsland。");
             Environment.Exit(0);
             return;
         }
@@ -442,7 +442,7 @@ public partial class App : AppBase, IAppHost
         {
             var enterRecovery = new CommonDialogBuilder()
                 .SetIconKind(CommonDialogIconKind.Hint)
-                .SetContent("ClassIsland 多次启动失败，您需要进入恢复模式以尝试修复 ClassIsland 吗？")
+                .SetContent("LegacyIsland 多次启动失败，您需要进入恢复模式以尝试修复 LegacyIsland 吗？")
                 .AddCancelAction()
                 .AddAction("进入恢复模式", IconGlyphs.WrenchCheckOutline, true)
                 .ShowDialog();
@@ -667,8 +667,8 @@ public partial class App : AppBase, IAppHost
                 services.AddAction<SleepActionSettings, SleepActionSettingsControl>("classisland.action.sleep", "等待时长", IconGlyphs.TimerSand);
                 services.AddAction<WeatherNotificationActionSettings, WeatherNotificationActionSettingControl>(
                     "classisland.notification.weather", "显示天气提醒", IconGlyphs.SunWirelessOutline);
-                services.AddAction("classisland.app.quit", "退出 ClassIsland", IconGlyphs.ExitToApp, (_, _) => Current.Stop());
-                services.AddAction<AppRestartActionSettings,AppRestartActionSettingsControl>("classisland.app.restart", "重启 ClassIsland", IconGlyphs.Restart);
+                services.AddAction("classisland.app.quit", "退出 LegacyIsland", IconGlyphs.ExitToApp, (_, _) => Current.Stop());
+                services.AddAction<AppRestartActionSettings,AppRestartActionSettingsControl>("classisland.app.restart", "重启 LegacyIsland", IconGlyphs.Restart);
                 // 行动处理
                 services.AddHostedService<AppRestartActionHandler>();
                 services.AddHostedService<RunActionHandler>();
@@ -843,12 +843,12 @@ public partial class App : AppBase, IAppHost
             File.Delete(startupCountFilePath);
             if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)
             {
-                GetService<ITaskBarIconService>().ShowNotification("配置文件损坏", "ClassIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。点击此消息以查看详细信息和从过往备份中恢复配置文件。", clickedCallback:() => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/config-errors")));
+                GetService<ITaskBarIconService>().ShowNotification("配置文件损坏", "LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。点击此消息以查看详细信息和从过往备份中恢复配置文件。", clickedCallback:() => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/config-errors")));
             }
             if (Settings.CorruptPluginsDisabledLastSession)
             {
                 Settings.CorruptPluginsDisabledLastSession = false;
-                GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "ClassIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/classisland.plugins")));
+                GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "LegacyIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/classisland.plugins")));
             }
             if (Settings.IsSplashEnabled)
             {

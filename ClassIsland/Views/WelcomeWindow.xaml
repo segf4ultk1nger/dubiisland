@@ -23,7 +23,7 @@
                    TextElement.FontWeight="Regular"
                    TextElement.FontSize="14"
                    FontFamily="{StaticResource HarmonyOsSans}"
-                   Title="ClassIsland 设置向导"
+                   Title="LegacyIsland 设置向导"
                    ShowTitleBar="True"
                    d:DataContext="{d:DesignInstance local:WelcomeWindow}"
                    Icon="/Assets/AppLogo.ico"
@@ -162,23 +162,23 @@
                                        Source="/Assets/AppLogo.png" />
 
                                 <StackPanel Grid.Column="1" Grid.Row="0">
-                                    <TextBlock Text="欢迎使用ClassIsland"
+                                    <TextBlock Text="欢迎使用LegacyIsland"
                                                Style="{StaticResource Headline5TextBlock}" />
                                     <TextBlock Margin="0 6 0 0" TextWrapping="Wrap"
                                                FontWeight="Light"
-                                               Text="本向导将引导您完成ClassIsland的设置，只需几步，即可完成ClassIsland的基本设置。点击【下一步】以开始设置。" />
+                                               Text="本向导将引导您完成LegacyIsland的设置，只需几步，即可完成LegacyIsland的基本设置。点击【下一步】以开始设置。" />
                                     <CheckBox Margin="0 12 0 0" IsChecked="{Binding ViewModel.IsLicenseAgreed}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="我已阅读并同意" VerticalAlignment="Center" />
                                             <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                    Content="《ClassIsland 开源许可》"
+                                                    Content="《LegacyIsland 开源许可》"
                                                     Padding="0"
                                                     VerticalAlignment="Center"
                                                     Command="{x:Static dialogs:DialogService.OpenDialogCommand}"
                                                     CommandParameter="{StaticResource OpenSourceLicense}" />
                                             <TextBlock Text="和" VerticalAlignment="Center"/>
                                             <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                    Content="《ClassIsland 隐私政策》"
+                                                    Content="《LegacyIsland 隐私政策》"
                                                     Padding="0"
                                                     VerticalAlignment="Center"
                                                     Click="ButtonPrivacy_OnClick" />
@@ -365,7 +365,7 @@
                                                    Style="{StaticResource Headline5TextBlock}" />
                                         <TextBlock Margin="0 6 0 0" TextWrapping="Wrap"
                                                    FontWeight="Light"
-                                                   Text="设置ClassIsland的系统集成功能，这些功能可以优化您使用本软件的体验。" />
+                                                   Text="设置LegacyIsland的系统集成功能，这些功能可以优化您使用本软件的体验。" />
                                         <StackPanel Margin="8">
                                             <StackPanel.Resources>
                                                 <Style TargetType="CheckBox"
@@ -486,7 +486,7 @@
                                                                             Margin="4 0"
                                                                             VerticalAlignment="Top"
                                                                             Title="阅读文档"
-                                                                            Content="阅读帮助文档来了解有关 ClassIsland 的更多信息和技术细节。">
+                                                                            Content="阅读帮助文档来了解有关 LegacyIsland 的更多信息和技术细节。">
                                                             <controls1:InfoCard.ActionButton>
                                                                 <WrapPanel>
                                                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
@@ -503,7 +503,7 @@
                                                                             Margin="4 0"
                                                                             VerticalAlignment="Top"
                                                                             Title="观看教程视频"
-                                                                            Content="只需十分钟，带您快速上手 ClassIsland。">
+                                                                            Content="只需十分钟，带您快速上手 LegacyIsland。">
                                                             <controls1:InfoCard.ActionButton>
                                                                 <WrapPanel>
                                                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"

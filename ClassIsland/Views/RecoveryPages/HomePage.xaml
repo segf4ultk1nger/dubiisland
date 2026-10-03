@@ -51,7 +51,7 @@
                     </Grid.ColumnDefinitions>
                     <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Text="继续使用 ClassIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Text="继续使用 LegacyIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                 </Grid>
             </Button>
             <Button Click="ButtonContinueSafe_OnClick">
@@ -66,7 +66,7 @@
                     </Grid.ColumnDefinitions>
                     <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Text="以安全模式继续使用 ClassIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Text="以安全模式继续使用 LegacyIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
                                Text="禁用所有插件和自动化功能。" 
                                TextWrapping="Wrap"
@@ -86,7 +86,7 @@
                     </Grid.ColumnDefinitions>
                     <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Text="以诊断模式继续使用 ClassIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Text="以诊断模式继续使用 LegacyIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
                                Text="在日志中记录详细的信息，并启用控制台输出。" 
                                TextWrapping="Wrap"

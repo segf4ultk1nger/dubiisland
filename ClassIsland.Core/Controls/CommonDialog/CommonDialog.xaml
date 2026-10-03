@@ -13,7 +13,7 @@
           TextElement.FontWeight="Regular"
           TextElement.FontSize="14"
           FontFamily="{StaticResource HarmonyOsSans}"
-          Title="ClassIsland"
+          Title="LegacyIsland"
           SizeToContent="Height"
           ResizeMode="NoResize"
           WindowStartupLocation="CenterScreen"

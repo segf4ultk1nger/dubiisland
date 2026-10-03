@@ -365,7 +365,7 @@
                                HorizontalAlignment="Center"
                                TextWrapping="Wrap"
                                Width="320">
-                        <Run Text="欢迎使用主题！主题可以修改甚至完全重塑 ClassIsland 主界面的外观。您可以使用主题功能打造出独一无二的 ClassIsland 界面。" />
+                        <Run Text="欢迎使用主题！主题可以修改甚至完全重塑 LegacyIsland 主界面的外观。您可以使用主题功能打造出独一无二的 LegacyIsland 界面。" />
 
                     </TextBlock>
                     <Border Width="320"
@@ -379,7 +379,7 @@
                             <TextBlock TextAlignment="Center"
                                        HorizontalAlignment="Center"
                                        TextWrapping="Wrap"
-                                       Text="需要注意，主题以 XAML 资源的形式加载，可能存在与部分 ClassIsland 版本不兼容，甚至使应用完全无法使用的情况。并且主题也可以以 ClassIsland 的身份和权限执行任意代码。请不要安装来路不明的主题，开发者也无法保证市场所提供的主题都是绝对安全的。ClassIsland 开发团队对使用主题造成的一切后果概不负责。" />
+                                       Text="需要注意，主题以 XAML 资源的形式加载，可能存在与部分 LegacyIsland 版本不兼容，甚至使应用完全无法使用的情况。并且主题也可以以 LegacyIsland 的身份和权限执行任意代码。请不要安装来路不明的主题，开发者也无法保证市场所提供的主题都是绝对安全的。LegacyIsland 开发团队对使用主题造成的一切后果概不负责。" />
                         </StackPanel>
                     </Border>
 

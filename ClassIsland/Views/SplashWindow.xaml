@@ -9,7 +9,7 @@
                   xmlns:windows="clr-namespace:Walterlv.Windows;assembly=ClassIsland.Core"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
                   mc:Ignorable="d"
-                  Title="ClassIsland 正在启动……" 
+                  Title="LegacyIsland 正在启动……" 
                   WindowStartupLocation="CenterScreen"
                   WindowStyle="None"
                   ResizeMode="NoResize"

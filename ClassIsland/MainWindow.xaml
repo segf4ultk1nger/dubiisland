@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland"
         mc:Ignorable="d"
-        Title="ClassIsland" 
+        Title="LegacyIsland" 
         Height="40" 
         Width="800"
         SnapsToDevicePixels="True"
@@ -90,7 +90,7 @@
             <ContextMenu.Resources>
                 <converters1:BooleanAndToVisibilityMultiConverter x:Key="BooleanAndToVisibilityMultiConverter" />
             </ContextMenu.Resources>
-            <MenuItem Header="ClassIsland" Click="MenuItemAbout_OnClick" IsEnabled="{Binding ViewModel.Settings.IsWelcomeWindowShowed}">
+            <MenuItem Header="LegacyIsland" Click="MenuItemAbout_OnClick" IsEnabled="{Binding ViewModel.Settings.IsWelcomeWindowShowed}">
                 <MenuItem.Icon>
                     <Image Source="/Assets/AppLogo.ico"/>
                 </MenuItem.Icon>
@@ -540,14 +540,14 @@
 
             </Border>
 
-            <!--<hc:NotifyIcon ContextMenu="{StaticResource AppContextMenu}" Text="ClassIsland" Icon="/Assets/AppLogo.ico"/>-->
+            <!--<hc:NotifyIcon ContextMenu="{StaticResource AppContextMenu}" Text="LegacyIsland" Icon="/Assets/AppLogo.ico"/>-->
             <!--<tb:TaskbarIcon ContextMenu="{StaticResource AppConteGriddu}"
                         DataContext="{Binding}"
                         x:Name="MyTaskBarIcon"
                         IconSource="/Assets/AppLogo.ico"
                         MenuActivation="LeftOrRightClick"
-                        ToolTipText="ClassIsland"
-                        ToolTip="ClassIsland">
+                        ToolTipText="LegacyIsland"
+                        ToolTip="LegacyIsland">
             </tb:TaskbarIcon>-->
 
             <!-- Content -->

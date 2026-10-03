@@ -146,7 +146,7 @@ public partial class WelcomeWindow : MyWindow
         {
             Source = new Uri("/Assets/Documents/Privacy_.md", UriKind.RelativeOrAbsolute),
             Owner = this,
-            Title = "ClassIsland 隐私政策"
+            Title = "LegacyIsland 隐私政策"
         }.ShowDialog();
     }
 

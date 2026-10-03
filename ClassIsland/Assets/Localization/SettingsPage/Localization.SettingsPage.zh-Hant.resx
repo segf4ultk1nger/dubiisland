@@ -151,7 +151,7 @@
     <value>插件</value>
   </data>
   <data name="About_string" xml:space="preserve">
-    <value>關於 ClassIsland</value>
+    <value>關於 LegacyIsland</value>
   </data>
   <data name="Theme_string" xml:space="preserve">
     <value>主題</value>
@@ -160,7 +160,7 @@
     <value>行为</value>
   </data>
   <data name="OpenSourceStatement" xml:space="preserve">
-    <value>ClassIsland 是開源免費的軟件，官方沒有提供任何形式的付費支持服務，源代碼倉庫地址在{sourcecodeurl}。如果您通過有償協助等付費方式取得本應用，在遇到問題時請在與賣家約定的服務框架下，優先向賣家求助。如果賣家沒有提供您預期的服務，請退款或通過其它形式積極維護您的合法權益。</value>
+    <value>LegacyIsland 是開源免費的軟件，官方沒有提供任何形式的付費支持服務，源代碼倉庫地址在{sourcecodeurl}。如果您通過有償協助等付費方式取得本應用，在遇到問題時請在與賣家約定的服務框架下，優先向賣家求助。如果賣家沒有提供您預期的服務，請退款或通過其它形式積極維護您的合法權益。</value>
   </data>
   <data name="ExperimentalFeature_string" xml:space="preserve">
     <value>實驗性功能</value>

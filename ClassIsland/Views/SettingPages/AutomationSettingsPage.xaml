@@ -430,7 +430,7 @@
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0"
                                Source="/Assets/AppLogo.png"
-                               ToolTip="ClassIsland"/>
+                               ToolTip="LegacyIsland"/>
                         <ciCore:IconText IconSize="25" Grid.Column="1"
                                                  VerticalAlignment="Center"
                                                  Margin="16 0"
@@ -453,7 +453,7 @@
                                HorizontalAlignment="Center"
                                TextWrapping="Wrap">
                         　    欢迎使用自动化！<LineBreak />
-                            自动化是 ClassIsland 1.6 (Himeko) 的新增功能，旨在<LineBreak />
+                            自动化是 LegacyIsland 1.6 (Himeko) 的新增功能，旨在<LineBreak />
                         　    提供简单快捷的自动操作。
                     </TextBlock>
 
@@ -479,7 +479,7 @@
                             <TextBlock TextAlignment="Center"
                                        HorizontalAlignment="Center"
                                        TextWrapping="Wrap">
-                                    自动化允许自动修改 ClassIsland 的各项设置，并调用<LineBreak />
+                                    自动化允许自动修改 LegacyIsland 的各项设置，并调用<LineBreak />
                                 　    外部程序，可能有一定安全风险。<LineBreak />
                                 　    不当的自动化编写可能对正常教学造成影响，请勿滥用。
                             </TextBlock>

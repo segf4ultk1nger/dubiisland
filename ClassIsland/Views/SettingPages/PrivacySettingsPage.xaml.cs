@@ -39,7 +39,7 @@ public partial class PrivacySettingsPage : SettingsPageBase
         {
             Source = new Uri("/Assets/Documents/Privacy_.md", UriKind.RelativeOrAbsolute),
             Owner = Window.GetWindow(this),
-            Title = "ClassIsland 隐私政策"
+            Title = "LegacyIsland 隐私政策"
         }.ShowDialog();
     }
 

@@ -43,7 +43,7 @@
 
                     <StackPanel Margin="24 8 16 12">
                         <TextBlock  TextWrapping="Wrap">
-                            <Run>学校/组织的 IT 可以通过集控功能向学校内的 ClassIsland 实例统一分发课表、时间表和科目等信息，并且可以集中调整软件设置和限制部分功能的使用，提高管理的便利性。</Run>
+                            <Run>学校/组织的 IT 可以通过集控功能向学校内的 LegacyIsland 实例统一分发课表、时间表和科目等信息，并且可以集中调整软件设置和限制部分功能的使用，提高管理的便利性。</Run>
                         </TextBlock>
                         <TextBlock  TextWrapping="Wrap" Margin="0 6 0 0" Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Run>您目前正在受</Run>

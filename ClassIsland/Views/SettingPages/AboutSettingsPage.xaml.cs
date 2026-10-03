@@ -23,7 +23,7 @@ namespace ClassIsland.Views.SettingPages;
 /// <summary>
 /// AboutSettingsPage.xaml 的交互逻辑
 /// </summary>
-[SettingsPageInfo("about", "关于 ClassIsland", IconGlyphs.InfoCircleOutline, IconGlyphs.InfoCircle, SettingsPageCategory.About)]
+[SettingsPageInfo("about", "关于 LegacyIsland", IconGlyphs.InfoCircleOutline, IconGlyphs.InfoCircle, SettingsPageCategory.About)]
 public partial class AboutSettingsPage : SettingsPageBase
 {
     public AboutSettingsViewModel ViewModel { get; } = new();
@@ -60,7 +60,7 @@ public partial class AboutSettingsPage : SettingsPageBase
                 .SetPackIcon(IconGlyphs.Bug)
                 .SetCaption("启用调试菜单")
                 .SetContent(
-                    "您正在发布版本的 ClassIsland 中启用仅供开发使用的调试菜单。请注意此功能仅限于开发和调试用途，ClassIsland 开发者不对以非开发用途使用此页面中功能造成的任何后果负责，也不接受以非开发用途使用时产生的 Bug 的反馈。\n\n如果您确实要启用此功能，请在下方文本框输入⌈我已知晓并同意，开发者不对以非开发用途使用此页面功能造成的任何后果负责，也不接受以非开发用途使用此页面功能产生的 Bug 的反馈⌋，然后点击【继续】。")
+                    "您正在发布版本的 LegacyIsland 中启用仅供开发使用的调试菜单。请注意此功能仅限于开发和调试用途，LegacyIsland 开发者不对以非开发用途使用此页面中功能造成的任何后果负责，也不接受以非开发用途使用时产生的 Bug 的反馈。\n\n如果您确实要启用此功能，请在下方文本框输入⌈我已知晓并同意，开发者不对以非开发用途使用此页面功能造成的任何后果负责，也不接受以非开发用途使用此页面功能产生的 Bug 的反馈⌋，然后点击【继续】。")
                 .HasInput(true)
                 .AddCancelAction()
                 .AddAction("继续", IconGlyphs.ArrowRight, true)
@@ -163,7 +163,7 @@ public partial class AboutSettingsPage : SettingsPageBase
         {
             Source = new Uri("/Assets/Documents/Privacy_.md", UriKind.RelativeOrAbsolute),
             Owner = Window.GetWindow(this),
-            Title = "ClassIsland 隐私政策"
+            Title = "LegacyIsland 隐私政策"
         }.ShowDialog();
     }
 

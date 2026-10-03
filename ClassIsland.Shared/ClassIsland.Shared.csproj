@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageTags>classisland</PackageTags>
-    <Description>ClassIsland 的核心共享库。</Description>
+    <Description>LegacyIsland 的核心共享库。</Description>
 	  <LangVersion>preview</LangVersion>
 	  <Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>
   </PropertyGroup>

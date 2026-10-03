@@ -2498,7 +2498,7 @@
                                         <Run Text="{Binding ProfileService.CurrentProfilePath}"/>
                                     </TextBlock>
                                 </ToggleButton>
-                                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此ClassIsland实例。">
+                                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此LegacyIsland实例。">
                                     <ToggleButton.CommandParameter>
                                         <controls:ManagementInfoControl/>
                                     </ToggleButton.CommandParameter>

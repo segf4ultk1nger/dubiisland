@@ -156,7 +156,7 @@ public partial class ThemesSettingsPage
         {
             Title = "打包主题",
             FileName = info.Manifest.Id + ".zip",
-            Filter = $"ClassIsland 主题包(*.zip)|*.zip"
+            Filter = $"LegacyIsland 主题包(*.zip)|*.zip"
         };
         if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             return;

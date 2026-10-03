@@ -36,7 +36,7 @@
                         <TextBlock TextWrapping="Wrap"
                                    VerticalAlignment="Center"
                                    Margin="4 0 0 0">
-                            <Run Text="ClassIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。"/>
+                            <Run Text="LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。"/>
                         </TextBlock>
                     </DockPanel>
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"

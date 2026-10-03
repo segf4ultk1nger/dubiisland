@@ -2,7 +2,7 @@
 
 <div align="center">
 
-# <image src="ClassIsland/Assets/DubiIsland-AppLogo.png" height="72" width="72"/> <br/> DubiIsland
+# <image src="ClassIsland/Assets/DubiIsland-AppLogo.png" height="72" width="72"/> <br/> LegacyIsland
 
 **延续 ClassIsland 1.7 的火种** | 打造我心中更完美的 ClassIsland
 
@@ -17,7 +17,7 @@
 [![GitHub Repo Languages](https://img.shields.io/github/languages/top/ClassIsland/ClassIsland?style=flat-square)](https://github.com/ClassIsland/ClassIsland/search?l=c%23)
 
 ClassIsland 是一款适用于班级多媒体屏幕的课表信息显示工具，可以在 Windows 屏幕上显示各种信息。<br/>
-DubiIsland 基于 ClassIsland 1.7 分支版本打造，致力于创造一个更易用的且支持 Windows 7 系统的桌面课表体验<br/>
+LegacyIsland 基于 ClassIsland 1.7 分支版本打造，致力于创造一个更易用的且支持 Windows 7 系统的桌面课表体验<br/>
 本应用的名字灵感源于 iOS 灵动岛（Dynamic Island）功能。
 
 #### 💬[Classlsland QQ 频道](https://pd.qq.com/s/grr6qwqwj) | [Classlsland QQ 群组](https://qm.qq.com/q/4NsDQKiAuQ) | [InkCanvastland CCE 自留地](https://qm.qq.com/q/3SpITDd1jq)
@@ -65,7 +65,7 @@ DubiIsland 基于 ClassIsland 1.7 分支版本打造，致力于创造一个更�
 - [ ] [集控管理](https://docs.classisland.tech/management)_（即将发布）_
 - [ ] ……
 
-### DubiIsland 的相关优化
+### LegacyIsland 的相关优化
 
 - [x] 迁移到 .NET6 并进一步优化在 Windows 7 等老旧操作系统上的适配。
 - [ ] 将部分 ClassIsland 2.0 的新组件迁移到该版本中
@@ -119,7 +119,7 @@ ClassIsland 与部分窗口美化工具（特别是如 Mica For Everyone 这类�
 
 ## 致谢
 
-**DubiIsland 项目由 segf4ultk1nger 和 Xavo Industries 联合出品。**
+**LegacyIsland 项目由 segf4ultk1nger 和 Xavo Industries 联合出品。**
 
 本项目受到 [DuguSand/class_form](https://github.com/DuguSand/class_form) 的启发而开发。
 

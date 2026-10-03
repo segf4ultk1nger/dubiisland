@@ -3,8 +3,8 @@ using System.Runtime.Versioning;
 
 [assembly: AssemblyVersion("1.8")]
 [assembly: AssemblyInformationalVersion("1.8")]
-[assembly: AssemblyTitle("ClassIsland")]
-[assembly: AssemblyProduct("ClassIsland")]
+[assembly: AssemblyTitle("LegacyIsland")]
+[assembly: AssemblyProduct("LegacyIsland")]
 #if NETCOREAPP
 [assembly: SupportedOSPlatform("Windows")]
 #endif

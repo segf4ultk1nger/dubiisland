@@ -27,7 +27,7 @@
         TextOptions.TextRenderingMode="Auto"
         mc:Ignorable="d"
         MinWidth="560"
-        Title="应用设置" Height="640" Width="867"
+        Title="LegacyIsland 设置" Height="640" Width="867"
         ShowTitleBar="True"
         SizeChanged="SettingsWindowNew_OnSizeChanged"
         Closing="SettingsWindowNew_OnClosing"
@@ -163,7 +163,7 @@
                         <Run Text="需要重启" />
                     </TextBlock>
                 </ToggleButton>
-                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此ClassIsland实例。">
+                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此LegacyIsland实例。">
                     <ToggleButton.CommandParameter>
                         <controls2:ManagementInfoControl />
                     </ToggleButton.CommandParameter>

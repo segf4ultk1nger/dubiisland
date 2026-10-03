@@ -27,7 +27,7 @@ public class TaskBarIconService : IHostedService, ITaskBarIconService
             BackgroundSource = new BitmapImage(new Uri("pack://application:,,,/ClassIsland;component/Assets/AppLogo.png", UriKind.Absolute)),
         },
         MenuActivation = PopupActivationMode.RightClick,
-        ToolTipText = "ClassIsland"
+        ToolTipText = "LegacyIsland"
     };
 
     private Action? CurrentNotificationCallback { get; set; }

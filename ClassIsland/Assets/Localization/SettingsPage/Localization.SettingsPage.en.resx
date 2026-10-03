@@ -151,7 +151,7 @@
     <value>Plugins</value>
   </data>
   <data name="About_string" xml:space="preserve">
-    <value>About ClassIsland</value>
+    <value>About LegacyIsland</value>
   </data>
   <data name="Theme_string" xml:space="preserve">
     <value>Theme</value>
@@ -160,7 +160,7 @@
     <value>Behavior</value>
   </data>
   <data name="OpenSourceStatement" xml:space="preserve">
-    <value>ClassIsland is an open source and free software, and the official does not provide any form of paid support services. The source code is hosted at {sourcecodeurl}.If you obtain this application through paid assistance or other payment methods, please prioritize seeking help from the seller within the service framework agreed upon with them when encountering problems. If the seller does not provide the service you expected, please refund or actively protect your legitimate rights and interests through other ways.</value>
+    <value>LegacyIsland is an open source and free software, and the official does not provide any form of paid support services. The source code is hosted at {sourcecodeurl}.If you obtain this application through paid assistance or other payment methods, please prioritize seeking help from the seller within the service framework agreed upon with them when encountering problems. If the seller does not provide the service you expected, please refund or actively protect your legitimate rights and interests through other ways.</value>
   </data>
   <data name="ExperimentalFeature_string" xml:space="preserve">
     <value>Experimental feature</value>

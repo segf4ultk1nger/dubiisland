@@ -158,7 +158,7 @@
         <Grid x:Name="GridWelcomeOverlay" Grid.Row="0"
                           Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                           Margin="-16">
-            <TextBlock x:Name="TextWelcomeOverlayCaption" Text="让我们从以下几个步骤来完成ClassIsland的设置。"
+            <TextBlock x:Name="TextWelcomeOverlayCaption" Text="让我们从以下几个步骤来完成LegacyIsland的设置。"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="125 0 0 88"

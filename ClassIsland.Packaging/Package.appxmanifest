@@ -12,8 +12,8 @@
     Version="0.0.0.0" />
 
   <Properties>
-    <DisplayName>ClassIsland (DEV)</DisplayName>
-    <PublisherDisplayName>ClassIsland</PublisherDisplayName>
+    <DisplayName>LegacyIsland (DEV)</DisplayName>
+    <PublisherDisplayName>LegacyIsland</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,8 +31,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="ClassIsland (DEV)"
-        Description="ClassIsland (DEV)"
+        DisplayName="LegacyIsland (DEV)"
+        Description="LegacyIsland (DEV)"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
@@ -42,7 +42,7 @@
       <Extensions>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="classisland">
-            <uap:DisplayName>ClassIsland</uap:DisplayName>
+            <uap:DisplayName>LegacyIsland</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
       </Extensions>

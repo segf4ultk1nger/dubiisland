@@ -192,7 +192,7 @@
                                         <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.InfoCircleOutline}"
                                                                  Margin="0 0 4 0"
                                                                  VerticalAlignment="Center"/>
-                                        <TextBlock Text="使用原始输入判断鼠标位置时，如果前台窗口的进程以管理员身份运行，可能会出现无法判定鼠标位置的情况。以管理员身份运行 ClassIsland 可以解决此问题。"
+                                        <TextBlock Text="使用原始输入判断鼠标位置时，如果前台窗口的进程以管理员身份运行，可能会出现无法判定鼠标位置的情况。以管理员身份运行 LegacyIsland 可以解决此问题。"
                                                    TextWrapping="Wrap"
                                                    VerticalAlignment="Center"/>
                                     </DockPanel>
