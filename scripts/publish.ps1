@@ -94,6 +94,12 @@ $exe = Get-TargetPath -Project $Proj -Configuration Release -Arch $Arch
 if (-not (Test-Path $exe)) { throw "Missing $exe" }
 Copy-Item -LiteralPath $exe -Destination (Join-Path $Dist 'LegacyIsland.exe')
 
+# 随包附带更新日志
+$changeLog = Join-Path $Root 'CHANGELOG.txt'
+if (Test-Path -LiteralPath $changeLog) {
+    Copy-Item -LiteralPath $changeLog -Destination (Join-Path $Dist 'CHANGELOG.txt')
+}
+
 $versionSource = Join-Path $Root 'Global.props'
 $versionText = Get-Content -Raw -LiteralPath $versionSource
 if ($versionText -notmatch '<LegacyIslandBaseVersion[^>]*>([^<]+)</LegacyIslandBaseVersion>') {
@@ -115,6 +121,7 @@ if ($Test) {
 
     $sevenZip = Get-SevenZip
     $names = @('LegacyIsland.exe')
+    if (Test-Path -LiteralPath (Join-Path $Dist 'CHANGELOG.txt')) { $names += 'CHANGELOG.txt' }
     Push-Location $Dist
     try {
         & $sevenZip a -tzip -y "-p$zipPassword" -mem=AES256 "$zipPath" @names
@@ -125,6 +132,7 @@ if ($Test) {
     }
 } else {
     $pack = @((Join-Path $Dist 'LegacyIsland.exe'))
+    if (Test-Path -LiteralPath (Join-Path $Dist 'CHANGELOG.txt')) { $pack += (Join-Path $Dist 'CHANGELOG.txt') }
     Compress-Archive -LiteralPath $pack -DestinationPath $zipPath -Force
 }
 
