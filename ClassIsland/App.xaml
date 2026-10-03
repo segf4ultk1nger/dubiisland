@@ -21,7 +21,7 @@
             <ci:SolidColorBrushOpacityConverter x:Key="SolidColorBrushOpacityConverter" />
             <Visibility x:Key="VisibilityCollapsedValue">Collapsed</Visibility>
 
-            <Style TargetType="Slider" BasedOn="{StaticResource MaterialDesignSlider}">
+            <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider}">
                 <Setter Property="materialDesign:BehaviorsAssist.Behaviors">
                     <Setter.Value>
                         <materialDesign:BehaviorCollection>

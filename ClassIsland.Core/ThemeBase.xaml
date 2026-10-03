@@ -30,17 +30,17 @@
         <Setter Property="SnapsToDevicePixels" Value="True"/>
     </Style>
 
-    <Style TargetType="ScrollViewer" BasedOn="{StaticResource MaterialDesignScrollViewer}">
+    <Style TargetType="ScrollViewer" BasedOn="{StaticResource MahApps.Styles.ScrollViewer}">
         <Setter Property="PanningMode" Value="Both"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 
-    <Style TargetType="ListBox" BasedOn="{StaticResource MaterialDesignListBox}">
+    <Style TargetType="ListBox" BasedOn="{StaticResource MahApps.Styles.ListBox}">
         <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel"/>
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
     </Style>
 
-    <Style TargetType="ListView" BasedOn="{StaticResource MaterialDesignListView}">
+    <Style TargetType="ListView" BasedOn="{StaticResource MahApps.Styles.ListView}">
         <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel"/>
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
     </Style>

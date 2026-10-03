@@ -17,17 +17,18 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Assets/Fonts/Fonts.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="/Themes/MaterialDesignYouNavigationStyles.xaml" />
         <ResourceDictionary Source="/Controls/MainWindowLine.xaml"/>
         <ResourceDictionary Source="/Controls/ScheduleCalendarControl.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="controls1:NumbericTextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+    <Style TargetType="controls1:NumbericTextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
     </Style>
 
-    <Style TargetType="{x:Type controls:FileBrowserButton}" BasedOn="{StaticResource MaterialDesignFlatButton}">
+    <Style TargetType="{x:Type controls:FileBrowserButton}" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Content" Value="{materialDesign:PackIcon Folder}"/>
         <Setter Property="ToolTip" Value="浏览…"/>
@@ -52,7 +53,7 @@
 
     <converters1:DayTimeSpanToHeightConverter x:Key="DayTimeSpanToHeightConverter" />
 
-    <Style TargetType="{x:Type controls:TimeLineListControl}" BasedOn="{StaticResource MaterialDesignListBox}">
+    <Style TargetType="{x:Type controls:TimeLineListControl}" BasedOn="{StaticResource MahApps.Styles.ListBox}">
         <Style.Resources>
             <!-- 档案编辑 > 时间线视图 > 上课/课间休息时间块 -->
             <DataTemplate DataType="{x:Type profile:TimeLayoutItem}" x:Key="DataTemplateTimePoint">
@@ -181,7 +182,7 @@
         </Setter>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                     <Style.Resources>
                         <converters1:DateTimeToCanvasPosConverter x:Key="DateTimeToCanvasPosConverter" />
                         <converters1:DateTimeDeltaToCanvasPosConverter x:Key="DateTimeDeltaToCanvasPosConverter" />
@@ -381,17 +382,17 @@
 
     <Style TargetType="{x:Type controls:TimeLineBackgroundRulerControl}"/>
 
-    <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignFloatingHintComboBox}"
+    <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}"
            x:Key="NotificationModeComboBox">
         
     </Style>
 
     <Style TargetType="{x:Type controls1:WizardOptionsListBox}"
            x:Key="WizardOptionsListBoxBaseStyle"
-           BasedOn="{StaticResource MaterialDesignListBox}">
+           BasedOn="{StaticResource MahApps.Styles.ListBox}">
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                     <Setter Property="Padding" Value="1"/>
                     <Setter Property="Margin" Value="0 2"/>
                 </Style>
@@ -429,7 +430,7 @@
     <Style TargetType="controls1:WizardOptionsListBox" BasedOn="{StaticResource WizardOptionsListBoxBaseStyle}"/>
 
     <converters1:RangePositionToStringConverter x:Key="RangePositionToStringConverter" />
-    <Style TargetType="{x:Type controls:ExcelSelectionTextBox}" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+    <Style TargetType="{x:Type controls:ExcelSelectionTextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsCurrentSelecting, RelativeSource={RelativeSource Self}}" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
@@ -463,5 +464,5 @@
         <Setter Property="Text" Value="{Binding Value, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource RangePositionToStringConverter}}"/>
     </Style>
 
-    <Style TargetType="controls1:AutoScrollListView" BasedOn="{StaticResource MaterialDesignListView}"/>
+    <Style TargetType="controls1:AutoScrollListView" BasedOn="{StaticResource MahApps.Styles.ListView}"/>
 </ResourceDictionary>
