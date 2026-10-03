@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClassIsland.Controls.Demo"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -32,7 +31,7 @@
                     <Setter Property="Opacity" Value="0.8" />
                 </Style>
             </Grid.Resources>
-            <materialDesign:ColorZone Mode="{Binding ThemeMode, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ThemeDemo}}" HorizontalAlignment="Center">
+            <Border HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal"
                             Margin="2">
 
@@ -45,12 +44,8 @@
                     <Rectangle Width="4" />
                     <Rectangle Width="4" />
                 </StackPanel>
-            </materialDesign:ColorZone>
-            <materialDesign:ColorZone Mode="{Binding ThemeMode, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ThemeDemo}}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Bottom"
-                                      Width="100"
-                                      Height="50">
+            </Border>
+            <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="50">
                 <StackPanel>
                     <StackPanel Height="6" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Rectangle Width="4" Opacity="0.5" />
@@ -66,7 +61,7 @@
                     <Rectangle Width="60" Opacity="0.75" HorizontalAlignment="Left"
                                Margin="4 4 0 0" />
                 </StackPanel>
-            </materialDesign:ColorZone>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

@@ -2,12 +2,12 @@
                               x:TypeArguments="actions:NotificationActionSettings"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls.ActionSettingsControls"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:actions="clr-namespace:ClassIsland.Models.Actions"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
              xmlns:controls="clr-namespace:ClassIsland.Controls"
              mc:Ignorable="d" 
@@ -16,25 +16,23 @@
         <ScrollViewer x:Key="SettingsDrawer" d:DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:NotificationActionSettingsControl}}">
             <StackPanel Width="400" Margin="16">
                 <TextBlock Text="提醒内容设置"
-                           Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                           Style="{StaticResource Headline5TextBlock}"
                            Margin="0 0 0 2"/>
                 <TextBox Text="{Binding Settings.Mask}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="遮罩内容"
+                         Style="{StaticResource MahApps.Styles.TextBox}"
+                         mah:TextBoxHelper.Watermark="遮罩内容"
                          Margin="0 0 0 2"/>
                 <TextBox Text="{Binding Settings.MaskDurationSeconds, Converter={StaticResource IntToStringConverter}}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="遮罩持续时长"
-                         materialDesign:TextFieldAssist.SuffixText="秒"
+                         Style="{StaticResource MahApps.Styles.TextBox}"
+                         mah:TextBoxHelper.Watermark="遮罩持续时长"
                          Margin="0 0 0 2"/>
                 <TextBox Text="{Binding Settings.Content}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="正文内容"
+                         Style="{StaticResource MahApps.Styles.TextBox}"
+                         mah:TextBoxHelper.Watermark="正文内容"
                          Margin="0 0 0 2"/>
                 <TextBox Text="{Binding Settings.ContentDurationSeconds, Converter={StaticResource IntToStringConverter}}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="正文持续时长"
-                         materialDesign:TextFieldAssist.SuffixText="秒"
+                         Style="{StaticResource MahApps.Styles.TextBox}"
+                         mah:TextBoxHelper.Watermark="正文持续时长"
                          Margin="0 0 0 8"/>
                 <CheckBox Content="启用遮罩语音" IsChecked="{Binding Settings.IsMaskSpeechEnabled}"
                           Margin="0 0 0 6"/>
@@ -57,12 +55,12 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Text="{Binding Settings.CustomSoundEffectPath}"
                                  Grid.Column="0"
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                 materialDesign:HintAssist.Hint="自定义提醒音效路径（留空将使用默认音效）"/>
+                                 Style="{StaticResource MahApps.Styles.TextBox}"
+                                 mah:TextBoxHelper.Watermark="自定义提醒音效路径（留空将使用默认音效）"/>
                         <controls:FileBrowserButton Grid.Column="1" CurrentPath="{Binding Settings.CustomSoundEffectPath, Mode=TwoWay}"/>
                     </Grid>
                 </StackPanel>
-                <Button Style="{StaticResource MaterialDesignFlatButton}" Content="确定"
+                <Button Style="{StaticResource MahApps.Styles.Button.Flat}" Content="确定"
                         Command="{x:Static dialogs:DialogService.CloseDialogCommand}"
                         HorizontalAlignment="Right"
                         Visibility="{Binding IsShowInDialog, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -70,7 +68,7 @@
         </ScrollViewer>
     </ci:ActionSettingsControlBase.Resources>
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:NotificationActionSettingsControl}}">
-        <Button Style="{StaticResource MaterialDesignFlatButton}"
+        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                 HorizontalAlignment="Left"
                 Click="ButtonShowSettings_OnClick">
             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.CogOutline}" Text="提醒设置…"/>

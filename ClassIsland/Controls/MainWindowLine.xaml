@@ -1,14 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:ClassIsland.Controls"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:ci="http://classisland.tech/schemas/xaml/core"
                     xmlns:classIsland="clr-namespace:ClassIsland"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     xmlns:notification="clr-namespace:ClassIsland.Core.Models.Notification;assembly=ClassIsland.Core">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Assets/Fonts/Fonts.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <ci:InvertBooleanAndToVisibilityMultiConverter x:Key="InvertBooleanAndToVisibilityMultiConverter" />
 
@@ -299,18 +297,16 @@
                     Height="{DynamicResource IslandContainerHeight}"
                     SnapsToDevicePixels="True"
                     ClipToBounds="True">
-                    <materialDesign:ColorZone x:Name="BackgroundBorderOverlayMask" Mode="PrimaryMid"
-                                              VerticalAlignment="Stretch"
-                                              RenderTransformOrigin="0.5,0.5">
-                        <materialDesign:ColorZone.RenderTransform>
+                    <Border x:Name="BackgroundBorderOverlayMask" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                        <Border.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform />
                                 <SkewTransform />
                                 <RotateTransform />
                                 <TranslateTransform Y="-50" />
                             </TransformGroup>
-                        </materialDesign:ColorZone.RenderTransform>
-                    </materialDesign:ColorZone>
+                        </Border.RenderTransform>
+                    </Border>
                 </Grid>
 
                 <Grid x:Name="PART_GridWrapper" ClipToBounds="True"
@@ -337,7 +333,6 @@
                                          Maximum="1"
                                          Value="{Binding NotificationProgressBarValue, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}"
                                          x:Name="OverlayTimeProgressBar"
-                                         materialDesign:TransitionAssist.DisableTransitions="True"
                                          Height="{Binding Height, ElementName=PART_GridWrapper}"
                                          Foreground="{DynamicResource MaterialDesignBody}"
                                          Background="Transparent"
@@ -352,22 +347,19 @@
                     </Grid>
 
                     <!-- Mask -->
-                    <materialDesign:ColorZone x:Name="OverlayMask" Mode="PrimaryMid" HorizontalAlignment="Stretch"
-                                              VerticalAlignment="Stretch"
-                                              RenderTransformOrigin="0.5,0.5"
-                                              SnapsToDevicePixels="True">
-                        <materialDesign:ColorZone.RenderTransform>
+                    <Border x:Name="OverlayMask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                        <Border.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform />
                                 <SkewTransform />
                                 <RotateTransform />
                                 <TranslateTransform Y="-50" />
                             </TransformGroup>
-                        </materialDesign:ColorZone.RenderTransform>
+                        </Border.RenderTransform>
                         <ContentPresenter x:Name="OverlayMaskContent"
                                           Content="{Binding ViewModel.CurrentMaskContent.Content, RelativeSource={RelativeSource FindAncestor, AncestorType=classIsland:MainWindow}}" 
                                           ContentTemplate="{Binding ViewModel.CurrentMaskContent.ContentTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType=classIsland:MainWindow}}"/>
-                    </materialDesign:ColorZone>
+                    </Border>
                 </Grid>
             </Grid>
         </Grid>

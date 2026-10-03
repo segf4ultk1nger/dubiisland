@@ -1,10 +1,10 @@
 <UserControl x:Class="ClassIsland.Controls.CsesImportControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              mc:Ignorable="d" 
@@ -14,7 +14,7 @@
     </UserControl.Resources>
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:CsesImportControl}}">
         <StackPanel VerticalAlignment="Stretch" Margin="16" Width="300">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            <TextBlock Style="{StaticResource Headline6TextBlock}"
                        Margin="0 0 0 8">
                 <Run Text="从 CSES 导入"/>
             </TextBlock>
@@ -24,12 +24,11 @@
                          IsChecked="{Binding ImportType, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=0}"/>
             <RadioButton Content="导入到新的档案" Margin="0 0 0 2"
                          IsChecked="{Binding ImportType, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=1}"/>
-            <TextBox materialDesign:HintAssist.Hint="新档案名称"
+            <TextBox mah:TextBoxHelper.Watermark="新档案名称"
                      VerticalAlignment="Center"
-                     materialDesign:TextFieldAssist.SuffixText=".json"
                      Text="{Binding NewProfileName}">
                 <TextBox.Style>
-                    <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+                    <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ImportType, Mode=OneWay}" Value="0">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -43,23 +42,23 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox materialDesign:HintAssist.Hint="CSES 文件路径" Grid.Column="0"
+                <TextBox mah:TextBoxHelper.Watermark="CSES 文件路径" Grid.Column="0"
                          VerticalAlignment="Center"
                          Text="{Binding SourceFilePath}"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                         Style="{StaticResource MahApps.Styles.TextBox}"/>
                 <local:FileBrowserButton Grid.Column="1" VerticalAlignment="Center"
                                          CurrentPath="{Binding SourceFilePath, Mode=TwoWay}"
                                          Filter="CSES 课表文件(*.yml, *.yaml)|*.yml;*.yaml"/>
             </Grid>
             <WrapPanel HorizontalAlignment="Right">
-                <Button Content="取消"  Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="取消"  Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="导入" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" 
+                <Button Content="导入" IsDefault="True" Style="{DynamicResource MahApps.Styles.Button.Flat}" 
                         Click="ButtonOk_OnClick"/>
             </WrapPanel>
         </StackPanel>

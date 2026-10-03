@@ -9,7 +9,6 @@
                          xmlns:controls1="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
                          xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                          xmlns:ci="http://classisland.tech/schemas/xaml/core"
-                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                          xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
                          mc:Ignorable="d"
                          d:DesignHeight="450"

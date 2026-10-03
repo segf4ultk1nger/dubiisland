@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls"
              xmlns:classIsland="clr-namespace:ClassIsland"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Height="100"
              Width="400">
@@ -125,7 +124,7 @@
                              IsIndeterminate="True"
                              VerticalAlignment="Center"
                              Margin="0 0 4 0"
-                             Style="{StaticResource MaterialDesignCircularProgressBar}"/>
+                             Style="{StaticResource MahApps.Styles.ProgressBar}"/>
                 <TextBlock Text="{Binding SplashService.SplashStatus, Mode=OneWay}" 
                            VerticalAlignment="Center"
                            FontSize="16"
@@ -147,7 +146,6 @@
                          BorderThickness="0"
                          Foreground="{StaticResource MyForeground}"
                          Background="Transparent"
-                         materialDesign:TransitionAssist.DisableTransitions="True"
                          Value="{Binding CurrentProgress, Mode=OneWay}"/>
         </Grid>
     </Border>

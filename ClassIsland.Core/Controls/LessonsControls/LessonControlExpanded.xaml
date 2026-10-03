@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:ClassIsland.Core.Controls.LessonsControls"
              xmlns:profile="clr-namespace:ClassIsland.Shared.Models.Profile;assembly=ClassIsland.Shared"
              xmlns:converters="clr-namespace:ClassIsland.Core.Converters"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:LessonControlBase.Resources>
@@ -72,14 +71,14 @@
                 <TabControl SelectedIndex="{Binding MasterTabIndex}" Margin="6 0 0 0"
                             Visibility="{Binding SettingsSource.ShowExtraInfoOnTimePoint, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TabControl.Resources>
-                        <Style TargetType="TabItem" BasedOn="{StaticResource MaterialDesignTabItem}">
+                        <Style TargetType="TabItem" BasedOn="{StaticResource MahApps.Styles.TabItem}">
                             <Setter Property="Visibility" Value="Collapsed" />
                         </Style>
                     </TabControl.Resources>
                     <TabItem>
                         <TabControl VerticalAlignment="Bottom" FontSize="{DynamicResource MainWindowSecondaryFontSize}">
                             <TabControl.Style>
-                                <Style TargetType="TabControl" BasedOn="{StaticResource MaterialDesignTabControl}">
+                                <Style TargetType="TabControl" BasedOn="{StaticResource MahApps.Styles.TabControl}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsLiveUpdatingEnabled, Mode=OneWay}" Value="False">
                                             <Setter Property="SelectedIndex" Value="0" />
@@ -194,10 +193,9 @@
                 </Border.LayoutTransform>
             </Border>
         </StackPanel>
-        <ProgressBar HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
-                 materialDesign:TransitionAssist.DisableTransitions="True">
+        <ProgressBar HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <ProgressBar.Style>
-                <Style TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignLinearProgressBar}">
+                <Style TargetType="ProgressBar" BasedOn="{StaticResource MahApps.Styles.ProgressBar}">
                     <Setter Property="Value" Value="{Binding Seconds}"/>
                     <Setter Property="Maximum" Value="{Binding TotalSeconds}"/>
                 </Style>

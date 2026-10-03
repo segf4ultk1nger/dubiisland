@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:ClassIsland.Controls.RuleSettingsControls"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:rules="clr-namespace:ClassIsland.Models.Rules"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:RainTimeRuleSettingsControl}}">
@@ -16,11 +15,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <ToggleButton Grid.Column="0" IsChecked="{Binding Settings.IsRemainingTime}"
-                      Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClockStart}}"
-                      materialDesign:ToggleButtonAssist.OnContent="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClockEnd}}">
+        <ToggleButton Grid.Column="0" IsChecked="{Binding Settings.IsRemainingTime}" Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClockStart}}">
             <ToggleButton.Style>
-                <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}"
+                <Style BasedOn="{StaticResource MahApps.Styles.ToggleButton}"
                        TargetType="ToggleButton">
                     <Style.Triggers>
                         <Trigger Property="IsChecked" Value="True">
@@ -34,7 +31,6 @@
         <ci:NumbericTextBox Text="{Binding Settings.RainTimeMinutes, Converter={StaticResource IntToStringConverter}}"
                             Grid.Column="1"
                             MinValue="0" MaxValue="120"
-                            Style="{StaticResource MaterialDesignTextBox}"
-                            materialDesign:TextFieldAssist.SuffixText="分钟"/>
+                            Style="{StaticResource MahApps.Styles.TextBox}"/>
     </Grid>
 </ci:RuleSettingsControlBase>

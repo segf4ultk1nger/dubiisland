@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using MaterialDesignThemes.Wpf;
-
 
 namespace ClassIsland.Controls.Demo;
 
@@ -11,11 +9,11 @@ namespace ClassIsland.Controls.Demo;
 public partial class ThemeDemo : UserControl
 {
     public static readonly DependencyProperty ThemeModeProperty = DependencyProperty.Register(
-        nameof(ThemeMode), typeof(ColorZoneMode), typeof(ThemeDemo), new PropertyMetadata(default(ColorZoneMode)));
+        nameof(ThemeMode), typeof(string), typeof(ThemeDemo), new PropertyMetadata("Light"));
 
-    public ColorZoneMode ThemeMode
+    public string ThemeMode
     {
-        get { return (ColorZoneMode)GetValue(ThemeModeProperty); }
+        get { return (string)GetValue(ThemeModeProperty); }
         set { SetValue(ThemeModeProperty, value); }
     }
 

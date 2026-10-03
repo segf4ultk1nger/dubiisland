@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:ClassIsland.Controls.Components"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Loaded="SlideComponent_OnLoaded"
                   Unloaded="SlideComponent_OnUnloaded"
@@ -80,7 +79,6 @@
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          ScrollViewer.CanContentScroll="True"
                          VirtualizingPanel.IsVirtualizing="False"
-                         materialDesign:ListBoxItemAssist.ShowSelection="False"
                          VerticalContentAlignment="Stretch"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Stretch">
@@ -90,12 +88,12 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.Resources>
-                        <Style TargetType="ScrollViewer" BasedOn="{StaticResource MaterialDesignScrollViewer}">
+                        <Style TargetType="ScrollViewer" BasedOn="{StaticResource MahApps.Styles.ScrollViewer}">
                             <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
                         </Style>
                     </ListBox.Resources>
                     <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                             <Style.Triggers>
                                 <!-- 无动画隐藏状态 -->
                                 <MultiDataTrigger>
@@ -183,7 +181,7 @@
                             ItemsSource="{Binding Settings.Children}"
                             VerticalContentAlignment="Stretch">
                     <TabControl.ItemContainerStyle>
-                        <Style TargetType="TabItem" BasedOn="{StaticResource MaterialDesignTabItem}">
+                        <Style TargetType="TabItem" BasedOn="{StaticResource MahApps.Styles.TabItem}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                         </Style>
                     </TabControl.ItemContainerStyle>

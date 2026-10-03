@@ -422,7 +422,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
                 return;
             if (Path.GetExtension(fileName) != ".cipx")
             {
-                ViewModel.MessageQueue.Enqueue($"不支持的文件：{fileName}");
+                ViewModel.StatusMessage = $"不支持的文件：{fileName}";
                 return;
             }
             try
@@ -440,7 +440,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
                 var mfText = new StreamReader(mf.Open()).ReadToEnd();
                 var manifest = deserializer.Deserialize<PluginManifest>(mfText);
 
-                ViewModel.MessageQueue.Enqueue($"插件 {manifest.Name} 版本 {manifest.Version} 安装成功。");
+                ViewModel.StatusMessage = $"插件 {manifest.Name} 版本 {manifest.Version} 安装成功。";
                 RequestRestart();
             }
             catch (Exception exception)

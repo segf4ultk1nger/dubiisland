@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Core.Controls"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services;assembly=ClassIsland.Core"
              xmlns:converters1="clr-namespace:ClassIsland.Core.Converters"
              xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
@@ -16,8 +15,7 @@
             x:Key="AttachedSettingsControlInfoIdToAttachedSettingsControlInfoMultiConverter" />
     </UserControl.Resources>
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:AttachedSettingsControlPresenter}}">
-        <Expander materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
-                  materialDesign:ExpanderAssist.VerticalHeaderPadding="0"
+        <Expander
                   Background="Transparent">
             <Expander.IsExpanded>
                 <MultiBinding Converter="{StaticResource BooleanAndExpressionMultiConverter}" Mode="OneWay">
@@ -27,13 +25,9 @@
             </Expander.IsExpanded>
             <Expander.Header>
                 <DockPanel>
-                    <ToggleButton DockPanel.Dock="Right"
-                                  IsChecked="{Binding AssociatedAttachedSettings.IsAttachSettingsEnabled}"
-                                  ToolTip="是否在此处启用特定的设置"
-                                  Content="{local:GlyphIcon {x:Static local:IconGlyphs.LayersOutline}}"
-                                  Visibility="{Binding ControlInfo.HasEnabledState, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding AssociatedAttachedSettings.IsAttachSettingsEnabled}" ToolTip="是否在此处启用特定的设置" Content="{local:GlyphIcon {x:Static local:IconGlyphs.LayersOutline}}" Visibility="{Binding ControlInfo.HasEnabledState, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <Button DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignToolForegroundButton}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Margin="4 -4"
                             ToolTip="查看此设置的继承情况…"
                             Content="{local:GlyphIcon {x:Static local:IconGlyphs.LayersSearchOutline}}"
@@ -46,7 +40,7 @@
                             </MultiBinding>
                         </Button.Visibility>
                     </Button>
-                    <materialDesign:PopupEx DockPanel.Dock="Right" 
+                    <Popup DockPanel.Dock="Right" 
                            PopupAnimation="Fade"
                            Closed="Popup_OnClosed"
                             Margin="0 -2"
@@ -82,7 +76,7 @@
                                             <ListBox Grid.Row="1" ItemsSource="{Binding NextItems}">
                                                 <ListBox.ItemContainerStyle>
                                                     <Style TargetType="ListBoxItem"
-                                                           BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                           BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate>
@@ -110,7 +104,7 @@
                                             <ListBox Grid.Row="1" ItemsSource="{Binding PreviousItems}">
                                                 <ListBox.ItemContainerStyle>
                                                     <Style TargetType="ListBoxItem"
-                                                           BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                           BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate>
@@ -138,13 +132,13 @@
                                             Margin="4 0 0 0"
                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                             CommandParameter="https://docs.classisland.tech/app/advanced#%E9%99%84%E5%8A%A0%E8%AE%BE%E7%BD%AE"
-                                            Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                            Style="{StaticResource MahApps.Styles.Button.Flat}" />
                                     <Button HorizontalAlignment="Left"
                                             Content="{local:GlyphIcon {x:Static local:IconGlyphs.Refresh}}"
                                             ToolTip="刷新"
                                             Margin="4 0 0 0"
                                             Click="ButtonRefresh_OnClick"
-                                            Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                            Style="{StaticResource MahApps.Styles.Button.Flat}" />
                                 </WrapPanel >
                                 <ProgressBar Grid.Row="0"
                                              IsIndeterminate="True"
@@ -152,7 +146,7 @@
                                              Visibility="{Binding IsLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </Grid>
                         </Border>
-                    </materialDesign:PopupEx>
+                    </Popup>
                     <Grid>
                         <controls:IconText Kind="{Binding ControlInfo.IconKind, Mode=OneWay}"
                                      Text="{Binding ControlInfo.Name, Mode=OneWay, FallbackValue=''}"

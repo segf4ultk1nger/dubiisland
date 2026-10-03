@@ -1,11 +1,11 @@
 <controls1:MyWindow x:Class="ClassIsland.Views.ClassChangingWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
         xmlns:converters="clr-namespace:ClassIsland.Converters"
         xmlns:models="clr-namespace:ClassIsland.Models"
@@ -32,7 +32,7 @@
         WindowStartupLocation="CenterScreen"
         dialogs:DialogService.Identifier="{Binding ViewModel.DialogIdentifier}">
     <controls1:MyWindow.Resources>
-        <Style x:Key="ClassPlanListBoxItemStyle" BasedOn="{StaticResource MaterialDesignListBoxItem}"
+        <Style x:Key="ClassPlanListBoxItemStyle" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}"
                TargetType="{x:Type ListBoxItem}">
             <Setter Property="Padding" Value="0" />
             <Setter Property="IsTabStop" Value="False" />
@@ -54,21 +54,21 @@
             <Setter Property="ItemContainerStyle" Value="{StaticResource ClassPlanListBoxItemStyle}"/>
         </Style>
         <StackPanel x:Key="OverwriteConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="覆盖当前的临时层"/>
             </TextBlock>
             <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
                 <Run Text="当前已经存在一个临时层课表，如果继续换课，那么该临时层将被覆盖。是否继续？"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="继续" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="继续" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -95,11 +95,9 @@
             </Grid.RowDefinitions>
 
             <!-- Content -->
-            <materialDesign:Transitioner Grid.Row="1" SelectedIndex="{Binding ViewModel.SlideIndex}">
-                <materialDesign:TransitionerSlide>
-                    <materialDesign:TransitionerSlide.ForwardWipe>
-                        <materialDesign:SlideOutWipe />
-                    </materialDesign:TransitionerSlide.ForwardWipe>
+            <controls1:Transitioner Grid.Row="1" SelectedIndex="{Binding ViewModel.SlideIndex}">
+                <controls1:TransitionerSlide>
+                    
                     <Grid>
                         <ci:LessonsListBox VerticalAlignment="Center"
                                  HorizontalAlignment="Center"
@@ -112,11 +110,9 @@
                                  SelectionChanged="Selector_OnSelectionChanged">
                         </ci:LessonsListBox>
                     </Grid>
-                </materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide>
-                    <materialDesign:TransitionerSlide.BackwardWipe>
-                        <materialDesign:SlideOutWipe />
-                    </materialDesign:TransitionerSlide.BackwardWipe>
+                </controls1:TransitionerSlide>
+                <controls1:TransitionerSlide>
+                    
                     <Grid Margin="8" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -131,17 +127,10 @@
                             CurrentClassPlan="{Binding ClassPlan}"
                             IsSelected="True"
                             IsTimerEnabled="False" />
-                        <ToggleButton
-                            Margin="8 0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Grid.Column="1"
-                            materialDesign:ToggleButtonAssist.OnContent="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.SwapHorizontal}}"
-                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}"
-                            IsChecked="{Binding SettingsService.Settings.IsSwapMode}">
+                        <ToggleButton Margin="8 0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}" IsChecked="{Binding SettingsService.Settings.IsSwapMode}">
                             <ToggleButton.Style>
                                 <Style TargetType="ToggleButton"
-                                       BasedOn="{StaticResource MaterialDesignActionToggleButton}">
+                                       BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                                     <Style.Triggers>
                                         <Trigger Property="IsChecked" Value="True">
                                             <Setter Property="ToolTip" Value="互换两个课程。" />
@@ -153,11 +142,11 @@
                                 </Style>
                             </ToggleButton.Style>
                         </ToggleButton>
-                        <materialDesign:Transitioner Grid.Column="2"
+                        <controls1:Transitioner Grid.Column="2"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Stretch">
-                            <materialDesign:Transitioner.Style>
-                                <Style TargetType="materialDesign:Transitioner">
+                            <controls1:Transitioner.Style>
+                                <Style TargetType="controls1:Transitioner">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SettingsService.Settings.IsSwapMode}" Value="True">
                                             <Setter Property="SelectedIndex" Value="0" />
@@ -167,11 +156,9 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </materialDesign:Transitioner.Style>
-                            <materialDesign:TransitionerSlide>
-                                <materialDesign:TransitionerSlide.ForwardWipe>
-                                    <materialDesign:SlideOutWipe />
-                                </materialDesign:TransitionerSlide.ForwardWipe>
+                            </controls1:Transitioner.Style>
+                            <controls1:TransitionerSlide>
+                                
                                 <ci:LessonsListBox VerticalAlignment="Center"
                                                    HorizontalAlignment="Center"
                                                    Margin="0 8"
@@ -181,16 +168,14 @@
                                                    Subjects="{Binding ProfileService.Profile.Subjects, Mode=OneWay}"
                                                    SelectedIndex="{Binding ViewModel.SwapModeTargetIndex}">
                                 </ci:LessonsListBox>
-                            </materialDesign:TransitionerSlide>
-                            <materialDesign:TransitionerSlide>
-                                <materialDesign:TransitionerSlide.BackwardWipe>
-                                    <materialDesign:SlideOutWipe />
-                                </materialDesign:TransitionerSlide.BackwardWipe>
+                            </controls1:TransitionerSlide>
+                            <controls1:TransitionerSlide>
+                                
                                 <ComboBox HorizontalAlignment="Left"
                                           MinWidth="100"
                                           VerticalAlignment="Center"
-                                          materialDesign:HintAssist.Hint="换课成…"
-                                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                          mah:TextBoxHelper.Watermark="换课成…"
+                                          Style="{StaticResource MahApps.Styles.ComboBox}"
                                           ItemsSource="{Binding ProfileService.Profile.Subjects, UpdateSourceTrigger=PropertyChanged}"
                                           SelectedValuePath="Key"
                                           SelectedValue="{Binding ViewModel.TargetSubjectIndex}">
@@ -200,11 +185,11 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-                            </materialDesign:TransitionerSlide>
-                        </materialDesign:Transitioner>
+                            </controls1:TransitionerSlide>
+                        </controls1:Transitioner>
                     </Grid>
-                </materialDesign:TransitionerSlide>
-            </materialDesign:Transitioner>
+                </controls1:TransitionerSlide>
+            </controls1:Transitioner>
 
             <!-- Separator -->
             <Separator Grid.Row="2" Margin="0 8 0 0" />
@@ -215,7 +200,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom"
                         Margin="6">
-                <Button Style="{StaticResource MaterialDesignPaperButton}"
+                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                         Margin="0 0 4 0"
                         IsCancel="True"
                         ToolTip="取消换课操作。">
@@ -225,7 +210,7 @@
                         Click="ButtonPrev_OnClick"
                         ToolTip="返回上一步。">
                     <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignPaperButton}">
+                        <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding ViewModel.SlideIndex}" Value="0">
                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -306,44 +291,34 @@
             <Grid Grid.Row="0" Margin="8 4">
                 <StackPanel Orientation="Horizontal" Margin="4 0">
                     <StackPanel.Resources>
-                        <Style TargetType="materialDesign:Chip" BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                             <Setter Property="Foreground"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
                             <Setter Property="BorderBrush"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                            <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}" />
-                            <Setter Property="IconBackground"
-                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                            <Setter Property="Margin" Value="0 -8 6 -8" />
+<Setter Property="Margin" Value="0 -8 6 -8" />
                         </Style>
                     </StackPanel.Resources>
-                    <materialDesign:Chip
-                        ToolTip="要换课的课表"
-                        Click="ButtonTemporaryClassPlan_OnClick">
-                        <materialDesign:Chip.Style>
-                            <Style TargetType="materialDesign:Chip"
-                                   BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                    <ToggleButton ToolTip="要换课的课表" Click="ButtonTemporaryClassPlan_OnClick">
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton"
+                                   BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ClassPlan.IsOverlay}" Value="True">
-                                        <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.LayersOutline}}" />
-                                    </DataTrigger>
+</DataTrigger>
                                 </Style.Triggers>
                                 <Setter Property="Foreground"
                                         Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
                                 <Setter Property="BorderBrush"
                                         Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}" />
-                                <Setter Property="IconBackground"
-                                        Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                <Setter Property="Margin" Value="0 -8 6 -8" />
+<Setter Property="Margin" Value="0 -8 6 -8" />
 
-                                <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileDocumentOutline}}" />
-                            </Style>
-                        </materialDesign:Chip.Style>
+</Style>
+                        </ToggleButton.Style>
                         <TextBlock>
                             <Run Text="{Binding ClassPlan.Name}" />
                         </TextBlock>
-                    </materialDesign:Chip>
+                    </ToggleButton>
                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}"
                                              VerticalAlignment="Center"
                                              Margin="4 0" />

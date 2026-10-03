@@ -1,17 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:ClassIsland.Controls"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:behaviors="clr-namespace:ClassIsland.Behaviors"
                     xmlns:ci="http://classisland.tech/schemas/xaml/core">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary
-            Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <materialDesign:CalendarDateCoalesceConverter x:Key="CalendarDateCoalesceConverter" />
-    <materialDesign:CalendarYearMonthConverter x:Key="CalendarYearMonthConverter" />
-    <Style TargetType="CalendarDayButton" BasedOn="{StaticResource MaterialDesignCalendarDayButton}"
+    
+    
+    <Style TargetType="CalendarDayButton" BasedOn="{StaticResource MahApps.Styles.CalendarDayButton}"
            x:Key="ScheduleCalendarDayButtonStyle">
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -149,22 +146,22 @@
                                      Stroke="{TemplateBinding Foreground}"
                                      StrokeThickness="1" />
                             <Ellipse x:Name="SelectedBackground"
-                                     Fill="{TemplateBinding materialDesign:CalendarAssist.SelectionColor}"
+                                     Fill="{DynamicResource MahApps.Brushes.Accent}"
                                      Opacity="0" />
                             
                             <Border x:Name="HighlightingBorder" Opacity="0">
                                 <Ellipse x:Name="HighlightBackground"
-                                         Fill="{TemplateBinding materialDesign:CalendarAssist.SelectionColor}"
+                                         Fill="{DynamicResource MahApps.Brushes.Accent}"
                                          Opacity="1" />
                             </Border>
                             <ContentPresenter x:Name="NormalText"
                                               Margin="5,1,5,1"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              TextElement.Foreground="{TemplateBinding materialDesign:CalendarAssist.SelectionForegroundColor}" />
+                                              TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}" />
                             <Ellipse x:Name="DayButtonFocusVisual"
                                      Opacity="0"
-                                     Stroke="{TemplateBinding materialDesign:CalendarAssist.SelectionColor}"
+                                     Stroke="{DynamicResource MahApps.Brushes.Accent}"
                                      StrokeThickness="1"
                                      Visibility="Collapsed" />
                         </Grid>
@@ -188,7 +185,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="CalendarItem" BasedOn="{StaticResource MaterialDesignCalendarItemPortrait}"
+    <Style TargetType="CalendarItem" BasedOn="{StaticResource MahApps.Styles.CalendarItem}"
            x:Key="ScheduleCalendarControlCalendarItemStyle">
         <Setter Property="Template">
             <Setter.Value>
@@ -244,15 +241,14 @@
                                                 </VisualState>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <materialDesign:Ripple HorizontalAlignment="Center"
-                                                               VerticalAlignment="Center">
+                                        
                                             <Viewbox Height="12" Margin="8">
                                                 <Path x:Name="path"
                                                       Data="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
                                                       Fill="{TemplateBinding Foreground}"
                                                       Stretch="Fill" />
                                             </Viewbox>
-                                        </materialDesign:Ripple>
+                                        
                                     </Grid>
                                 </ControlTemplate>
                                 <ControlTemplate x:Key="NextButtonTemplate" TargetType="{x:Type Button}">
@@ -271,15 +267,14 @@
                                                 </VisualState>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <materialDesign:Ripple HorizontalAlignment="Center"
-                                                               VerticalAlignment="Center">
+                                        
                                             <Viewbox Height="12" Margin="8">
                                                 <Path x:Name="path"
                                                       Data="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"
                                                       Fill="{TemplateBinding Foreground}"
                                                       Stretch="Fill" />
                                             </Viewbox>
-                                        </materialDesign:Ripple>
+                                        
                                     </Grid>
                                 </ControlTemplate>
                                 <ControlTemplate x:Key="HeaderButtonTemplate" TargetType="{x:Type Button}">
@@ -315,7 +310,6 @@
                                     Margin="16,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
-                                    materialDesign:CalendarAssist.Orientation="{TemplateBinding materialDesign:CalendarAssist.Orientation}"
                                     Focusable="False"
                                     FontWeight="Medium"
                                     Foreground="{DynamicResource MaterialDesignBody}"
@@ -460,7 +454,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="controls:ScheduleCalendarControl" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
+    <Style TargetType="controls:ScheduleCalendarControl" BasedOn="{StaticResource MahApps.Styles.Calendar}">
         <Style.Resources>
 
         </Style.Resources>

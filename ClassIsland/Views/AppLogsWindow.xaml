@@ -1,11 +1,11 @@
 ﻿<controls1:MyWindow x:Class="ClassIsland.Views.AppLogsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:classIsland="clr-namespace:ClassIsland"
         xmlns:behaviors="clr-namespace:ClassIsland.Behaviors"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
@@ -37,7 +37,7 @@
         <Grid Grid.Row="0">
             <ListBox HorizontalAlignment="Left"
                      SelectionChanged="Selector_OnSelectionChanged"
-                Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineListBox}"
+                Style="{StaticResource MahApps.Styles.ListBox}"
             >
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredCritical}">
                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LightningBolt}" Text="灾难"/>
@@ -59,10 +59,8 @@
                 </ListBoxItem>
             </ListBox>
             
-            <TextBox materialDesign:HintAssist.Hint="搜索日志…"
-                     materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="Search"
-                     materialDesign:TextFieldAssist.HasClearButton="True"
+            <TextBox mah:TextBoxHelper.Watermark="搜索日志…"
+                     mah:TextBoxHelper.ClearTextButton="True"
                      HorizontalAlignment="Right"
                      VerticalAlignment="Center"
                      MinWidth="200"
@@ -80,7 +78,7 @@
                             x:Name="MainListView"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <controls1:AutoScrollListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Trace">
                             <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
@@ -151,15 +149,15 @@
         </controls1:AutoScrollListView>
 
         <WrapPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
+            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                     Click="ButtonClearLogs_OnClick">
                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Clear}" Text="清空日志"/>
             </Button>
-            <!--<Button Style="{StaticResource MaterialDesignFlatButton}"
+            <!--<Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                     Click="ButtonScrollToBottom_OnClick">
                 <controls:IconText Kind="{x:Static controls1:IconGlyphs.ArrowBottom}" Text="滚动到最底"/>
             </Button>-->
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
+            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                     Click="ButtonCopySelectedLogs_OnClick">
                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ContentCopy}" Text="复制选中"/>
             </Button>

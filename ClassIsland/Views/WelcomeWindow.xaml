@@ -4,7 +4,6 @@
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                    xmlns:local="clr-namespace:ClassIsland.Views"
-                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
                    xmlns:controls="clr-namespace:ClassIsland.Controls"
                    xmlns:gif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
@@ -39,11 +38,11 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="开放源代码许可" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
-            <TextBox Grid.Row="1" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="0 12 0 0"
+            <TextBlock Grid.Row="0" Text="开放源代码许可" Style="{StaticResource Headline5TextBlock}"/>
+            <TextBox Grid.Row="1" Style="{StaticResource MahApps.Styles.TextBox}" Margin="0 12 0 0"
                      Padding="8" Text="{Binding ViewModel.License, Mode=OneWay}" IsReadOnly="True"
                      VerticalScrollBarVisibility="Auto" FontFamily="Consolas"/>
-            <Button Grid.Row="2" Style="{StaticResource MaterialDesignFlatButton}" Content="确定" 
+            <Button Grid.Row="2" Style="{StaticResource MahApps.Styles.Button.Flat}" Content="确定" 
                     IsDefault="True"
                     HorizontalAlignment="Right" Margin="0 8 0 0"
                     Command="{x:Static dialogs:DialogService.CloseDialogCommand}">
@@ -52,21 +51,21 @@
         </Grid>
         <!-- 退出确认 -->
         <StackPanel x:Key="ExitAppConfirmDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="退出应用"/>
             </TextBlock>
             <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
                 <Run Text="您需要完成设置才能开始使用本应用。关闭此窗口将直接退出应用。"></Run>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="退出" HorizontalAlignment="Right" IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="退出" HorizontalAlignment="Right" IsDefault="True" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -93,7 +92,6 @@
                                     VerticalContentAlignment="Stretch"
                                     IsTabStop="False"
                                     SelectedIndex="{Binding ViewModel.SlideIndex, Mode=TwoWay}"
-                                    materialDesign:ListBoxItemAssist.ShowSelection="False"
                                     Margin="8 4">
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -102,7 +100,7 @@
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemContainerStyle>
                                         <Style TargetType="ListBoxItem"
-                                               BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                               BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                             <Setter Property="Padding" Value="0" />
                                             <Setter Property="IsTabStop" Value="False" />
                                         </Style>
@@ -111,7 +109,7 @@
                                         <DataTemplate>
                                             <DataTemplate.Resources>
                                                 <Style TargetType="RadioButton"
-                                                       BasedOn="{StaticResource MaterialDesignTabRadioButton}">
+                                                       BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                                                     <Setter Property="BorderBrush"
                                                             Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
                                                     <Setter Property="FontSize" Value="18" />
@@ -124,10 +122,6 @@
                                                         </Trigger>
                                                     </Style.Triggers>
                                                     <Style.Resources>
-                                                        <Style TargetType="materialDesign:Ripple">
-                                                            <Setter Property="Feedback"
-                                                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
-                                                        </Style>
                                                     </Style.Resources>
                                                 </Style>
                                                 <converters1:StringToRadioButtonSelectionConverter
@@ -146,12 +140,11 @@
                                     <system:String>完成</system:String>
                     </ListBox>
 
-                    <materialDesign:Transitioner Grid.Row="1"
+                    <controls1:Transitioner Grid.Row="1"
                                                  Margin="16"
-                                                 AutoApplyTransitionOrigins="True"
                                                  SelectedIndex="{Binding ViewModel.SlideIndex, Mode=TwoWay}">
                         <!-- 欢迎 -->
-                        <materialDesign:TransitionerSlide>
+                        <controls1:TransitionerSlide>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -170,21 +163,21 @@
 
                                 <StackPanel Grid.Column="1" Grid.Row="0">
                                     <TextBlock Text="欢迎使用ClassIsland"
-                                               Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                                               Style="{StaticResource Headline5TextBlock}" />
                                     <TextBlock Margin="0 6 0 0" TextWrapping="Wrap"
                                                FontWeight="Light"
                                                Text="本向导将引导您完成ClassIsland的设置，只需几步，即可完成ClassIsland的基本设置。点击【下一步】以开始设置。" />
                                     <CheckBox Margin="0 12 0 0" IsChecked="{Binding ViewModel.IsLicenseAgreed}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="我已阅读并同意" VerticalAlignment="Center" />
-                                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                     Content="《ClassIsland 开源许可》"
                                                     Padding="0"
                                                     VerticalAlignment="Center"
                                                     Command="{x:Static dialogs:DialogService.OpenDialogCommand}"
                                                     CommandParameter="{StaticResource OpenSourceLicense}" />
                                             <TextBlock Text="和" VerticalAlignment="Center"/>
-                                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                     Content="《ClassIsland 隐私政策》"
                                                     Padding="0"
                                                     VerticalAlignment="Center"
@@ -192,9 +185,7 @@
                                             <TextBlock Text="。" VerticalAlignment="Center" />
                                         </StackPanel>
                                     </CheckBox>
-                                    <materialDesign:ColorZone Background="#17800080"
-                                                              Margin="0 0 0 4"
-                                                              Panel.ZIndex="1">
+                                    <Border Background="#17800080" Margin="0 0 0 4" Panel.ZIndex="1">
                                         <StackPanel Margin="8 4">
                                             <DockPanel>
                                                 <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}" />
@@ -207,27 +198,27 @@
                                                 </TextBlock>
                                             </DockPanel>
                                         </StackPanel>
-                                    </materialDesign:ColorZone>
+                                    </Border>
                                 </StackPanel>
                                 <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal"
                                             HorizontalAlignment="Right">
                                     <Button Click="ButtonJoinManagementOnClick"
                                             Margin="0 0 6 0"
-                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                                             IsEnabled="{Binding ViewModel.IsLicenseAgreed, Mode=OneWay}"
                                             Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WorkOutline}" Text="加入管理" />
                                     </Button>
-                                    <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}"
+                                    <Button Command="{x:Static controls1:Transitioner.MoveNextCommand}"
                                             IsEnabled="{Binding ViewModel.IsLicenseAgreed, Mode=OneWay}">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
-                        </materialDesign:TransitionerSlide>
+                        </controls1:TransitionerSlide>
 
                         <!-- 基本设置 -->
-                        <materialDesign:TransitionerSlide>
+                        <controls1:TransitionerSlide>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -237,7 +228,7 @@
 
                                 <StackPanel Grid.Row="0">
                                     <TextBlock Text="基本设置"
-                                               Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                                               Style="{StaticResource Headline5TextBlock}" />
                                     <TextBlock Margin="0 6 0 0" TextWrapping="Wrap"
                                                FontWeight="Light"
                                                Text="您后续也可以在应用设置中再次调整这些选项。" />
@@ -259,20 +250,20 @@
                                                            Description="启用后，应用将收集并上传应用的使用情况与错误信息，以帮助改进此应用。上传的信息不包含您的个人信息。" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Style="{StaticResource MaterialDesignPaperButton}"
-                                            Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                            Command="{x:Static controls1:Transitioner.MovePreviousCommand}"
                                             Margin="0 0 6 0">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
-                                    <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                                    <Button Command="{x:Static controls1:Transitioner.MoveNextCommand}">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
-                        </materialDesign:TransitionerSlide>
+                        </controls1:TransitionerSlide>
 
                         <!-- 匿名信息收集 -->
-                        <materialDesign:TransitionerSlide>
+                        <controls1:TransitionerSlide>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -282,7 +273,7 @@
 
                                 <StackPanel Grid.Row="0">
                                     <TextBlock Text="外观"
-                                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                               Style="{StaticResource Headline5TextBlock}"
                                                Margin="0 0 0 8" />
                                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ThemeLightDark}" Text="明暗主题" />
                                     <Grid SnapsToDevicePixels="True">
@@ -362,20 +353,20 @@
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Style="{StaticResource MaterialDesignPaperButton}"
-                                            Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                            Command="{x:Static controls1:Transitioner.MovePreviousCommand}"
                                             Margin="0 0 6 0">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
-                                    <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                                    <Button Command="{x:Static controls1:Transitioner.MoveNextCommand}">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
-                        </materialDesign:TransitionerSlide>
+                        </controls1:TransitionerSlide>
 
                         <!-- 系统 -->
-                        <materialDesign:TransitionerSlide>
+                        <controls1:TransitionerSlide>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -385,14 +376,14 @@
                                 <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
                                     <StackPanel>
                                         <TextBlock Text="系统"
-                                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                                                   Style="{StaticResource Headline5TextBlock}" />
                                         <TextBlock Margin="0 6 0 0" TextWrapping="Wrap"
                                                    FontWeight="Light"
                                                    Text="设置ClassIsland的系统集成功能，这些功能可以优化您使用本软件的体验。" />
                                         <StackPanel Margin="8">
                                             <StackPanel.Resources>
                                                 <Style TargetType="CheckBox"
-                                                       BasedOn="{StaticResource MaterialDesignCheckBox}">
+                                                       BasedOn="{StaticResource MahApps.Styles.CheckBox}">
                                                     <Setter Property="FocusVisualStyle"
                                                             Value="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}">
                                                     </Setter>
@@ -438,20 +429,20 @@
                                     </StackPanel>
                                 </ScrollViewer>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Style="{StaticResource MaterialDesignPaperButton}"
-                                            Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                            Command="{x:Static controls1:Transitioner.MovePreviousCommand}"
                                             Margin="0 0 6 0">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
-                                    <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                                    <Button Command="{x:Static controls1:Transitioner.MoveNextCommand}">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
-                        </materialDesign:TransitionerSlide>
+                        </controls1:TransitionerSlide>
 
                         <!-- 完成 -->
-                        <materialDesign:TransitionerSlide>
+                        <controls1:TransitionerSlide>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -466,7 +457,7 @@
                                         </Grid.RowDefinitions>
                                         <StackPanel>
                                             <TextBlock Text="完成"
-                                                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                                                       Style="{StaticResource Headline5TextBlock}" />
                                             <TextBlock Margin="0 6 0 16" TextWrapping="Wrap"
                                                        FontWeight="Light">
                                                 <Run TextDecorations="{x:Static TextDecorations.Strikethrough}">轰！擦擦擦！推推！</Run>
@@ -474,16 +465,16 @@
                                             </TextBlock>
 
                                         </StackPanel>   
-                                        <materialDesign:Transitioner Grid.Row="1" SelectedIndex="{Binding ViewModel.FlipIndex}">
-                                            <materialDesign:TransitionerSlide>
+                                        <controls1:Transitioner Grid.Row="1" SelectedIndex="{Binding ViewModel.FlipIndex}">
+                                            <controls1:TransitionerSlide>
                                                 <StackPanel VerticalAlignment="Center"
                                                             HorizontalAlignment="Center">
                                                     <demo:OpenTaskBarMenuDemo Margin="0 0 0 8" />
                                                     <TextBlock Text="点击任务栏托盘图标可以打开应用主菜单。"
                                                                />
                                                 </StackPanel>
-                                            </materialDesign:TransitionerSlide>
-                                            <materialDesign:TransitionerSlide>
+                                            </controls1:TransitionerSlide>
+                                            <controls1:TransitionerSlide>
                                                 <StackPanel VerticalAlignment="Center"
                                                             HorizontalAlignment="Center"
                                                             Width="500">
@@ -491,8 +482,8 @@
                                                            Margin="0 0 0 8"/>
                                                     <TextBlock Text="要编辑课表和时间点，请在应用主菜单中点击【编辑档案】。"/>
                                                 </StackPanel>
-                                            </materialDesign:TransitionerSlide>
-                                            <materialDesign:TransitionerSlide>
+                                            </controls1:TransitionerSlide>
+                                            <controls1:TransitionerSlide>
                                                 <StackPanel>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
@@ -512,7 +503,7 @@
                                                                             Content="阅读帮助文档来了解有关 ClassIsland 的更多信息和技术细节。">
                                                             <controls1:InfoCard.ActionButton>
                                                                 <WrapPanel>
-                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="https://docs.classisland.tech/">
                                                                         <commands:IconText Kind="{x:Static controls1:IconGlyphs.Internet}" Text="在线阅读…"/>
@@ -529,7 +520,7 @@
                                                                             Content="只需十分钟，带您快速上手 ClassIsland。">
                                                             <controls1:InfoCard.ActionButton>
                                                                 <WrapPanel>
-                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="https://www.bilibili.com/video/BV1fA4m1A7uZ/">
                                                                         <commands:IconText Kind="{x:Static controls1:IconGlyphs.Youtube}" Text="观看入门教程视频…"/>
@@ -546,7 +537,7 @@
                                                                             Content="开始编辑您的第一份时间表和课表。">
                                                             <controls1:InfoCard.ActionButton>
                                                                 <WrapPanel>
-                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="classisland://app/profile/">
                                                                         <commands:IconText Kind="{x:Static controls1:IconGlyphs.LeadPencil}" Text="打开编辑档案界面…"/>
@@ -564,7 +555,7 @@
                                                             <controls1:InfoCard.ActionButton>
                                                                 <WrapPanel>
                                                                     
-                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="https://migrate.classisland.tech/">
                                                                         <commands:IconText Kind="{x:Static controls1:IconGlyphs.Internet}" Text="打开导入工具网页…"/>
@@ -575,12 +566,12 @@
                                                     </Grid>
                                                     <TextBlock Text="点击【完成】即可结束设置向导。"/>
                                                 </StackPanel>
-                                            </materialDesign:TransitionerSlide>
-                                        </materialDesign:Transitioner>
+                                            </controls1:TransitionerSlide>
+                                        </controls1:Transitioner>
                                     </Grid>
                                 </ScrollViewer>
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Style="{StaticResource MaterialDesignPaperButton}"
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                             Click="ButtonCompleteFlipBack_OnClick">
                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
@@ -596,11 +587,10 @@
                                     </Button>
                                 </StackPanel>
                             </Grid>
-                        </materialDesign:TransitionerSlide>
-                    </materialDesign:Transitioner>
+                        </controls1:TransitionerSlide>
+                    </controls1:Transitioner>
                 </Grid>
-            <materialDesign:Snackbar VerticalAlignment="Bottom"
-                                     MessageQueue="{Binding ViewModel.SnackbarQueue, Mode=OneWay}"/>
+            <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="16" TextWrapping="Wrap" FontWeight="Medium" Text="{Binding ViewModel.StatusMessage, Mode=OneWay}"/>
         </Grid>
     </ww:AsyncBox>
 </controls1:MyWindow>

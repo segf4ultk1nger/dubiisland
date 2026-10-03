@@ -27,7 +27,6 @@ using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using ClassIsland.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using ClassIsland.Services;
 using CommonDialog = ClassIsland.Core.Controls.CommonDialog.CommonDialog;
@@ -618,7 +617,7 @@ public partial class SettingsWindowNew : MyWindow
 
         await ShortcutHelpers.CreateClassSwapShortcutAsync(dialog.FileName);
 
-        ViewModel.SnackbarMessageQueue.Enqueue("快捷换课图标创建成功。");
+        ViewModel.StatusMessage = "快捷换课图标创建成功。";
     }
 
     private async void MenuItemRestartToRecovery_OnClick(object sender, RoutedEventArgs e)

@@ -8,16 +8,12 @@
                         xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
                         xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                         xmlns:ci="http://classisland.tech/schemas/xaml/core"
-                        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                         mc:Ignorable="d" 
                         d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherComponentSettingsControl}}">
         <ScrollViewer>
             <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
-                <materialDesign:ColorZone Background="#204169e1" 
-                                          Panel.ZIndex="1" 
-                                          CornerRadius="4"
-                                          Margin="0 0 0 5">
+                <Border Background="#204169e1" Panel.ZIndex="1" CornerRadius="4" Margin="0 0 0 5">
                     <Grid>
                         <DockPanel Margin="8 4">
                             <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.Info}"/>
@@ -33,7 +29,7 @@
                             </TextBlock>
                         </DockPanel>
                     </Grid>
-                </materialDesign:ColorZone>
+                </Border>
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CardTextOutline}"
                                  Header="显示天气信息"
                                  Description="显示当前天气信息摘要。"

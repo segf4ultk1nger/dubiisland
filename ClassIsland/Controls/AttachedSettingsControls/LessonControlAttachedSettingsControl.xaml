@@ -2,10 +2,10 @@
                                 x:Class="ClassIsland.Controls.AttachedSettingsControls.LessonControlAttachedSettingsControl"
                                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                                 xmlns:local="clr-namespace:ClassIsland.Controls.AttachedSettingsControls"
-                                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                                 xmlns:controls="clr-namespace:ClassIsland.Controls"
                                 xmlns:converters="clr-namespace:ClassIsland.Converters"
                                 xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
@@ -28,9 +28,9 @@
             <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
                       SelectedIndex="{Binding Settings.ExtraInfoType}"
                       HorizontalContentAlignment="Stretch"
-                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                      Style="{StaticResource MahApps.Styles.ComboBox}"
                       Visibility="{Binding Settings.ShowExtraInfoOnTimePoint, Converter={StaticResource BooleanToVisibilityConverter}}"
-                      materialDesign:HintAssist.Hint="要显示的附加信息"
+                      mah:TextBoxHelper.Watermark="要显示的附加信息"
                       Margin="0 0 0 6">
                 <ComboBoxItem HorizontalContentAlignment="Left">
                     <TextBlock Text="时间点持续时间" />
@@ -56,11 +56,9 @@
         <TextBox 
            MinWidth="100"
            Margin="0 0 0 6"
-           materialDesign:TextFieldAssist.PrefixText="剩余"
-           materialDesign:HintAssist.Hint="显示精确倒计时时长"
-           materialDesign:TextFieldAssist.SuffixText="秒时"
+           mah:TextBoxHelper.Watermark="显示精确倒计时时长"
            Foreground="{DynamicResource MaterialDesignBody}"
-           Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+           Style="{StaticResource MahApps.Styles.TextBox}"
            Text="{Binding Settings.ExtraInfo4ShowSecondsSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
         <WrapPanel>
             <!-- 时间点结束倒计时 -->
@@ -70,10 +68,9 @@
             <!-- 时间点结束倒计时时长 -->
             <controls1:NumbericTextBox MaxValue="36000" MinValue="0"
                                       MinWidth="100"
-                                      materialDesign:TextFieldAssist.SuffixText="秒"
                                       Visibility="{Binding Settings.IsCountdownEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                       Foreground="{DynamicResource MaterialDesignBody}"
-                                      Style="{StaticResource MaterialDesignTextBoxBase}"
+                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                       Text="{Binding Settings.CountdownSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
         </WrapPanel>
         <CheckBox Content="使用模糊倒计时"

@@ -10,7 +10,6 @@
              xmlns:converters="clr-namespace:ClassIsland.Converters"
              xmlns:converters1="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
              xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:notificationProviderSettings="clr-namespace:ClassIsland.Models.NotificationProviderSettings"
              mc:Ignorable="d" 

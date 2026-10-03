@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
       xmlns:ci="clr-namespace:ClassIsland"
       xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
@@ -26,10 +25,9 @@
       d:DataContext="{d:DesignInstance local:AboutSettingsPage}">
 
     <controls:SettingsPageBase.Resources>
-        <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
             <Setter Property="Height" Value="48"/>
             <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
-            <Setter Property="materialDesign:RippleAssist.Feedback" Value="{DynamicResource MaterialDesignBody}"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="24 0"/>
             <Setter Property="TextElement.FontSize" Value="14"/>
@@ -46,21 +44,18 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="贡献人员" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+            <TextBlock Grid.Row="0" Text="贡献人员" Style="{StaticResource Headline5TextBlock}" />
             <TextBlock Grid.Row="1" Margin="0 6 0 0" Text="感谢以下同学为本项目做出的贡献！"/>
             <Button Grid.Row="2" HorizontalAlignment="Left" 
                     Click="ButtonRefreshContributors_OnClick"
                     Margin="0 2 0 0"
-                    Style="{StaticResource MaterialDesignFlatButton}"
-                    materialDesign:ButtonProgressAssist.IsIndeterminate="True"
-                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding ViewModel.IsRefreshingContributors}"
+                    Style="{StaticResource MahApps.Styles.Button.Flat}"
                     IsEnabled="{Binding ViewModel.IsRefreshingContributors, Converter={StaticResource InvertBooleanConverter}}">
                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
             </Button>
             <ListView Grid.Row="3" Margin="0 2 0 0"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      ItemsSource="{Binding SettingsService.Settings.ContributorsCache.Contributors}"
-                      materialDesign:ListBoxItemAssist.ShowSelection="False">
+                      ItemsSource="{Binding SettingsService.Settings.ContributorsCache.Contributors}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -101,7 +96,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="第三方库" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+            <TextBlock Grid.Row="0" Text="第三方库" Style="{StaticResource Headline5TextBlock}" />
             <ListView Grid.Row="1" Margin="0 6 0 0" HorizontalContentAlignment="Stretch"
                       VirtualizingPanel.ScrollUnit="Pixel">
                 <ListView.ItemTemplate>
@@ -245,11 +240,11 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="开放源代码许可" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-            <TextBox Grid.Row="1" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="0 12 0 0"
+            <TextBlock Grid.Row="0" Text="开放源代码许可" Style="{StaticResource Headline5TextBlock}" />
+            <TextBox Grid.Row="1" Style="{StaticResource MahApps.Styles.TextBox}" Margin="0 12 0 0"
                      Padding="8" Text="{Binding ViewModel.License, Mode=OneWay}" IsReadOnly="True"
                      VerticalScrollBarVisibility="Auto" FontFamily="Consolas" />
-            <Button Grid.Row="2" Style="{StaticResource MaterialDesignFlatButton}" Content="确定"
+            <Button Grid.Row="2" Style="{StaticResource MahApps.Styles.Button.Flat}" Content="确定"
                     IsDefault="True"
                     HorizontalAlignment="Right" Margin="0 8 0 0"
                     Command="{x:Static dialogs:DialogService.CloseDialogCommand}">
@@ -263,12 +258,12 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="诊断信息" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-            <TextBox Grid.Row="1" Style="{StaticResource MaterialDesignOutlinedTextBox}" Margin="0 12 0 0"
+            <TextBlock Grid.Row="0" Text="诊断信息" Style="{StaticResource Headline5TextBlock}" />
+            <TextBox Grid.Row="1" Style="{StaticResource MahApps.Styles.TextBox}" Margin="0 12 0 0"
                      Padding="8" Text="{Binding ViewModel.DiagnosticInfo, Mode=OneWay}" IsReadOnly="True"
                      VerticalContentAlignment="Top"
                      VerticalScrollBarVisibility="Auto" FontFamily="Consolas" />
-            <Button Grid.Row="2" Style="{StaticResource MaterialDesignFlatButton}" Content="确定"
+            <Button Grid.Row="2" Style="{StaticResource MahApps.Styles.Button.Flat}" Content="确定"
                     IsDefault="True"
                     HorizontalAlignment="Right" Margin="0 8 0 0"
                     Command="{x:Static dialogs:DialogService.CloseDialogCommand}">
@@ -281,16 +276,14 @@
         <StackPanel Margin="6" MaxWidth="750">
             <StackPanel>
                 <!-- banner -->
-                <materialDesign:Card ClipContent="True">
+                <Border ClipToBounds="True">
                     <StackPanel>
-                        <materialDesign:Ripple Feedback="{DynamicResource MaterialDesignBody}"
-                                               materialDesign:RippleAssist.RippleOnTop="True"
-                                               MouseDown="AppIcon_OnMouseDown">
+                        
                             <Border Background="#000000">
                                 <Image Source="/Assets/BannerMain_App2.png" Stretch="UniformToFill" HorizontalAlignment="Center"
        VerticalAlignment="Center" />
                             </Border>
-                        </materialDesign:Ripple>
+                        
                         <Grid HorizontalAlignment="Stretch" Margin="12">
                             <!-- about -->
                             <StackPanel Margin="12 0 0 0">
@@ -306,25 +299,25 @@
                             </StackPanel>
                             <!-- Links -->
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                                <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Web}, Size=20}"
                                         Margin="0 0 4 0"
                                         ToolTip="项目主页"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://classisland.tech"/>
-                                <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.BookOpenVariant}, Size=20}"
                                         Margin="0 0 4 0"
                                         ToolTip="文档"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://docs.classisland.tech"/>
-                                <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.GitHub}, Size=20}"
                                         Margin="0 0 4 0"
                                         ToolTip="GitHub"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://github.com/ClassIsland/ClassIsland"/>
-                                <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ForumOutline}, Size=20}"
                                         ToolTip="加入社区"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
@@ -332,10 +325,10 @@
                             </StackPanel>
                         </Grid>
                     </StackPanel>
-                </materialDesign:Card>
+                </Border>
             </StackPanel>
 
-            <materialDesign:Card Margin="0 12 0 0" ClipContent="True">
+            <Border Margin="0 12 0 0" ClipToBounds="True">
                 <StackPanel Style="{StaticResource LinkButtonGroupStackPanelStyle}">
                     
                     <Button Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
@@ -364,19 +357,18 @@
                         </Grid>
                     </Button>
                 </StackPanel>
-            </materialDesign:Card>
+            </Border>
 
-            <materialDesign:Card Margin="0 12 0 0" ClipContent="True" MouseLeftButtonDown="Sayings_OnMouseLeftButtonDown"
-                                 Visibility="{Binding ManagementService.Policy.DisableEasterEggs, Converter={StaticResource InverseBoolToVisConverter}}">
+            <Border Margin="0 12 0 0" ClipToBounds="True" MouseLeftButtonDown="Sayings_OnMouseLeftButtonDown" Visibility="{Binding ManagementService.Policy.DisableEasterEggs, Converter={StaticResource InverseBoolToVisConverter}}">
                 <StackPanel Style="{StaticResource LinkButtonGroupStackPanelStyle}">
                     <TextBlock Text="回声洞" FontWeight="Bold" Margin="16 12 16 6"/>
 
                     <controls2:TypingControl Margin="24 8 16 12" Text="{Binding ViewModel.Sayings, Mode=OneWay}"
                                              IsBusy="{Binding ViewModel.IsSayingBusy, Mode=OneWayToSource}"/>
                 </StackPanel>
-            </materialDesign:Card>
+            </Border>
 
-            <materialDesign:Card Margin="0 12 0 0" ClipContent="True">
+            <Border Margin="0 12 0 0" ClipToBounds="True">
                 <StackPanel Style="{StaticResource LinkButtonGroupStackPanelStyle}">
                     <TextBlock Text="鸣谢" FontWeight="Bold" Margin="16 12 16 6"/>
                     <Button Click="ButtonContributors_OnClick">
@@ -404,9 +396,9 @@
                         感谢其他使用的第三方库和贡献成员，详见贡献名单和第三方库。
                     </TextBlock>
                 </StackPanel>
-            </materialDesign:Card>
+            </Border>
 
-            <materialDesign:Card Margin="0 12 0 0" ClipContent="True">
+            <Border Margin="0 12 0 0" ClipToBounds="True">
                 <StackPanel Style="{StaticResource LinkButtonGroupStackPanelStyle}">
                     <Button Command="{x:Static dialogs:DialogService.OpenDialogCommand}"
                             CommandParameter="{StaticResource OpenSourceLicense}">
@@ -421,7 +413,7 @@
                         </Grid>
                     </Button>
                 </StackPanel>
-            </materialDesign:Card>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </controls:SettingsPageBase>

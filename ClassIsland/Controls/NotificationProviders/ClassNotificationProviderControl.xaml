@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClassIsland.Controls.NotificationProviders"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:ClassIsland.Converters"
              xmlns:classIsland="clr-namespace:ClassIsland"
              xmlns:converters1="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
@@ -98,27 +97,19 @@
         </Grid>
     </UserControl.Resources>
     <Grid Margin="16 0" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClassNotificationProviderControl}}">
-        <materialDesign:Transitioner SelectedIndex="{Binding SlideIndex, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClassNotificationProviderControl}, Mode=OneWay}">
-            <materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:SlideOutWipe/>
-                </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                    <materialDesign:SlideOutWipe/>
-                </materialDesign:TransitionerSlide.ForwardWipe>
+        <ciCore:Transitioner SelectedIndex="{Binding SlideIndex, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClassNotificationProviderControl}, Mode=OneWay}">
+            <ciCore:TransitionerSlide>
+                
+                
                 <ContentPresenter Content="{Binding Element, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClassNotificationProviderControl}}"/>
-            </materialDesign:TransitionerSlide>
-            <materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                    <materialDesign:SlideOutWipe/>
-                </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                    <materialDesign:SlideOutWipe/>
-                </materialDesign:TransitionerSlide.ForwardWipe>
+            </ciCore:TransitionerSlide>
+            <ciCore:TransitionerSlide>
+                
+                
                 <TextBlock Text="{Binding Message, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClassNotificationProviderControl}}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
-            </materialDesign:TransitionerSlide>
-        </materialDesign:Transitioner>
+            </ciCore:TransitionerSlide>
+        </ciCore:Transitioner>
     </Grid>
 </UserControl>

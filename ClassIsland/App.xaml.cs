@@ -34,7 +34,6 @@ using ClassIsland.Services.NotificationProviders;
 using ClassIsland.Services.SpeechService;
 using ClassIsland.Views;
 using ClassIsland.Views.SettingPages;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -218,8 +217,6 @@ public partial class App : AppBase, IAppHost
     {
         DependencyPropertyHelper.ForceOverwriteDependencyPropertyDefaultValue(ToolTipService.InitialShowDelayProperty,
             0);
-        DependencyPropertyHelper.ForceOverwriteDependencyPropertyDefaultValue(ShadowAssist.CacheModeProperty,
-            null);
     }
 
     private void TaskSchedulerOnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
@@ -756,7 +753,6 @@ public partial class App : AppBase, IAppHost
         ThreadedUiDispatcher = threadedUiDispatcherAwaiter.Result;
         Logger.LogInformation("初始化应用。");
 
-        TransitionAssist.DisableTransitionsProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(Settings.IsTransientDisabled));
         IThemeService.IsTransientDisabled = Settings.IsTransientDisabled;
         IThemeService.IsWaitForTransientDisabled = Settings.IsWaitForTransientDisabled;
         if (Settings.IsSplashEnabled && !ApplicationCommand.Quiet)

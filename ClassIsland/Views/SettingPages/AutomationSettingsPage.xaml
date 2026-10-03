@@ -1,11 +1,11 @@
 <ci:SettingsPageBase x:Class="ClassIsland.Views.SettingPages.AutomationSettingsPage"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
-                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
                      xmlns:controls1="clr-namespace:ClassIsland.Controls"
                      xmlns:converters1="clr-namespace:ClassIsland.Converters"
@@ -40,27 +40,26 @@
                     VerticalAlignment="Stretch"
                     Margin="16"
                     MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            <TextBlock Style="{StaticResource Headline6TextBlock}"
                        Text="新建配置" />
             <TextBox Margin="0 6 0 0"
                      TextWrapping="Wrap"
                      x:Name="TextBoxProfileName"
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Style="{StaticResource MahApps.Styles.TextBox}"
                      Text="{Binding ViewModel.CreateProfileName, UpdateSourceTrigger=PropertyChanged}"
-                     materialDesign:HintAssist.Hint="配置名"
-                     materialDesign:TextFieldAssist.SuffixText=".json" />
+                     mah:TextBoxHelper.Watermark="配置名" />
             <StackPanel Orientation="Horizontal"
                         Margin="0 8 0 0"
                         HorizontalAlignment="Right">
                 <Button Content="新建"
                         IsDefault="True"
                         HorizontalAlignment="Right"
-                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Style="{DynamicResource MahApps.Styles.Button.Flat}"
                         Command="{x:Static dialogs:DialogService.CloseDialogCommand}"
                         CommandParameter="{Binding ViewModel.CreateProfileName, Mode=OneWay}" />
                 <Button Content="取消"
                         HorizontalAlignment="Right"
-                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Style="{DynamicResource MahApps.Styles.Button.Flat}"
                         Command="{x:Static dialogs:DialogService.CloseDialogCommand}"
                         Margin="6 0 0 0"
                         CommandParameter="{x:Null}" />
@@ -99,7 +98,7 @@
                                             ToolTip="自动化帮助文档…"
                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                             CommandParameter="https://docs.classisland.tech/app/automation"
-                                            Style="{StaticResource MaterialDesignToolForegroundButton}"/>
+                                            Style="{StaticResource MahApps.Styles.Button.Flat}"/>
                                     <ToggleButton IsChecked="{Binding SettingsService.Settings.IsAutomationEnabled, Mode=TwoWay}"/>
                                 </StackPanel>
                             </ci:SettingsCard.Switcher>
@@ -108,7 +107,7 @@
                         <Grid Grid.Row="1">
 
                             <!-- 添加自动化 -->
-                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     Click="ButtonAdd_OnClick"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
@@ -124,37 +123,37 @@
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
                                         Margin="0 0 4 0">
-                                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                                           ItemsSource="{Binding AutomationService.Configs}"
                                           MinWidth="150"
                                           MaxWidth="300"
                                           SelectedItem="{Binding SettingsService.Settings.CurrentAutomationConfig}"
-                                          materialDesign:HintAssist.Hint="配置方案" />
+                                          mah:TextBoxHelper.Watermark="配置方案" />
                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Refresh}}"
                                         ToolTip="刷新配置方案"
                                         VerticalAlignment="Center"
                                         Margin="2 0"
                                         Click="ButtonRefresh_OnClick"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                        Style="{StaticResource MahApps.Styles.Button.Flat}" />
                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentPlusOutline}}"
                                         ToolTip="新建配置方案…"
                                         VerticalAlignment="Center"
                                         Margin="2 0"
                                         Click="ButtonCreateConfig_OnClick"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                        Style="{StaticResource MahApps.Styles.Button.Flat}" />
                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FolderOpenOutline}}"
                                         ToolTip="打开配置文件夹…"
                                         VerticalAlignment="Center"
                                         Click="ButtonOpenConfigFolder_OnClick"
                                         Margin="2 0"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                        Style="{StaticResource MahApps.Styles.Button.Flat}" />
                             </StackPanel>
                         </Grid>
 
                         <!-- 左：自动化导航栏 -->
                         <ScrollViewer Grid.Row="2">
                             <ListBox ItemsSource="{Binding AutomationService.Workflows}"
-                                     Style="{StaticResource MaterialDesignNavigationPrimaryListBox}"
+                                     Style="{StaticResource NavigationPrimaryListBox}"
                                      SelectionChanged="ListBox_SelectionChanged"
                                      SelectedItem="{Binding ViewModel.SelectedAutomation, Mode=TwoWay}"
                                      HorizontalContentAlignment="Stretch"
@@ -164,16 +163,14 @@
                                      dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}">
                                 <dd:DragDrop.EffectMoveAdornerTemplate>
                                     <DataTemplate>
-                                        <materialDesign:ColorZone Mode="PrimaryMid"
-                                                                  Height="24"
-                                                                  CornerRadius="12">
+                                        <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowUpDown}"
                                                          Text="排序"
                                                          Margin="4 0"
                                                          IconMargin="2"
                                                          TextElement.FontWeight="Medium"
                                                          VerticalAlignment="Center" />
-                                        </materialDesign:ColorZone>
+                                        </Border>
                                     </DataTemplate>
                                 </dd:DragDrop.EffectMoveAdornerTemplate>
                                 <ListBox.ItemTemplate>
@@ -183,18 +180,17 @@
                                             <StackPanel Orientation="Horizontal"
                                                         HorizontalAlignment="Right"
                                                         DockPanel.Dock="Right">
-                                                <ToggleButton ToolTip="启用"
-                                                              IsChecked="{Binding ActionSet.IsEnabled}" />
+                                                <ToggleButton ToolTip="启用" IsChecked="{Binding ActionSet.IsEnabled}"/>
                                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}"
                                                         ToolTip="复制"
-                                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                        Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                         Command="{x:Static local:AutomationSettingsPage.DuplicateCommand}"
                                                         CommandParameter="{Binding}"
                                                         Padding="15 0 10 0" />
 
                                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
                                                         ToolTip="删除"
-                                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                        Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                         Command="{x:Static local:AutomationSettingsPage.RemoveCommand}"
                                                         CommandParameter="{Binding}"
                                                         Padding="5 0 5 0" />
@@ -246,8 +242,8 @@
                                 </Style.Triggers>
                             </Style>
                         </Grid.Style>
-                        <TextBox materialDesign:HintAssist.Hint="名称"
-                                 materialDesign:HintAssist.IsFloating="True"
+                        <TextBox mah:TextBoxHelper.Watermark="名称"
+                                 mah:TextBoxHelper.UseFloatingWatermark="True"
                                  DataContext="{Binding ViewModel.SelectedAutomation, Mode=OneWay}"
                                  Text="{Binding ActionSet.Name, UpdateSourceTrigger=PropertyChanged}"
                                  FontWeight="Medium"
@@ -266,7 +262,7 @@
                                     CommandParameter="{Binding ActionSet}"
                                     Padding="12 0">
                                 <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActionSet.IsOn}" Value="True">
                                                 <Setter Property="Opacity" Value="0.56" />
@@ -282,7 +278,7 @@
                                     Padding="12 0"
                                     Margin="0 0 8 0">
                                 <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding ActionSet.IsOn}" Value="False">
                                                 <Setter Property="Opacity" Value="0.56" />
@@ -325,7 +321,7 @@
                                     </StackPanel.Style>
 
                                     <!-- 触发器编辑 -->
-                                    <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                                    <GroupBox Style="{StaticResource MahApps.Styles.GroupBox}"
                                               Margin="2 2 2 10">
                                         <GroupBox.HeaderTemplate>
                                             <DataTemplate>
@@ -337,14 +333,13 @@
                                     </GroupBox>
 
                                     <!--规则编辑-->
-                                    <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                                    <GroupBox Style="{StaticResource MahApps.Styles.GroupBox}"
                                               Margin="2 2 2 10"
                                               Header="{Binding}">
                                         <GroupBox.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <ToggleButton IsChecked="{Binding IsConditionEnabled, Mode=TwoWay}"
-                                                                  Margin="0 0 4 0"/>
+                                                    <ToggleButton IsChecked="{Binding IsConditionEnabled, Mode=TwoWay}" Margin="0 0 4 0"/>
                                                     <ci:IconText Text="并且满足以下规则时"
                                                                  Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" />
                                                 </StackPanel>
@@ -360,7 +355,7 @@
                                     </GroupBox>
 
                                     <!--行动编辑-->
-                                    <GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                                    <GroupBox Style="{StaticResource MahApps.Styles.GroupBox}"
                                               Margin="2 2 2 10">
                                         <GroupBox.HeaderTemplate>
                                             <DataTemplate>
@@ -372,7 +367,7 @@
                                     </GroupBox>
 
                                     <!--TODO: 恢复行动编辑-->
-                                    <!--<GroupBox Style="{StaticResource MaterialDesignCardGroupBox}"
+                                    <!--<GroupBox Style="{StaticResource MahApps.Styles.GroupBox}"
                                                           Margin="2">
                                                     <GroupBox.HeaderTemplate>
                                                         <DataTemplate>
@@ -451,7 +446,7 @@
                                HorizontalAlignment="Center"
                                TextAlignment="Center"
                                Margin="0 8 0 0"
-                               Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                               Style="{StaticResource Headline5TextBlock}" />
 
                     <TextBlock Margin="0 10 0 0"
                                TextAlignment="Center"
@@ -466,7 +461,7 @@
                             Margin="0 6 0 0"
                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                             CommandParameter="https://docs.classisland.tech/app/automation"
-                            Style="{StaticResource MaterialDesignFlatSecondaryButton}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                             ToolTip="docs.classisland.tech/app/automation"
                             ToolTipService.Placement="Right">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ExternalLink}"

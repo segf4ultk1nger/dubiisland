@@ -7,7 +7,6 @@
                   xmlns:local="clr-namespace:ClassIsland.Controls.Components"
                   xmlns:models="clr-namespace:ClassIsland.Models"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
-                  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
                   xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                   xmlns:system="clr-namespace:System;assembly=System.Runtime"
@@ -15,21 +14,21 @@
                   d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
         <StackPanel x:Key="MigrateConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="导入旧版设置"/>
             </TextBlock>
             <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
                 <Run Text="此操作将从 1.4 及以前的课表设置导入课表组件设置，并覆盖当前课表组件的设置。"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="继续" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="继续" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -43,13 +42,11 @@
         <ScrollViewer>
             <StackPanel>
                 <!-- 附加设置覆盖提示 -->
-                <materialDesign:ColorZone Background="{DynamicResource MaterialDesignToolBarBackground}"
-                                          Margin="0 0 0 4">
+                <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Margin="0 0 0 4">
                     <Grid>
                         <DockPanel Margin="8 0 4 0">
-                            <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     DockPanel.Dock="Right"
-                                    materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                                     Foreground="{DynamicResource MaterialDesignBody}"
                                     Click="ButtonShowAttachedSettings_OnClick">
                                 <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
@@ -62,9 +59,9 @@
                                        VerticalAlignment="Center"/>
                         </DockPanel>
                     </Grid>
-                </materialDesign:ColorZone>
+                </Border>
                 <!-- 显示时间点附加信息 -->
-                <materialDesign:Card Margin="0 0 0 6">
+                <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -144,14 +141,13 @@
                                            Opacity="0.75"/>
                                 <TextBox Foreground="{DynamicResource MaterialDesignBody}"
                                          Text="{Binding Settings.ExtraInfo4ShowSecondsSeconds, Converter={StaticResource IntToStringConverter}}"
-                                         MinWidth="75" Margin="3 0 0 0" TextAlignment="Center"
-                                         materialDesign:TextFieldAssist.SuffixText="秒"/>
+                                         MinWidth="75" Margin="3 0 0 0" TextAlignment="Center"/>
                             </StackPanel>
                         </Grid>
                     </Expander>
-                </materialDesign:Card>
+                </Border>
                 <!-- 时间点结束倒计时 -->
-                <materialDesign:Card Margin="0 0 0 6">
+                <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.IsCountdownEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -177,9 +173,8 @@
                             <ci:NumbericTextBox Grid.Row="0" MaxValue="36000" MinValue="0" Width="100"
                                                 Grid.Column="1"
                                                 VerticalAlignment="Center"
-                                                materialDesign:TextFieldAssist.SuffixText="秒"
                                                 Foreground="{DynamicResource MaterialDesignBody}"
-                                                Style="{StaticResource MaterialDesignTextBoxBase}"
+                                                Style="{StaticResource MahApps.Styles.TextBox}"
                                                 Text="{Binding Settings.CountdownSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
 
                             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
@@ -189,7 +184,7 @@
                             </StackPanel>
                         </Grid>
                     </Expander>
-                </materialDesign:Card>
+                </Border>
                 <!-- 上课时仅显示当前课程 -->
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
                                  Header="上课时仅显示当前课程"
@@ -222,7 +217,7 @@
                     </ci:SettingsCard.Switcher>
                 </ci:SettingsCard>
                 <!-- 无课程时显示占位符 -->
-                <materialDesign:Card Margin="0 0 0 6">
+                <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -280,7 +275,7 @@
                             </Grid>
                         </StackPanel>
                     </Expander>
-                </materialDesign:Card>
+                </Border>
                 <!-- 放学后显示明天课表 -->
                 <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CalendarOutline}"
                                  Header="显示明天课表"
@@ -297,7 +292,7 @@
                     </ci:SettingsCard.Switcher>
                 </ci:SettingsCard>
                 <Button Margin="0 0 0 6" HorizontalAlignment="Left"
-                        Style="{StaticResource MaterialDesignFlatButton}"
+                        Style="{StaticResource MahApps.Styles.Button.Flat}"
                         Click="ButtonImportLegacySettings_OnClick"
                         Visibility="{Binding SettingsService.Settings.IsMigratedFromv1_4, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Import}" Text="导入旧版设置"/>

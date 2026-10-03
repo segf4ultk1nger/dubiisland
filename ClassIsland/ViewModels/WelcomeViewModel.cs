@@ -3,7 +3,6 @@
 using ClassIsland.Models;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.ViewModels;
 
@@ -219,5 +218,16 @@ public class WelcomeViewModel : ObservableRecipient
         }
     }
 
-    public SnackbarMessageQueue SnackbarQueue { get; } = new();
+    private string _statusMessage = "";
+
+    public string StatusMessage
+    {
+        get => _statusMessage;
+        set
+        {
+            if (value == _statusMessage) return;
+            _statusMessage = value;
+            OnPropertyChanged();
+        }
+    }
 }

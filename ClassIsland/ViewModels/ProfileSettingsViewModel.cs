@@ -5,7 +5,6 @@ using ClassIsland.Shared.Models.Profile;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.ViewModels;
 
@@ -14,7 +13,7 @@ public class ProfileSettingsViewModel : ObservableRecipient
     private object _drawerContent = new();
     private bool _isDrawerOpen;
     private bool _isClassPlansEditing = false;
-    private SnackbarMessageQueue _messageQueue = new();
+    private string _statusMessage = "";
     private ObservableCollection<string> _profiles = new();
     private bool _isRestartSnackbarActive = false;
     private string _renameProfileName = "";
@@ -83,13 +82,13 @@ public class ProfileSettingsViewModel : ObservableRecipient
         }
     }
 
-    public SnackbarMessageQueue MessageQueue
+    public string StatusMessage
     {
-        get => _messageQueue;
+        get => _statusMessage;
         set
         {
-            if (Equals(value, _messageQueue)) return;
-            _messageQueue = value;
+            if (value == _statusMessage) return;
+            _statusMessage = value;
             OnPropertyChanged();
         }
     }

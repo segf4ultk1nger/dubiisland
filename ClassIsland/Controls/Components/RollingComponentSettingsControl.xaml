@@ -7,7 +7,6 @@
                   xmlns:local="clr-namespace:ClassIsland.Controls.Components"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
                   xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
-                  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   mc:Ignorable="d"
                   d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
@@ -20,10 +19,7 @@
 
             </StackPanel.Resources>
 
-            <materialDesign:ColorZone Background="#204169e1" 
-                                      Panel.ZIndex="1" 
-                                      Margin="0 0 0 5"
-                                      Visibility="{Binding SettingsService.Settings.IsRollingComponentWarningVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Background="#204169e1" Panel.ZIndex="1" Margin="0 0 0 5" Visibility="{Binding SettingsService.Settings.IsRollingComponentWarningVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -38,12 +34,12 @@
                         </TextBlock>
                     </DockPanel>
                     <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
-                            Grid.Column="1" Style="{StaticResource MaterialDesignToolForegroundButton}"
+                            Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Margin="0 -8"
                             ToolTip="关闭"
                             Click="ButtonCloseWarningTip_OnClick"/>
                 </Grid>
-            </materialDesign:ColorZone>
+            </Border>
 
             <!-- 滚动速度 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CarSpeedLimiter}"
@@ -52,7 +48,7 @@
                              Margin="0 0 0 6">
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
-                        <TextBox materialDesign:TextFieldAssist.SuffixText="px/秒"
+                        <TextBox
                                  Width="100"
                                  Text="{Binding Settings.SpeedPixelPerSecond, Converter={StaticResource IntToStringConverter}}" />
                     </StackPanel>
@@ -60,7 +56,7 @@
             </ci:SettingsCard>
 
             <!-- 定时暂停 -->
-            <materialDesign:Card Margin="0 0 0 6">
+            <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="{Binding Settings.IsPauseEnabled, Mode=OneWay}"
                           TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -82,7 +78,7 @@
                                             IsCompact="True">
                             <ci:SettingsControl.Switcher>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox materialDesign:TextFieldAssist.SuffixText="秒"
+                                    <TextBox
                                              Width="100"
                                              Text="{Binding Settings.PauseSeconds, Converter={StaticResource IntToStringConverter}}" />
                                 </StackPanel>
@@ -96,7 +92,7 @@
                                          IsCompact="True">
                             <ci:SettingsControl.Switcher>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox materialDesign:TextFieldAssist.SuffixText="px"
+                                    <TextBox
                                              Width="100"
                                              Text="{Binding Settings.PauseOffsetX, Converter={StaticResource IntToStringConverter}}" />
                                 </StackPanel>
@@ -104,7 +100,7 @@
                         </ci:SettingsControl>
                     </StackPanel>
                 </Expander>
-            </materialDesign:Card>
+            </Border>
 
             <!-- 满足规则时停止 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
@@ -114,13 +110,12 @@
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Click="ButtonOpenStopRuleset_OnClick"
                                 Visibility="{Binding Settings.StopOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
-                        <ToggleButton VerticalAlignment="Center"
-                                      IsChecked="{Binding Settings.StopOnRule}" />
+                        <ToggleButton VerticalAlignment="Center" IsChecked="{Binding Settings.StopOnRule}"/>
                     </StackPanel>
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>

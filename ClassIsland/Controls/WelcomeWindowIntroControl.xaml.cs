@@ -24,7 +24,11 @@ public partial class WelcomeWindowIntroControl : UserControl
 
     protected override void OnInitialized(EventArgs e)
     {
-        Foreground = new SolidColorBrush(App.GetService<IThemeService>().CurrentTheme!.Body);
+        var theme = App.GetService<IThemeService>();
+        var foreground = theme.CurrentRealThemeMode == 0
+            ? Color.FromRgb(33, 33, 33)
+            : Color.FromRgb(255, 255, 255);
+        Foreground = new SolidColorBrush(foreground);
         _ = Task.Run(() =>
         {
             Play("Intro");

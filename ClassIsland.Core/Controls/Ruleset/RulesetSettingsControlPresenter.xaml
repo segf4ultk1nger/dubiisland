@@ -7,7 +7,6 @@
     xmlns:local="clr-namespace:ClassIsland.Core.Controls.Ruleset"
     xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
     xmlns:converters="clr-namespace:ClassIsland.Core.Abstractions.Converters"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services">
     <ContentPresenter x:Name="RootContentPresenter"/>
 </UserControl>

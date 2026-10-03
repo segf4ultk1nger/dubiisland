@@ -48,7 +48,7 @@ public partial class WelcomeWindow : MyWindow
             if (args.PropertyName == nameof(SettingsService.Settings.IsSentryEnabled))
             {
                 ViewModel.RequiresRestarting = true;
-                ViewModel.SnackbarQueue.Enqueue("应用将在向导完成后自动重启，以应用部分更改。");
+                ViewModel.StatusMessage = "应用将在向导完成后自动重启，以应用部分更改。";
             }
         };
     }
@@ -153,7 +153,7 @@ public partial class WelcomeWindow : MyWindow
     private void ButtonSkip_OnClick(object sender, RoutedEventArgs e)
     {
         ViewModel.SlideIndex = 4;
-        ViewModel.SnackbarQueue.Enqueue("您稍后可以在【应用设置】中调整这些设置。");
+        ViewModel.StatusMessage = "您稍后可以在【应用设置】中调整这些设置。";
     }
 
     private void ButtonCompleteFlipBack_OnClick(object sender, RoutedEventArgs e)

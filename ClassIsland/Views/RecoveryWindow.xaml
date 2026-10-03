@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:windows="clr-namespace:Walterlv.Windows;assembly=ClassIsland.Core"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -29,18 +28,14 @@
             </Grid.RowDefinitions>
             <Frame Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
 
-            <materialDesign:ColorZone Grid.Column="0" Grid.Row="0" Padding="16"
-                                      Mode="PrimaryMid"
-                                      materialDesign:ElevationAssist.Elevation="Dp4"
-                                      Margin="0 0 0 4">
+            <Border Grid.Column="0" Grid.Row="0" Padding="16" Margin="0 0 0 4" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                 <Grid Margin="4 0 4 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <!--<ToggleButton Grid.Column="0"
-                            Style="{StaticResource MaterialDesignHamburgerToggleButton}" />-->
+                    <!--<ToggleButton Grid.Column="0" Style="{StaticResource MahApps.Styles.ToggleButton}"/>-->
                     <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center"
                                 Margin="0 -16">
                         <Button ToolTip="返回"
@@ -49,21 +44,21 @@
                                 Padding="0"
                                 Click="ButtonGoBack_OnClick"
                                 Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ArrowLeft}, Size=24}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Column="1">
 
                         <TextBlock Text="恢复"
-                                   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                   Style="{StaticResource Headline6TextBlock}"
                                    HorizontalAlignment="Left"
                                    Margin="0 0 0 0"
                                    VerticalAlignment="Center" />
                     </StackPanel>
 
                 </Grid>
-            </materialDesign:ColorZone>
+            </Border>
 
 
         </Grid>

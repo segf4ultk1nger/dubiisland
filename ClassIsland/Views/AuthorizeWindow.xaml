@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:registry="clr-namespace:ClassIsland.Core.Services.Registry;assembly=ClassIsland.Core"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:dd="urn:gong-wpf-dragdrop"
@@ -40,12 +39,12 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 12"
                     Visibility="{Binding ViewModel.IsEditingMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-            <TextBlock Text="验证您的身份" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+            <TextBlock Text="验证您的身份" Style="{StaticResource Headline5TextBlock}"/>
             <TextBlock Text="要继续操作，请通过下列的方式验证您的身份。" TextWrapping="Wrap" Margin="0 4 0 0"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 12"
                     Visibility="{Binding ViewModel.IsEditingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <TextBlock Text="编辑认证项目" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+            <TextBlock Text="编辑认证项目" Style="{StaticResource Headline5TextBlock}"/>
             <TextBlock Text="编辑进行此操作需要的认证方式。" TextWrapping="Wrap" Margin="0 4 0 0"/>
         </StackPanel>
 
@@ -53,7 +52,7 @@
                     Visibility="{Binding ViewModel.IsEditingMode, RelativeSource={RelativeSource FindAncestor, AncestorType=local:AuthorizeWindow}, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                     Margin="0 0 0 8">
-            <Button Style="{StaticResource MaterialDesignFlatButton}"
+            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                     Click="ButtonAddAuthorizeMethod_OnClick">
                 <Button.Content>
                     <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Add}" Text="添加认证方式"></ci:IconText>
@@ -73,26 +72,24 @@
                  ItemsSource="{Binding ViewModel.Credential.Items}"
                  HorizontalContentAlignment="Stretch"
                  Margin="0 0 0 0"
-                 materialDesign:RippleAssist.IsDisabled="True"
                  SelectedItem="{Binding ViewModel.SelectedCredentialItem}"
                  dd:DragDrop.IsDragSource="{Binding ViewModel.IsEditingMode}"
                  dd:DragDrop.IsDropTarget="{Binding ViewModel.IsEditingMode}"
                  dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <materialDesign:ColorZone Mode="PrimaryMid" Height="24"
-                                              CornerRadius="12">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowUpDown}" Text="调整顺序"
                                             Margin="4 0"
                                             IconMargin="2"
                                             TextElement.FontWeight="Medium"
                                             VerticalAlignment="Center"/>
-                    </materialDesign:ColorZone>
+                    </Border>
                 </DataTemplate>
             </dd:DragDrop.EffectMoveAdornerTemplate>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="4" materialDesign:RippleAssist.IsDisabled="False">
+                    <Grid Margin="4">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -124,7 +121,7 @@
                                     <Binding Path="ViewModel.IsEditingMode" RelativeSource="{RelativeSource FindAncestor, AncestorType=local:AuthorizeWindow}"/>
                                 </MultiBinding>
                             </StackPanel.Visibility>
-                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     ToolTip="删除"
                                     Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Delete}}"
                                     Foreground="IndianRed"
@@ -143,7 +140,7 @@
         </ListBox>
 
         <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left"
-                Style="{StaticResource MaterialDesignPaperButton}"
+                Style="{StaticResource MahApps.Styles.Button.Flat}"
                 IsCancel="True">
             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Cancel}" Text="取消"/>
         </Button>

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls.Demo"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="281.25" d:DesignWidth="500" ClipToBounds="True" Width="500" Height="281.25" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <UserControl.Resources>
@@ -180,18 +179,15 @@
         </Grid.RenderTransform>
         <Grid x:Name="GridMain" Background="{DynamicResource PrimaryHueLightBrush}" RenderTransformOrigin="1,1">
 
-            <materialDesign:ColorZone Background="#BB000000" Mode="Dark"
-                                      x:Name="ZoneHiddenTaskBarIcons"
-                                      VerticalAlignment="Bottom"
-                                      HorizontalAlignment="Right" Margin="0,0,52,16" RenderTransformOrigin="0.5,0.5">
-                <materialDesign:ColorZone.RenderTransform>
+            <Border Background="#BB000000" x:Name="ZoneHiddenTaskBarIcons" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,52,16" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform Y="36"/>
                     </TransformGroup>
-                </materialDesign:ColorZone.RenderTransform>
+                </Border.RenderTransform>
                 <Grid>
 
                     <Grid.RowDefinitions>
@@ -217,9 +213,9 @@
                            Source="/Assets/AppLogo.png" RenderTransformOrigin="0.5,0.5"/>
 
                 </Grid>
-            </materialDesign:ColorZone>
+            </Border>
 
-            <materialDesign:ColorZone VerticalAlignment="Bottom" Height="16" Background="#BB000000" Mode="Dark">
+            <Border VerticalAlignment="Bottom" Height="16" Background="#BB000000">
                 <Grid x:Name="GridTaskBar" >
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Margin="2">
@@ -246,7 +242,7 @@
                         <Border Background="White" Width="16" Height="6" Opacity="0.75"/>
                     </StackPanel>
                 </Grid>
-            </materialDesign:ColorZone>
+            </Border>
             <Image x:Name="ImageAppIcon" Width="8" Height="8" 
                         RenderOptions.BitmapScalingMode="HighQuality"
                         Source="/Assets/AppLogo.png" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,66,18" Visibility="Hidden" RenderTransformOrigin="0.5,0.5">
@@ -259,8 +255,7 @@
                     </TransformGroup>
                 </Image.RenderTransform>
             </Image>
-            <materialDesign:ColorZone x:Name="ZoneMainMenu" Mode="Standard" Padding="0"
-                                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,58,16" Opacity="0">
+            <Border x:Name="ZoneMainMenu" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,58,16" Opacity="0" Background="{DynamicResource MaterialDesignPaper}">
                 <StackPanel HorizontalAlignment="Left">
                     <Border
                         Background="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
@@ -293,7 +288,7 @@
                         Background="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                         Width="16" Height="4" Opacity="0.75" Margin="4 2" HorizontalAlignment="Left"/>
                 </StackPanel>
-            </materialDesign:ColorZone>
+            </Border>
         </Grid>
         <Grid x:Name="GridPointer" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>

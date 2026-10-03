@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:ci="http://classisland.tech/schemas/xaml/core"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:helpers="clr-namespace:ClassIsland.Shared.Helpers;assembly=ClassIsland.Shared"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -21,18 +20,16 @@
 
     <ScrollViewer>
         <StackPanel MaxWidth="750" Style="{StaticResource SettingsPageStackPanelStyle}">
-            <materialDesign:ColorZone Background="#17ee7700"
-                                      Margin="0 0 0 4"
-                                      Panel.ZIndex="1">
-                <materialDesign:ColorZone.Style>
-                    <Style TargetType="materialDesign:ColorZone">
+            <Border Background="#17ee7700" Margin="0 0 0 4" Panel.ZIndex="1">
+                <Border.Style>
+                    <Style TargetType="Border">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Count, Source={x:Static helpers:ConfigureFileHelper.Errors}}" Value="0">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </materialDesign:ColorZone.Style>
+                </Border.Style>
                 <StackPanel Margin="8 4">
                     <DockPanel>
                         <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.WarningOutline}" />
@@ -42,15 +39,14 @@
                             <Run Text="ClassIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。"/>
                         </TextBlock>
                     </DockPanel>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Left"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
                             Margin="24 6 0 0" Foreground="{DynamicResource MaterialDesignBody}"
-                            materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                             Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
                             CommandParameter="classisland://app/config-errors">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.OpenInNew}" Text="详细信息…"/>
                     </Button>
                 </StackPanel>
-            </materialDesign:ColorZone>
+            </Border>
 
             <!--<Separator Margin="0 16 0 8" />
             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.DatabaseOutline}" Text="存储空间" Margin="0 0 0 8" />
@@ -61,7 +57,7 @@
             <Separator Margin="0 16 0 8" />-->
             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.SettingsBackupRestore}" Text="备份" Margin="0 0 0 8" />
             <!-- 启用自动备份 -->
-            <materialDesign:Card Margin="0 0 0 6">
+            <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=OneWay}"
                           TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -82,7 +78,7 @@
                                                Description="自动备份时的间隔天数。"
                                                Margin="0 0 0 6">
                             <ci:SettingsControl.Switcher>
-                                <TextBox materialDesign:TextFieldAssist.SuffixText="天"
+                                <TextBox
                                          Width="100"
                                          Text="{Binding SettingsService.Settings.AutoBackupIntervalDays, Converter={StaticResource IntToStringConverter}}"
                                          Foreground="{DynamicResource MaterialDesignBody}"/>
@@ -95,7 +91,7 @@
                                             Description="最多允许存在的自动备份上限。当自动备份数量达到上限时，将覆盖最旧的备份。设置为 0 则为无上限。"
                                             Margin="0 0 0 6">
                             <ci:SettingsControl.Switcher>
-                                <TextBox materialDesign:TextFieldAssist.SuffixText="个"
+                                <TextBox
                                          Width="100"
                                          Text="{Binding SettingsService.Settings.AutoBackupLimit, Converter={StaticResource IntToStringConverter}}"
                                          Foreground="{DynamicResource MaterialDesignBody}"/>
@@ -111,9 +107,9 @@
                         </TextBlock>
                     </StackPanel>
                 </Expander>
-            </materialDesign:Card>
+            </Border>
             <!-- 备份 -->
-            <materialDesign:Card Padding="12 10 16 10" Margin="0 0 0 6">
+            <Border Padding="12 10 16 10" Margin="0 0 0 6">
                 <StackPanel>
                     <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.BackupRestore}"
                                         Header="手动备份"
@@ -121,12 +117,12 @@
                                         Margin="0 0 0 6"
                                         HasSwitcher="False"/>
                     <WrapPanel>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 IsEnabled="{Binding ViewModel.IsBackingUp, Converter={StaticResource InvertBooleanConverter}}"
                                 Click="ButtonCreateBackup_OnClick">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.BackupRestore}" Text="立即备份" />
                         </Button>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Click="ButtonViewBackupFiles_OnClick">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.FolderOutline}" Text="查看备份文件…" />
                         </Button>
@@ -134,13 +130,13 @@
                                                  VerticalAlignment="Stretch"
                                                  ToolTip="备份成功。"
                                                  Visibility="{Binding ViewModel.IsBackupFinished, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        <ProgressBar Style="{StaticResource MahApps.Styles.ProgressBar}"
                                      Visibility="{Binding ViewModel.IsBackingUp, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </WrapPanel>
                 </StackPanel>
-            </materialDesign:Card>
+            </Border>
 
-            <materialDesign:Card Padding="12 10 16 10">
+            <Border Padding="12 10 16 10">
                 <StackPanel>
                     <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.BackupRestore}"
                                         Header="恢复备份"
@@ -148,7 +144,7 @@
                                         Margin="0 0 0 6"
                                         HasSwitcher="False"/>
                     <WrapPanel>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 IsEnabled="{Binding ViewModel.IsBackingUp, Converter={StaticResource InvertBooleanConverter}}"
                                 Click="ButtonRecoverBackup_OnClick">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restore}" Text="恢复备份" />
@@ -157,7 +153,7 @@
 
                     </WrapPanel>
                 </StackPanel>
-            </materialDesign:Card>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </ci:SettingsPageBase>

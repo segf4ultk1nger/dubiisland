@@ -9,7 +9,6 @@
         Height="40" 
         Width="800"
         SnapsToDevicePixels="True"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:converters="clr-namespace:ClassIsland.Converters"
         xmlns:models="clr-namespace:ClassIsland.Models"
@@ -39,8 +38,7 @@
         Icon="/Assets/AppLogo.ico"
         Loaded="MainWindow_OnLoaded"
         SizeToContent="Height"
-        ShowActivated="False"
-        materialDesign:ShadowAssist.CacheMode="{x:Null}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+        ShowActivated="False" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.TrayIconLeftClickedCommand}"
                         Executed="TrayIconOnClicked_OnExecuted"/>
@@ -102,7 +100,7 @@
                     <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.UploadOutline}"/>
                 </MenuItem.Icon>
                 <MenuItem.Style>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ViewModel.Settings.LastUpdateStatus}" Value="UpToDate">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -145,7 +143,7 @@
             </MenuItem>
             <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.SwapHorizontal}}" Header="换课…" Click="MenuItemClassSwap_OnClick">
                 <MenuItem.Style>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding LessonsService.CurrentClassPlan}" Value="{x:Null}">
                                 <Setter Property="Visibility" Value="Collapsed"/>

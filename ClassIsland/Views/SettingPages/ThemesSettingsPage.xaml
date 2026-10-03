@@ -5,7 +5,6 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
                      xmlns:ci="http://classisland.tech/schemas/xaml/core"
-                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                      xmlns:controls="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
                      xmlns:controls1="clr-namespace:ClassIsland.Controls"
                      xmlns:classIsland="clr-namespace:ClassIsland"
@@ -29,10 +28,9 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <TextBlock Text="错误信息" Grid.Row="0"
-                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                       Style="{StaticResource Headline5TextBlock}" />
             <TextBox Grid.Row="1"
                      VerticalContentAlignment="Top"
-                     materialDesign:TextFieldAssist.UnderlineBrush="{x:Null}"
                      BorderThickness="0"
                      Text="{Binding Mode=OneTime}" />
         </Grid>
@@ -68,7 +66,6 @@
                                 DockPanel.Dock="Left"
                                 Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                 HorizontalAlignment="Left"
-                                materialDesign:ListBoxItemAssist.ShowSelection="False"
                                 ScrollViewer.CanContentScroll="True"
                                 HorizontalContentAlignment="Center"
                                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
@@ -81,14 +78,14 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                         <Setter Property="Padding" Value="0 0" />
                     </Style>
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <RadioButton Content="{Binding}"
-                                                     Style="{StaticResource MaterialDesignTabRadioButton}"
+                                                     Style="{StaticResource MahApps.Styles.RadioButton}"
                                                      Height="36"
                                                      IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
                         </RadioButton>
@@ -98,32 +95,30 @@
                 <system:String>已安装</system:String>
             </ListBox>
 
-            <materialDesign:ColorZone Grid.Column="1"
-                                      CornerRadius="4"
-                                      Background="{DynamicResource MaterialDesignCardBackground}">
+            <Border Grid.Column="1" CornerRadius="4" Background="{DynamicResource MaterialDesignCardBackground}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonBase_OnClick">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Refresh}" Text="刷新市场" />
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonLoadThemes_OnClick">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restart}" Text="重载主题" />
                     </Button>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonOpenThemeFolder_OnClick">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.FolderOutline}" Text="打开主题文件夹…" />
                     </Button>
                 </StackPanel>
-            </materialDesign:ColorZone>
+            </Border>
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="0" >
             <ProgressBar IsIndeterminate="True" Height="5"
                          Visibility="{Binding PluginMarketService.IsLoadingPluginSource, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <materialDesign:ColorZone Background="#10FF0000">
-                <materialDesign:ColorZone.Style>
-                    <Style TargetType="materialDesign:ColorZone">
+            <Border Background="#10FF0000">
+                <Border.Style>
+                    <Style TargetType="Border">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding PluginMarketService.Exception, Mode=OneWay}"
                                          Value="{x:Null}">
@@ -131,7 +126,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </materialDesign:ColorZone.Style>
+                </Border.Style>
                 <Grid>
                     <DockPanel Margin="8 4">
                         <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.ErrorOutline}"/>
@@ -143,17 +138,16 @@
                         </TextBlock>
                     </DockPanel>
                 </Grid>
-            </materialDesign:ColorZone>
+            </Border>
         </StackPanel>
         
 
         <ListBox Grid.Row="2" HorizontalContentAlignment="Stretch"
                      Background="{DynamicResource MaterialDesignPaper}"
                      ItemsSource="{Binding Source={StaticResource ThemeSource}}"
-                     materialDesign:ListBoxItemAssist.ShowSelection="False"
                      VerticalContentAlignment="Stretch">
             <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="Margin" Value="2"/>
                     <Setter Property="Template">
@@ -179,12 +173,9 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <materialDesign:Card Background="{DynamicResource MaterialDesignBackground}"
-                                         SnapsToDevicePixels="True"
-                                         UseLayoutRounding="True"
-                                         RenderOptions.EdgeMode="Aliased">
-                        <materialDesign:Card.Resources>
-                        </materialDesign:Card.Resources>
+                    <Border Background="{DynamicResource MaterialDesignBackground}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased">
+                        <Border.Resources>
+                        </Border.Resources>
                         <Grid Background="Transparent">
                             <Border>
                                 <Border.OpacityMask>
@@ -247,7 +238,7 @@
                                     <TextBlock Text="{Binding Value.Manifest.Author}"
                                                VerticalAlignment="Center" FontSize="12"
                                                HorizontalAlignment="Left" />
-                                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                             Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Web}, Size=14}"
                                             Margin="2 -8 0 -8"
                                             ToolTip="网站…"
@@ -260,7 +251,7 @@
                                             VerticalAlignment="Center"
                                             Margin="0 -8"
                                             IsEnabled="{Binding Value.DownloadProgress.IsDownloading, Converter={StaticResource InvertBooleanConverter}}">
-                                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                 Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Error}}"
                                                 Visibility="{Binding Value.IsError, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                 Margin="2 0"
@@ -268,12 +259,11 @@
                                                 ToolTip="加载此主题时发生错误"
                                                 CommandParameter="{Binding Value}"
                                                 Command="{Binding ShowErrorsCommand, RelativeSource={RelativeSource AncestorType=local:ThemesSettingsPage}}" />
-                                    <materialDesign:PopupBox Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                             Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.MoreHoriz}}"
-                                                             Margin="2 0"
-                                                             ToolTip="更多选项…"
-                                                             UseLayoutRounding="True"
-                                                             RenderOptions.EdgeMode="Aliased">
+                                    <Grid Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="2 0">
+<ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" ToolTip="更多选项…" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased" Padding="4" Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.MoreHoriz}}"/>
+<Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
+<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+
                                         <StackPanel>
                                             <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FolderOutline}}" Header="打开主题文件夹…"
                                                       CommandParameter="{Binding Value}"
@@ -291,15 +281,16 @@
                                                       CommandParameter="{Binding Value}"
                                                       Command="{Binding UndoUninstallThemeCommand, RelativeSource={RelativeSource AncestorType=local:ThemesSettingsPage}}"/>
                                         </StackPanel>
-                                    </materialDesign:PopupBox>
+                                    
+</Border>
+</Popup>
+</Grid>
                                     <Button
                                             ToolTip="安装"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                            Style="{StaticResource MahApps.Styles.Button.Circle}"
                                             Width="28" Height="28"
                                             CommandParameter="{Binding Value.Manifest.Id}"
                                             Command="{Binding InstallThemeCommand, RelativeSource={RelativeSource AncestorType=local:ThemesSettingsPage}}"
-                                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Value.DownloadProgress.IsDownloading}"
-                                            materialDesign:ButtonProgressAssist.Value="{Binding Value.DownloadProgress.Progress}"
                                             Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.MonitorDownload}}">
                                         <Button.Visibility>
                                             <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
@@ -311,12 +302,10 @@
                                     </Button>
                                     <Button
                                             ToolTip="更新"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                            Style="{StaticResource MahApps.Styles.Button.Circle}"
                                             Width="28" Height="28"
                                             CommandParameter="{Binding Value.Manifest.Id}"
                                             Command="{Binding InstallThemeCommand, RelativeSource={RelativeSource AncestorType=local:ThemesSettingsPage}}"
-                                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Value.DownloadProgress.IsDownloading}"
-                                            materialDesign:ButtonProgressAssist.Value="{Binding Value.DownloadProgress.Progress}"
                                             Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Upload}}">
                                         <Button.Visibility>
                                             <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
@@ -329,21 +318,18 @@
                                     </Button>
                                     <Button
                                             ToolTip="重启以应用更改"
-                                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                            Style="{StaticResource MahApps.Styles.Button.Circle}"
                                             Width="28" Height="28"
                                             Click="ButtonRestart_OnClick"
                                             Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Restart}}"
                                             Visibility="{Binding Value.RestartRequired, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     </Button>
-                                    <ToggleButton IsChecked="{Binding Value.IsEnabled}"
-                                                  VerticalAlignment="Center"
-                                                  Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                  Margin="4 0 0 0" />
+                                    <ToggleButton IsChecked="{Binding Value.IsEnabled}" VerticalAlignment="Center" Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="4 0 0 0"/>
                                     
                                 </StackPanel>
                             </Grid>
                         </Grid>
-                    </materialDesign:Card>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -373,7 +359,7 @@
                                HorizontalAlignment="Center"
                                TextAlignment="Center"
                                Margin="0 8 0 0"
-                               Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                               Style="{StaticResource Headline5TextBlock}" />
                     <TextBlock Margin="0 6 0 0"
                                TextAlignment="Center"
                                HorizontalAlignment="Center"

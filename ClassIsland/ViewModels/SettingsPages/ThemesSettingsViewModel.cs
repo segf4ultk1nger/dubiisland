@@ -1,6 +1,5 @@
 ﻿using ClassIsland.Core.Models.Plugin;
 using CommunityToolkit.Mvvm.ComponentModel;
-using MaterialDesignThemes.Wpf;
 using System.Windows.Documents;
 using ClassIsland.Core.Models.XamlTheme;
 
@@ -14,6 +13,5 @@ public partial class ThemesSettingsViewModel : ObservableObject
     [ObservableProperty] private ThemeIndexItem? _selectedThemeIndexInfo;
     [ObservableProperty] private int _themeCategoryIndex = 1;
     [ObservableProperty] private string _themeFilterText = "";
-    [ObservableProperty] private SnackbarMessageQueue _messageQueue = new();
     [ObservableProperty] private bool _isDragEntering = false;
 }

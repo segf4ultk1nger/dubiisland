@@ -1,6 +1,7 @@
 ﻿<controls:SettingsPageBase x:Class="ClassIsland.Views.SettingPages.NotificationSettingsPage"
                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                            xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
@@ -9,7 +10,6 @@
                            xmlns:notification="clr-namespace:ClassIsland.Shared.Models.Notification;assembly=ClassIsland.Shared"
                            xmlns:controls2="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
                            xmlns:dd="urn:gong-wpf-dragdrop"
-                           xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                            xmlns:converters="clr-namespace:ClassIsland.Converters"
                            xmlns:system="clr-namespace:System;assembly=System.Runtime"
                            xmlns:ci="http://classisland.tech/schemas/xaml/core"
@@ -42,7 +42,7 @@
                       Width="500">
             <StackPanel Margin="16"
                         IsEnabled="{Binding ProviderSettings.IsSettingsEnabled}">
-                <TextBlock Text="提醒高级设置" Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                <TextBlock Text="提醒高级设置" Style="{StaticResource Headline5TextBlock}"
                            Margin="0 0 0 8"/>
                 <TextBlock Text="此处的设置将覆盖全局设置和提醒请求中要求的设置。" Margin="0 0 0 8"
                            Visibility="{Binding ProviderSettings.IsSettingsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -64,7 +64,7 @@
                                         IsOn="{Binding ProviderSettings.IsNotificationEffectEnabled, Mode=TwoWay}" />
 
                 <!-- 启用提醒音效 -->
-                <materialDesign:Card Margin="0 6 0 0">
+                <Border Margin="0 6 0 0">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding ProviderSettings.IsNotificationSoundEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -89,7 +89,7 @@
                                                 VerticalAlignment="Center">
                                         <TextBox MinWidth="150"
                                                  MaxWidth="150"
-                                                 materialDesign:HintAssist.Hint="（默认音效）"
+                                                 mah:TextBoxHelper.Watermark="（默认音效）"
                                                  Text="{Binding ProviderSettings.NotificationSoundPath}"
                                                  VerticalAlignment="Center"
                                                  Margin="0 0 2 0" />
@@ -101,7 +101,7 @@
                             </controls2:SettingsControl>
                         </StackPanel>
                     </Expander>
-                </materialDesign:Card>
+                </Border>
                 <!-- 置顶提醒 -->
                 <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
                                         Margin="0 6 0 0"
@@ -123,7 +123,7 @@
                 <Grid DataContext="{Binding ViewModel.SelectedRegisterInfo, Mode=OneWay}"
                       d:DataContext="{d:DesignInstance notification:NotificationProviderRegisterInfo}">
                     <TextBlock Text="{Binding Name}"
-                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Style="{StaticResource Headline5TextBlock}"
                                TextTrimming="CharacterEllipsis"
                                VerticalAlignment="Center" />
                 </Grid>
@@ -154,20 +154,18 @@
                                  dd:DragDrop.IsDropTarget="True"
                                  SelectionChanged="SelectorMain_OnSelected"
                                  HorizontalContentAlignment="Stretch"
-                                 materialDesign:RippleAssist.IsDisabled="True"
                                  dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}"
                                  SelectedItem="{Binding ViewModel.NotificationSettingsSelectedProvider, Mode=TwoWay}">
 
                             <dd:DragDrop.EffectMoveAdornerTemplate>
                                 <DataTemplate>
-                                    <materialDesign:ColorZone Mode="PrimaryMid" Height="24"
-                                                              CornerRadius="12">
+                                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                                         <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ArrowUpDown}" Text="调整优先级"
                                                             Margin="4 0"
                                                             IconMargin="2"
                                                             TextElement.FontWeight="Medium"
                                                             VerticalAlignment="Center"/>
-                                    </materialDesign:ColorZone>
+                                    </Border>
                                 </DataTemplate>
                             </dd:DragDrop.EffectMoveAdornerTemplate>
 
@@ -207,13 +205,11 @@
                                                    FontSize="12" />
 
                                         <Expander Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"
-                                                  materialDesign:ExpanderAssist.VerticalHeaderPadding="2"
-                                                  materialDesign:ExpanderAssist.HorizontalHeaderPadding="2"
                                                   Background="{x:Null}"
                                                   Collapsed="Expander_OnCollapsed"
                                                   Header="提醒渠道">
                                             <Expander.Style>
-                                                <Style TargetType="Expander" BasedOn="{StaticResource MaterialDesignExpander}">
+                                                <Style TargetType="Expander" BasedOn="{StaticResource MahApps.Styles.Expander}">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding NotificationChannels.Count}" Value="0">
                                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -279,7 +275,7 @@
                             <StackPanel Margin="0 0 0 8">
                                 
                                 <!-- 启用提醒语音 -->
-                                <materialDesign:Card>
+                                <Border>
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationSpeech, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
@@ -354,8 +350,8 @@
                                             <TextBox Grid.Row="4" Grid.Column="0"
                                                      Grid.ColumnSpan="2"
                                                      Margin="0 6 0 0"
-                                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                                     materialDesign:HintAssist.Hint="测试朗读文本"
+                                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                                     mah:TextBoxHelper.Watermark="测试朗读文本"
                                                      Text="{Binding ViewModel.TestSpeechText}" />
 
                                             <WrapPanel Grid.Row="5" Grid.Column="0"
@@ -363,23 +359,23 @@
                                                        Margin="0 6 0 0">
                                                 <Button Click="ButtonTestSpeeching_OnClick"
                                                         HorizontalAlignment="Left"
-                                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                                        Style="{StaticResource MahApps.Styles.Button.Flat}">
                                                     <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Play}"
                                                                         Text="测试语音" />
                                                 </Button>
                                                 <Button Click="ButtonOpenSpeechSettings_OnClick"
                                                         HorizontalAlignment="Left"
-                                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                                        Style="{StaticResource MahApps.Styles.Button.Flat}">
                                                     <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ExternalLink}"
                                                                         Text="系统文本转语音设置" />
                                                 </Button>
                                             </WrapPanel>
                                         </Grid>
                                     </Expander>
-                                </materialDesign:Card>
+                                </Border>
 
                                 <!-- 启用提醒强调特效 -->
-                                <materialDesign:Card Margin="0 6 0 0">
+                                <Border Margin="0 6 0 0">
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationEffect, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -422,10 +418,10 @@
                                             </controls2:SettingsControl>
                                         </StackPanel>
                                     </Expander>
-                                </materialDesign:Card>
+                                </Border>
 
                                 <!-- 启用提醒音效 -->
-                                <materialDesign:Card Margin="0 6 0 0">
+                                <Border Margin="0 6 0 0">
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationSound, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -481,11 +477,11 @@
                                                                 VerticalAlignment="Center">
                                                         <TextBox MinWidth="150"
                                                                  MaxWidth="150"
-                                                                 materialDesign:HintAssist.Hint="（默认音效）"
+                                                                 mah:TextBoxHelper.Watermark="（默认音效）"
                                                                  Text="{Binding SettingsService.Settings.NotificationSoundPath}"
                                                                  VerticalAlignment="Center"
                                                                  Margin="0 0 2 0"
-                                                                 materialDesign:TextFieldAssist.HasClearButton="True"/>
+                                                                 mah:TextBoxHelper.ClearTextButton="True"/>
                                                         <controls1:FileBrowserButton
                                                             CurrentPath="{Binding SettingsService.Settings.NotificationSoundPath, Mode=TwoWay}"
                                                             VerticalAlignment="Center" />
@@ -494,10 +490,10 @@
                                             </controls2:SettingsControl>
                                         </Grid>
                                     </Expander>
-                                </materialDesign:Card>
+                                </Border>
 
                                 <!-- 置顶提醒 -->
-                                <materialDesign:Card Margin="0 6 0 0">
+                                <Border Margin="0 6 0 0">
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationTopmost, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -517,7 +513,7 @@
                                                       Margin="0 0 0 6" />
                                         </StackPanel>
                                     </Expander>
-                                </materialDesign:Card>
+                                </Border>
                             </StackPanel>
                         </ScrollViewer>
                     </TabItem>
@@ -572,10 +568,8 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <ToggleButton Grid.Column="0" Margin="0 0 6 0"
-                                              VerticalAlignment="Center"
-                                              IsChecked="{Binding ProviderSettings.IsSettingsEnabled}" />
-                                <Button Grid.Column="1" Style="{StaticResource MaterialDesignToolButton}"
+                                <ToggleButton Grid.Column="0" Margin="0 0 6 0" VerticalAlignment="Center" IsChecked="{Binding ProviderSettings.IsSettingsEnabled}"/>
+                                <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         Foreground="{DynamicResource PrimaryHueMidBrush}"
                                         Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.CogOutline}}"
                                         VerticalAlignment="Center"

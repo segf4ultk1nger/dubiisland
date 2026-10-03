@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:controls="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:controls1="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
@@ -35,21 +34,21 @@
         dialogs:DialogService.Identifier="{x:Static controls1:SettingsPageBase.DialogHostIdentifier}">
     <controls:MyWindow.Resources>
         <StackPanel VerticalAlignment="Stretch" Margin="16" MaxWidth="400" x:Key="RestartDialog">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="需要重启"/>
             </TextBlock>
             <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
                 <Run Text="部分设置需要重启以应用。"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="稍后" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="稍后" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="立即重启" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="立即重启" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
@@ -60,10 +59,9 @@
         </StackPanel>
 
         <ScrollViewer Width="332" x:Key="ExperimentalSettings"
-                      VerticalScrollBarVisibility="Auto"
-                      materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">
+                      VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="16">
-                <TextBlock Text="实验性功能" Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                <TextBlock Text="实验性功能" Style="{StaticResource Headline5TextBlock}"
                            Margin="0 0 0 4" />
                 <TextBlock Text="正在开发/测试的不稳定功能，可能会出现Bug等问题，请谨慎使用。" TextWrapping="Wrap"
                            Margin="0 0 0 16" />
@@ -78,8 +76,8 @@
                     </TextBlock>
                 </CheckBox>
 
-                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          materialDesign:HintAssist.Hint="设置页面缓存策略"
+                <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                          mah:TextBoxHelper.Watermark="设置页面缓存策略"
                           Margin="0 0 0 2"
                           SelectedIndex="{Binding SettingsService.Settings.SettingsPagesCachePolicy}">
                     <ComboBoxItem>不缓存</ComboBoxItem>
@@ -90,16 +88,14 @@
                            Opacity="0.75"
                            />
 
-                <Expander materialDesign:ExpanderAssist.VerticalHeaderPadding="0"
-                          materialDesign:ExpanderAssist.HorizontalHeaderPadding="0"
+                <Expander
                           Foreground="Transparent"
                           Margin="0 24 0 0"
                           Visibility="{Binding ManagementService.Policy.DisableEasterEggs, Converter={StaticResource InverseBoolToVisConverter}}">
                     
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonDoNotClickVeryDangerous_OnClick"
                             Foreground="Red"
-                            materialDesign:RippleAssist.Feedback="Red"
                             HorizontalAlignment="Left"
                             >
                         <commands:IconText Kind="{x:Static controls:IconGlyphs.WarningOutline}" Text="千万别点" />
@@ -165,10 +161,10 @@
                 <ListBox ItemsSource="{Binding Source={StaticResource NavigationCollectionViewSource}}"
                          SelectedItem="{Binding ViewModel.SelectedPageInfo}"
                          SelectionChanged="NavigationListBox_OnSelectionChanged"
-                         Style="{StaticResource MaterialDesignNavigationPrimaryListBox}"
+                         Style="{StaticResource NavigationPrimaryListBox}"
                          IsSynchronizedWithCurrentItem="False"
                          IsEnabled="{Binding ViewModel.IsNavigating, Converter={StaticResource InvertBooleanConverter}}"
-                         ItemContainerStyle="{StaticResource MaterialDesignYouPrimaryNavigationListBoxItemStyle}">
+                         ItemContainerStyle="{StaticResource NavigationPrimaryListBoxItemYou}">
                     <ListBox.GroupStyle>
                         <GroupStyle>
                             <GroupStyle.ContainerStyle>
@@ -321,8 +317,8 @@
                     </Grid>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="8 4">
                                 <StackPanel.Resources>
-                                    <Style TargetType="materialDesign:Chip"
-                                           BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                                    <Style TargetType="ToggleButton"
+                                           BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                                         <Style.Resources>
                                             <converters:SolidColorBrushOpacityConverter
                                                 x:Key="SolidColorBrushOpacityConverter" />
@@ -331,39 +327,33 @@
                                                 Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
                                         <Setter Property="BorderBrush"
                                                 Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                        <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}" />
-                                        <Setter Property="IconBackground"
-                                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                        <Setter Property="Margin" Value="0 0 6 0" />
+<Setter Property="Margin" Value="0 0 6 0" />
                                     </Style>
                                 </StackPanel.Resources>
-                                <materialDesign:Chip
-                                    Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    ToolTip="部分设置需要重启应用后生效。"
-                                    Click="ButtonRestartApp_OnClick"
-                                    Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Restart}}">
+                                <ToggleButton Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="部分设置需要重启应用后生效。" Click="ButtonRestartApp_OnClick">
                                     <TextBlock>
                                         <Run Text="需要重启" />
                                     </TextBlock>
-                                </materialDesign:Chip>
-                                <materialDesign:Chip
-                                    Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Command="{x:Static dialogs:DialogService.OpenDialogCommand}"
-                                    ToolTip="查看您的单位/组织如何管理此ClassIsland实例。"
-                                    Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WorkOutline}}">
-                                    <materialDesign:Chip.CommandParameter>
+                                </ToggleButton>
+                                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此ClassIsland实例。">
+                                    <ToggleButton.CommandParameter>
                                         <controls2:ManagementInfoControl />
-                                    </materialDesign:Chip.CommandParameter>
+                                    </ToggleButton.CommandParameter>
                                     <TextBlock>
                                         <Run Text="由贵单位管理" />
                                     </TextBlock>
-                                </materialDesign:Chip>
+                                </ToggleButton>
                                 <TextBlock Text="{x:Static ci:App.AppVersion}"
                                            Margin="8 0 0 0"
                                            VerticalAlignment="Center"
                                            ToolTip="应用版本" />
-                                <materialDesign:PopupBox Margin="8 0 0 0" ToolTip="更多选项…" StaysOpen="False"
-                                                         IsPopupOpen="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}">
+                                <Grid Margin="8 0 0 0">
+<ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" ToolTip="更多选项…" IsChecked="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}" Padding="4">
+…
+</ToggleButton>
+<Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
+<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+
                                     <StackPanel>
                                         <StackPanel>
                                             <!--<MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WarningCircleOutline}}" Header="查看崩溃报告…"/>
@@ -416,7 +406,10 @@
                                         </StackPanel>
 
                                     </StackPanel>
-                                </materialDesign:PopupBox>
+                                
+</Border>
+</Popup>
+</Grid>
                     </StackPanel>
                 </Grid>
                 <mah:FlyoutsControl>
@@ -437,8 +430,6 @@
                     </mah:Flyout>
                 </mah:FlyoutsControl>
             </Grid>
-        <materialDesign:Snackbar MessageQueue="{Binding ViewModel.SnackbarMessageQueue}"
-                                 VerticalAlignment="Bottom"
-                                 HorizontalAlignment="Center"/>
+        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="16" TextWrapping="Wrap" FontWeight="Medium" Text="{Binding ViewModel.StatusMessage}"/>
     </Grid>
 </controls:MyWindow>

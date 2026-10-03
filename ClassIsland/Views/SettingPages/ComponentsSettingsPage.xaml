@@ -1,13 +1,13 @@
 <controls:SettingsPageBase x:Class="ClassIsland.Views.SettingPages.ComponentsSettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
       xmlns:registry="clr-namespace:ClassIsland.Core.Services.Registry;assembly=ClassIsland.Core"
       xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
       xmlns:dd="urn:gong-wpf-dragdrop"
       xmlns:controls2="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
@@ -39,16 +39,15 @@
                               Filter="ContainerComponentsSource_OnFilter"/>
 
         <StackPanel x:Key="CreateProfileDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="新建档案"/>
+            <TextBlock Style="{StaticResource Headline6TextBlock}" Text="新建档案"/>
             <TextBox Margin="0 6 0 0" TextWrapping="Wrap" x:Name="TextBoxProfileName" 
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Style="{StaticResource MahApps.Styles.TextBox}"
                      Text="{Binding ViewModel.CreateProfileName, UpdateSourceTrigger=PropertyChanged}"
-                     materialDesign:HintAssist.Hint="配置名"
-                     materialDesign:TextFieldAssist.SuffixText=".json"/>
+                     mah:TextBoxHelper.Watermark="配置名"/>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="新建" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" 
+                <Button Content="新建" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" 
                         CommandParameter="{Binding ViewModel.CreateProfileName, Mode=OneWay}"/>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
             </StackPanel>
         </StackPanel>
 
@@ -68,7 +67,7 @@
                     </DataTemplate>
                 </MenuItem.ItemTemplate>
                 <MenuItem.ItemContainerStyle>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
                         <Setter Property="Command" Value="{Binding Data.CreateContainerComponentCommand, Source={StaticResource DataProxy}}"/>
                         <Setter Property="CommandParameter" Value="{Binding}"/>
                     </Style>
@@ -78,7 +77,7 @@
                       Click="MenuItemDuplicateComponent_OnClick"/>
         </ContextMenu>
 
-        <Style x:Key="ComponentListBoxStyle" BasedOn="{StaticResource MaterialDesignListBox}"
+        <Style x:Key="ComponentListBoxStyle" BasedOn="{StaticResource MahApps.Styles.ListBox}"
                TargetType="ListBox">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="dd:DragDrop.IsDragSource" Value="True"/>
@@ -94,20 +93,19 @@
             <Setter Property="dd:DragDrop.EffectMoveAdornerTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <materialDesign:ColorZone Mode="PrimaryMid" Height="24"
-                                                  CornerRadius="12">
+                        <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                             <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ArrowAll}" Text="移动"
                                                 Margin="4 0"
                                                 IconMargin="2"
                                                 TextElement.FontWeight="Medium"
                                                 VerticalAlignment="Center"/>
-                        </materialDesign:ColorZone>
+                        </Border>
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
-                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                         <Setter Property="ContextMenu" Value="{StaticResource ComponentOperationContextMenu}"/>
                     </Style>
                 </Setter.Value>
@@ -128,13 +126,13 @@
                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
                                     Command="{Binding OpenContextMenuCommand, RelativeSource={RelativeSource AncestorType=local:ComponentsSettingsPage}}"
                                     Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Style="{StaticResource MaterialDesignToolForegroundButton}"/>
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"/>
                             <Button Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.OpenInBrowser}}"
                                     Margin="0 -16 0 -16"
                                     VerticalAlignment="Center"
                                     ToolTip="查看子组件"
                                     Click="ButtonShowChildrenComponents_OnClick"
-                                    Style="{StaticResource MaterialDesignToolForegroundButton}">
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}">
                                 <Button.Visibility>
                                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
                                         <Binding Path="IsSelected" RelativeSource="{RelativeSource FindAncestor, AncestorType=ListBoxItem}"/>
@@ -149,7 +147,7 @@
                                     ToolTip="删除"
                                     Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Click="ButtonRemoveSelectedComponent_OnClick"
-                                    Style="{StaticResource MaterialDesignToolForegroundButton}"/>
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"/>
                         </StackPanel>
                     </DataTemplate>
                 </Setter.Value>
@@ -192,30 +190,30 @@
             <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
-                <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                           ItemsSource="{Binding ComponentsService.ComponentConfigs}"
                           MinWidth="150"
                           MaxWidth="300"
                           SelectedItem="{Binding SettingsService.Settings.CurrentComponentConfig}"
-                          materialDesign:HintAssist.Hint="配置方案"/>
+                          mah:TextBoxHelper.Watermark="配置方案"/>
                 <Button Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Refresh}}"
                         ToolTip="刷新"
                         VerticalAlignment="Center"
                         Margin="2 0"
                         Click="ButtonRefresh_OnClick"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}"/>
+                        Style="{StaticResource MahApps.Styles.Button.Flat}"/>
                 <Button Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Add}}"
                         ToolTip="新建…"
                         VerticalAlignment="Center"
                         Margin="2 0"
                         Click="ButtonCreateConfig_OnClick"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}"/>
+                        Style="{StaticResource MahApps.Styles.Button.Flat}"/>
                 <Button Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.FolderOpenOutline}}"
                         ToolTip="打开配置文件夹…"
                         VerticalAlignment="Center"
                         Click="ButtonOpenConfigFolder_OnClick"
                         Margin="2 0"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}"/>
+                        Style="{StaticResource MahApps.Styles.Button.Flat}"/>
             </StackPanel>
         </Grid>
         <!-- ROW 2 列表编辑区域 -->
@@ -255,7 +253,7 @@
                                 ToolTip="返回上一层级"
                                 Visibility="{Binding ViewModel.CanChildrenNavigateBack, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
                                 Click="ButtonNavigateUp_OnClick"
-                                Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                Style="{StaticResource MahApps.Styles.Button.Flat}" />
                         <TextBlock VerticalAlignment="Center"
                                    Grid.Column="1"
                                    HorizontalAlignment="Left">
@@ -267,7 +265,7 @@
                                 HorizontalAlignment="Right"
                                 ToolTip="关闭"
                                 Click="ButtonChildrenViewClose_OnClick"
-                                Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                                Style="{StaticResource MahApps.Styles.Button.Flat}" />
                     </Grid>
                 </DataTemplate>
             </GroupBox.HeaderTemplate>
@@ -296,22 +294,20 @@
                              dd:DragDrop.DragDropCopyKeyState="LeftMouseButton"
                              dd:DragDrop.UseDefaultEffectDataTemplate="False"
                              HorizontalContentAlignment="Stretch"
-                             VerticalContentAlignment="Stretch"
-                             materialDesign:ListViewAssist.ListViewItemPadding="0">
+                             VerticalContentAlignment="Stretch">
                         <dd:DragDrop.EffectCopyAdornerTemplate>
                             <DataTemplate>
-                                <materialDesign:ColorZone Mode="PrimaryMid" Height="24"
-                                                          CornerRadius="12">
+                                <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                                     <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Add}" Text="添加"
                                                         Margin="4 0"
                                                         IconMargin="2"
                                                         TextElement.FontWeight="Medium"
                                                         VerticalAlignment="Center"/>
-                                </materialDesign:ColorZone>
+                                </Border>
                             </DataTemplate>
                         </dd:DragDrop.EffectCopyAdornerTemplate>
                         <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                 
                             </Style>
                         </ListBox.ItemContainerStyle>
@@ -379,13 +375,12 @@
                                             <controls2:SettingsCard.Switcher>
                                                 <StackPanel Orientation="Horizontal">
                                                     <Button HorizontalAlignment="Left"
-                                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                             Click="ButtonOpenRuleset_OnClick"
                                                             Visibility="{Binding HideOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <controls2:IconText Kind="{x:Static controls2:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                                                     </Button>
-                                                    <ToggleButton VerticalAlignment="Center"
-                                                                  IsChecked="{Binding HideOnRule}" />
+                                                    <ToggleButton VerticalAlignment="Center" IsChecked="{Binding HideOnRule}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
                                         </controls2:SettingsCard>
@@ -393,7 +388,7 @@
                                         <Separator Margin="0 16 0 8" />
                                         <controls2:IconText Kind="{x:Static controls2:IconGlyphs.FormatFont}" Text="字体" Margin="0 0 0 8" />
                                         <!-- 字体大小 -->
-                                        <materialDesign:Card Margin="0 0 0 6">
+                                        <Border Margin="0 0 0 6">
                                             <Expander Background="Transparent"
                                                       IsExpanded="{Binding IsResourceOverridingEnabled, Mode=OneWay}"
                                                       TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -408,11 +403,8 @@
                                                 <Grid Margin="36 0 48 12" IsEnabled="{Binding IsResourceOverridingEnabled, Mode=OneWay}">
                                                     <Grid.Resources>
                                                         <Style TargetType="controls2:NumbericTextBox"
-                                                               BasedOn="{StaticResource MaterialDesignTextBoxBase}">
+                                                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
                                                             <Setter Property="Width" Value="100" />
-                                                            <Setter
-                                                                Property="materialDesign:TextFieldAssist.SuffixText"
-                                                                Value="px" />
                                                             <Setter Property="MinValue" Value="1" />
                                                             <Setter Property="MaxValue" Value="40" />
                                                         </Style>
@@ -451,7 +443,7 @@
                                                         Text="{Binding MainWindowLargeFontSize, Converter={StaticResource IntToStringConverter}}" />
                                                 </Grid>
                                             </Expander>
-                                        </materialDesign:Card>
+                                        </Border>
                                         <!-- 字体颜色 -->
                                         <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.FormatColorFill}"
                                                                 Header="字体颜色"
@@ -464,8 +456,7 @@
                                                                     Margin="0 0 6 0"
                                                                     Color="{Binding ForegroundColor, Mode=TwoWay}"
                                                                     Visibility="{Binding IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                                    <ToggleButton VerticalAlignment="Center"
-                                                                  IsChecked="{Binding IsCustomForegroundColorEnabled}" />
+                                                    <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsCustomForegroundColorEnabled}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
                                         </controls2:SettingsCard>
@@ -482,7 +473,7 @@
                                                 <Grid>
                                                     <ListBox SelectedIndex="{Binding HorizontalAlignment, Converter={StaticResource HorizontalAlignmentToIntConverter}}">
                                                         <ListBox.ItemContainerStyle>
-                                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                                                 <Style.Triggers>
                                                                     <Trigger Property="IsSelected" Value="True">
                                                                         <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
@@ -512,19 +503,16 @@
                                             <controls2:SettingsCard.Switcher>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBox VerticalAlignment="Center"
-                                                             materialDesign:TextFieldAssist.SuffixText="px"
                                                              Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                              Margin="0 0 6 0"
                                                              Width="100"
                                                              Text="{Binding FixedWidth, Converter={StaticResource IntToStringConverter}}"/>
-                                                    <ToggleButton VerticalAlignment="Center"
-                                                                  IsChecked="{Binding IsFixedWidthEnabled}" />
+                                                    <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsFixedWidthEnabled}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
                                         </controls2:SettingsCard>
                                         <!-- 宽度限制 -->
-                                        <materialDesign:Card Margin="0 0 0 6"
-                                                             Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
+                                        <Border Margin="0 0 0 6" Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
                                             <Expander Background="Transparent"
                                                       IsExpanded="True"
                                                       TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
@@ -549,35 +537,28 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <!-- 最小宽度 -->
-                                                    <ToggleButton Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"
-                                                                  Margin="0 0 4 0"
-                                                                  IsChecked="{Binding IsMinWidthEnabled}"/>
+                                                    <ToggleButton Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" IsChecked="{Binding IsMinWidthEnabled}"/>
                                                     <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"
                                                                Text="最小宽度"/>
                                                     <TextBox Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
-                                                             materialDesign:TextFieldAssist.SuffixText="px"
                                                              IsEnabled="{Binding IsMinWidthEnabled}"
                                                              Text="{Binding MinWidth, Converter={StaticResource IntToStringConverter}}"/>
                                                     <!-- 最大宽度 -->
-                                                    <ToggleButton Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
-                                                                  Margin="0 0 4 0"
-                                                                  IsChecked="{Binding IsMaxWidthEnabled}"/>
+                                                    <ToggleButton Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" IsChecked="{Binding IsMaxWidthEnabled}"/>
                                                     <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
                                                                Text="最大宽度"/>
                                                     <TextBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
-                                                             materialDesign:TextFieldAssist.SuffixText="px"
                                                              IsEnabled="{Binding IsMaxWidthEnabled}"
                                                              Text="{Binding MaxWidth, Converter={StaticResource IntToStringConverter}}"/>
                                                 </Grid>
                                             </Expander>
-                                        </materialDesign:Card>
+                                        </Border>
                                         <StackPanel Orientation="Horizontal" ToolTip="GUID" HorizontalAlignment="Left">
                                             <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Code}" VerticalAlignment="Center"/>
                                             <TextBox Text="{Binding Id, Mode=OneWay}"
                                                      Margin="4 0 0 0"
                                                      IsReadOnly="True"
                                                      VerticalAlignment="Center"
-                                                     materialDesign:TextFieldAssist.DecorationVisibility="Collapsed"
                                                      BorderThickness="0"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -594,13 +575,13 @@
                             HorizontalAlignment="Right">
                     <TextBox Text="{Binding ViewModel.SelectedComponentSettings.RelativeLineNumber, Converter={StaticResource IntToStringConverter}}"
                              Width="70"
-                             materialDesign:HintAssist.Hint="相对行号"
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                             mah:TextBoxHelper.Watermark="相对行号"
+                             Style="{StaticResource MahApps.Styles.TextBox}"/>
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ArrowUp}}"
                             Click="ButtonMoveToPrevLine_OnClick"
                             ToolTip="移动到上一行"/>
-                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ArrowDown}}"
                             Click="ButtonMoveToNextLine_OnClick"
                             ToolTip="移动到下一行"/>

@@ -278,15 +278,15 @@ public partial class ProfileSettingsWindow : MyWindow
                     {
                         if (index != 0)
                         {
-                            ViewModel.MessageQueue.Enqueue("没有合适的位置来插入新的时间点。");
+                            ViewModel.StatusMessage = "没有合适的位置来插入新的时间点。";
                             return;
                         }
                         baseSec = selected.StartSecond - lastTime; // 向前插入时间点的简易实现，未考虑分割线
-                        ViewModel.MessageQueue.Enqueue("已向前插入了新的时间点。");
+                        ViewModel.StatusMessage = "已向前插入了新的时间点。";
                     }
                     if (next.StartSecond.TimeOfDay < baseSec.TimeOfDay + lastTime)
                     {
-                        ViewModel.MessageQueue.Enqueue("没有足够的空间完全插入该时间点，已缩短时间点长度。");
+                        ViewModel.StatusMessage = "没有足够的空间完全插入该时间点，已缩短时间点长度。";
                         lastTime = next.StartSecond.TimeOfDay - baseSec.TimeOfDay;
                     }
                 }
@@ -297,7 +297,7 @@ public partial class ProfileSettingsWindow : MyWindow
                 baseSec = selected.EndSecond;
                 if ((from i in timeLayout.Layouts where i.TimeType == 2 select i.StartSecond).ToList().Contains(baseSec))
                 {
-                    ViewModel.MessageQueue.Enqueue("这里已经存在一条分割线。");
+                    ViewModel.StatusMessage = "这里已经存在一条分割线。";
                     return;
                 }
             }
@@ -307,7 +307,7 @@ public partial class ProfileSettingsWindow : MyWindow
                 baseSec = selected.EndSecond;
                 if ((from i in timeLayout.Layouts where i.TimeType == 3 select i.StartSecond).ToList().Contains(baseSec))
                 {
-                    ViewModel.MessageQueue.Enqueue("这里已经存在一个行动。");
+                    ViewModel.StatusMessage = "这里已经存在一个行动。";
                     return;
                 }
             }
@@ -394,7 +394,7 @@ public partial class ProfileSettingsWindow : MyWindow
         var eventName = "views.ProfileSettingsWindow.timeLayout.remove";
         if (c > 0)
         {
-            ViewModel.MessageQueue.Enqueue("仍有课表在使用该时间表。删除时间表前需要删除所有使用该时间表的课表。");
+            ViewModel.StatusMessage = "仍有课表在使用该时间表。删除时间表前需要删除所有使用该时间表的课表。";
             SentrySdk.Metrics.Increment(eventName, tags: new Dictionary<string, string>
             {
                 {"IsSuccess", "false"},
@@ -789,7 +789,7 @@ public partial class ProfileSettingsWindow : MyWindow
                 {"Reason", "正在删除已加载或将要加载的档案。"},
                 {"IsSuccess", "false"}
             });
-            ViewModel.MessageQueue.Enqueue("无法删除已加载或将要加载的档案。");
+            ViewModel.StatusMessage = "无法删除已加载或将要加载的档案。";
             return;
         }
         var r = await DialogService.ShowAsync(FindResource("DeleteProfileDialog"), ViewModel.DialogHostId.ToString());
@@ -881,7 +881,7 @@ public partial class ProfileSettingsWindow : MyWindow
         }
         else
         {
-            ViewModel.MessageQueue.Enqueue("在这一天已存在一个临时层课表，无法创建新的临时层课表。");
+            ViewModel.StatusMessage = "在这一天已存在一个临时层课表，无法创建新的临时层课表。";
         }
 
         PopupCreateTempOverlayClassPlan.IsOpen = false;
@@ -928,7 +928,7 @@ public partial class ProfileSettingsWindow : MyWindow
         if (ManagementService.Policy.DisableProfileClassPlanEditing ||
             ManagementService.Policy.DisableProfileTimeLayoutEditing || ManagementService.Policy.DisableProfileEditing)
         {
-            ViewModel.MessageQueue.Enqueue($"此功能已被您的组织禁用。");
+            ViewModel.StatusMessage = $"此功能已被您的组织禁用。";
             return;
         }
 
@@ -949,12 +949,12 @@ public partial class ProfileSettingsWindow : MyWindow
         if (ManagementService.Policy.DisableProfileClassPlanEditing ||
             ManagementService.Policy.DisableProfileTimeLayoutEditing || ManagementService.Policy.DisableProfileEditing)
         {
-            ViewModel.MessageQueue.Enqueue($"此功能已被您的组织禁用。");
+            ViewModel.StatusMessage = $"此功能已被您的组织禁用。";
             return;
         }
         if (Path.GetExtension(filename) != ".xlsx")
         {
-            ViewModel.MessageQueue.Enqueue($"不支持的文件：{filename}");
+            ViewModel.StatusMessage = $"不支持的文件：{filename}";
             return;
         }
         var eiw = App.GetService<ExcelImportWindow>();
@@ -1015,7 +1015,7 @@ public partial class ProfileSettingsWindow : MyWindow
     private void SaveProfile()
     {
         ProfileService.SaveProfile();
-        ViewModel.MessageQueue.Enqueue($"已保存到{ProfileService.CurrentProfilePath}。");
+        ViewModel.StatusMessage = $"已保存到{ProfileService.CurrentProfilePath}。";
     }
 
     private void ButtonBeginCreateTempOverlayClassPlan_OnClick(object sender, RoutedEventArgs e)
@@ -1175,7 +1175,7 @@ public partial class ProfileSettingsWindow : MyWindow
         var r = await DialogService.ShowAsync(new CsesImportControl(), ViewModel.DialogHostId.ToString());
         if (r as bool? == true)
         {
-            ViewModel.MessageQueue.Enqueue("成功导入了 CSES 课表。");
+            ViewModel.StatusMessage = "成功导入了 CSES 课表。";
             RefreshProfiles();
         }
     }
@@ -1332,14 +1332,14 @@ public partial class ProfileSettingsWindow : MyWindow
         var cell = DataGridWeekSchedule.SelectedCells.FirstOrDefault();
         if (cell.Item is not WeekClassPlanRow row)
         {
-            ViewModel.MessageQueue.Enqueue("请先选择要交换的课程。");
+            ViewModel.StatusMessage = "请先选择要交换的课程。";
             return;
         }
         var date = ViewModel.ScheduleWeekViewBaseDate.AddDays(cell.Column.DisplayIndex);
         var index = ViewModel.WeekClassPlanRows.IndexOf(row);
         if (GetClassInfoFromRow(row, cell.Column.DisplayIndex) == null)
         {
-            ViewModel.MessageQueue.Enqueue("选择课程区域无效。");
+            ViewModel.StatusMessage = "选择课程区域无效。";
             return;
         }
         ViewModel.ClassSwapStartPosition = new ScheduleClassPosition(date, index);
@@ -1370,7 +1370,7 @@ public partial class ProfileSettingsWindow : MyWindow
         var index = ViewModel.WeekClassPlanRows.IndexOf(row);
         if (GetClassInfoFromRow(row, cell.Column.DisplayIndex) == null)
         {
-            ViewModel.MessageQueue.Enqueue("选择课程区域无效。");
+            ViewModel.StatusMessage = "选择课程区域无效。";
             return;
         }
         ViewModel.ClassSwapEndPosition = new ScheduleClassPosition(date, index);
@@ -1439,12 +1439,12 @@ public partial class ProfileSettingsWindow : MyWindow
         var cell = DataGridWeekSchedule.SelectedCells.FirstOrDefault();
         if (cell.Item is not WeekClassPlanRow row)
         {
-            ViewModel.MessageQueue.Enqueue("请先选择要修改的课程。");
+            ViewModel.StatusMessage = "请先选择要修改的课程。";
             return;
         }
         if (GetClassInfoFromRow(row, cell.Column.DisplayIndex) == null)
         {
-            ViewModel.MessageQueue.Enqueue("选择课程区域无效。");
+            ViewModel.StatusMessage = "选择课程区域无效。";
             return;
         }
 

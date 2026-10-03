@@ -17,7 +17,7 @@
             <Image Source="/Assets/AppLogo.png" Width="72" Height="72"/>
             <ProgressBar
                 IsIndeterminate="True"
-                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                Style="{StaticResource MahApps.Styles.ProgressBar}"
                 Value="0" 
                 Height="28" Width="28"
                 HorizontalAlignment="Center"

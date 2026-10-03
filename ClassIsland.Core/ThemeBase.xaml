@@ -2,18 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:ClassIsland.Core.Converters"
                     xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:lessonsControls="clr-namespace:ClassIsland.Core.Controls.LessonsControls"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
-        <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="LightBlue" SecondaryColor="LightBlue" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Flyout.xaml" />
         <!--<ResourceDictionary Source="/Assets/Fonts/Fonts.xaml"/>-->
         <ResourceDictionary Source="pack://application:,,,/ClassIsland.Core;component/Themes/Generic.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ClassIsland.Core;component/Themes/RichTextStyles.xaml"/>
@@ -24,6 +20,30 @@
     </system:String>
 
     <converters:BooleanToBooleanReConverter x:Key="BooleanToBooleanReConverter" />
+    <converters:TimeSpanToDateTimeConverter x:Key="TimeSpanToDateTimeConverter" />
+    <Style x:Key="Headline5TextBlock" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Light"/>
+    </Style>
+    <Style x:Key="Headline6TextBlock" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+    <Style TargetType="controls:Transitioner">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:Transitioner">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter Content="{TemplateBinding SelectedItem}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="ProgressBar" BasedOn="{StaticResource MahApps.Styles.ProgressBar}"/>
+    <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
     <Style TargetType="Image">
         <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
         <Setter Property="UseLayoutRounding" Value="True"/>

@@ -8,7 +8,6 @@
                         xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
                         xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                         xmlns:controls1="clr-namespace:ClassIsland.Controls"
-                        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                         xmlns:ci="http://classisland.tech/schemas/xaml/core"
                         xmlns:converters="clr-namespace:ClassIsland.Converters"
                         mc:Ignorable="d"
@@ -137,7 +136,7 @@
                     <DataTemplate>
                         <TabControl>
                             <TabControl.Style>
-                                <Style TargetType="TabControl" BasedOn="{StaticResource MaterialDesignTabControlBase}">
+                                <Style TargetType="TabControl" BasedOn="{StaticResource MahApps.Styles.TabControl}">
                                     <Style.Triggers>
                                         <DataTrigger Value="0" Binding="{Binding Settings.AlertsTitleShowMode, RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherComponent}}">
                                             <Setter Property="SelectedIndex" Value="0" />
@@ -152,7 +151,7 @@
                                 </Style>
                             </TabControl.Style>
                             <TabControl.Resources>
-                                <Style TargetType="TabItem" BasedOn="{StaticResource MaterialDesignTabItem}">
+                                <Style TargetType="TabItem" BasedOn="{StaticResource MahApps.Styles.TabItem}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </Style>
                             </TabControl.Resources>

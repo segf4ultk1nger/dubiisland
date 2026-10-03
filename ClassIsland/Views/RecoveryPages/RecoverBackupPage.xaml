@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClassIsland.Views.RecoveryPages"
       xmlns:ci="http://classisland.tech/schemas/xaml/core"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="RecoverBackupPage"
@@ -36,11 +35,9 @@
         <StackPanel Grid.Row="2" Margin="8">
             <RadioButton Content="增量恢复：替换备份中已有的文件，保留新添加的文件" IsChecked="{Binding ViewModel.RecoverMode, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=0}"/>
             <RadioButton Content="完整恢复：完整恢复到选定备份，不保留新添加的文件" Margin="0 2 0 0" IsChecked="{Binding ViewModel.RecoverMode, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=1}"/>
-            <Button HorizontalAlignment="Right" Margin="0 8 0 0" Click="ButtonRecover_OnClick"
-                    materialDesign:ButtonProgressAssist.IsIndeterminate="True"
-                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding ViewModel.IsWorking}">
+            <Button HorizontalAlignment="Right" Margin="0 8 0 0" Click="ButtonRecover_OnClick">
                 <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding ViewModel.SelectedBackupName}" Value="{x:Null}">
                                 <Setter Property="IsEnabled" Value="False"/>

@@ -1,13 +1,13 @@
 ﻿<ci:MyWindow x:Class="ClassIsland.Views.ClassPlanDetailsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         xmlns:windows="clr-namespace:Walterlv.Windows;assembly=ClassIsland.Core"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services;assembly=ClassIsland.Core"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -69,7 +69,7 @@
                     Grid.Row="1"
                     HorizontalContentAlignment="Left">
             <TabControl.Style>
-                <Style TargetType="TabControl" BasedOn="{StaticResource MaterialDesignTabControl}">
+                <Style TargetType="TabControl" BasedOn="{StaticResource MahApps.Styles.TabControl}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ViewModel.SelectedLesson}" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -86,8 +86,8 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                        <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                  materialDesign:HintAssist.Hint="要查看的附加设置"
+                        <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                                  mah:TextBoxHelper.Watermark="要查看的附加设置"
                                   SelectedItem="{Binding ViewModel.SelectedControlInfo}"
                                   ItemsSource="{x:Static services:IAttachedSettingsHostService.RegisteredControls}"
                                   MinWidth="150"
@@ -103,7 +103,7 @@
                                 VerticalAlignment="Center"
                                 Padding="0"
                                 HorizontalAlignment="Right"
-                                Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Click="ButtonRefresh2_OnClick"
                                 Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Refresh}}" />
                     </WrapPanel>
@@ -115,7 +115,7 @@
                     <ListBox Grid.Row="2"
                              ItemsSource="{Binding ViewModel.Nodes}">
                         <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate>
@@ -142,12 +142,9 @@
                                                         </Style>
                                                     </Border.Style>
                                                 </Border>
-                                                <materialDesign:ColorZone Grid.Column="0"
-                                                                          HorizontalAlignment="Stretch"
-                                                                          VerticalAlignment="Top"
-                                                                          Height="24">
-                                                    <materialDesign:ColorZone.Style>
-                                                        <Style TargetType="materialDesign:ColorZone">
+                                                <Border Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="24">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding State}" Value="Enabled">
                                                                     <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
@@ -157,8 +154,8 @@
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </materialDesign:ColorZone.Style>
-                                                </materialDesign:ColorZone>
+                                                    </Border.Style>
+                                                </Border>
                                                 <ci:AttachedSettingsControlPresenter
                                                     Grid.Column="1"
                                                     Margin="4 0 0 0"
@@ -200,64 +197,52 @@
         </StackPanel>
 
         <!-- AppBar -->
-        <materialDesign:ColorZone Grid.Column="0" Grid.ColumnSpan="3"
-                                  Grid.Row="0" Mode="PrimaryMid"
-                                  Padding="16"
-                                  materialDesign:ElevationAssist.Elevation="Dp4">
+        <Border Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Padding="16" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
             <Grid>
                 <StackPanel Orientation="Horizontal" Margin="4 0">
                     <StackPanel.Resources>
-                        <Style TargetType="materialDesign:Chip" BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                             <Setter Property="Foreground"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
                             <Setter Property="BorderBrush"
                                     Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                            <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}" />
-                            <Setter Property="IconBackground"
-                                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                            <Setter Property="Margin" Value="0 -8 6 -8" />
+<Setter Property="Margin" Value="0 -8 6 -8" />
                         </Style>
                     </StackPanel.Resources>
-                    <TextBlock Text="课表详细信息" Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                    <TextBlock Text="课表详细信息" Style="{StaticResource Headline6TextBlock}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center" Margin="0,0,16,0" />
-                    <materialDesign:Chip
-                        ToolTip="课表">
-                        <materialDesign:Chip.Style>
-                            <Style TargetType="materialDesign:Chip"
-                                   BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                    <ToggleButton ToolTip="课表">
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton"
+                                   BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ViewModel.ClassPlan.IsOverlay}" Value="True">
-                                        <Setter Property="Icon" Value="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.LayersOutline}}" />
-                                    </DataTrigger>
+</DataTrigger>
                                 </Style.Triggers>
                                 <Setter Property="Foreground"
                                         Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
                                 <Setter Property="BorderBrush"
                                         Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}" />
-                                <Setter Property="IconBackground"
-                                        Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-                                <Setter Property="Margin" Value="0 -8 6 -8" />
+<Setter Property="Margin" Value="0 -8 6 -8" />
 
-                                <Setter Property="Icon" Value="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentOutline}}" />
-                            </Style>
-                        </materialDesign:Chip.Style>
+</Style>
+                        </ToggleButton.Style>
                         <TextBlock>
                             <Run Text="{Binding ViewModel.ClassPlan.Name}" />
                         </TextBlock>
-                    </materialDesign:Chip>
+                    </ToggleButton>
                 </StackPanel>
                 <Button ToolTip="刷新"
                         Margin="0 -4 16 -4"
                         VerticalAlignment="Center"
                         Padding="0"
                         HorizontalAlignment="Right"
-                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                        Style="{StaticResource MahApps.Styles.Button.Flat}"
                         Click="ButtonBase_OnClick"
                         Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Refresh}, Size=24}" />
             </Grid>
-        </materialDesign:ColorZone>
+        </Border>
         <windows:AsyncBox Grid.Column="0" Grid.ColumnSpan="3"
                           Grid.Row="0" Grid.RowSpan="2"
                           VerticalAlignment="Bottom" Height="6" LoadingViewType="controls:LoadingMask"/>

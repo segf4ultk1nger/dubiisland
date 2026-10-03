@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ClassIsland.Core.Attributes;
 using CommunityToolkit.Mvvm.ComponentModel;
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.ViewModels;
 
@@ -13,7 +12,7 @@ public class SettingsNewViewModel : ObservableRecipient
     private bool _isNavigationDrawerOpened = false;
     private bool _canGoBack = false;
     private object? _drawerContent;
-    private SnackbarMessageQueue _snackbarMessageQueue = new();
+    private string _statusMessage = "";
     private bool _isDrawerOpen = false;
     private bool _isRequestedRestart = false;
     private bool _isNavigating = false;
@@ -89,13 +88,13 @@ public class SettingsNewViewModel : ObservableRecipient
         }
     }
 
-    public SnackbarMessageQueue SnackbarMessageQueue
+    public string StatusMessage
     {
-        get => _snackbarMessageQueue;
+        get => _statusMessage;
         set
         {
-            if (Equals(value, _snackbarMessageQueue)) return;
-            _snackbarMessageQueue = value;
+            if (value == _statusMessage) return;
+            _statusMessage = value;
             OnPropertyChanged();
         }
     }

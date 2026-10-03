@@ -4,11 +4,10 @@
                     xmlns:profile="clr-namespace:ClassIsland.Shared.Models.Profile;assembly=ClassIsland.Shared"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type lessonsControls:LessonsListBox}"
-           BasedOn="{StaticResource MaterialDesignListBox}"
+           BasedOn="{StaticResource MahApps.Styles.ListBox}"
            x:Key="ClassIsland.LessonsListBox">
         <Style.Resources>
             <lessonsControls:ClassInfoMultiConverter x:Key="ClassInfoMultiConverter"/>
@@ -108,7 +107,7 @@
         </Setter>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="MaxHeight" Value="40"/>
                 </Style>

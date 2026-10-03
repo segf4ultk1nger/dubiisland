@@ -114,7 +114,7 @@ public partial class DebugPage : SettingsPageBase
         SettingsService.Settings.DebugTimeOffsetSeconds += Math.Round((tar - now).TotalSeconds);
     }
 
-    private void TargetTime_OnChanged(object sender, RoutedEventArgs e)
+    private void TargetTime_OnChanged(object sender, RoutedPropertyChangedEventArgs<DateTime?> e)
     {
         if (!ViewModel.IsTargetDateTimeLoaded) return;
 

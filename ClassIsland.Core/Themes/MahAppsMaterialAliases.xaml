@@ -11,4 +11,10 @@
     <SolidColorBrush x:Key="MaterialDesignSelection" Color="{DynamicResource MahApps.Colors.Highlight}" />
     <SolidColorBrush x:Key="MaterialDesignCardBackground" Color="{DynamicResource MahApps.Colors.ThemeBackground}" />
     <SolidColorBrush x:Key="MaterialDesignToolBarBackground" Color="{DynamicResource MahApps.Colors.ThemeBackground}" />
+    <SolidColorBrush x:Key="MaterialDesignBackground" Color="{DynamicResource MahApps.Colors.ThemeBackground}" />
+    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{DynamicResource MahApps.Colors.Accent3}" />
+    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{DynamicResource MahApps.Colors.Accent}" />
+    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{DynamicResource MahApps.Colors.AccentBase}" />
+    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{DynamicResource MahApps.Colors.IdealForeground}" />
+    <SolidColorBrush x:Key="SecondaryHueMidBrush" Color="{DynamicResource MahApps.Colors.Accent2}" />
 </ResourceDictionary>

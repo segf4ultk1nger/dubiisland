@@ -1,6 +1,5 @@
 ﻿using System.Windows.Media;
 using ClassIsland.Core.Models.Theming;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 
 namespace ClassIsland.Core.Abstractions.Services;
@@ -11,9 +10,9 @@ namespace ClassIsland.Core.Abstractions.Services;
 public interface IThemeService
 {
     /// <summary>
-    /// 当前主题
+    /// 当前第一主题色，供进度条等读取。
     /// </summary>
-    public ITheme? CurrentTheme { get; set; }
+    public Color PrimaryColor { get; set; }
 
     /// <summary>
     /// 主题更新事件，当主题更变时会触发此事件。

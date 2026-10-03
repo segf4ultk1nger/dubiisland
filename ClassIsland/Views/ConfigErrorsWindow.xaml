@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         xmlns:helpers="clr-namespace:ClassIsland.Shared.Helpers;assembly=ClassIsland.Shared"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -91,7 +90,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}"
-                                        Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                        Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         ToolTip="复制详细信息"
                                         CommandParameter="{Binding}"
                                         Margin="0 -8"

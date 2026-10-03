@@ -3,9 +3,9 @@
                               d:DataContext="{d:DesignInstance Type=local:RunActionSettingsControl}"
                               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                               xmlns:ci="http://classisland.tech/schemas/xaml/core"
                               xmlns:actions="clr-namespace:ClassIsland.Models.Actions"
-                              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                               xmlns:local="clr-namespace:ClassIsland.Controls.ActionSettingsControls"
@@ -23,20 +23,27 @@
         <TextBox Text="{Binding Settings.Value, Mode=TwoWay}"
                  VerticalAlignment="Center"
                  HorizontalAlignment="Left"
-                 materialDesign:HintAssist.Hint="应用程序、网址 或 cmd 命令"
+                 mah:TextBoxHelper.Watermark="应用程序、网址 或 cmd 命令"
                  MaxWidth="250"/>
         <controls:FileBrowserButton CurrentPath="{Binding Settings.Value, Mode=TwoWay}"
                                     Grid.Column="1" />
-        <materialDesign:PopupBox Grid.Column="3"
-                                 StaysOpen="True"
-                                 Padding="0">
+        <Grid Grid.Column="3">
+<ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" Padding="0">
+…
+</ToggleButton>
+<Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="True" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
+<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+
             <StackPanel Margin="4 -6 4 6">
                 <TextBox Text="{Binding Settings.Args, Mode=TwoWay}"
-                         materialDesign:HintAssist.IsFloating="True"
-                         materialDesign:HintAssist.Hint="（可选）应用程序启动参数"
+                         mah:TextBoxHelper.UseFloatingWatermark="True"
+                         mah:TextBoxHelper.Watermark="（可选）应用程序启动参数"
                          VerticalAlignment="Center"
                          MinWidth="250"/>
             </StackPanel>
-        </materialDesign:PopupBox>
+        
+</Border>
+</Popup>
+</Grid>
     </Grid>
 </ci:ActionSettingsControlBase>

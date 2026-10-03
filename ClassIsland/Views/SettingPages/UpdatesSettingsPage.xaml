@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:appUpdating="clr-namespace:ClassIsland.Services.AppUpdating"
       xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
       xmlns:mdXaml="clr-namespace:MdXaml;assembly=MdXaml"
@@ -29,23 +28,22 @@
     <controls:SettingsPageBase.Resources>
         <converters:SizeLongToStringConverter x:Key="SizeLongToStringConverter" />
         <ScrollViewer Width="332" x:Key="AdvancedUpdateSettings"
-                      VerticalScrollBarVisibility="Auto"
-                      materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">
+                      VerticalScrollBarVisibility="Auto">
             <Grid Margin="16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="更新高级设置" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                    <TextBlock Text="更新高级设置" Style="{StaticResource Headline5TextBlock}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0 16 0 0">
                     <!-- 强制更新 -->
-                    <TextBlock Text="强制更新" Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
+                    <TextBlock Text="强制更新" Style="{StaticResource Headline6TextBlock}" />
                     <TextBlock Text="将应用强制更新到当前分支的最新版本，即使当前版本高于该分支的最新版本。" FontWeight="Light" TextWrapping="Wrap"
                                Margin="0 6 0 0" />
-                    <Button Margin="0 3 0 0" Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Margin="0 3 0 0" Style="{StaticResource MahApps.Styles.Button.Flat}"
                             HorizontalAlignment="Left"
                             Click="ButtonForceUpdate_OnClick">
                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.AlertOutline}" Text="强制更新" />
@@ -302,7 +300,7 @@
                     <ProgressBar Margin="0 3 0 0">
                         <ProgressBar.Style>
                             <Style TargetType="ProgressBar"
-                                   BasedOn="{StaticResource MaterialDesignLinearProgressBar2}">
+                                   BasedOn="{StaticResource MahApps.Styles.ProgressBar}">
                                 <Style.Triggers>
                                     <DataTrigger
                                         Binding="{Binding UpdateService.CurrentWorkingStatus, Mode=OneWay}"
@@ -330,27 +328,21 @@
                 </StackPanel>
 
                 <!-- 网络错误 -->
-                <materialDesign:Snackbar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                         HorizontalAlignment="Stretch"
-                                         IsActive="True"
-                                         Margin="0 6">
-                    <materialDesign:Snackbar.Style>
-                        <Style TargetType="materialDesign:Snackbar">
-                            <Style.Triggers>
-                                <DataTrigger
-                                    Binding="{Binding UpdateService.NetworkErrorException}"
-                                    Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </materialDesign:Snackbar.Style>
-                    <materialDesign:Snackbar.Message>
-                        <materialDesign:SnackbarMessage ActionContent="确定"
-                                                        Content="网络错误，请检查网络连接后重试。"
-                                                        ActionClick="UpdateErrorMessage_OnActionClick" />
-                    </materialDesign:Snackbar.Message>
-                </materialDesign:Snackbar>
+                <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Padding="12 8" Margin="0 6" Background="{DynamicResource MaterialDesignPaper}">
+<Border.Style>
+<Style TargetType="Border">
+<Style.Triggers>
+<DataTrigger Binding="{Binding UpdateService.NetworkErrorException}" Value="{x:Null}">
+<Setter Property="Visibility" Value="Collapsed"/>
+</DataTrigger>
+</Style.Triggers>
+</Style>
+</Border.Style>
+<DockPanel>
+<Button DockPanel.Dock="Right" Content="确定" Margin="12 0 0 0" Click="UpdateErrorMessage_OnActionClick"/>
+<TextBlock Text="网络错误，请检查网络连接后重试。" VerticalAlignment="Center" TextWrapping="Wrap"/>
+</DockPanel>
+</Border>
 
                 <!-- 更新操作栏 -->
                 <WrapPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3"
@@ -371,7 +363,7 @@
                     <Button Margin="0 0 6 0" Click="ButtonCheckUpdate_OnClick">
                         <Button.Style>
                             <Style TargetType="Button"
-                                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                   BasedOn="{StaticResource MahApps.Styles.Button}">
                                 <Style.Triggers>
                                     <DataTrigger
                                         Binding="{Binding SettingsService.Settings.LastUpdateStatus, Mode=OneWay}"
@@ -388,7 +380,7 @@
                     <Button Margin="0 0 6 0" Click="ButtonStartDownloading_OnClick">
                         <Button.Style>
                             <Style TargetType="Button"
-                                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                   BasedOn="{StaticResource MahApps.Styles.Button}">
                                 <Style.Triggers>
                                     <DataTrigger
                                         Binding="{Binding SettingsService.Settings.LastUpdateStatus, Mode=OneWay}"
@@ -411,7 +403,7 @@
                             Click="ButtonCheckUpdate_OnClick">
                         <Button.Style>
                             <Style TargetType="Button"
-                                   BasedOn="{StaticResource MaterialDesignPaperButton}">
+                                   BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                 <Style.Triggers>
                                     <DataTrigger
                                         Binding="{Binding SettingsService.Settings.LastUpdateStatus, Mode=OneWay}"
@@ -433,7 +425,7 @@
                     <Button Margin="0 0 6 0" Click="ButtonRestartToUpdate_OnClick">
                         <Button.Style>
                             <Style TargetType="Button"
-                                   BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                   BasedOn="{StaticResource MahApps.Styles.Button}">
                                 <Style.Triggers>
                                     <DataTrigger
                                         Binding="{Binding SettingsService.Settings.LastUpdateStatus, Mode=OneWay}"
@@ -450,7 +442,7 @@
                     <Button Margin="0 0 6 0" Click="ButtonCancelUpdate_OnClick">
                         <Button.Style>
                             <Style TargetType="Button"
-                                   BasedOn="{StaticResource MaterialDesignPaperButton}">
+                                   BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                 <Style.Triggers>
                                     <DataTrigger
                                         Binding="{Binding UpdateService.CurrentWorkingStatus, Mode=OneWay}"
@@ -470,15 +462,15 @@
                     </Button>
                     <!-- debug -->
                     <Button Content="（debug）重置更新状态"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonDebugResetUpdate_OnClick"
                             Visibility="{Binding SettingsService.Settings.IsDebugEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <Button Content="（debug）下载完成"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonDebugDownloaded_OnClick"
                             Visibility="{Binding SettingsService.Settings.IsDebugEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <Button Content="（debug）网络错误"
-                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonDebugNetworkError_OnClick"
                             Visibility="{Binding SettingsService.Settings.IsDebugEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </WrapPanel>
@@ -487,7 +479,7 @@
                 <!--<ProgressBar Grid.Column="0" Grid.Row="3"
                              HorizontalAlignment="Left"
                              Visibility="Collapsed"
-                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                             Style="{StaticResource MahApps.Styles.ProgressBar}"
                              IsIndeterminate="True"
                              Value="0" Margin="0,9,0,9" />-->
 
@@ -498,7 +490,7 @@
                           Content="在下次启动应用时自动安装更新。">
                     <CheckBox.Style>
                         <Style TargetType="CheckBox"
-                               BasedOn="{StaticResource MaterialDesignCheckBox}">
+                               BasedOn="{StaticResource MahApps.Styles.CheckBox}">
                             <Style.Triggers>
                                 <DataTrigger
                                     Binding="{Binding SettingsService.Settings.LastUpdateStatus, Mode=OneWay}"
@@ -578,7 +570,7 @@
                             </TextBlock>
 
                             <Button HorizontalAlignment="Center" Margin="0 8 0 0"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     Click="ButtonChangelogs_OnClick">
                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileDocumentOutline}" Text="查看新增功能" />
                             </Button>
@@ -607,7 +599,7 @@
                 <TabItem Header="更新设置">
                     <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Margin="0" Tag="CanPolicyDisable">
                         <!-- 更新模式 -->
-                        <materialDesign:Card Style="{StaticResource UpdateEnabledStyle}">
+                        <Border Style="{StaticResource UpdateEnabledStyle}">
                             <StackPanel Margin="12">
                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Upload}" Text="更新模式" Margin="0 0 0 8" />
                                 <Slider Margin="12" Minimum="0" Maximum="3"
@@ -656,11 +648,10 @@
                                     </controls1:IconText.Style>
                                 </controls1:IconText>
                             </StackPanel>
-                        </materialDesign:Card>
+                        </Border>
 
                         <!-- 更新通道 -->
-                        <materialDesign:Card Margin="0 6 0 0"
-                                             Style="{StaticResource UpdateEnabledStyle}">
+                        <Border Margin="0 6 0 0" Style="{StaticResource UpdateEnabledStyle}">
                             <StackPanel Margin="12">
                                 <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.DownloadOutline}"
                                                            Header="更新通道"
@@ -686,15 +677,14 @@
                                            TextWrapping="Wrap"
                                            Text="{Binding ViewModel.SelectedChannelModel.Description, Mode=OneWay}" />
                                 <!--<TextBlock Text="{Binding SettingsService.Settings.SelectedChannel, Mode=OneWay}"/>-->
-                                <!--<Button Content="管理更新频道" Style="{StaticResource MaterialDesignFlatButton}"
+                                <!--<Button Content="管理更新频道" Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                             HorizontalAlignment="Left"
                                                             Margin="0 3 0 0" />-->
                             </StackPanel>
-                        </materialDesign:Card>
+                        </Border>
 
                         <!-- 镜像源选择 -->
-                        <materialDesign:Card Margin="0 6 0 0"
-                                             Style="{StaticResource UpdateEnabledStyle}">
+                        <Border Margin="0 6 0 0" Style="{StaticResource UpdateEnabledStyle}">
                             <Expander Background="Transparent" IsExpanded="True">
                                 <Expander.Header>
                                     <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Web}"
@@ -771,7 +761,7 @@
                                                         </TextBlock>
                                                     </StackPanel>
                                                     <ProgressBar
-                                                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                                        Style="{StaticResource MahApps.Styles.ProgressBar}"
                                                         IsIndeterminate="True"
                                                         Margin="8 -4 0 -4"
                                                         Foreground="{DynamicResource PrimaryHueMidBrush}"
@@ -782,7 +772,7 @@
                                     </ListBox>
                                     <Button Content="测试延迟"
                                             Click="MenuItemTestUpdateMirrors_OnClick"
-                                            Style="{StaticResource MaterialDesignFlatButton}"
+                                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                                             HorizontalAlignment="Left"
                                             Margin="0 4 0 0" />
                                     <Separator Margin="0 4" />
@@ -793,12 +783,12 @@
                                                                IsOn="{Binding SettingsService.Settings.IsAutoSelectUpgradeMirror, Mode=TwoWay}" />
                                 </StackPanel>
                             </Expander>
-                        </materialDesign:Card>
+                        </Border>
 
                         <!-- 高级设置 -->
                         <Border Style="{StaticResource UpdateEnabledStyle}">
                             <Button Content="高级设置"
-                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     HorizontalAlignment="Left"
                                     Margin="0 8 0 0"
                                     Click="ButtonAdvancedSettings_OnClick" />

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Media;
 using ClassIsland.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using MaterialDesignThemes.Wpf;
 using unvell.ReoGrid;
 using unvell.ReoGrid.IO.OpenXML.Schema;
 using Cell = unvell.ReoGrid.Cell;
@@ -70,5 +69,5 @@ public partial class ExcelExportViewModel : ObservableObject
 
     [ObservableProperty] private double _colWidth = 100.0;
 
-    [ObservableProperty] private SnackbarMessageQueue _messageQueue = new();
+    [ObservableProperty] private string _statusMessage = "";
 }

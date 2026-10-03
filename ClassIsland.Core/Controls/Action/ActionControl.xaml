@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:ClassIsland.Core.Controls.Action"
              xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
              xmlns:converters="clr-namespace:ClassIsland.Core.Abstractions.Converters"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services"
              xmlns:dd="urn:gong-wpf-dragdrop"
              FontFamily="{StaticResource HarmonyOsSans}"
@@ -24,13 +23,13 @@
                       HorizontalAlignment="Stretch">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <materialDesign:ColorZone Mode="PrimaryMid" Height="24" CornerRadius="12">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                         <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="调整行动顺序"
                                      Margin="4 0"
                                      IconMargin="2"
                                      TextElement.FontWeight="Medium"
                                      VerticalAlignment="Center"/>
-                    </materialDesign:ColorZone>
+                    </Border>
                 </DataTemplate>
             </dd:DragDrop.EffectMoveAdornerTemplate>
             <ItemsControl.ItemTemplate>
@@ -43,7 +42,7 @@
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
                                     Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Remove}}"
-                                    Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     ToolTip="删除"
                                     Command="{x:Static local:ActionControl.RemoveActionCommand}"
                                     CommandParameter="{Binding}"
@@ -76,7 +75,7 @@
                                              Grid.Column="2">
                                     <ProgressBar.Style>
                                         <Style TargetType="ProgressBar"
-                                               BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
+                                               BasedOn="{StaticResource MahApps.Styles.ProgressBar}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsWorking}" Value="False">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -85,11 +84,9 @@
                                         </Style>
                                     </ProgressBar.Style>
                                 </ProgressBar>
-                                <materialDesign:PopupBox Grid.Column="2"
-                                                         StaysOpen="True"
-                                                         Padding="0">
-                                    <materialDesign:PopupBox.ToggleContent>
-                                        <controls:IconText IconSize="20" Foreground="Red"
+                                <Grid Grid.Column="2">
+<ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" Padding="0">
+<controls:IconText IconSize="20" Foreground="Red"
                                                                  VerticalAlignment="Center"
                                                                  Kind="{x:Static controls:IconGlyphs.Alert}"
                                                                  Grid.Column="2"
@@ -106,9 +103,10 @@
                                                 </Style>
                                             </controls:IconText.Style>
                                         </controls:IconText>
-                                    </materialDesign:PopupBox.ToggleContent>
-                                    <StackPanel MaxWidth="650"
-                                                materialDesign:ElevationAssist.Elevation="Dp4">
+</ToggleButton>
+<Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="True" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
+<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<StackPanel MaxWidth="650">
                                         <TextBlock Text="上次运行此行动时出现错误。"
                                                    Foreground="{DynamicResource SecondaryHueMidBrush}"
                                                    Margin="10 10 0 -6" />
@@ -116,7 +114,6 @@
                                                  TextWrapping="WrapWithOverflow"
                                                  TextAlignment="Left"
                                                  AcceptsReturn="True"
-                                                 materialDesign:TextFieldAssist.UnderlineBrush="{x:Null}"
                                                  IsReadOnly="True"
                                                  IsReadOnlyCaretVisible="True"
                                                  VerticalContentAlignment="Top"
@@ -124,14 +121,16 @@
                                                  BorderThickness="0"
                                                  Padding="10" />
                                     </StackPanel>
-                                </materialDesign:PopupBox>
+</Border>
+</Popup>
+</Grid>
                             </Grid>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Style="{StaticResource MaterialDesignFlatButton}"
+        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                 Click="ButtonAddAction_OnClick"
                 HorizontalAlignment="Left">
             <controls:IconText Kind="{x:Static controls:IconGlyphs.Plus}"

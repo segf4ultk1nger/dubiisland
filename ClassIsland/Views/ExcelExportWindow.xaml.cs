@@ -495,7 +495,7 @@ public partial class ExcelExportWindow
         }
 
         Grid.Save(dialog.FileName, FileFormat.Excel2007, Encoding.Default);
-        ViewModel.MessageQueue.Enqueue($"已保存到 {dialog.FileName}");
+        ViewModel.StatusMessage = $"已保存到 {dialog.FileName}";
         return dialog.FileName;
     }
 

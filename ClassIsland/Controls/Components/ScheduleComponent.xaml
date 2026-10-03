@@ -8,7 +8,6 @@
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:models="clr-namespace:ClassIsland.Models"
              xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:ClassIsland.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -20,16 +19,9 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <materialDesign:ColorZone 
-            Grid.Column="0"
-            Margin="0 0 2 0"
-            VerticalAlignment="Center"
-            Mode="PrimaryMid"
-            Padding="8 2"
-            CornerRadius="16"
-            x:Name="Tomorrow">
-            <materialDesign:ColorZone.Style>
-                <Style TargetType="materialDesign:ColorZone">
+        <Border Grid.Column="0" Margin="0 0 2 0" VerticalAlignment="Center" Padding="8 2" CornerRadius="16" x:Name="Tomorrow" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+            <Border.Style>
+                <Style TargetType="Border">
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -46,9 +38,9 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </materialDesign:ColorZone.Style>
+            </Border.Style>
             <TextBlock Text="明天"/>
-        </materialDesign:ColorZone>
+        </Border>
         <ci:LessonsListBox Grid.Column="1" 
                            Subjects="{Binding ProfileService.Profile.Subjects, Mode=OneWay}"
                            LessonControlSettings="{Binding Settings, Mode=OneWay}"

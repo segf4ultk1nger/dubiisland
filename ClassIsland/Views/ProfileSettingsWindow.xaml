@@ -4,7 +4,6 @@
                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                    xmlns:local="clr-namespace:ClassIsland.Views"
-                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
                    xmlns:models="clr-namespace:ClassIsland.Models"
                    xmlns:controls="clr-namespace:ClassIsland.Controls"
@@ -68,7 +67,7 @@
         <converters1:SubjectIdToSubjectConverter x:Key="SubjectIdToSubjectConverter"/>
         <converters1:ClassPlanGroupIdToClassPlanGroupConverter x:Key="ClassPlanGroupIdToClassPlanGroupConverter"/>
         <converters1:ClassPlanDictionaryValueAccessConverter x:Key="ClassPlanDictionaryValueAccessConverter"/>
-        <Style BasedOn="{StaticResource MaterialDesignDataGridComboBox}" TargetType="{x:Type ComboBox}" x:Key="ClassPlanDataGridComboBoxStyle">
+        <Style BasedOn="{StaticResource MahApps.Styles.ComboBox}" TargetType="{x:Type ComboBox}" x:Key="ClassPlanDataGridComboBoxStyle">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -82,11 +81,11 @@
         <ScrollViewer x:Key="TimeLayoutInfoEditor" Width="332" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="16"  
                         DataContext="{Binding SelectedItem, ElementName=ListViewTimeLayouts}">
-                <TextBlock Text="时间表信息" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
-                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                <TextBlock Text="时间表信息" Style="{StaticResource Headline5TextBlock}"/>
+                <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
                          Margin="0 12 0 0"
                          Text="{Binding Value.Name}"
-                         materialDesign:HintAssist.Hint="名称"/>
+                         mah:TextBoxHelper.Watermark="名称"/>
                 <!-- 附加属性 -->
                 <Separator Margin="0 16 0 8"/>
                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="更多选项" Margin="0 0 0 8"/>
@@ -119,7 +118,7 @@
 
         <!-- 删除时间表确认 -->
         <StackPanel x:Key="DeleteTimeLayoutConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="删除"/>
                 <Run Text="{Binding SelectedItem.Value.Name, ElementName=ListViewTimeLayouts}"/>
             </TextBlock>
@@ -129,14 +128,14 @@
                 <Run Text="吗？如果有与此时间表关联的课程表，那么这些课程表在时间表删除后将无法正常工作！"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="删除" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="删除" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -148,7 +147,7 @@
 
         <!-- 删除科目确认 -->
         <StackPanel x:Key="DeleteSubjectConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="删除"/>
                 <Run Text="{Binding SelectedItem.Value.Name, ElementName=ListViewSubjects}"/>
             </TextBlock>
@@ -156,14 +155,14 @@
                 <Run Text="确定要删除选中的科目吗？如果有包含此科目的课程表，那么这些课程表在科目删除后将无法正常工作！"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="删除" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="删除" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -175,7 +174,7 @@
 
         <!-- 删除课表确认 -->
         <StackPanel x:Key="DeleteClassPlanConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="删除"/>
                 <Run Text="{Binding SelectedItem.Value.Name, ElementName=ListViewClassPlans}"/>
             </TextBlock>
@@ -185,14 +184,14 @@
                 <Run Text="吗？"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="删除" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="删除" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -208,7 +207,7 @@
                       VerticalScrollBarVisibility="Auto">
             <StackPanel DataContext="{Binding SelectedItem.Value, ElementName=ListViewClassPlans}"
                         Margin="16">
-                <TextBlock Text="课程表信息" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                <TextBlock Text="课程表信息" Style="{StaticResource Headline5TextBlock}" />
                 <Border Padding="14" 
                         Visibility="{Binding IsOverlay, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Margin="0 8 0 0"
@@ -219,7 +218,7 @@
                         <TextBlock TextWrapping="Wrap" FontSize="13" Margin="0 4 0 0">
                             这是一个临时层课表，将在使用过后自动删除。
                         </TextBlock>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 HorizontalAlignment="Left"
                                 Padding="4"
                                 Margin="0 4 0 0"
@@ -228,7 +227,7 @@
                                 ToolTip="将当前临时层课表转换为正常课表。">
                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogTransferOutline}" Text="转换为普通课表"/>
                         </Button>
-                        <!--<Button Style="{StaticResource MaterialDesignFlatButton}"
+                        <!--<Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 HorizontalAlignment="Left"
                                 Padding="4"
                                 Margin="0 2 0 0"
@@ -237,14 +236,14 @@
                         </Button>-->
                     </StackPanel>
                 </Border>
-                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
                          Margin="0 12 0 0"
                          Text="{Binding Name}"
-                         materialDesign:HintAssist.Hint="名称" />
-                <ComboBox Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                         mah:TextBoxHelper.Watermark="名称" />
+                <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                           x:Name="ComboBox1"
                           Margin="0 12 0 0"
-                          materialDesign:HintAssist.Hint="时间表"
+                          mah:TextBoxHelper.Watermark="时间表"
                           SelectedItem="{Binding TimeLayoutId, Converter={StaticResource ClassPlanDictionaryValueAccessConverter}}"
                           ItemsSource="{Binding MainViewModel.Profile.TimeLayouts, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ProfileSettingsWindow}}}">
                     <ComboBox.ItemTemplate>
@@ -254,9 +253,9 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <ComboBox Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                           Margin="0 12 0 0"
-                          materialDesign:HintAssist.Hint="课表群"
+                          mah:TextBoxHelper.Watermark="课表群"
                           SelectedValue="{Binding AssociatedGroup, Mode=TwoWay}"
                           SelectedValuePath="Key"
                           SelectionChanged="ComboBoxClassPlanGroup_OnSelectionChanged"
@@ -316,7 +315,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="当前启用的课表" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                    <TextBlock Text="当前启用的课表" Style="{StaticResource Headline5TextBlock}"/>
                     <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
                         <ToggleButton VerticalAlignment="Center" Margin="0 0 4 0" IsChecked="{Binding LessonsService.IsClassPlanEnabled}"/>
                         <TextBlock Text="加载课表" VerticalAlignment="Center"/>
@@ -338,11 +337,10 @@
                                    TextWrapping="Wrap"
                                    Margin="0 0 0 4"/>
                         <StackPanel Orientation="Horizontal">
-                            <ToggleButton VerticalAlignment="Center" Margin="0 0 4 0"
-                                          IsChecked="{Binding ProfileService.Profile.IsOverlayClassPlanEnabled}"/>
+                            <ToggleButton VerticalAlignment="Center" Margin="0 0 4 0" IsChecked="{Binding ProfileService.Profile.IsOverlayClassPlanEnabled}"/>
                             <TextBlock Text="启用临时层" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0 4 0 0"
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" Margin="0 4 0 0"
                                 HorizontalAlignment="Left"
                                 Click="ButtonClearTempOverlay_OnClick"
                                 ToolTip="清除临时层课表。">
@@ -353,7 +351,7 @@
                     <Separator Margin="0 16 0 4"/>
                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileChartOutline}" Text="临时课表" Margin="0 0 0 8"/>
                     <TextBlock Text="若当天授课计划有变，可临时选择某一课表作为当天的课表。该设置仅在当天有效。" TextWrapping="Wrap"/>
-                    <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" 
                             HorizontalAlignment="Left"
                             ToolTip="清除选择的临时课表，并恢复至正常课表安排。"
                             Margin="0 6 0 0"
@@ -408,13 +406,13 @@
                 <StackPanel Grid.Row="2">
                     <Separator Margin="0 16 0 4" />
                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CalendarOutline}" Text="多周轮换偏移" Margin="0 0 0 8" />
-                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             HorizontalAlignment="Left"
                             Click="ButtonOpenWeekOffsetSettings_OnClick">
                         <ci:IconText Kind="{x:Static controls1:IconGlyphs.CalendarMultiple}" Text="调整多周轮换偏移…"/>
                     </Button>
                 </StackPanel>
-                <materialDesign:PopupEx Grid.Row="2"
+                <Popup Grid.Row="2"
                                         AllowsTransparency="True"
                                         StaysOpen="False"
                                         Placement="Mouse"
@@ -431,44 +429,42 @@
                         </Border.Effect>
                         <controls:WeekOffsetSettingsControl/>
                     </Border>
-                </materialDesign:PopupEx>
+                </Popup>
             </Grid>
         </Grid>
 
         <!-- 新建档案 -->
         <StackPanel x:Key="CreateProfileDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="新建档案"/>
+            <TextBlock Style="{StaticResource Headline6TextBlock}" Text="新建档案"/>
             <TextBox Margin="0 6 0 0" TextWrapping="Wrap" x:Name="TextBoxProfileName" 
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Style="{StaticResource MahApps.Styles.TextBox}"
                      Text="{Binding ViewModel.CreateProfileName}"
-                     materialDesign:HintAssist.Hint="档案名"
-                     materialDesign:TextFieldAssist.SuffixText=".json"/>
+                     mah:TextBoxHelper.Watermark="档案名"/>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="新建" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" 
+                <Button Content="新建" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" 
                         CommandParameter="{Binding ViewModel.CreateProfileName, Mode=OneWay}"/>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
             </StackPanel>
         </StackPanel>
 
         <!-- 重命名档案 -->
         <StackPanel x:Key="RenameProfileDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="重命名档案"/>
+            <TextBlock Style="{StaticResource Headline6TextBlock}" Text="重命名档案"/>
             <TextBox Margin="0 6 0 0" TextWrapping="Wrap"
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     Style="{StaticResource MahApps.Styles.TextBox}"
                      Text="{Binding ViewModel.RenameProfileName}"
-                     materialDesign:HintAssist.Hint="档案名"
-                     materialDesign:TextFieldAssist.SuffixText=".json"/>
+                     mah:TextBoxHelper.Watermark="档案名"/>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="重命名" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" 
+                <Button Content="重命名" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" 
                         CommandParameter="{Binding ViewModel.RenameProfileName, Mode=OneWay}"/>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
             </StackPanel>
         </StackPanel>
 
         <!-- 删除档案 -->
         <converters1:StringConnectConverter x:Key="StringConnectConverter" />
         <StackPanel x:Key="DeleteProfileDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="删除档案"/>
+            <TextBlock Style="{StaticResource Headline6TextBlock}" Text="删除档案"/>
             <TextBlock TextWrapping="Wrap" Margin="0 12 0 0">
                 <Run Text="你确定要删除这个档案吗？一旦删除，这个操作将无法撤销，该档案的所有数据都将丢失！"/>
             </TextBlock>
@@ -480,7 +476,7 @@
                 <Grid HorizontalAlignment="Right">
                     <Button Content="删除" 
                             IsDefault="True"
-                            Style="{DynamicResource MaterialDesignFlatButton}" 
+                            Style="{DynamicResource MahApps.Styles.Button.Flat}" 
                             Command="{x:Static dialogs:DialogService.CloseDialogCommand}">
                         <Button.CommandParameter>
                             <system:Boolean xmlns:system="clr-namespace:System;assembly=System.Runtime">
@@ -489,7 +485,7 @@
                         </Button.CommandParameter>
                     </Button>
                 </Grid>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0" CommandParameter="{x:Null}"/>
             </StackPanel>
         </StackPanel>
 
@@ -500,13 +496,13 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" >
-                <TextBlock Text="管理档案" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                <TextBlock Text="管理档案" Style="{StaticResource Headline5TextBlock}"/>
                 <TextBlock Text="管理与切换保存的档案。切换档案需要重新启动应用。" TextWrapping="Wrap"
                            Margin="0 6 0 0"/>
                 <!--<TextBlock Text="{Binding MainViewModel.Settings.SelectedProfile, Mode=OneWay}"/>-->
                 <WrapPanel Margin="0 6 0 0">
                     <WrapPanel.Resources>
-                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                        <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                             <Setter Property="Margin" Value="0 0 6 0"/>
                         </Style>
                     </WrapPanel.Resources>
@@ -554,15 +550,12 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <materialDesign:Snackbar Grid.Row="0" Grid.RowSpan="2" 
-                                     IsActive="{Binding ViewModel.IsRestartSnackbarActive, Mode=OneWay}"
-                                     Margin="0 0 0 -16"
-                                     ActionButtonPlacement="Inline">
-                <materialDesign:SnackbarMessage
-                    ActionContent="重启"
-                    ActionClick="SnackbarRestartMessage_OnActionClick"
-                    Content="切换档案需要重启应用程序。" />
-            </materialDesign:Snackbar>
+            <Border Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 -16" Padding="12 8" VerticalAlignment="Bottom" Background="{DynamicResource MaterialDesignPaper}" Visibility="{Binding ViewModel.IsRestartSnackbarActive, Converter={StaticResource BooleanToVisibilityConverter}}">
+<DockPanel>
+<Button DockPanel.Dock="Right" Content="重启" Margin="12 0 0 0" Click="SnackbarRestartMessage_OnActionClick"/>
+<TextBlock Text="切换档案需要重启应用程序。" VerticalAlignment="Center"/>
+</DockPanel>
+</Border>
         </Grid>
 
         <!-- 课表群管理 -->
@@ -579,7 +572,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="课表群" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                    <TextBlock Text="课表群" Style="{StaticResource Headline5TextBlock}"/>
                     <TextBlock TextWrapping="Wrap" Margin="0 6 0 0">
                         您可以通过课表群对课表进行分组，并灵活地启用一批课表。<ci:NavHyperlink CommandParameter="https://docs.classisland.tech/app/profile/classplan#%E8%AF%BE%E8%A1%A8%E7%BE%A4">了解更多…</ci:NavHyperlink>
                     </TextBlock>
@@ -603,7 +596,7 @@
                                         <TextBlock Text="当前：" VerticalAlignment="Center" />
                                         <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"
                                                    VerticalAlignment="Center" />
-                                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                 VerticalAlignment="Center"
                                                 Click="ButtonClearTempClassPlanGroup_OnClick">
                                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Clear}" Text="清除" />
@@ -625,20 +618,19 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <ToggleButton Grid.Column="0" VerticalAlignment="Center"
-                                          IsChecked="{Binding ProfileService.Profile.IsTempClassPlanGroupEnabled}" />
+                            <ToggleButton Grid.Column="0" VerticalAlignment="Center" IsChecked="{Binding ProfileService.Profile.IsTempClassPlanGroupEnabled}"/>
                             <TextBlock Grid.Column="1" Text="已启用" VerticalAlignment="Center"
                                        Margin="2 0 0 0" />
                             <DatePicker Grid.Column="2"
                                         VerticalAlignment="Center"
-                                        materialDesign:HintAssist.Hint="失效日期"
+                                        mah:TextBoxHelper.Watermark="失效日期"
                                         SelectedDate="{Binding ProfileService.Profile.TempClassPlanGroupExpireTime}"
-                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                        Style="{StaticResource MahApps.Styles.DatePicker}"
                                         Margin="2 0 0 0"/>
-                            <ComboBox Grid.Column="3" Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                            <ComboBox Grid.Column="3" Style="{StaticResource MahApps.Styles.ComboBox}"
                                       SelectedIndex="{Binding ProfileService.Profile.TempClassPlanGroupType, Converter={StaticResource TempClassPlanGroupTypeToIntConverter}}"
                                       VerticalAlignment="Center"
-                                      materialDesign:HintAssist.Hint="覆盖模式"
+                                      mah:TextBoxHelper.Watermark="覆盖模式"
                                       Margin="2 0 0 0">
                                 <ComboBoxItem>覆盖</ComboBoxItem>
                                 <ComboBoxItem>继承</ComboBoxItem>
@@ -649,7 +641,7 @@
                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Group}" Text="管理课表群" Margin="0 0 0 4"/>
                     
                     <WrapPanel Orientation="Horizontal">
-                        <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" 
                                 HorizontalAlignment="Left"
                                 ToolTip="创建一个新的课表群。"
                                 Margin="2"
@@ -680,7 +672,7 @@
             </Grid>
         </Grid>
 
-        <Style TargetType="ListBox" BasedOn="{StaticResource MaterialDesignNavigationPrimaryListBox}"
+        <Style TargetType="ListBox" BasedOn="{StaticResource NavigationPrimaryListBox}"
                x:Key="NavigationListBox">
 
         </Style>
@@ -698,21 +690,21 @@
         <converters:SubjectDictionaryKeyFinderMultiConverter x:Key="SubjectDictionaryKeyFinderMultiConverter" />
 
         <StackPanel x:Key="ProfileTrustWarning" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+            <TextBlock Style="{StaticResource Headline6TextBlock}">
                 <Run Text="不信任的档案"/>
             </TextBlock>
             <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
                 <Run Text="当前档案不受信任，部分功能（如行动时间点等）将禁用。如果您信任此档案并希望启用这些受限的功能，请将此档案设置为信任。"/>
             </TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="信任此档案" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
+                <Button Content="信任此档案" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             True
                         </system:Boolean>
                     </Button.CommandParameter>
                 </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
+                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
                     <Button.CommandParameter>
                         <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
                             False
@@ -788,7 +780,7 @@
                                              SelectedValuePath="Value"
                                              ItemsSource="{Binding Source={StaticResource ClassPlansViewSource}}"
                                              x:Name="ListViewClassPlans"
-                                             Style="{StaticResource MaterialDesignNavigationPrimaryListBox}"
+                                             Style="{StaticResource NavigationPrimaryListBox}"
                                              VirtualizingPanel.ScrollUnit="Pixel"
                                              VirtualizingPanel.IsVirtualizing="True"
                                              VirtualizingPanel.IsContainerVirtualizable="True"
@@ -809,8 +801,7 @@
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                                    <Expander IsExpanded="True" materialDesign:ExpanderAssist.VerticalHeaderPadding="2"
-                                                                              materialDesign:ExpanderAssist.HorizontalHeaderPadding="2">
+                                                                    <Expander IsExpanded="True">
                                                                         <Expander.DataContext>
                                                                             <MultiBinding Converter="{StaticResource ClassPlanGroupIdToClassPlanGroupConverter}">
                                                                                 <Binding Path="ProfileService.Profile.ClassPlanGroups" RelativeSource="{RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}"/>
@@ -1037,7 +1028,7 @@
                                                     IsEnabled="{Binding IsOverlay, Converter={StaticResource BooleanToBooleanReConverter}}">
                                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LayersOutline}" Text="创建临时层" />
                                             </Button>
-                                            <materialDesign:PopupEx x:Name="PopupCreateTempOverlayClassPlan"
+                                            <Popup x:Name="PopupCreateTempOverlayClassPlan"
                                                                     StaysOpen="False"
                                                                     AllowsTransparency="True"
                                                                     PopupAnimation="Fade">
@@ -1050,9 +1041,9 @@
                                                                           ShadowDepth="0"/>
                                                     </Border.Effect>
                                                     <StackPanel Margin="12">
-                                                        <TextBlock Text="创建临时层" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
-                                                        <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}" 
-                                                                  materialDesign:HintAssist.Hint="时间表"
+                                                        <TextBlock Text="创建临时层" Style="{StaticResource Headline5TextBlock}"/>
+                                                        <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}" 
+                                                                  mah:TextBoxHelper.Watermark="时间表"
                                                                   ItemsSource="{Binding ProfileService.Profile.TimeLayouts, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"
                                                                   SelectedValuePath="Key"
                                                                   SelectedValue="{Binding ViewModel.TempOverlayClassPlanTimeLayoutId, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"
@@ -1064,16 +1055,16 @@
                                                             </ComboBox.ItemTemplate>
                                                         </ComboBox>
                                                         <DatePicker SelectedDate="{Binding ViewModel.OverlayEnableDateTime, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"
-                                                                    materialDesign:HintAssist.Hint="启用日期"
+                                                                    mah:TextBoxHelper.Watermark="启用日期"
                                                                     Margin="0 4 0 0"
-                                                                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}"/>
+                                                                    Style="{StaticResource MahApps.Styles.DatePicker}"/>
                                                         <Button HorizontalAlignment="Right" Margin="0 12 0 0"
                                                                 Click="ButtonCreateTempOverlayClassPlan_OnClick">
                                                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="创建"/>
                                                         </Button>
                                                     </StackPanel>
                                                 </Border>
-                                            </materialDesign:PopupEx>
+                                            </Popup>
                                             <Separator />
                                             <Button Click="ButtonDeleteClassPlan_OnClick" ToolTip="删除该课表。">
                                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Delete}" Text="删除课表" />
@@ -1094,10 +1085,9 @@
 
                                             <!-- Warnings -->
                                             <StackPanel Grid.Row="0" Grid.Column="0">
-                                                <materialDesign:ColorZone Background="#17800080" 
-                                                                          Panel.ZIndex="1">
-                                                    <materialDesign:ColorZone.Style>
-                                                        <Style TargetType="materialDesign:ColorZone">
+                                                <Border Background="#17800080" Panel.ZIndex="1">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ProfileService.Profile.TimeLayouts.Count, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}" Value="0">
                                                                     <Setter Property="Visibility" Value="Visible"/>
@@ -1105,7 +1095,7 @@
                                                             </Style.Triggers>
                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                         </Style>
-                                                    </materialDesign:ColorZone.Style>
+                                                    </Border.Style>
                                                     <Grid>
                                                         <DockPanel Margin="8 4">
                                                             <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}"/>
@@ -1118,11 +1108,10 @@
                                                             </TextBlock>
                                                         </DockPanel>
                                                     </Grid>
-                                                </materialDesign:ColorZone>
-                                                <materialDesign:ColorZone Background="#17800080" 
-                                                                          Panel.ZIndex="1">
-                                                    <materialDesign:ColorZone.Style>
-                                                        <Style TargetType="materialDesign:ColorZone">
+                                                </Border>
+                                                <Border Background="#17800080" Panel.ZIndex="1">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding TimeLayoutId}" Value="">
                                                                     <Setter Property="Visibility" Value="Visible"/>
@@ -1133,7 +1122,7 @@
                                                             </Style.Triggers>
                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                         </Style>
-                                                    </materialDesign:ColorZone.Style>
+                                                    </Border.Style>
                                                     <Grid>
                                                         <DockPanel Margin="8 4">
                                                             <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}"/>
@@ -1147,7 +1136,7 @@
                                                             </TextBlock>
                                                         </DockPanel>
                                                     </Grid>
-                                                </materialDesign:ColorZone>
+                                                </Border>
                                             </StackPanel>
 
                                             <DataGrid Grid.Column="0" Grid.Row="1"
@@ -1181,7 +1170,7 @@
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
-                                                    <materialDesign:DataGridComboBoxColumn Header="科目"
+                                                    <controls:ItemsSourceDataGridComboBoxColumn Header="科目"
                                                         ItemsSourceBinding="{Binding MainViewModel.Profile.Subjects, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ProfileSettingsWindow}}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                                         SelectedValueBinding="{Binding SubjectId}"
                                                         SelectedValuePath="Key"
@@ -1197,7 +1186,7 @@
                                             <TabControl Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
                                                         HorizontalContentAlignment="Left">
                                                 <TabControl.Style>
-                                                    <Style TargetType="TabControl" BasedOn="{StaticResource MaterialDesignTabControl}">
+                                                    <Style TargetType="TabControl" BasedOn="{StaticResource MahApps.Styles.TabControl}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding ViewModel.SelectedClassInfo, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}" Value="{x:Null}">
                                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -1217,10 +1206,10 @@
                                                             SelectedValuePath="Key"
                                                             SelectedValue="{Binding ViewModel.SelectedClassInfo.SubjectId, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, FallbackValue='', Converter={StaticResource PreventNullConverter}}"
                                                             ItemsSource="{Binding ProfileService.Profile.Subjects, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"
-                                                            Style="{StaticResource MaterialDesignNavigationPrimaryListBox}">
+                                                            Style="{StaticResource NavigationPrimaryListBox}">
                                                             <ListBox.ItemContainerStyle>
                                                                 <Style
-                                                                    BasedOn="{StaticResource MaterialDesignNavigationPrimaryListBoxItem}"
+                                                                    BasedOn="{StaticResource NavigationPrimaryListBoxItem}"
                                                                     TargetType="ListBoxItem">
                                                                     <Setter Property="Margin" Value="1" />
                                                                     <Setter Property="Padding" Value="0" />
@@ -1244,25 +1233,24 @@
                                                             </ListBox.ItemTemplate>
                                                         </ListBox>
                                                         <StackPanel Grid.Row="1" >
-                                                            <materialDesign:ColorZone Background="#20A0D9B4" Visibility="{Binding ViewModel.IsClassPlanEditComplete, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
+                                                            <Border Background="#20A0D9B4" Visibility="{Binding ViewModel.IsClassPlanEditComplete, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                                                 <DockPanel Margin="8 0 4 0">
-                                                                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Close}}"
                                                                             VerticalAlignment="Center"
                                                                             DockPanel.Dock="Right"
                                                                             ToolTip="关闭"
                                                                             Click="ButtonCloseCompleteTip_OnClick"/>
-                                                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             DockPanel.Dock="Right"
                                                                             Click="ButtonAddClassPlanFromCompletedTip_OnClick"
-                                                                            materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                                                                             Foreground="{DynamicResource MaterialDesignBody}">
                                                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="添加课表"/>
                                                                     </Button>
                                                                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.DoneOutline}" Text="此课表已完成录入。"
                                                                         VerticalAlignment="Center"/>
                                                                 </DockPanel>
-                                                            </materialDesign:ColorZone>
+                                                            </Border>
                                                             <CheckBox Margin="8"
                                                                       IsChecked="{Binding MainViewModel.Settings.IsProfileEditorClassInfoSubjectAutoMoveNextEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"  Content="选完科目自动移动到下一个课程"/>
                                                         </StackPanel>
@@ -1292,12 +1280,9 @@
                                             </StackPanel>
                                         </Grid>
                                         <!-- 关闭前警告 -->
-                                        <materialDesign:ColorZone Grid.Row="2" Background="Yellow"
-                                                                  HorizontalAlignment="Stretch"
-                                                                  Visibility="{Binding ViewModel.IsClassPlansEditing, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ProfileSettingsWindow}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
-                                                                  Mode="Light">
+                                        <Border Grid.Row="2" Background="Yellow" HorizontalAlignment="Stretch" Visibility="{Binding ViewModel.IsClassPlansEditing, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ProfileSettingsWindow}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
                                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Warning}" Text="正在编辑课表。若要关闭窗口，请先完成课表编辑。" Margin="6" />
-                                        </materialDesign:ColorZone>
+                                        </Border>
                                     </Grid>
                                 </Grid>
                                 <StackPanel Grid.Column="2" 
@@ -1379,29 +1364,22 @@
                                     </ListBox>
 
                                     <!-- 时间点时长 -->
-                                    <materialDesign:Card HorizontalAlignment="Stretch"
-                                                         VerticalAlignment="Center"
-                                                         Foreground="{DynamicResource MaterialDesignBody}"
-                                                         Padding="12 10 12 10"
-                                                         Grid.Row="3" Margin="8 8 6 8"
-                                                         IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
+                                    <Border HorizontalAlignment="Stretch" VerticalAlignment="Center" TextElement.Foreground="{DynamicResource MaterialDesignBody}" Padding="12 10 12 10" Grid.Row="3" Margin="8 8 6 8" IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                         <StackPanel>
                                             <controls1:NumbericTextBox
                                                 MaxValue="36000" MinValue="0" HorizontalAlignment="Stretch"
-                                                materialDesign:TextFieldAssist.SuffixText="分钟"
                                                 Foreground="{DynamicResource MaterialDesignBody}"
-                                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                                materialDesign:HintAssist.Hint="默认上课时间点时长"
+                                                Style="{StaticResource MahApps.Styles.TextBox}"
+                                                mah:TextBoxHelper.Watermark="默认上课时间点时长"
                                                 Text="{Binding MainViewModel.Settings.DefaultOnClassTimePointMinutes, Mode=TwoWay, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                             <controls1:NumbericTextBox
                                                 MaxValue="36000" MinValue="0" HorizontalAlignment="Stretch"
-                                                materialDesign:TextFieldAssist.SuffixText="分钟"
                                                 Foreground="{DynamicResource MaterialDesignBody}"
-                                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                                materialDesign:HintAssist.Hint="默认课间时间点时长"
+                                                Style="{StaticResource MahApps.Styles.TextBox}"
+                                                mah:TextBoxHelper.Watermark="默认课间时间点时长"
                                                 Text="{Binding MainViewModel.Settings.DefaultBreakingTimePointMinutes, Mode=TwoWay, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                         </StackPanel>
-                                    </materialDesign:Card>
+                                    </Border>
                                 </Grid>
 
                                 <GridSplitter HorizontalAlignment="Stretch" Grid.Column="1"/>
@@ -1482,8 +1460,7 @@
                                         <Separator />
                                         <!--<StackPanel Orientation="Horizontal" Margin="6 0">
                                             <controls:IconText Kind="{x:Static controls1:IconGlyphs.ResizeVertical}" Text="编辑模式" />
-                                            <ToggleButton
-                                                IsChecked="{Binding ViewModel.IsPanningModeEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}" />
+                                            <ToggleButton IsChecked="{Binding ViewModel.IsPanningModeEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"/>
                                             <controls:IconText Kind="{x:Static controls1:IconGlyphs.GestureTouch}" Text="移动模式" />
                                         </StackPanel>
                                         <Separator/>-->
@@ -1512,10 +1489,10 @@
                                                      SelectedItem="{Binding ViewModel.SelectedTimePoint, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, Mode=TwoWay}"
                                                      ItemsSource="{Binding Layouts, Mode=OneWay}"
                                                      x:Name="ListViewTimePoints"
-                                                     Style="{StaticResource MaterialDesignNavigationPrimaryListBox}">
+                                                     Style="{StaticResource NavigationPrimaryListBox}">
                                                 <ListBox.ItemContainerStyle>
                                                     <Style TargetType="ListBoxItem"
-                                                           BasedOn="{StaticResource MaterialDesignNavigationPrimaryListBoxItem}">
+                                                           BasedOn="{StaticResource NavigationPrimaryListBoxItem}">
                                                         
                                                     </Style>
                                                 </ListBox.ItemContainerStyle>
@@ -1563,16 +1540,9 @@
                                                 VerticalAlignment="Center"
                                                 Margin="2 0"
                                                 ToolTipService.Placement="Top"
-                                                Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                 Click="ButtonTimeLayoutEditScrollToContent_OnClick"/>
-                                        <ToggleButton
-                                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Magnet}, Size=14}"
-                                            IsChecked="{Binding ViewModel.IsTimeLineSticky, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
-                                            Style="{StaticResource MaterialDesignFlatToggleButton}"
-                                            ToolTip="启用时间点吸附" 
-                                            Margin="2 0"    
-                                            ToolTipService.Placement="Top"
-                                            Width="24" Height="24"/>
+                                        <ToggleButton Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Magnet}, Size=14}" IsChecked="{Binding ViewModel.IsTimeLineSticky, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}" Style="{StaticResource MahApps.Styles.ToggleButton}" ToolTip="启用时间点吸附" Margin="2 0" ToolTipService.Placement="Top" Width="24" Height="24"/>
                                         <TextBlock Text="{Binding ViewModel.TimeLineScale, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, Mode=OneWay, StringFormat={}{0:P0}}" 
                                                    Margin="4 0 4 0"
                                                    ToolTip="缩放比例"
@@ -1584,7 +1554,7 @@
                                                       ToolTipService.Placement="Top"
                                                       VerticalAlignment="Center"
                                                       Margin="2 0"
-                                                      Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                      Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                       Click="ButtonZoomOut_OnClick"/>
                                         <RepeatButton Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ZoomIn}}"
                                                       ToolTip="放大"
@@ -1592,7 +1562,7 @@
                                                       ToolTipService.Placement="Top"
                                                       VerticalAlignment="Center"
                                                       Margin="2 0"
-                                                      Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                      Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                       Click="ButtonZoomIn_OnClick"/>
                                     </StackPanel>
 
@@ -1605,7 +1575,7 @@
                                             Margin="2 0"
                                             Click="ButtonTimeLayoutEditScrollToContent_OnClick">
                                         <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
+                                            <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding SelectedIndex, ElementName=TabTimeLayoutEditors}"
                                                                  Value="0">
@@ -1625,22 +1595,21 @@
                                              VerticalAlignment="Bottom"
                                              HorizontalAlignment="Left"
                                              SelectionChanged="Selector_OnSelectionChanged"
-                                             SelectedIndex="{Binding SelectedIndex, ElementName=TabTimeLayoutEditors}"
-                                             materialDesign:ListBoxItemAssist.ShowSelection="False">
+                                             SelectedIndex="{Binding SelectedIndex, ElementName=TabTimeLayoutEditors}">
                                         <ListBox.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
                                         <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                                 <Setter Property="Padding" Value="0"/>
                                             </Style>
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate DataType="{x:Type controls1:IconText}">
                                                 <DataTemplate.Resources>
-                                                    <Style TargetType="RadioButton" BasedOn="{StaticResource MaterialDesignTabRadioButtonTop}">
+                                                    <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                                                         <Setter Property="ToolTipService.Placement" Value="Top"/>
                                                     </Style>
                                                     <converters1:StringToRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
@@ -1664,20 +1633,18 @@
                                                     DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                             <StackPanel>
                                                 <TextBlock Text="编辑时间点"
-                                                           Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                                                           Style="{StaticResource Headline5TextBlock}" />
                                                 <!--<TextBlock Text="{Binding}"/>-->
-                                                <materialDesign:TimePicker materialDesign:HintAssist.Hint="开始时间"
+                                                <mah:TimePicker mah:TextBoxHelper.Watermark="开始时间"
                                                                            Margin="0 12 0 0"
-                                                                           WithSeconds="True" Is24Hours="True"
-                                                                           Style="{StaticResource MaterialDesignOutlinedTimePicker}"
-                                                                           SelectedTime="{Binding ViewModel.SelectedTimePoint.StartSecond}" />
-                                                <materialDesign:TimePicker materialDesign:HintAssist.Hint="结束时间"
+                                                                           Style="{StaticResource MahApps.Styles.TimePickerBase}"
+                                                                           SelectedDateTime="{Binding ViewModel.SelectedTimePoint.StartSecond, Converter={StaticResource TimeSpanToDateTimeConverter}}" />
+                                                <mah:TimePicker mah:TextBoxHelper.Watermark="结束时间"
                                                                            Margin="0 12 0 0"
-                                                                           WithSeconds="True" Is24Hours="True"
-                                                                           SelectedTime="{Binding ViewModel.SelectedTimePoint.EndSecond}">
-                                                    <materialDesign:TimePicker.Style>
-                                                        <Style TargetType="materialDesign:TimePicker"
-                                                               BasedOn="{StaticResource MaterialDesignOutlinedTimePicker}">
+                                                                           SelectedDateTime="{Binding ViewModel.SelectedTimePoint.EndSecond, Converter={StaticResource TimeSpanToDateTimeConverter}}">
+                                                    <mah:TimePicker.Style>
+                                                        <Style TargetType="mah:TimePicker"
+                                                               BasedOn="{StaticResource MahApps.Styles.TimePickerBase}">
                                                             <Style.Triggers>
                                                                 <DataTrigger
                                                                     Binding="{Binding ViewModel.SelectedTimePoint.TimeType}"
@@ -1692,8 +1659,8 @@
                                                             </Style.Triggers>
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </Style>
-                                                    </materialDesign:TimePicker.Style>
-                                                </materialDesign:TimePicker>
+                                                    </mah:TimePicker.Style>
+                                                </mah:TimePicker>
                                                 <StackPanel>
                                                     <StackPanel.Style>
                                                         <Style TargetType="StackPanel">
@@ -1714,7 +1681,7 @@
                                                     </StackPanel.Style>
                                                     <TextBlock Text="类型" Margin="0 16 0 0" />
                                                     <ListBox
-                                                        Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
+                                                        Style="{StaticResource MahApps.Styles.ListBox}"
                                                         SelectedIndex="{Binding ViewModel.SelectedTimePoint.TimeType}"
                                                         PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
                                                         <ListBoxItem>
@@ -1751,8 +1718,8 @@
 
                                                 <Separator Margin="0 20 0 8" />
                                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.BookOutline}" Text="默认课程" Margin="0 0 0 4" />
-                                                <ComboBox materialDesign:HintAssist.Hint="默认课程"
-                                                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                                <ComboBox mah:TextBoxHelper.Watermark="默认课程"
+                                                          Style="{StaticResource MahApps.Styles.ComboBox}"
                                                           ItemsSource="{Binding ProfileService.Profile.Subjects, UpdateSourceTrigger=PropertyChanged}"
                                                           SelectedValuePath="Key"
                                                           SelectedValue="{Binding ViewModel.SelectedTimePoint.DefaultClassId}">
@@ -1763,7 +1730,7 @@
                                                     </ComboBox.ItemTemplate>
                                                 </ComboBox>
                                                 <WrapPanel Orientation="Horizontal" Margin="0 4 0 0">
-                                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                             Click="ButtonOverwriteClasses_OnClick"
                                                             IsEnabled="{Binding ManagementService.Policy.DisableProfileClassPlanEditing, Converter={StaticResource InvertBooleanConverter}}">
                                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Upload}" Text="覆盖现有课程"/>
@@ -1783,10 +1750,10 @@
                                                         <Setter Property="Visibility" Value="Collapsed" />
                                                     </Style>
                                                 </StackPanel.Style>
-                                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                                <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
                                                     Margin="0 12 0 0"
                                                     Text="{Binding ViewModel.SelectedTimePoint.BreakName, UpdateSourceTrigger=PropertyChanged}"
-                                                    materialDesign:HintAssist.Hint="课间名称" />
+                                                    mah:TextBoxHelper.Watermark="课间名称" />
                                             </StackPanel>
                                             <Separator Margin="0 20 0 8" />
                                             <StackPanel>
@@ -1829,7 +1796,7 @@
                                                     </Style>
                                                 </StackPanel.Style>
                                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Airplane}" Text="行动" Margin="0 0 0 8" />
-                                                <Button Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Left"
+                                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
                                                         Click="ButtonDebugTriggerAction_OnClick"
                                                         IsEnabled="{Binding ProfileService.IsCurrentProfileTrusted, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
                                                         Margin="0 0 0 2">
@@ -2021,7 +1988,7 @@
                                     <!-- 科目编辑 -->
                                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                                         <StackPanel Margin="12" IsEnabled="{Binding ManagementService.Policy.DisableProfileSubjectsEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
-                                            <TextBlock Text="编辑科目信息" Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                            <TextBlock Text="编辑科目信息" Style="{StaticResource Headline5TextBlock}"
                                                        Margin="0 0 0 16"/>
                                             <!-- 科目名 & 简称 -->
                                             <Grid>
@@ -2032,23 +1999,23 @@
                                                 <!-- 科目名 -->
                                                 <TextBox Grid.Column="0" 
                                                          x:Name="TextBoxSubjectName"
-                                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                                         materialDesign:HintAssist.Hint="科目名"
+                                                         Style="{StaticResource MahApps.Styles.TextBox}"
+                                                         mah:TextBoxHelper.Watermark="科目名"
                                                          Text="{Binding Name}"/>
                                                 <!-- 简称 -->
                                                 <TextBox Grid.Column="1" Margin="6 0 0 0"
-                                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                                         materialDesign:HintAssist.Hint="简称"
+                                                         Style="{StaticResource MahApps.Styles.TextBox}"
+                                                         mah:TextBoxHelper.Watermark="简称"
                                                          Text="{Binding Initial}"/>
                                             </Grid>
                                             <!-- 科任老师 -->
                                             <TextBox Margin="0 6 0 0"
-                                                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                                     materialDesign:HintAssist.Hint="科任老师"
+                                                     Style="{StaticResource MahApps.Styles.TextBox}"
+                                                     mah:TextBoxHelper.Watermark="科任老师"
                                                      Text="{Binding TeacherName}"/>
                                             <!-- 户外课程 -->
                                             <CheckBox Margin="0 6 0 0"
-                                                      Style="{StaticResource MaterialDesignCheckBox}"
+                                                      Style="{StaticResource MahApps.Styles.CheckBox}"
                                                       IsChecked="{Binding IsOutDoor}"
                                                       Content="该科目是户外课程"/>
                                             <!-- 附加属性 -->
@@ -2131,21 +2098,19 @@
                                                     IsEnabled="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource InvertBooleanConverter}}">
                                                 <ci:IconText Kind="{x:Static controls1:IconGlyphs.EditOutline}" Text="修改课程" />
                                             </Button>
-                                            <materialDesign:PopupEx AllowsTransparency="True"
+                                            <Popup AllowsTransparency="True"
                                                                     StaysOpen="False"
                                                                     PopupAnimation="Fade"
                                                                     IsOpen="{Binding ViewModel.IsClassPlanTempEditPopupOpen}">
-                                                <materialDesign:Card Background="{DynamicResource MaterialDesignPaper}"
-                                                                     Margin="8"
-                                                                     materialDesign:ElevationAssist.Elevation="Dp8">
+                                                <Border Background="{DynamicResource MaterialDesignPaper}" Margin="8">
                                                     <StackPanel Margin="12" Width="250">
                                                         <TextBlock Text="修改课程"
-                                                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                                                                   Style="{StaticResource Headline5TextBlock}"
                                                                    Margin="0 0 0 8" />
                                                         <ComboBox HorizontalAlignment="Stretch"
-                                                                  materialDesign:HintAssist.Hint="换课成…"
+                                                                  mah:TextBoxHelper.Watermark="换课成…"
                                                                   Margin="0 0 0 8"
-                                                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                                                  Style="{StaticResource MahApps.Styles.ComboBox}"
                                                                   ItemsSource="{Binding ProfileService.Profile.Subjects, UpdateSourceTrigger=PropertyChanged}"
                                                                   SelectedValuePath="Key"
                                                                   SelectedValue="{Binding ViewModel.TargetSubjectIndex}">
@@ -2164,7 +2129,7 @@
                                                                 HorizontalAlignment="Left">
                                                             <Button.Style>
                                                                 <Style TargetType="Button"
-                                                                       BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                                                       BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                                                     <Style.Triggers>
                                                                         <DataTrigger
                                                                             Binding="{Binding ViewModel.TargetSubjectIndex}"
@@ -2177,8 +2142,8 @@
                                                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="确定" />
                                                         </Button>
                                                     </StackPanel>
-                                                </materialDesign:Card>
-                                            </materialDesign:PopupEx>
+                                                </Border>
+                                            </Popup>
                                         </Grid>
                                         <Button Click="ButtonSwapSchedule_OnClick"
                                                 IsEnabled="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource InvertBooleanConverter}}">
@@ -2237,12 +2202,12 @@
                                             <StackPanel Grid.Row="0" Orientation="Horizontal">
                                                 <DatePicker SelectedDate="{Binding ViewModel.ScheduleCalendarSelectedDate}"
                                                             Width="100"/>
-                                                <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                         Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowLeft}}"
                                                         ToolTip="上一周"
                                                         Margin="4 0 0 0"
                                                         Click="ButtonPreviousWeek_OnClick"/>
-                                                <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                         Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}"
                                                         ToolTip="下一周"
                                                         Margin="4 0 0 0"
@@ -2253,10 +2218,7 @@
                                                 </TextBlock>
                                             </StackPanel>
 
-                                            <materialDesign:ColorZone Background="#204169e1" 
-                                                                      Panel.ZIndex="1" 
-                                                                      Grid.Row="2"
-                                                                      Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Border Background="#204169e1" Panel.ZIndex="1" Grid.Row="2" Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <Grid>
                                                     <DockPanel Margin="8 4">
                                                         <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.SwapHorizontal}"/>
@@ -2269,7 +2231,7 @@
                                                         </TextBlock>
                                                     </DockPanel>
                                                 </Grid>
-                                            </materialDesign:ColorZone>
+                                            </Border>
 
                                             <DataGrid Grid.Row="1"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -2473,22 +2435,21 @@
                                          VerticalContentAlignment="Stretch"
                                          VerticalAlignment="Bottom"
                                          HorizontalAlignment="Left"
-                                         SelectedIndex="{Binding SelectedIndex, ElementName=ScheduleAdjustmentTabControl}"
-                                         materialDesign:ListBoxItemAssist.ShowSelection="False">
+                                         SelectedIndex="{Binding SelectedIndex, ElementName=ScheduleAdjustmentTabControl}">
                                     <ListBox.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
                                         </ItemsPanelTemplate>
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemContainerStyle>
-                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                             <Setter Property="Padding" Value="0"/>
                                         </Style>
                                     </ListBox.ItemContainerStyle>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate DataType="{x:Type controls1:IconText}">
                                             <DataTemplate.Resources>
-                                                <Style TargetType="RadioButton" BasedOn="{StaticResource MaterialDesignTabRadioButtonTop}">
+                                                <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                                                     <Setter Property="ToolTipService.Placement" Value="Top"/>
                                                 </Style>
                                                 <converters1:StringToRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
@@ -2524,68 +2485,46 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.Resources>
-                                <Style TargetType="materialDesign:Chip" BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                                <Style TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                                     <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
                                     <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
-                                    <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}"/>
-                                    <Setter Property="IconBackground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
-                                    <Setter Property="Margin" Value="0 0 6 0"/>
+<Setter Property="Margin" Value="0 0 6 0"/>
                                 </Style>
                             </Grid.Resources>
                             <StackPanel Grid.Column="0" 
                                         Orientation="Horizontal" HorizontalAlignment="Left">
-                                <materialDesign:Chip
-                                    Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
-                                    ToolTip="档案"
-                                    Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileDocumentOutline}}"
-                                    Click="ButtonProfileManage_OnClick"
-                                    IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
+                                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}" ToolTip="档案" Click="ButtonProfileManage_OnClick" IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
                                     <TextBlock MaxWidth="100" TextTrimming="CharacterEllipsis">
                                         <Run Text="{Binding ProfileService.CurrentProfilePath}"/>
                                     </TextBlock>
-                                </materialDesign:Chip>
-                                <materialDesign:Chip
-                                    Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Command="{x:Static dialogs:DialogService.OpenDialogCommand}"
-                                    ToolTip="查看您的单位/组织如何管理此ClassIsland实例。"
-                                    Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.WorkOutline}}">
-                                    <materialDesign:Chip.CommandParameter>
+                                </ToggleButton>
+                                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此ClassIsland实例。">
+                                    <ToggleButton.CommandParameter>
                                         <controls:ManagementInfoControl/>
-                                    </materialDesign:Chip.CommandParameter>
+                                    </ToggleButton.CommandParameter>
                                     <TextBlock>
                                         <Run Text="由贵单位管理"/>
                                     </TextBlock>
-                                </materialDesign:Chip>
-                                <materialDesign:Chip
-                                    Visibility="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource InverseBoolToVisConverter}, Mode=OneWay}"
-                                    Click="ButtonTemporaryClassPlan_OnClick"
-                                    Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}"
-                                    ToolTip="当前启用的课表">
-                                    <materialDesign:Chip.Style>
-                                        <Style TargetType="materialDesign:Chip" BasedOn="{StaticResource MaterialDesignOutlineChip}">
+                                </ToggleButton>
+                                <ToggleButton Visibility="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource InverseBoolToVisConverter}, Mode=OneWay}" Click="ButtonTemporaryClassPlan_OnClick" Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}" ToolTip="当前启用的课表">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding ProfileService.Profile.TempClassPlanId}" Value="{x:Null}">
-                                                    <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileChartOutline}}"/>
-                                                </DataTrigger>
+</DataTrigger>
                                                 <DataTrigger Binding="{Binding LessonsService.CurrentClassPlan.IsOverlay}" Value="True">
-                                                    <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.LayersOutline}}"/>
-                                                </DataTrigger>
+</DataTrigger>
                                                 <DataTrigger Binding="{Binding LessonsService.CurrentClassPlan}" Value="{x:Null}">
-                                                    <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileOutline}}"/>
-                                                </DataTrigger>
+</DataTrigger>
                                                 <DataTrigger Binding="{Binding LessonsService.IsClassPlanEnabled}" Value="False">
-                                                    <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Cancel}}"/>
-                                                </DataTrigger>
+</DataTrigger>
                                             </Style.Triggers>
                                             <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
                                             <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
-                                            <Setter Property="IconForeground" Value="{DynamicResource MaterialDesignBody}"/>
-                                            <Setter Property="IconBackground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}"/>
-                                            <Setter Property="Margin" Value="0 0 6 0"/>
+<Setter Property="Margin" Value="0 0 6 0"/>
 
-                                            <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileDocumentMultipleOutline}}"/>
-                                        </Style>
-                                    </materialDesign:Chip.Style>
+</Style>
+                                    </ToggleButton.Style>
                                     <TextBlock FontFamily="{StaticResource HarmonyOsSans}" MaxWidth="100" TextTrimming="CharacterEllipsis">
                                         <Run>
                                             <Run.Style>
@@ -2603,12 +2542,8 @@
                                             </Run.Style>
                                         </Run>
                                     </TextBlock>
-                                </materialDesign:Chip>
-                                <materialDesign:Chip
-                                    ToolTip="课表群"
-                                    Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Group}}"
-                                    Click="ButtonClassPlansGroup_OnClick"
-                                    IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
+                                </ToggleButton>
+                                <ToggleButton ToolTip="课表群" Click="ButtonClassPlansGroup_OnClick" IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
                                     <TextBlock MaxWidth="100" TextTrimming="CharacterEllipsis">
                                         <TextBlock.DataContext>
                                             <MultiBinding Converter="{StaticResource ClassPlanGroupIdToClassPlanGroupConverter}">
@@ -2618,13 +2553,12 @@
                                         </TextBlock.DataContext>
                                         <Run Text="{Binding Name}"/>
                                     </TextBlock>
-                                </materialDesign:Chip>
+                                </ToggleButton>
                             </StackPanel>
                             <ListBox Grid.Column="1"
                                      Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
                                      VerticalContentAlignment="Stretch"
                                      SelectedIndex="{Binding SelectedIndex, ElementName=RootTabControl}"
-                                     materialDesign:ListBoxItemAssist.ShowSelection="False"
                                      ScrollViewer.CanContentScroll="True"
                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -2637,14 +2571,14 @@
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                         <Setter Property="Padding" Value="0"/>
                                     </Style>
                                 </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DataTemplate.Resources>
-                                            <Style TargetType="RadioButton" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
+                                            <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                                                 <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
                                                 <Setter Property="FontSize" Value="18"/>
                                                 <Setter Property="Opacity" Value="0.75"/>
@@ -2656,9 +2590,6 @@
                                                     </Trigger>
                                                 </Style.Triggers>
                                                 <Style.Resources>
-                                                    <Style TargetType="materialDesign:Ripple">
-                                                        <Setter Property="Feedback" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
-                                                    </Style>
                                                 </Style.Resources>
                                             </Style>
                                             <converters1:StringToRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
@@ -2676,47 +2607,29 @@
                             <StackPanel Grid.Column="2" Orientation="Horizontal"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center">
-                                <materialDesign:Chip
-                                    ToolTip="当前档案不受信任，部分功能受限。"
-                                    Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Warning}}"
-                                    Click="ButtonUnTrustedProfile_OnClick"
-                                    Visibility="{Binding ProfileService.IsCurrentProfileTrusted, Converter={StaticResource InverseBoolToVisConverter}}">
+                                <ToggleButton ToolTip="当前档案不受信任，部分功能受限。" Click="ButtonUnTrustedProfile_OnClick" Visibility="{Binding ProfileService.IsCurrentProfileTrusted, Converter={StaticResource InverseBoolToVisConverter}}">
                                     <TextBlock>
                                         <Run Text="不信任"/>
                                     </TextBlock>
-                                </materialDesign:Chip>
-                                <materialDesign:Chip
-                                    ToolTip="查看档案编辑帮助。"
-                                    Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Help}}"
-                                    Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
-                                    CommandParameter="https://docs.classisland.tech/app/profile/"
-                                    IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
+                                </ToggleButton>
+                                <ToggleButton ToolTip="查看档案编辑帮助。" Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" CommandParameter="https://docs.classisland.tech/app/profile/" IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
                                     <TextBlock>
                                         <Run Text="帮助"/>
                                     </TextBlock>
-                                </materialDesign:Chip>
+                                </ToggleButton>
                                 <Grid>
-                                    <materialDesign:Chip
-                                        ToolTip="导入或导出档案…"
-                                        Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Import}}"
-                                        Click="ButtonImportFromFile_OnClick"
-                                        IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
+                                    <ToggleButton ToolTip="导入或导出档案…" Click="ButtonImportFromFile_OnClick" IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
                                         <TextBlock>
                                             <Run Text="导入/导出" />
                                         </TextBlock>
-                                    </materialDesign:Chip>
-                                    <materialDesign:PopupEx
+                                    </ToggleButton>
+                                    <Popup
                                         AllowsTransparency="True"
                                         StaysOpen="False"
                                         PopupAnimation="Fade"
 
                                         IsOpen="{Binding ViewModel.IsProfileImportMenuOpened}">
-                                        <materialDesign:Card
-                                            MenuItem.Click="MenuItemImports_OnClick"
-                                            Margin="16"
-                                            Background="{DynamicResource MaterialDesignPaper}"
-                                            materialDesign:ElevationAssist.Elevation="Dp4"
-                                            TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+                                        <Border MenuItem.Click="MenuItemImports_OnClick" Margin="16" Background="{DynamicResource MaterialDesignPaper}" TextElement.Foreground="{DynamicResource MaterialDesignBody}">
                                             <StackPanel Margin="0 4">
                                                 <TextBlock Text="导入" Foreground="{DynamicResource PrimaryHueMidBrush}"
                                                            FontWeight="Bold"
@@ -2742,17 +2655,14 @@
                                                           Click="MenuItemExportExcel_OnClick"
                                                           Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileExcelOutline}}" />
                                             </StackPanel>
-                                        </materialDesign:Card>
-                                    </materialDesign:PopupEx>
+                                        </Border>
+                                    </Popup>
                                 </Grid>
                             </StackPanel>
                         </Grid>
                     </Grid>
 
-                    <materialDesign:ColorZone Background="#17800080"
-                                              Grid.Row="1"
-                                              Panel.ZIndex="1"
-                                              Visibility="{Binding MainViewModel.Settings.ShowSellingAnnouncement, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border Background="#17800080" Grid.Row="1" Panel.ZIndex="1" Visibility="{Binding MainViewModel.Settings.ShowSellingAnnouncement, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Grid Margin="8 4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -2770,10 +2680,10 @@
                             </DockPanel>
                             <Button Grid.Column="1" Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Close}}"
                                     Click="ButtonHideSellingAnnouncementBanner_OnClick"
-                                    Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     ToolTip="不再显示"/>
                         </Grid>
-                    </materialDesign:ColorZone>
+                    </Border>
                 </Grid>
                 <mah:FlyoutsControl>
                     <mah:Flyout x:Name="MyDrawerHost"
@@ -2801,7 +2711,7 @@
         </Grid>
 
         <!-- 顶层元素 -->
-        <materialDesign:Snackbar VerticalAlignment="Bottom" MessageQueue="{Binding ViewModel.MessageQueue}"/>
+        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="16" TextWrapping="Wrap" FontWeight="Medium" Text="{Binding ViewModel.StatusMessage}"/>
         <windows:AsyncBox VerticalAlignment="Bottom" Height="6" LoadingViewType="controls:LoadingMask"/>
     </Grid>
 </controls1:MyWindow>

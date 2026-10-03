@@ -4,16 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Core.Controls"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:navHyperlink="clr-namespace:ClassIsland.Core.Controls.NavHyperlink"
              xmlns:commands="clr-namespace:ClassIsland.Core.Commands"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:AnnouncementControl}}">
-        <materialDesign:ColorZone Margin="0 0 0 4"
-                                  Panel.ZIndex="1">
-            <materialDesign:ColorZone.Style>
-                <Style TargetType="materialDesign:ColorZone">
+        <Border Margin="0 0 0 4" Panel.ZIndex="1">
+            <Border.Style>
+                <Style TargetType="Border">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Announcement.Severity}" Value="Announcement">
                             <Setter Property="Background" Value="#175DE2E7"/>
@@ -32,7 +30,7 @@
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </materialDesign:ColorZone.Style>
+            </Border.Style>
             <StackPanel Margin="8 4">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -69,21 +67,20 @@
                                Text="{Binding Announcement.Summary, Mode=OneWay}"/>
 
                     <Button Grid.Column="2" VerticalAlignment="Top"
-                            Style="{StaticResource MaterialDesignToolForegroundButton}"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Margin="0 -7"
                             Content="{local:GlyphIcon {x:Static local:IconGlyphs.Close}}"
                             ToolTip="关闭"
                             Click="ButtonRead_OnClick"/>
                 </Grid>
-                <Button Style="{StaticResource MaterialDesignFlatButton}" HorizontalAlignment="Left"
+                <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
                         Margin="24 6 0 0" Foreground="{DynamicResource MaterialDesignBody}"
-                        materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                         CommandParameter="{Binding Announcement.DetailsUri, Mode=OneWay}"
                         Visibility="{Binding Announcement.HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <local:IconText Kind="{x:Static local:IconGlyphs.OpenInNew}" Text="详细信息"/>
                 </Button>
             </StackPanel>
-        </materialDesign:ColorZone>
+        </Border>
     </Grid>
 </UserControl>

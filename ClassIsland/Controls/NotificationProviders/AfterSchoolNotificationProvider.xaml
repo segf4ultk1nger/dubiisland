@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:ClassIsland.Controls.NotificationProviders"
              xmlns:notificationProviders="clr-namespace:ClassIsland.Controls.NotificationProviders"
              xmlns:classIsland="clr-namespace:ClassIsland"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <UserControl.Resources>

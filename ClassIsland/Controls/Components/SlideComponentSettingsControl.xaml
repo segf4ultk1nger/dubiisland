@@ -7,7 +7,6 @@
              xmlns:local="clr-namespace:ClassIsland.Controls.Components"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
@@ -26,7 +25,7 @@
                              Margin="0 0 0 6">
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
-                        <TextBox materialDesign:TextFieldAssist.SuffixText="秒"
+                        <TextBox
                                  Width="100"
                                  Text="{Binding Settings.SlideSeconds, Converter={StaticResource IntToStringConverter}}" />
                     </StackPanel>
@@ -56,13 +55,12 @@
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Click="ButtonOpenPauseRuleset_OnClick"
                                 Visibility="{Binding Settings.IsPauseOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
-                        <ToggleButton VerticalAlignment="Center"
-                                      IsChecked="{Binding Settings.IsPauseOnRuleEnabled}" />
+                        <ToggleButton VerticalAlignment="Center" IsChecked="{Binding Settings.IsPauseOnRuleEnabled}"/>
                     </StackPanel>
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
@@ -74,13 +72,12 @@
                 <ci:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Click="ButtonOpenStopRuleset_OnClick"
                                 Visibility="{Binding Settings.IsStopOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
-                        <ToggleButton VerticalAlignment="Center"
-                                      IsChecked="{Binding Settings.IsStopOnRuleEnabled}" />
+                        <ToggleButton VerticalAlignment="Center" IsChecked="{Binding Settings.IsStopOnRuleEnabled}"/>
                     </StackPanel>
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>

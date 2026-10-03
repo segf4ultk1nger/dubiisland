@@ -1,12 +1,12 @@
 ﻿<ci:MyWindow x:Class="ClassIsland.Views.ExcelExportWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClassIsland.Views"
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         xmlns:reoGrid="clr-namespace:unvell.ReoGrid;assembly=unvell.ReoGrid"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:converters="clr-namespace:ClassIsland.Converters"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:behaviors="clr-namespace:ClassIsland.Behaviors"
@@ -53,7 +53,7 @@
             <reoGrid:ReoGridControl.Style>
                 <Style TargetType="reoGrid:ReoGridControl">
                     <Style.Resources>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}"/>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}"/>
                         <Style TargetType="ScrollBar">
                         </Style>
                         <Style TargetType="TabControl">
@@ -90,8 +90,7 @@
             <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Redo}}" ToolTip="重做" Click="ButtonRedo_OnClick"
                     IsEnabled="{Binding ViewModel.CanRedo}"/>
             <Separator/>
-            <ComboBox materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                      materialDesign:TextFieldAssist.LeadingIcon="FormatFont"
+            <ComboBox
                       ToolTip="字体"
                       ItemsSource="{Binding ViewModel.FontFamilies}"
                       Width="150"
@@ -105,9 +104,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <TextBox materialDesign:TextFieldAssist.HasLeadingIcon="True"
-                     materialDesign:TextFieldAssist.LeadingIcon="FontSize"
-                     materialDesign:TextFieldAssist.SuffixText="px"
+            <TextBox
                      Text="{Binding ViewModel.SelectedRange.Style.FontSize, Converter={StaticResource IntToStringConverter}}"
                      ToolTip="字号"
                      Width="75"/>
@@ -155,7 +152,6 @@
 
         <TabControl Grid.Column="2" Grid.Row="2" 
                     TabStripPlacement="Right"
-                    materialDesign:TabAssist.HasUniformTabWidth="False"
                     >
             <TabControl.Resources>
                 
@@ -171,8 +167,8 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0">
-                        <TextBlock Text="课表" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
-                        <controls:ExcelSelectionTextBox materialDesign:HintAssist.Hint="基准位置"
+                        <TextBlock Text="课表" Style="{StaticResource Headline5TextBlock}"/>
+                        <controls:ExcelSelectionTextBox mah:TextBoxHelper.Watermark="基准位置"
                                                         IsSelecting="{Binding ViewModel.IsSelectingMode, Mode=TwoWay}"
                                                         EnterSelectingModeCommand="{Binding EnterSelectingModeCommand}"
                                                         SelectionPropertyName="ClassPlanStartPos"
@@ -183,14 +179,14 @@
                              SelectionMode="Multiple">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem"
-                                   BasedOn="{StaticResource MaterialDesignListBoxItem}">
-                                <Setter Property="materialDesign:BehaviorsAssist.Behaviors">
+                                   BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+                                <Setter Property="behaviors:StyleBehaviors.Behaviors">
                                     <Setter.Value>
-                                        <materialDesign:BehaviorCollection>
+                                        <behaviors:StyleBehaviorCollection>
                                             <behaviors:AllCollectionBehavior    
                                                 AllCollection="{Binding Data.ViewModel.SelectedClassPlanIds, Source={StaticResource DataProxy}}"
                                                 CurrentValue="{Binding Key}" />
-                                        </materialDesign:BehaviorCollection>
+                                        </behaviors:StyleBehaviorCollection>
                                     </Setter.Value>
                                 </Setter>
                             </Style>
@@ -208,12 +204,12 @@
                      MinWidth="42" Height="42">
                 <ScrollViewer>
                     <StackPanel Margin="12">
-                        <TextBlock Text="样式" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                        <TextBlock Text="样式" Style="{StaticResource Headline5TextBlock}"/>
 
                         <CheckBox Content="包含教师名称" Margin="0 6 0 0"
                                   IsChecked="{Binding ViewModel.IsTeacherNameEnabled}"/>
-                        <ComboBox Margin="0 6 0 0" materialDesign:HintAssist.Hint="水平对齐方式"
-                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                        <ComboBox Margin="0 6 0 0" mah:TextBoxHelper.Watermark="水平对齐方式"
+                                  Style="{StaticResource MahApps.Styles.ComboBox}"
                                   SelectedIndex="{Binding ViewModel.HorAlign, Converter={StaticResource ReoHorAlignmentToIntConverter}}">
                             <ComboBoxItem>无</ComboBoxItem>
                             <ComboBoxItem>左对齐</ComboBoxItem>
@@ -221,8 +217,8 @@
                             <ComboBoxItem>右对齐</ComboBoxItem>
                             <ComboBoxItem>两端对齐</ComboBoxItem>
                         </ComboBox>
-                        <ComboBox Margin="0 6 0 0" materialDesign:HintAssist.Hint="垂直对齐方式"
-                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                        <ComboBox Margin="0 6 0 0" mah:TextBoxHelper.Watermark="垂直对齐方式"
+                                  Style="{StaticResource MahApps.Styles.ComboBox}"
                                   SelectedIndex="{Binding ViewModel.VerAlign, Converter={StaticResource ReoGridVerAlignToIntConverter}}">
                             <ComboBoxItem>默认</ComboBoxItem>
                             <ComboBoxItem>顶部对齐</ComboBoxItem>
@@ -239,8 +235,8 @@
                         <ci:ColorPicker HorizontalAlignment="Left" Margin="0 4 0 0"
                                         Color="{Binding ViewModel.BackgroundColor, Mode=TwoWay}"/>
 
-                        <ComboBox Margin="0 6 0 0" materialDesign:HintAssist.Hint="单元格框线"
-                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                        <ComboBox Margin="0 6 0 0" mah:TextBoxHelper.Watermark="单元格框线"
+                                  Style="{StaticResource MahApps.Styles.ComboBox}"
                                   SelectedIndex="{Binding ViewModel.BorderMode}">
                             <ComboBoxItem>无</ComboBoxItem>
                             <ComboBoxItem>全框线</ComboBoxItem>
@@ -253,15 +249,13 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBox Grid.Column="0" 
-                                     materialDesign:HintAssist.Hint="行高"
+                                     mah:TextBoxHelper.Watermark="行高"
                                      Text="{Binding ViewModel.RowHeight, Converter={StaticResource IntToStringConverter}}"
-                                     materialDesign:TextFieldAssist.SuffixText="px"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                                     Style="{StaticResource MahApps.Styles.TextBox}"/>
                             <TextBox Grid.Column="1" 
-                                     materialDesign:HintAssist.Hint="列宽"
+                                     mah:TextBoxHelper.Watermark="列宽"
                                      Text="{Binding ViewModel.ColWidth, Converter={StaticResource IntToStringConverter}}"
-                                     materialDesign:TextFieldAssist.SuffixText="px"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                                     Style="{StaticResource MahApps.Styles.TextBox}"/>
                         </Grid>
 
                         <Button Margin="0 12 0 0" HorizontalAlignment="Left"
@@ -275,7 +269,7 @@
                      MinWidth="42" Height="42">
                 <ScrollViewer>
                     <StackPanel Margin="12">
-                        <TextBlock Text="保存" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                        <TextBlock Text="保存" Style="{StaticResource Headline5TextBlock}"/>
 
                         <Button Margin="0 12 0 0" HorizontalAlignment="Left"
                                 Click="ButtonSaveToFile_OnClick">
@@ -285,7 +279,7 @@
                                    TextWrapping="Wrap"/>
 
                         <Button Margin="0 12 0 0" HorizontalAlignment="Left"
-                                Style="{StaticResource MaterialDesignPaperButton}"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Click="ButtonSaveAndOpenInExcel_OnClick">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MicrosoftExcel}" Text="保存并在默认 Excel 文件编辑器中打开"/>
                         </Button>
@@ -295,8 +289,6 @@
                 </ScrollViewer>
             </TabItem>
         </TabControl>
-        <materialDesign:Snackbar Grid.Column="0" Grid.Row="0"
-                                 Grid.ColumnSpan="3" Grid.RowSpan="3"
-                                 MessageQueue="{Binding ViewModel.MessageQueue}"/>
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="16" TextWrapping="Wrap" FontWeight="Medium" VerticalAlignment="Bottom" HorizontalAlignment="Center" Text="{Binding ViewModel.StatusMessage}"/>
     </Grid>
 </ci:MyWindow>

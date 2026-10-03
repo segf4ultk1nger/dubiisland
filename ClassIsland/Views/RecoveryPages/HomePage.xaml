@@ -4,7 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClassIsland.Views.RecoveryPages"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HomePage"
@@ -18,14 +17,13 @@
       TextOptions.TextRenderingMode="Auto" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
 
     <Page.Resources>
-        <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
             <Style.Resources>
                 <Style TargetType="ciCore:IconText">
                     <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"></Setter>
                 </Style>
             </Style.Resources>
             <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
-            <Setter Property="materialDesign:RippleAssist.Feedback" Value="{DynamicResource MaterialDesignBody}"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="8 6"/>
             <Setter Property="TextElement.FontSize" Value="14"/>
@@ -38,7 +36,7 @@
             <StackPanel.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource LinkButtonStyle}"/>
             </StackPanel.Resources>
-            <TextBlock Text="选择一个选项" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+            <TextBlock Text="选择一个选项" Style="{StaticResource Headline5TextBlock}"/>
             <TextBlock Text="选择一个操作以继续。" Margin="0 8 0 16"/>
 
             <Button Click="ButtonContinue_OnClick">

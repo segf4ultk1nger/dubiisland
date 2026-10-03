@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Core.Controls.Action"
              xmlns:dd="urn:gong-wpf-dragdrop"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
              xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services"
              mc:Ignorable="d" 
@@ -19,13 +18,13 @@
                       HorizontalAlignment="Stretch">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <materialDesign:ColorZone Mode="PrimaryMid" Height="24" CornerRadius="12">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
                         <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="调整触发器顺序"
                                      Margin="4 0"
                                      IconMargin="2"
                                      TextElement.FontWeight="Medium"
                                      VerticalAlignment="Center"/>
-                    </materialDesign:ColorZone>
+                    </Border>
                 </DataTemplate>
             </dd:DragDrop.EffectMoveAdornerTemplate>
             <ItemsControl.ItemTemplate>
@@ -39,7 +38,7 @@
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
                                     Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Remove}}"
-                                    Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                    Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     ToolTip="删除"
                                     Command="{Binding RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType=local:TriggerSettingsControl}}"
                                     CommandParameter="{Binding}"
@@ -73,7 +72,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Button Style="{StaticResource MaterialDesignFlatButton}"
+        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                 Click="ButtonAddTrigger_OnClick"
                 HorizontalAlignment="Left">
             <controls:IconText Kind="{x:Static controls:IconGlyphs.Plus}"

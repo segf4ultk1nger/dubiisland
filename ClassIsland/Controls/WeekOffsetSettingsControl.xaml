@@ -16,7 +16,7 @@
             <TextBlock Text="设置本周在多周轮换中的周数。" TextWrapping="Wrap" Margin="0 0 0 8" />
             <TextBlock Text="单双周：" />
             <ListBox
-                Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
+                Style="{StaticResource MahApps.Styles.ListBox}"
                 SelectedIndex="{Binding CurrentWeeks[2]}"
                 Tag="2">
                 <ListBoxItem Visibility="Collapsed" />
@@ -25,7 +25,7 @@
             </ListBox>
             <TextBlock Text="三周轮换：" />
             <ListBox
-                Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
+                Style="{StaticResource MahApps.Styles.ListBox}"
                 SelectedIndex="{Binding CurrentWeeks[3]}"
                 Tag="3">
                 <ListBoxItem Visibility="Collapsed" />
@@ -35,7 +35,7 @@
             </ListBox>
             <TextBlock Text="四周轮换：" />
             <ListBox
-                Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
+                Style="{StaticResource MahApps.Styles.ListBox}"
                 SelectedIndex="{Binding CurrentWeeks[4]}"
                 Tag="4">
                 <ListBoxItem Visibility="Collapsed" />
@@ -48,7 +48,7 @@
                 <Button HorizontalAlignment="Left" Click="ButtonFinish_OnClick">
                     <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Check}" Text="应用" />
                 </Button>
-                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                         Click="ButtonClear_OnClick">
                     <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Refresh}" Text="重置偏移"/>
                 </Button>
