@@ -37,6 +37,10 @@
     <PropertyGroup Condition="'$(Configuration)'=='Debug_MSIX' Or '$(Configuration)'=='Release_MSIX'">
       <IsMsix>true</IsMsix>
     </PropertyGroup>
+    <!-- Costura 只在 Release 打开，把托管依赖嵌入 exe；Debug / MSIX 关闭，保持散文件便于调试和打包。 -->
+    <PropertyGroup Condition="'$(Configuration)' != 'Release'">
+        <DisableFody>true</DisableFody>
+    </PropertyGroup>
     <ItemGroup>
         <None Remove="assets\documents\ChangeLog.md" />
         <None Remove="Assets\HoYoStickers\帕姆_注意.png" />
@@ -52,6 +56,12 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="Costura.Fody" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Fody" Version="6.8.2">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="DotNetCampus.LatestCSharpFeatures" Version="13.0.1" PrivateAssets="all" />
         <PackageReference Include="EPPlus" Version="7.0.8" />
         <PackageReference Include="Google.Protobuf" Version="3.27.0-rc1" />

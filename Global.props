@@ -16,6 +16,56 @@
 		</Compile>
 	</ItemGroup>
 
+	<PropertyGroup>
+		<!-- 手写的 Assembly/File 版本保持不动，这个基准版本只在 git 不可用时兜底 -->
+		<LegacyIslandBaseVersion Condition="'$(LegacyIslandBaseVersion)' == ''">1.8</LegacyIslandBaseVersion>
+	</PropertyGroup>
+
+	<!--
+		实时版本号（仅注入 InformationalVersion，供 exe 的“产品版本”、关于页和发布包名使用）：
+		  0.<Ship x.x.x.x 提交数>.<yyMMdd>.<总提交数>+<短 hash>
+		git 不在 PATH 或不是仓库时回退到 <LegacyIslandBaseVersion>。
+		GenerateAssemblyInfo 被关闭，所以这里直接生成一个带 AssemblyInformationalVersion 的源文件。
+	-->
+	<Target Name="StampGitInformationalVersion"
+	        BeforeTargets="BeforeCompile"
+	        Condition="'$(MSBuildProjectName)' == 'ClassIsland'">
+		<PropertyGroup>
+			<_StampDate>$([System.DateTime]::Now.ToString('yyMMdd'))</_StampDate>
+		</PropertyGroup>
+		<Exec Command="git rev-list --count --grep=&quot;^Ship &quot; HEAD"
+		      ConsoleToMSBuild="true" StandardOutputImportance="low" IgnoreExitCode="true">
+			<Output TaskParameter="ConsoleOutput" ItemName="_StampShipOut" />
+		</Exec>
+		<Exec Command="git rev-list --count HEAD"
+		      ConsoleToMSBuild="true" StandardOutputImportance="low" IgnoreExitCode="true">
+			<Output TaskParameter="ConsoleOutput" ItemName="_StampCommitsOut" />
+		</Exec>
+		<Exec Command="git rev-parse --short=8 HEAD"
+		      ConsoleToMSBuild="true" StandardOutputImportance="low" IgnoreExitCode="true">
+			<Output TaskParameter="ConsoleOutput" ItemName="_StampHashOut" />
+		</Exec>
+		<PropertyGroup>
+			<_StampShip>@(_StampShipOut)</_StampShip>
+			<_StampCommits>@(_StampCommitsOut)</_StampCommits>
+			<_StampHash>@(_StampHashOut)</_StampHash>
+			<_StampedInformationalVersion Condition="'$(_StampHash)' != '' and '$(_StampCommits)' != '' and '$(_StampCommits)' != '0'">0.$(_StampShip).$(_StampDate).$(_StampCommits)+$(_StampHash)</_StampedInformationalVersion>
+			<_StampedInformationalVersion Condition="'$(_StampedInformationalVersion)' == ''">$(LegacyIslandBaseVersion)</_StampedInformationalVersion>
+		</PropertyGroup>
+		<Message Importance="normal" Text="LegacyIsland: InformationalVersion = $(_StampedInformationalVersion)" />
+		<ItemGroup>
+			<_StampAttribute Include="System.Reflection.AssemblyInformationalVersionAttribute">
+				<_Parameter1>$(_StampedInformationalVersion)</_Parameter1>
+			</_StampAttribute>
+		</ItemGroup>
+		<WriteCodeFragment AssemblyAttributes="@(_StampAttribute)"
+		                   Language="C#"
+		                   OutputFile="$(IntermediateOutputPath)LegacyIslandVersion.g.cs">
+			<Output TaskParameter="OutputFile" ItemName="Compile" />
+			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
+		</WriteCodeFragment>
+	</Target>
+
 	<!--<Target Name="PopulateInfo" DependsOnTargets="GitVersion" BeforeTargets="GetAssemblyVersion;GenerateNuspec;GetPackageContents">
 		<PropertyGroup>
 			<Version>$(GitBaseTag)</Version>

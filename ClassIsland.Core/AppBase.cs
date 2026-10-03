@@ -85,20 +85,29 @@ public abstract class AppBase : Application, IAppHost
     /// <summary>
     /// 应用版本
     /// </summary>
-    public static string AppVersion => Assembly.GetExecutingAssembly().GetName().Version!.ToString();
+    public static string AppVersion
+    {
+        get
+        {
+            var informationalVersion = Assembly.GetEntryAssembly()
+                ?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            return string.IsNullOrEmpty(informationalVersion)
+                ? Assembly.GetExecutingAssembly().GetName().Version!.ToString()
+                : informationalVersion;
+        }
+    }
 
     /// <summary>
     /// 应用版本代号
     /// </summary>
-    // ReSharper disable StringLiteralTypo
+    // ReSharper disable once StringLiteralTypo
     public static string AppCodeName => "RyouYamada";
-    // ReSharper restore StringLiteralTypo
 
     /// <summary>
     /// 应用长版本号
     /// </summary>
     public static string AppVersionLong =>
-        $"{AppVersion}-{AppCodeName}-{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch}) (Core {IAppHost.CoreVersion})";
+        $"{AppVersion} ({AppCodeName}, {ThisAssembly.Git.Branch}) (Core {IAppHost.CoreVersion})";
     
     /// <summary>
     /// 应用当前生命周期状态
