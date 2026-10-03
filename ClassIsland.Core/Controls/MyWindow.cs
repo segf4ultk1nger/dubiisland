@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -50,12 +52,10 @@ public class MyWindow : MetroWindow
 
     private const string VisualStudioControlsUriString =
         "pack://application:,,,/MahApps.Metro;component/Styles/VS/Controls.xaml";
-    private const string VisualStudioColorsUriString =
-        "pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml";
 
     /// <summary>
-    /// 除课表窗口（MainWindow，普通 Window）外的窗口统一套用 MahApps 的 Visual Studio 样式。
-    /// 必须等主题色应用之后再合并，否则 VS/Colors 里的 StaticResource 找不到主题颜色。
+    /// 除课表窗口（MainWindow，普通 Window）外的窗口套用 MahApps 的 Visual Studio 控件模板。
+    /// 不合并 VS/Colors，颜色继续跟随应用主题。
     /// </summary>
     private void OnInitialized(object? sender, System.EventArgs e)
     {
@@ -65,16 +65,33 @@ public class MyWindow : MetroWindow
             {
                 Source = new Uri(VisualStudioControlsUriString)
             });
-            Resources.MergedDictionaries.Add(new ResourceDictionary
-            {
-                Source = new Uri(VisualStudioColorsUriString)
-            });
+        }
+        catch
+        {
+            // ignored
+        }
+
+        try
+        {
             SetResourceReference(StyleProperty, "MahApps.Styles.MetroWindow.VisualStudio");
         }
         catch
         {
             // ignored
         }
+
+        // VS/Colors 未合并时，VS 的 ScrollBar 样式缺少刷子会变得不可见，回退到默认滚动条样式。
+        if (TryFindResource("MahApps.Styles.ScrollBar") is Style scrollBarStyle)
+        {
+            Resources[typeof(ScrollBar)] = new Style(typeof(ScrollBar), scrollBarStyle);
+        }
+
+        // 去掉聚焦/失焦时的窗口发光边框（ControlzEx 用独立的 GlowWindow 绘制）。
+        GlowColor = null;
+        NonActiveGlowColor = null;
+        GlowDepth = 0;
+        BorderBrush = Brushes.Transparent;
+        NonActiveBorderBrush = Brushes.Transparent;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

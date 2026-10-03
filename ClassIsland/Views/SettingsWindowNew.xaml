@@ -291,10 +291,10 @@
                            IsPaneOpen="{Binding ViewModel.IsNavigationDrawerOpened, Mode=TwoWay}"
                            OpenPaneLength="250"
                            CompactPaneLength="48"
-                           PaneMargin="0 0 0 -20"
-                           DisplayMode="CompactInline">
+                           PaneMargin="0 0 0 -20">
             <mah:HamburgerMenu.Style>
                 <Style TargetType="mah:HamburgerMenu" BasedOn="{StaticResource MahApps.Styles.HamburgerMenu}">
+                    <Setter Property="DisplayMode" Value="CompactInline"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ViewModel.IsViewCompressed, Mode=OneWay}" Value="True">
                             <Setter Property="DisplayMode" Value="CompactOverlay"/>
