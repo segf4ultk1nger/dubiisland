@@ -402,11 +402,8 @@
                                             Value="Collapsed" />
                                 </Style>
                             </StackPanel.Style>
-                            <ci:StickerControl ImageSource="/Assets/HoYoStickers/光辉矢愿_瞄准.png"
-                                   Width="72"
-                                   Height="72"
-                                   Glyph="{x:Static ciCore:IconGlyphs.ScriptOutline}"
-                                   StickerToolTip="光辉矢愿_瞄准" />
+                            <ci:IconText IconSize="56"
+                                   Kind="{x:Static ciCore:IconGlyphs.ScriptOutline}" />
                             <TextBlock Text="在左侧选择或添加一个自动化，然后在此处进行设置。"
                                        TextWrapping="Wrap"
                                        Margin="0 4 0 0" />

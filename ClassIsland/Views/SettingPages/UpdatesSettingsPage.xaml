@@ -542,10 +542,8 @@
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </Style>
                             </StackPanel.Style>
-                            <ci:StickerControl ImageSource="/Assets/HoYoStickers/光辉矢愿_遨游.png" Width="81"
-                                   Height="81"
-                                   StickerToolTip="光辉矢愿_遨游"
-                                   Glyph="{x:Static controls1:IconGlyphs.UploadOutline}"/>
+                            <controls1:IconText IconSize="56"
+                                   Kind="{x:Static controls1:IconGlyphs.UploadOutline}"/>
 
                             <TextBlock TextWrapping="Wrap"
                                        HorizontalAlignment="Center"

@@ -1,5 +1,4 @@
-﻿using Octokit;
-using System.Security.Policy;
+﻿using System.Security.Policy;
 using ClassIsland.Core.Abstractions.Models.Marketplace;
 using CommunityToolkit.Mvvm.ComponentModel;
 

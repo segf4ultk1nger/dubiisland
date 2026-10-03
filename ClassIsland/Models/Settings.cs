@@ -19,7 +19,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-using Octokit;
 
 using WindowsShortcutFactory;
 
@@ -118,7 +117,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private DateTime _lastSpeedTest = DateTime.MinValue;
     private string _updateReleaseInfo = "";
     private Version _updateVersion = new Version();
-    private Release _lastCheckUpdateInfoCacheGitHub = new Release();
     private string _updateDownloadUrl = "";
     private DateTime _firstLaunchTime = DateTime.Now;
     private long _diagnosticStartupCount = 0;

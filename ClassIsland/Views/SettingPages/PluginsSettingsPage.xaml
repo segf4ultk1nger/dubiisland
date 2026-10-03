@@ -381,10 +381,8 @@
         <ControlTemplate x:Key="BlankListBoxTemplate">
             <Grid>
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <ci:StickerControl ImageSource="/Assets/HoYoStickers/光辉矢愿_不可以看.png"
-                                       Height="72" Width="72"
-                                       StickerToolTip="光辉矢愿_不可以看"
-                                       FallbackGlyph="{x:Static ciCore:IconGlyphs.ToyBrickSearch}"
+                    <ci:IconText IconSize="56"
+                                       Kind="{x:Static ciCore:IconGlyphs.ToyBrickSearch}"
                                        Margin="0 0 0 8" />
                     <TextBlock Margin="0 0 0 6">
                         <TextBlock.Style>

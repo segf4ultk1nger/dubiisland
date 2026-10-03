@@ -18,7 +18,6 @@ using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using PgpCore;
 
 namespace ClassIsland.Services.SpeechService;
 
@@ -116,19 +115,6 @@ public class GptSoVitsService : ISpeechService
         var httpClient = new HttpClient();
         var settings = SettingsService.Settings.GptSoVitsSpeechSettings;
 
-        if (settings.IsInternal && GptSovitsSecrets.IsSecretsFilled)
-        {
-            var key = new EncryptionKeys(GptSovitsSecrets.PrivateKey, GptSovitsSecrets.PrivateKeyPassPhrase);
-            var pgp = new PGP(key);
-            var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            var signData = new
-            {
-                ContentSHA256 = FrameworkCompat.Sha256(Encoding.UTF8.GetBytes(text)),
-                Timestamp = Convert.ToInt64(ts.TotalMilliseconds)
-            };
-            var sign = await pgp.SignAsync(JsonSerializer.Serialize(signData));
-            httpClient.DefaultRequestHeaders.Add("X-ClassIsland-ApiSignature", Convert.ToBase64String(Encoding.UTF8.GetBytes(sign)));
-        }
         httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("ClassIsland", AppBase.AppVersion));
         var serverIp = settings.GptSoVitsServerIp;
         var port = settings.GptSoVitsPort;

@@ -1,3 +1,6 @@
 <Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
-  <Costura />
+  <Costura>
+    <!-- 不把 pdb 嵌进 exe（配合 portable pdb，减小体积）。 -->
+    <IncludeDebugSymbols>false</IncludeDebugSymbols>
+  </Costura>
 </Weavers>

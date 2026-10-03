@@ -113,7 +113,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DebugType>embedded</DebugType>
+		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 	</PropertyGroup>

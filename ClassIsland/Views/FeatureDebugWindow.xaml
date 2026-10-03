@@ -165,14 +165,7 @@
                 <StackPanel HorizontalAlignment="Center">
                     <ci:IconControl Glyph="{x:Static ciCore:IconGlyphs.Github}"
                                     FallbackGlyph="{x:Static ciCore:IconGlyphs.QuestionMarkCircleOutline}"
-                                    Width="64" Height="64"
-                                    IconKind="{x:Static ciCore:IconGlyphs.Image}"
-                                    ImageSource="/Assets/HoYoStickers/光辉矢愿_想我了吗.png"/>
-                    <ci:StickerControl Glyph="{x:Static ciCore:IconGlyphs.Github}"
-                                    FallbackGlyph="{x:Static ciCore:IconGlyphs.QuestionMarkCircleOutline}"
-                                    Width="64" Height="64"
-                                    StickerToolTip="帕姆_点赞"
-                                    ImageSource="/Assets/HoYoStickers/帕姆_点赞.png"/>
+                                    Width="64" Height="64"/>
                     <controls:WeatherRangePackIconControl>
                         <controls:WeatherRangePackIconControl.Value>
                             <weather:RangedValue From="2" To="4"/>

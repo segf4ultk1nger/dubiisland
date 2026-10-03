@@ -464,8 +464,6 @@
                                                 <StackPanel VerticalAlignment="Center"
                                                             HorizontalAlignment="Center"
                                                             Width="500">
-                                                    <Image Source="/Assets/Demo_OpenProfileSettingsWindow.png" 
-                                                           Margin="0 0 0 8"/>
                                                     <TextBlock Text="要编辑课表和时间点，请在应用主菜单中点击【编辑档案】。"/>
                                                 </StackPanel>
                                             </controls1:TransitionerSlide>

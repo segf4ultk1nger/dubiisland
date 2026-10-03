@@ -7,7 +7,6 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 
 using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Security;
 using Sentry;
 
 namespace ClassIsland.Helpers;
@@ -35,17 +34,6 @@ public class WebRequestHelper
             try
             {
                 var data = await HttpClient.GetStringAsync(uri, cancellationToken.Value);
-                if (verifySign && publicKey != null)
-                {
-                    var signUri = new UriBuilder(uri);
-                    signUri.Path += ".sig";
-                    var sign = await HttpClient.GetByteArrayAsync(signUri.Uri, CancellationToken.None);
-                    var valid = DetachedSignatureProcessor.VerifyDetachedSignature(data, sign, publicKey);
-                    if (!valid)
-                    {
-                        throw new GeneralSecurityException("数据签名校验失败。");
-                    }
-                }
                 var r = JsonSerializer.Deserialize<T>(data, JsonOptions);
                 return r == null ? throw new Exception("Json.Deserialize returned null value.") : r;
             }

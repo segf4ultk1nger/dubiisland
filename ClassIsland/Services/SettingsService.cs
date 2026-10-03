@@ -18,7 +18,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ClassIsland.Core.Abstractions.Services.SpeechService;
 using Edge_tts_sharp.Model;
-using Octokit;
 
 namespace ClassIsland.Services;
 

@@ -90,28 +90,14 @@ public class CommonDialogBuilder
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
     public CommonDialogBuilder SetIconKind(CommonDialogIconKind kind)
     {
-        var managementService = IAppHost.TryGetService<IManagementService>();
-        return managementService?.Policy.DisableEasterEggs == true
-            ? kind switch
-            {
-                CommonDialogIconKind.Information => SetPackIcon(IconGlyphs.InfoCircle),
-                CommonDialogIconKind.Hint => SetPackIcon(IconGlyphs.WarningCircle),
-                CommonDialogIconKind.Forbidden => SetPackIcon(IconGlyphs.AlertOctagon),
-                CommonDialogIconKind.Error => SetPackIcon(IconGlyphs.CloseCircle),
-                _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
-            }
-            : kind switch
-            {
-                CommonDialogIconKind.Information => SetBitmapIcon(new Uri("/Assets/HoYoStickers/帕姆_点赞.png",
-                    UriKind.RelativeOrAbsolute)),
-                CommonDialogIconKind.Hint => SetBitmapIcon(new Uri("/Assets/HoYoStickers/帕姆_注意.png",
-                    UriKind.RelativeOrAbsolute)),
-                CommonDialogIconKind.Forbidden => SetBitmapIcon(new Uri("/Assets/HoYoStickers/帕姆_不可以.png",
-                    UriKind.RelativeOrAbsolute)),
-                CommonDialogIconKind.Error => SetBitmapIcon(new Uri("/Assets/HoYoStickers/帕姆_哭哭.png",
-                    UriKind.RelativeOrAbsolute)),
-                _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
-            };
+        return kind switch
+        {
+            CommonDialogIconKind.Information => SetPackIcon(IconGlyphs.InfoCircle),
+            CommonDialogIconKind.Hint => SetPackIcon(IconGlyphs.WarningCircle),
+            CommonDialogIconKind.Forbidden => SetPackIcon(IconGlyphs.AlertOctagon),
+            CommonDialogIconKind.Error => SetPackIcon(IconGlyphs.CloseCircle),
+            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+        };
     }
 
     /// <summary>
