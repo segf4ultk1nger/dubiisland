@@ -36,31 +36,31 @@
         <controls1:NumbericTextBox MaxValue="3600" MinValue="0"
                                    Text="{Binding Settings.ClassPreparingDeltaTime, Converter={StaticResource IntToStringConverter}}"
                                    mah:TextBoxHelper.Watermark="准备上课提醒时间"
-                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                    Style="{StaticResource MahApps.Styles.TextBox}"
                                    Margin="0 0 0 6" />
         <!-- 准备上课提醒文字 -->
         <TextBox Text="{Binding Settings.ClassOnPreparingText}"
                  mah:TextBoxHelper.Watermark="准备上课提醒文字（留空以禁用）"
-                 Foreground="{DynamicResource MaterialDesignBody}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                  Style="{StaticResource MahApps.Styles.TextBox}"
                  Margin="0 0 0 6" />
         <!-- 上课遮罩文字 -->
         <TextBox Text="{Binding Settings.ClassOnMaskText}"
                  mah:TextBoxHelper.Watermark="上课遮罩文字"
-                 Foreground="{DynamicResource MaterialDesignBody}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                  Style="{StaticResource MahApps.Styles.TextBox}"
                  Margin="0 0 0 6" />
         <!-- 准备上课遮罩文字 -->
         <TextBox Text="{Binding Settings.ClassOnPreparingMaskText}"
                  mah:TextBoxHelper.Watermark="准备上课遮罩文字"
-                 Foreground="{DynamicResource MaterialDesignBody}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                  Style="{StaticResource MahApps.Styles.TextBox}"
                  Margin="0 0 0 6" />
         <!-- 下课提醒文字 -->
         <TextBox Text="{Binding Settings.ClassOffOverlayText}"
                  mah:TextBoxHelper.Watermark="下课提醒文字（留空以禁用）"
-                 Foreground="{DynamicResource MaterialDesignBody}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                  Style="{StaticResource MahApps.Styles.TextBox}"
                  Margin="0 0 0 6" />
 

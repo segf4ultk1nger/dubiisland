@@ -13,11 +13,11 @@
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ThemeMode, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ThemeDemo}}"
                                      Value="Light">
-                            <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ThemeMode, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ThemeDemo}}"
                                      Value="Dark">
-                            <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.AccentBase}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -38,7 +38,7 @@
                     <Rectangle Width="12" />
                     <Rectangle Width="4" />
                     <Rectangle Width="4" />
-                    <Rectangle Width="12" Fill="{DynamicResource PrimaryHueMidBrush}" />
+                    <Rectangle Width="12" Fill="{DynamicResource MahApps.Brushes.Accent}" />
                     <Rectangle Width="4" />
                     <Rectangle Width="4" />
                     <Rectangle Width="4" />
@@ -52,7 +52,7 @@
                         <Rectangle Width="4" Opacity="0.5" />
                         <Rectangle Width="4" Opacity="0.5" />
                     </StackPanel>
-                    <Border Background="{DynamicResource PrimaryHueMidBrush}"
+                    <Border Background="{DynamicResource MahApps.Brushes.Accent}"
                             Height="12" />
                     <Rectangle Width="55" Opacity="0.75" HorizontalAlignment="Left"
                                Margin="4 4 0 0" />

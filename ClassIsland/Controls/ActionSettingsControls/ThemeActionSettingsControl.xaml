@@ -12,7 +12,7 @@
     d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <StackPanel Orientation="Horizontal">
         <TextBlock Text="修改为" VerticalAlignment="Center" Margin="0 0 4 0"/>
-        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   SelectedIndex="{Binding Settings.Value}"
                   HorizontalContentAlignment="Left">
             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ThemeLightDark}" Text="跟随系统" />

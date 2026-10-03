@@ -13,7 +13,7 @@
     <StackPanel Orientation="Horizontal"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WindowDockingLocationActionSettingsControl}}">
         <TextBlock Text="移动到" VerticalAlignment="Center" Margin="0 0 4 0"/>
-        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   SelectedIndex="{Binding Settings.Value}"
                   HorizontalContentAlignment="Left">
             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowTopLeft}" Text="左上角" />

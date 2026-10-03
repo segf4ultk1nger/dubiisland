@@ -15,8 +15,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="关于"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -27,7 +27,7 @@
     <controls:SettingsPageBase.Resources>
         <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
             <Setter Property="Height" Value="48"/>
-            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="24 0"/>
             <Setter Property="TextElement.FontSize" Value="14"/>
@@ -71,7 +71,7 @@
                                     <RectangleGeometry RadiusX="16" RadiusY="16"
                                                        Rect="0,0,32,32" />
                                 </Grid.Clip>
-                                <Border Background="{DynamicResource MaterialDesignBody}" Opacity="0.1" />
+                                <Border Background="{DynamicResource MahApps.Brushes.ThemeForeground}" Opacity="0.1" />
                                 <Image Source="{Binding AvatarUri}"
                                        RenderOptions.BitmapScalingMode="HighQuality"
                                        Width="32" Height="32">
@@ -171,9 +171,6 @@
                 <models:ContributionLabel Title="HarmonyOS Sans"
                                           Website="https://developer.harmonyos.com/cn/design/resource" 
                                           LicenseUrl="https://github.com/ClassIsland/ClassIsland/blob/dev/ClassIsland/Assets/Fonts/LICENSE.txt"/>
-                <models:ContributionLabel Title="MaterialDesignInXamlToolkit"
-                                          Website="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit"
-                                          LicenseUrl="https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit/blob/master/LICENSE"/>
                 <models:ContributionLabel Title="MdXaml"
                                           Website="https://github.com/whistyun/MdXaml" 
                                           LicenseUrl="https://github.com/whistyun/MdXaml/blob/master/LICENSE.txt"/>
@@ -387,7 +384,7 @@
                         本项目受到
                         <Hyperlink Click="Hyperlink2_OnClick">DuguSand/class_form</Hyperlink>
                         的启发而开发。<LineBreak/>
-                        界面主题和部分控件使用了 MaterialDesignInXamlToolkit 框架。<LineBreak/>
+                        界面主题和部分控件使用了 MahApps.Metro 框架。<LineBreak/>
                         应用字体使用了华为出品的 HarmonyOS Sans。<LineBreak/>
                         感谢协助本应用测试的同学。<LineBreak/>
                         感谢<commands:NavHyperlink CommandParameter="https://forum.smart-teach.cn/">智教联盟</commands:NavHyperlink>提供服务器资源，<commands:NavHyperlink CommandParameter="https://xiaowuap.com/">吴恩泽</commands:NavHyperlink>提供 TTS、遥测等服务资源。<LineBreak/>

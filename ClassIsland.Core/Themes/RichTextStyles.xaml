@@ -18,9 +18,9 @@
     <Style x:Key="MarkdownQuoteStyle" TargetType="Section">
         <Setter Property="Margin" Value="0 0 0 16"/>
         <Setter Property="Padding" Value="16 0 0 0"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignBodyLight}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray}"/>
         <Setter Property="BorderThickness" Value="4 0 0 0"/>
-        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray}"/>
     </Style>
 
     <system:Double x:Key="MarkdownImageMaxWidth">700</system:Double>
@@ -36,29 +36,29 @@
 
     <Style x:Key="MarkdownHeadline1Style" TargetType="Paragraph">
         <Setter Property="Margin" Value="0, 0, 0, 16"/>
-        <Setter Property="Foreground"  Value="{DynamicResource MaterialDesignBody}" />
+        <Setter Property="Foreground"  Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="FontSize"    Value="32"/>
         <Setter Property="LineHeight" Value="1.25"/>
         <Setter Property="FontWeight"  Value="SemiBold" />
-        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
         <Setter Property="Padding" Value="0 0 0 4.8"/>
         <Setter Property="BorderThickness" Value="0 0 0 1"/>
     </Style>
 
     <Style x:Key="MarkdownHeadline2Style" TargetType="Paragraph">
         <Setter Property="Margin" Value="0, 24, 0, 16"/>
-        <Setter Property="Foreground"  Value="{DynamicResource MaterialDesignBody}" />
+        <Setter Property="Foreground"  Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="FontSize"    Value="24"/>
         <Setter Property="FontWeight"  Value="SemiBold" />
         <Setter Property="LineHeight" Value="1.25"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
         <Setter Property="Padding" Value="0 0 0 4.8"/>
         <Setter Property="BorderThickness" Value="0 0 0 1"/>
     </Style>
 
     <Style x:Key="MarkdownHeadline3Style" TargetType="Paragraph">
         <Setter Property="Margin" Value="0, 24, 0, 16"/>
-        <Setter Property="Foreground"  Value="{DynamicResource MaterialDesignBody}" />
+        <Setter Property="Foreground"  Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="FontSize"    Value="20" />
         <Setter Property="FontWeight"  Value="Medium" />
         <Setter Property="LineHeight" Value="1.25"/>
@@ -66,7 +66,7 @@
 
     <Style x:Key="MarkdownHeadline4Style" TargetType="Paragraph">
         <Setter Property="Margin" Value="0, 24, 0, 16"/>
-        <Setter Property="Foreground"  Value="{DynamicResource MaterialDesignBody}" />
+        <Setter Property="Foreground"  Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
         <Setter Property="FontSize"    Value="16"/>
         <Setter Property="FontWeight"  Value="Regular" />
         <Setter Property="LineHeight" Value="1.25"/>
@@ -92,7 +92,7 @@
     <Style TargetType="Table" >
         <Setter Property="CellSpacing" Value="0"/>
         <Setter Property="BorderThickness" Value="0.5"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignBody}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
     </Style>
 
     <Style TargetType="TableRowGroup">
@@ -105,11 +105,11 @@
 
     <Style TargetType="TableCell">
         <Setter Property="BorderThickness" Value="0.5"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignBody}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         <Setter Property="Padding" Value="8"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
-                <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground
 }"/>
             </DataTrigger>
         </Style.Triggers>
@@ -118,10 +118,10 @@
     <Style x:Key="HyperlinkBaseStyle" TargetType="Hyperlink">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightBrush}"></Setter>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent3}"></Setter>
             </Trigger>
         </Style.Triggers>
-        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <!-- <Setter Property="Command" Value="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"/> -->
     </Style>
     

@@ -12,8 +12,8 @@
       xmlns:system="clr-namespace:System;assembly=System.Runtime"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -36,7 +36,7 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Margin="0 0 8 0">
-                    <Border BorderBrush="{DynamicResource MaterialDesignBody}" BorderThickness="8" CornerRadius="4" VerticalAlignment="Center" Height="220">
+                    <Border BorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}" BorderThickness="8" CornerRadius="4" VerticalAlignment="Center" Height="220">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -147,7 +147,7 @@
                                     Description="窗口在屏幕上的层级。置底则会显示在所有窗口的后方，置顶则将显示在所有窗口的前方。">
                 <ci:SettingsCard.Switcher>
                     <ComboBox SelectedIndex="{Binding SettingsService.Settings.WindowLayer, Mode=TwoWay}"
-                              Foreground="{DynamicResource MaterialDesignBody}">
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <ComboBoxItem>
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.LayersMinus}" Text="置底" />
                         </ComboBoxItem>
@@ -162,10 +162,10 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=OneWay}"
-                          TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveDown}"
-                                                  Foreground="{DynamicResource MaterialDesignBody}"
+                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="指针移入淡化"
                                                   Description="启用后，在鼠标移入或触屏点击主界面区域时，将淡化主界面。"
                                                   IsOn="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=TwoWay}"
@@ -186,7 +186,7 @@
                                     </DockPanel>
                                 </Grid>
                             </Border>
-                            <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0 0 0 4">
+                            <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0 0 0 4">
                                 <Grid TextElement.FontSize="13">
                                     <DockPanel Margin="8 4 4 4">
                                         <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.InfoCircleOutline}"
@@ -217,7 +217,7 @@
                                              Width="100"
                                              IsEditable="True"
                                              Text="{Binding SettingsService.Settings.TouchInFadingDurationMs, Converter={StaticResource IntToStringConverter}}"
-                                             Foreground="{DynamicResource MaterialDesignBody}">
+                                             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <system:String>0</system:String>
                                         <system:String>1500</system:String>
                                         <system:String>3000</system:String>
@@ -229,7 +229,7 @@
 
                             <!-- 反转指针移入淡化 -->
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveUp}"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="反转指针移入淡化"
                                                 Description="启用后，将默认淡化主界面，使主界面仅在鼠标移入时显示。此开关不影响隐藏主界面。"
                                                 IsOn="{Binding SettingsService.Settings.IsMouseInFadingReversed, Mode=TwoWay}"

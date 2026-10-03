@@ -248,7 +248,7 @@
 
     <ci:ColorToColorPickerBrushConverter x:Key="ColorToColorPickerBrushConverter" />
     <Style TargetType="Border" x:Key="BackgroundBorderStyle" BasedOn="{StaticResource DockingStyle}">
-        <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding ViewModel.Settings.IsCustomBackgroundColorEnabled, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}" Value="True">
                 <Setter Property="Background" Value="{Binding ViewModel.Settings.BackgroundColor, Converter={StaticResource ColorToColorPickerBrushConverter}, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}"/>
@@ -302,7 +302,7 @@
                     Height="{DynamicResource IslandContainerHeight}"
                     SnapsToDevicePixels="True"
                     ClipToBounds="True">
-                    <Border x:Name="BackgroundBorderOverlayMask" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                    <Border x:Name="BackgroundBorderOverlayMask" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                         <Border.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform />
@@ -339,7 +339,7 @@
                                          Value="{Binding NotificationProgressBarValue, RelativeSource={RelativeSource AncestorType=classIsland:MainWindow}}"
                                          x:Name="OverlayTimeProgressBar"
                                          Height="{Binding Height, ElementName=PART_GridWrapper}"
-                                         Foreground="{DynamicResource MaterialDesignBody}"
+                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                          Background="Transparent"
                                          BorderBrush="Transparent"
                                          Opacity="0.16">
@@ -352,7 +352,7 @@
                     </Grid>
 
                     <!-- Mask -->
-                    <Border x:Name="OverlayMask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                    <Border x:Name="OverlayMask" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" SnapsToDevicePixels="True" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                         <Border.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform />

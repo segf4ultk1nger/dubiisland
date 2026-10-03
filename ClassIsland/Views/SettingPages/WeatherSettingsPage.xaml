@@ -18,8 +18,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="天气"
       d:DataContext="{d:DesignInstance local:WeatherSettingsPage}"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -122,13 +122,13 @@
                                            VerticalAlignment="Center"
                                            Source="{Binding Images[icon]}" />
                                     <TextBlock VerticalAlignment="Center"
-                                               Foreground="{DynamicResource MaterialDesignBody}">
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Run Text="{Binding Title}" />
                                     </TextBlock>
                                 </StackPanel>
                             </Expander.Header>
                             <TextBlock Text="{Binding Detail}" TextWrapping="Wrap"
-                                       Foreground="{DynamicResource MaterialDesignBodyLight}"
+                                       Foreground="{DynamicResource MahApps.Brushes.Gray}"
                                        FontSize="12"
                                        Margin="32 0 24 0" />
                         </Expander>
@@ -142,10 +142,10 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="True"
-                          TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Earth}"
-                                                  Foreground="{DynamicResource MaterialDesignBody}"
+                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="天气位置"
                                                   Description="设置 ClassIsland 用于查询天气的位置信息及获取这些位置信息的方式。"
                                                   Margin="-12 0">
@@ -179,7 +179,7 @@
                                     <Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.EditOutline}}" ToolTip="编辑"
                                             Margin="6 0 0 0"
                                             Click="ButtonEditCurrentCity_OnClick"
-                                            Foreground="{DynamicResource PrimaryHueMidBrush}">
+                                            Foreground="{DynamicResource MahApps.Brushes.Accent}">
                                         <Button.Style>
                                             <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                                                 <Style.Triggers>
@@ -252,7 +252,7 @@
                                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                 Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.CrosshairsGps}}"
                                                 ToolTip="定位"
-                                                Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                 Click="ButtonGetCurrentPos_OnClick" />
                                     </StackPanel>
                                 </controls1:SettingsControl.Switcher>
@@ -272,10 +272,10 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="True"
-                          TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.FilterOutline}"
-                                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                    Header="排除的气象预警"
                                                    HasSwitcher="False"
                                                    Description="包含以下字符串的预警将不会显示，一行一条排除项。"
@@ -300,7 +300,7 @@
                                     IsOn="{Binding SettingsService.Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}">
                 <controls1:SettingsCard.Switcher>
                     <Grid>
-                        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   ItemsSource="{x:Static services:IWeatherService.RegisteredTemplates}"
                                   HorizontalContentAlignment="Left"
                                   MinWidth="120"

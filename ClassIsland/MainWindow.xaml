@@ -21,7 +21,7 @@
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
         TextElement.FontWeight="{Binding ViewModel.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
         TextElement.FontSize="14"
         d:DataContext="{d:DesignInstance local:MainWindow}"
@@ -76,7 +76,7 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="Border" x:Key="BackgroundBorderStyle" BasedOn="{StaticResource DockingStyle}">
-            <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}" />
+            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ViewModel.Settings.IsCustomBackgroundColorEnabled}" Value="True">
                     <Setter Property="Background" Value="{Binding ViewModel.Settings.BackgroundColor, Converter={StaticResource ColorToColorPickerBrushConverter}}"/>

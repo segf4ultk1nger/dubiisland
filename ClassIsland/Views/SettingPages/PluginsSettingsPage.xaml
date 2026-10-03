@@ -19,8 +19,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="插件"
       d:DataContext="{d:DesignInstance local:PluginsSettingsPage}"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -198,7 +198,7 @@
 …
 </ToggleButton>
 <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
 
                         <StackPanel ButtonBase.Click="ButtonBase_OnClick">
                             <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.PackageOutline}}" Header="打包插件" Click="MenuItemPackPlugin_OnClick"/>
@@ -241,12 +241,12 @@
                                             <Style.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
                                                     <Setter Property="Foreground"
-                                                            Value="{DynamicResource PrimaryHueLightBrush}">
+                                                            Value="{DynamicResource MahApps.Brushes.Accent3}">
                                                     </Setter>
                                                 </Trigger>
                                             </Style.Triggers>
                                             <Setter Property="Foreground"
-                                                    Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                    Value="{DynamicResource MahApps.Brushes.Accent}" />
                                             <Setter Property="ToolTipService.Placement" Value="Mouse" />
                                         </Style>
                                     </mdxaml:MarkdownScrollViewer.Resources>
@@ -485,7 +485,7 @@
 …
 </ToggleButton>
 <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding ViewModel.IsPluginMarketOperationsPopupOpened, RelativeSource={RelativeSource FindAncestor, AncestorType=local:PluginsSettingsPage}, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
 
                                 <StackPanel ButtonBase.Click="ButtonBase2_OnClick">
                                     <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Reload}}" Header="从缓存重载插件源" 
@@ -513,7 +513,7 @@
                             </Button>
 
                         </DockPanel>
-                        <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Visibility="{Binding PluginMarketService.IsLoadingPluginSource, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Visibility="{Binding PluginMarketService.IsLoadingPluginSource, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid>
                                 <ProgressBar VerticalAlignment="Stretch"
                                              Height="28"
@@ -755,7 +755,7 @@
                 </Grid>
             </controls1:ListDetailView.RightContent>
         </controls1:ListDetailView>
-        <Border Background="{DynamicResource MaterialDesignPaper}"
+        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                 Visibility="{Binding SettingsService.Settings.IsPluginMarketWarningVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ScrollViewer>
                 <StackPanel VerticalAlignment="Center"
@@ -812,7 +812,7 @@
         </Border>
         <Grid Grid.Row="0"
               Visibility="{Binding ViewModel.IsDragEntering, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Border Background="{DynamicResource MaterialDesignBackground}"
+            <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                     Opacity="0.75"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <ciCore:IconText IconSize="64" Kind="{x:Static ciCore:IconGlyphs.FileImport}"

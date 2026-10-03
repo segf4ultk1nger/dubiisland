@@ -65,10 +65,10 @@ public partial class ExcelExportWindow
     private void UpdateChartStyle()
     {
         var rgcs = ControlAppearanceStyle.CreateDefaultControlStyle();
-        var primary = (SolidColorBrush)FindResource("PrimaryHueMidBrush");
-        var body = (SolidColorBrush)FindResource("MaterialDesignBody");
-        var paper = (SolidColorBrush)FindResource("MaterialDesignPaper");
-        var divider = (SolidColorBrush)FindResource("MaterialDesignDivider");
+        var primary = (SolidColorBrush)FindResource("MahApps.Brushes.Accent");
+        var body = (SolidColorBrush)FindResource("MahApps.Brushes.ThemeForeground");
+        var paper = (SolidColorBrush)FindResource("MahApps.Brushes.ThemeBackground");
+        var divider = (SolidColorBrush)FindResource("MahApps.Brushes.Gray7");
         var c = primary.Color;
         var sc = new SolidColor(c.R, c.G, c.B);
         var sca = SolidColor.FromArgb((byte)30, c.R, c.G, c.B);

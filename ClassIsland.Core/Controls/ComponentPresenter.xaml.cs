@@ -191,13 +191,13 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
             var brush = new SolidColorBrush(Settings.ForegroundColor);
             SetValue(Control.ForegroundProperty, brush);
             SetValue(TextElement.ForegroundProperty, brush);
-            Resources["MaterialDesignBody"] = brush;
+            Resources["MahApps.Brushes.ThemeForeground"] = brush;
         }
         else
         {
-            if (Resources.Contains("MaterialDesignBody"))
+            if (Resources.Contains("MahApps.Brushes.ThemeForeground"))
             {
-                Resources.Remove("MaterialDesignBody");
+                Resources.Remove("MahApps.Brushes.ThemeForeground");
             }
             SetValue(Control.ForegroundProperty, DependencyProperty.UnsetValue);
             SetValue(TextElement.ForegroundProperty, DependencyProperty.UnsetValue);

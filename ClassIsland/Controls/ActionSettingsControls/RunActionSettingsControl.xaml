@@ -32,7 +32,7 @@
 …
 </ToggleButton>
 <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="True" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
 
             <StackPanel Margin="4 -6 4 6">
                 <TextBox Text="{Binding Settings.Args, Mode=TwoWay}"

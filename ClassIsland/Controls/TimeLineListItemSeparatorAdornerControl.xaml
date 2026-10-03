@@ -12,10 +12,10 @@
     <Grid>
         <Grid SnapsToDevicePixels="True">
             <Border Margin="-1" BorderThickness="1"
-                    BorderBrush="{DynamicResource MaterialDesignPaper}"/>
+                    BorderBrush="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
             <Border Margin="-3" BorderThickness="2" 
                     CornerRadius="1"
-                    BorderBrush="{DynamicResource MaterialDesignBody}">
+                    BorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}">
 
             </Border>
             <Grid Margin="-16" Visibility="{Binding IsReadOnly, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TimeLineListItemSeparatorAdornerControl}, Converter={StaticResource InverseBoolToVisConverter}}">
@@ -23,7 +23,7 @@
                     <Thumb.Template>
                         <ControlTemplate>
                             <Ellipse Width="16" Height="16" 
-                                     Stroke="{DynamicResource PrimaryHueMidBrush}">
+                                     Stroke="{DynamicResource MahApps.Brushes.Accent}">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
                                         <Setter Property="StrokeThickness" Value="2"/>
@@ -31,7 +31,7 @@
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsDragging, RelativeSource={RelativeSource FindAncestor, AncestorType=Thumb}}"
                                                          Value="True">
-                                                <Setter Property="Fill" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                                 <Setter Property="StrokeThickness" Value="0"/>
                                             </DataTrigger>
                                         </Style.Triggers>

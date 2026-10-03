@@ -6,7 +6,7 @@
              xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
-             Foreground="{DynamicResource MaterialDesignBody}"
+             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
              FontFamily="{StaticResource HarmonyOsSans}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

@@ -19,11 +19,11 @@
                       HorizontalContentAlignment="Stretch"
                       dd:DragDrop.IsDragSource="True"
                       dd:DragDrop.IsDropTarget="True"
-                      dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}"
+                      dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}"
                       HorizontalAlignment="Stretch">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                         <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="调整行动顺序"
                                      Margin="4 0"
                                      IconMargin="2"
@@ -105,10 +105,10 @@
                                         </controls:IconText>
 </ToggleButton>
 <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="True" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
 <StackPanel MaxWidth="650">
                                         <TextBlock Text="上次运行此行动时出现错误。"
-                                                   Foreground="{DynamicResource SecondaryHueMidBrush}"
+                                                   Foreground="{DynamicResource MahApps.Brushes.Accent2}"
                                                    Margin="10 10 0 -6" />
                                         <TextBox Text="{Binding Exception, Mode=OneWay}"
                                                  TextWrapping="WrapWithOverflow"

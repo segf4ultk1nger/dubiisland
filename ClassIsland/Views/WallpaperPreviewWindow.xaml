@@ -11,8 +11,8 @@
         Title="壁纸提取结果预览" Height="450" Width="800"
         WindowStartupLocation="CenterOwner"
         d:DataContext="{d:DesignInstance local:WallpaperPreviewWindow}"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
@@ -25,7 +25,7 @@
                StretchDirection="Both"/>
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Bottom">
-            <Border Background="{DynamicResource MaterialDesignPaper}"
+            <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                     Opacity="0.8"/>
             <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                     Click="ButtonRefresh_OnClick"
@@ -54,7 +54,7 @@
                 d:Visibility="Visible"
                 Cursor="Wait"
                 x:Name="LoadingOverlay"
-                Background="{DynamicResource MaterialDesignPaper}">
+                Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>

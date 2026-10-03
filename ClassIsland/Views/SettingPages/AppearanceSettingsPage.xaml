@@ -11,8 +11,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="外观"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -103,7 +103,7 @@
                                                            Description="控制应用的明暗主题。">
                 <controls1:SettingsCard.Switcher>
                     <Grid>
-                        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   SelectedIndex="{Binding SettingsService.Settings.Theme}"
                                   HorizontalContentAlignment="Left">
                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ThemeLightDark}" Text="跟随系统" />
@@ -118,7 +118,7 @@
                                                            Description="控制应用选取主题色的途径。">
                 <controls1:SettingsCard.Switcher>
                     <Grid>
-                        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   SelectionChanged="ButtonUpdateWallpaper_OnClick"
                                   HorizontalContentAlignment="Left"
                                   SelectedIndex="{Binding SettingsService.Settings.ColorSource}">
@@ -237,10 +237,10 @@
                 <Border Margin="0 6 0 6">
                     <Expander Background="Transparent"
                                                       IsExpanded="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=OneWay}"
-                                                      TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                                      TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.RefreshAuto}"
-                                                                              Foreground="{DynamicResource MaterialDesignBody}"
+                                                                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                               Header="启用自动提取主题色"
                                                                               Description="若启用，将会在每分钟刷新一次壁纸主题色，适用于会随时间大幅变化主题色的动态壁纸。"
                                                                               IsOn="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=TwoWay}"
@@ -256,7 +256,7 @@
                                     <Grid>
                                         <controls1:NumbericTextBox MaxValue="36000" MinValue="0"
                                                                    Width="150"
-                                                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                    Style="{StaticResource MahApps.Styles.TextBox}"
                                                                    Text="{Binding SettingsService.Settings.WallpaperAutoUpdateIntervalSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
                                     </Grid>
@@ -286,7 +286,7 @@
                                                             ToolTip="浏览…"
                                                             DockPanel.Dock="Right"
                                                             Click="ButtonBrowseWindows_OnClick" />
-                            <TextBox Foreground="{DynamicResource MaterialDesignBody}"
+                            <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                              Text="{Binding SettingsService.Settings.WallpaperClassName}" />
                         </DockPanel>
                     </controls1:SettingsCard.Switcher>
@@ -298,7 +298,7 @@
                     <controls1:SettingsCard.Switcher>
                         <Grid>
                             <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="150"
-                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                        Style="{StaticResource MahApps.Styles.TextBox}"
                                                        Text="{Binding SettingsService.Settings.TargetLightValue, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
                         </Grid>
@@ -366,7 +366,7 @@
                 <controls1:SettingsCard Margin="0 6" IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔" Description="自动从屏幕上提取主题色时间隔的时间，建议设为10秒左右。">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
-                            <controls1:NumbericTextBox MaxValue="300" MinValue="0" Width="100" Foreground="{DynamicResource MaterialDesignBody}" Style="{StaticResource MahApps.Styles.TextBox}"
+                            <controls1:NumbericTextBox MaxValue="300" MinValue="0" Width="100" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Style="{StaticResource MahApps.Styles.TextBox}"
                                                        Text="{Binding SettingsService.Settings.WallpaperAutoUpdateIntervalSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}"/>
                         </Grid>
                     </controls1:SettingsCard.Switcher>
@@ -375,7 +375,7 @@
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰" Description="取色时为亮度更接近此值的颜色赋予更高的权重。（默认值：0.6）">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
-                            <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="100" Foreground="{DynamicResource MaterialDesignBody}" Style="{StaticResource MahApps.Styles.TextBox}"
+                            <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="100" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Style="{StaticResource MahApps.Styles.TextBox}"
                                                        Text="{Binding SettingsService.Settings.TargetLightValue, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
                         </Grid>
                     </controls1:SettingsCard.Switcher>
@@ -389,7 +389,7 @@
                 <controls1:SettingsCard.Switcher>
                     <Grid>
                         <ComboBox ItemsSource="{Binding ViewModel.FontFamilies}"
-                                  Foreground="{DynamicResource MaterialDesignBody}"
+                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   SelectedItem="{Binding SettingsService.Settings.MainWindowFont, Converter={StaticResource StringToFontFamilyConverter}}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
@@ -420,7 +420,7 @@
                     <Grid>
                         <ComboBox
                             SelectedItem="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
-                            Foreground="{DynamicResource MaterialDesignBody}">
+                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding}" FontWeight="{Binding}"
@@ -450,10 +450,10 @@
             <!-- 字体大小 -->
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
-                          TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.FontSize}"
-                                                  Foreground="{DynamicResource MaterialDesignBody}"
+                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="字体大小"
                                                   Description="调整主界面上各类字体的大小。"
                                                   HasSwitcher="False"

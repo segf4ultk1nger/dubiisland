@@ -25,7 +25,7 @@
                       Content="显示时间点附加信息"
                       Margin="0 0 0 6" />
             <!-- 要显示的附加信息 -->
-            <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+            <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                       SelectedIndex="{Binding Settings.ExtraInfoType}"
                       HorizontalContentAlignment="Stretch"
                       Style="{StaticResource MahApps.Styles.ComboBox}"
@@ -57,7 +57,7 @@
            MinWidth="100"
            Margin="0 0 0 6"
            mah:TextBoxHelper.Watermark="显示精确倒计时时长"
-           Foreground="{DynamicResource MaterialDesignBody}"
+           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
            Style="{StaticResource MahApps.Styles.TextBox}"
            Text="{Binding Settings.ExtraInfo4ShowSecondsSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
         <WrapPanel>
@@ -69,7 +69,7 @@
             <controls1:NumbericTextBox MaxValue="36000" MinValue="0"
                                       MinWidth="100"
                                       Visibility="{Binding Settings.IsCountdownEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                       Style="{StaticResource MahApps.Styles.TextBox}"
                                       Text="{Binding Settings.CountdownSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
         </WrapPanel>

@@ -139,7 +139,7 @@
                     <TabItem>
                         <Grid VerticalAlignment="Bottom">
                             <Border Height="20"
-                                    Background="{DynamicResource PrimaryHueMidBrush}"
+                                    Background="{DynamicResource MahApps.Brushes.Accent}"
                                     ClipToBounds="True"
                                     BorderThickness="1"
                                     Padding="8 0"
@@ -148,7 +148,7 @@
                             </Border>
                             <Border Height="20"
                                     ClipToBounds="True"
-                                    BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                                    BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                                     BorderThickness="1"
                                     Padding="8 0"
                                     CornerRadius="12.5">
@@ -164,7 +164,7 @@
 
             </StackPanel>
         </StackPanel>
-        <Line VerticalAlignment="Center" Stroke="{DynamicResource MaterialDesignBody}" StrokeThickness="2"
+        <Line VerticalAlignment="Center" Stroke="{DynamicResource MahApps.Brushes.ThemeForeground}" StrokeThickness="2"
               HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="25" Opacity="0.8">
             <Line.Style>
                 <Style TargetType="Line">

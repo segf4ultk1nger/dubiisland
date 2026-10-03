@@ -27,8 +27,8 @@
                    xmlns:action="clr-namespace:ClassIsland.Core.Controls.Action;assembly=ClassIsland.Core"
                    mc:Ignorable="d" 
                    d:DesignHeight="450" d:DesignWidth="800"
-                   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                   Background="{DynamicResource MaterialDesignPaper}"
+                   TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                   Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                    TextElement.FontWeight="Regular"
                    TextElement.FontSize="14"
                    FontFamily="{StaticResource HarmonyOsSans}"
@@ -211,10 +211,10 @@
                 <Border Padding="14" 
                         Visibility="{Binding IsOverlay, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Margin="0 8 0 0"
-                        BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                        BorderBrush="{DynamicResource MahApps.Brushes.Gray7}" 
                         BorderThickness="1" CornerRadius="8">
                     <StackPanel>
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.InfoCircleOutline}" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.InfoCircleOutline}" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
                         <TextBlock TextWrapping="Wrap" FontSize="13" Margin="0 4 0 0">
                             这是一个临时层课表，将在使用过后自动删除。
                         </TextBlock>
@@ -418,7 +418,7 @@
                                         Placement="Mouse"
                                         IsOpen="{Binding ViewModel.IsWeekOffsetSettingsOpen}"
                                         PopupAnimation="Fade">
-                    <Border Background="{DynamicResource MaterialDesignPaper}"
+                    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                             Margin="8"
                             Button.Click="ButtonWeekOffsetSettingsButtons_OnClick">
                         <Border.Effect>
@@ -550,7 +550,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Border Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 -16" Padding="12 8" VerticalAlignment="Bottom" Background="{DynamicResource MaterialDesignPaper}" Visibility="{Binding ViewModel.IsRestartSnackbarActive, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 -16" Padding="12 8" VerticalAlignment="Bottom" Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Visibility="{Binding ViewModel.IsRestartSnackbarActive, Converter={StaticResource BooleanToVisibilityConverter}}">
 <DockPanel>
 <Button DockPanel.Dock="Right" Content="重启" Margin="12 0 0 0" Click="SnackbarRestartMessage_OnActionClick"/>
 <TextBlock Text="切换档案需要重启应用程序。" VerticalAlignment="Center"/>
@@ -841,19 +841,19 @@
                                                                 Margin="2 0"
                                                                 Padding="8 0"
                                                                 VerticalAlignment="Center"
-                                                                BorderBrush="{DynamicResource PrimaryHueMidBrush}">
+                                                                BorderBrush="{DynamicResource MahApps.Brushes.Accent}">
                                                             <Border.Style>
                                                                 <Style TargetType="Border">
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding Value.IsActivated}" Value="True">
-                                                                            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
-                                                                            <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignPaper}"/>
+                                                                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                                                            <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                                                                             <Setter Property="BorderThickness" Value="0"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                     <Setter Property="Background" Value="{x:Null}"/>
                                                                     <Setter Property="BorderThickness" Value="1"/>
-                                                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                                                 </Style>
                                                             </Border.Style>
                                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -948,8 +948,8 @@
                                                                     </Style.Triggers>
                                                                     <Setter Property="Background" Value="{x:Null}"/>
                                                                     <Setter Property="BorderThickness" Value="1"/>
-                                                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBody}"/>
-                                                                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                                    <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                                                                    <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                                                 </Style>
                                                             </Border.Style>
                                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -1032,7 +1032,7 @@
                                                                     StaysOpen="False"
                                                                     AllowsTransparency="True"
                                                                     PopupAnimation="Fade">
-                                                <Border Background="{DynamicResource MaterialDesignPaper}" Width="320"
+                                                <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Width="320"
                                                         Margin="8">
                                                     <Border.Effect>
                                                         <DropShadowEffect BlurRadius="8"
@@ -1244,7 +1244,7 @@
                                                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             DockPanel.Dock="Right"
                                                                             Click="ButtonAddClassPlanFromCompletedTip_OnClick"
-                                                                            Foreground="{DynamicResource MaterialDesignBody}">
+                                                                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="添加课表"/>
                                                                     </Button>
                                                                     <controls1:IconText Kind="{x:Static controls1:IconGlyphs.DoneOutline}" Text="此课表已完成录入。"
@@ -1364,17 +1364,17 @@
                                     </ListBox>
 
                                     <!-- 时间点时长 -->
-                                    <Border HorizontalAlignment="Stretch" VerticalAlignment="Center" TextElement.Foreground="{DynamicResource MaterialDesignBody}" Padding="12 10 12 10" Grid.Row="3" Margin="8 8 6 8" IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
+                                    <Border HorizontalAlignment="Stretch" VerticalAlignment="Center" TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Padding="12 10 12 10" Grid.Row="3" Margin="8 8 6 8" IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                         <StackPanel>
                                             <controls1:NumbericTextBox
                                                 MaxValue="36000" MinValue="0" HorizontalAlignment="Stretch"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Style="{StaticResource MahApps.Styles.TextBox}"
                                                 mah:TextBoxHelper.Watermark="默认上课时间点时长"
                                                 Text="{Binding MainViewModel.Settings.DefaultOnClassTimePointMinutes, Mode=TwoWay, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
                                             <controls1:NumbericTextBox
                                                 MaxValue="36000" MinValue="0" HorizontalAlignment="Stretch"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Style="{StaticResource MahApps.Styles.TextBox}"
                                                 mah:TextBoxHelper.Watermark="默认课间时间点时长"
                                                 Text="{Binding MainViewModel.Settings.DefaultBreakingTimePointMinutes, Mode=TwoWay, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}" />
@@ -1807,7 +1807,7 @@
                                         </StackPanel>
                                     </ScrollViewer>
                                     <Grid Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" 
-                                          Background="{DynamicResource MaterialDesignPaper}">
+                                          Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                                         <Grid.Style>
                                             <Style TargetType="Grid">
                                                 <Style.Triggers>
@@ -1834,7 +1834,7 @@
                                     <!--<Grid Grid.Row="0" Grid.RowSpan="4"
                                           Grid.Column="0" Grid.ColumnSpan="3"
                                           Visibility="{Binding IsActivated, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <Border Background="{DynamicResource MaterialDesignPaper}" Opacity="0.8"/>
+                                        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Opacity="0.8"/>
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <Image Source="/Assets/HoYoStickers/帕姆_震惊.png" Width="78"  Margin="0 0 0 8"
                                                    ToolTip="帕姆_震惊"/>
@@ -2102,7 +2102,7 @@
                                                                     StaysOpen="False"
                                                                     PopupAnimation="Fade"
                                                                     IsOpen="{Binding ViewModel.IsClassPlanTempEditPopupOpen}">
-                                                <Border Background="{DynamicResource MaterialDesignPaper}" Margin="8">
+                                                <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Margin="8">
                                                     <StackPanel Margin="12" Width="250">
                                                         <TextBlock Text="修改课程"
                                                                    Style="{StaticResource Headline5TextBlock}"
@@ -2268,7 +2268,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Sunday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2292,7 +2292,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Monday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2316,7 +2316,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Tuesday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2340,7 +2340,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Wednesday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2364,7 +2364,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Thursday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2388,7 +2388,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Friday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2412,7 +2412,7 @@
                                                                         </Grid.DataContext>
                                                                         <TextBlock Text="{Binding Name}" />
                                                                     </Grid>
-                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource PrimaryHueMidBrush}"
+                                                                    <Ellipse Width="8" Height="8" Fill="{DynamicResource MahApps.Brushes.Accent}"
                                                                              VerticalAlignment="Center" Margin="4 0 0 0"
                                                                              Visibility="{Binding Saturday.IsChangedClass, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue={StaticResource VisibilityCollapsedValue}}"/>
                                                                 </StackPanel>
@@ -2468,7 +2468,7 @@
 
                     </TabControl>
 
-                    <Border Grid.Row="2" Background="{DynamicResource MaterialDesignPaper}" 
+                    <Border Grid.Row="2" Background="{DynamicResource MahApps.Brushes.ThemeBackground}" 
                             Visibility="{Binding ManagementService.Policy.DisableProfileEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
                             <controls1:IconText IconSize="64" Kind="{x:Static controls1:IconGlyphs.Work}" HorizontalAlignment="Center"/>
@@ -2629,9 +2629,9 @@
                                         PopupAnimation="Fade"
 
                                         IsOpen="{Binding ViewModel.IsProfileImportMenuOpened}">
-                                        <Border MenuItem.Click="MenuItemImports_OnClick" Margin="16" Background="{DynamicResource MaterialDesignPaper}" TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+                                        <Border MenuItem.Click="MenuItemImports_OnClick" Margin="16" Background="{DynamicResource MahApps.Brushes.ThemeBackground}" TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                             <StackPanel Margin="0 4">
-                                                <TextBlock Text="导入" Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                <TextBlock Text="导入" Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                            FontWeight="Bold"
                                                            Margin="12 8 8 4" />
                                                 <MenuItem Header="从 Excel 表格导入…"
@@ -2645,7 +2645,7 @@
                                                           Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
                                                           CommandParameter="https://migrate.classisland.tech/" />
                                                 <Separator />
-                                                <TextBlock Text="导出" Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                <TextBlock Text="导出" Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                            FontWeight="Bold"
                                                            Margin="12 8 8 4" />
                                                 <MenuItem Header="导出到 CSES…"
@@ -2676,7 +2676,7 @@
                 </mah:FlyoutsControl>
             </Grid>
         <Grid Visibility="{Binding ViewModel.IsDragEntering, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Border Background="{DynamicResource MaterialDesignBackground}"
+            <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                     Opacity="0.75"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <controls1:IconText IconSize="64" Kind="{x:Static controls1:IconGlyphs.FileImport}"

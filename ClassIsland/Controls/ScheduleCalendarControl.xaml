@@ -133,7 +133,7 @@
                         </VisualStateManager.VisualStateGroups>
                         <Border Background="Transparent"
                                 Grid.Row="0" Grid.RowSpan="2"
-                                BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                BorderBrush="{DynamicResource MahApps.Brushes.Gray7}"
                                 BorderThickness="1 1 0 0 " />
                         
                         <Grid VerticalAlignment="Top" HorizontalAlignment="Right"
@@ -312,7 +312,7 @@
                                     VerticalAlignment="Center"
                                     Focusable="False"
                                     FontWeight="Medium"
-                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     Template="{StaticResource HeaderButtonTemplate}"/>
                             
                             <Button x:Name="PART_PreviousButton"

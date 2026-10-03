@@ -681,12 +681,12 @@ public partial class App : AppBase, IAppHost
                 services.AddSpeechProvider<EdgeTtsService, EdgeTtsSpeechServiceSettingsControl>();
                 services.AddSpeechProvider<GptSoVitsService, GptSovitsSpeechServiceSettingsControl>();
                 // 天气图标模板
-                var materialDesignWeatherIconTemplateDictionary = new ResourceDictionary()
+                var defaultWeatherIconTemplateDictionary = new ResourceDictionary()
                 {
-                    Source = new Uri("pack://application:,,,/ClassIsland;component/Controls/WeatherIcons/MaterialDesignWeatherIconTemplate.xaml")
+                    Source = new Uri("pack://application:,,,/ClassIsland;component/Controls/WeatherIcons/DefaultWeatherIconTemplate.xaml")
                 };
-                services.AddWeatherIconTemplate("classisland.weatherIcons.materialDesign", "Material Design（默认）",
-                    (DataTemplate)materialDesignWeatherIconTemplateDictionary["MaterialDesignWeatherIconTemplate"]!);
+                services.AddWeatherIconTemplate("classisland.weatherIcons.materialDesign", "默认（图标集）",
+                    (DataTemplate)defaultWeatherIconTemplateDictionary["DefaultWeatherIconTemplate"]!);
                 var simpleTextWeatherIconTemplateDictionary = new ResourceDictionary()
                 {
                     Source = new Uri("pack://application:,,,/ClassIsland;component/Controls/WeatherIcons/SimpleTextWeatherIconTemplate.xaml")
@@ -1034,66 +1034,6 @@ public partial class App : AppBase, IAppHost
         catch (Exception e)
         {
             CommonDialog.ShowError($"无法重新启动应用，可能当前运行的实例正在以管理员身份运行。请使用任务管理器终止正在运行的实例，然后再试一次。\n\n{e.Message}");
-        }
-    }
-
-    private void OverrideFocusVisualStyle()
-    {
-        var overwriteList = new List<string>()
-        {
-            "MaterialDesignRaisedButton",
-            "MaterialDesignFlatButton",
-            "MaterialDesignFloatingActionMiniButton",
-            "MaterialDesignPaperButton",
-            "MaterialDesignCheckBox",
-            "MaterialDesignUserForegroundCheckBox",
-            "MaterialDesignComboBoxItemStyle",
-            "MaterialDesignDataGridComboBoxItemStyle",
-            "MaterialDesignDataGridComboBox",
-            "MaterialDesignCardsListBoxItem",
-            "MaterialDesignRadioButton",
-            "MaterialDesignUserForegroundRadioButton",
-            "MaterialDesignTabRadioButton",
-            "MaterialDesignScrollBarButton",
-            "MaterialDesignSnackbarActionButton",
-            "MaterialDesignFilledUniformTabControl",
-            "MaterialDesignSwitchToggleButton",
-            "MaterialDesignSwitchAccentToggleButton"
-        };
-        var v = Resources[SystemParameters.FocusVisualStyleKey];
-        foreach (var k in overwriteList)
-        {
-            var style = (Style?)TryFindResource(k);
-            if (style == null) continue;
-            Setter? targetSetter =
-                DependencyPropertyHelper.FindSetter(style.Setters, FrameworkElement.FocusVisualStyleProperty);
-            Setter? templateSetter = DependencyPropertyHelper.FindSetter(style.Setters, Control.TemplateProperty);
-
-            if (targetSetter != null)
-            {
-                typeof(Setter).GetField("_value", BindingFlags.NonPublic | BindingFlags.Instance)
-                    ?.SetValue(targetSetter, v);
-            }
-
-            if (templateSetter != null)
-            {
-                var template = (ControlTemplate)templateSetter.Value;
-                foreach (var trigger in template.Triggers)
-                {
-                    if (trigger is not Trigger tt)
-                    {
-                        continue;
-                    }
-
-                    var target =
-                        DependencyPropertyHelper.FindSetter(tt.Setters, FrameworkElement.FocusVisualStyleProperty);
-                    if (target != null)
-                    {
-                        typeof(Setter).GetField("_value", BindingFlags.NonPublic | BindingFlags.Instance)
-                            ?.SetValue(target, v);
-                    }
-                }
-            }
         }
     }
 

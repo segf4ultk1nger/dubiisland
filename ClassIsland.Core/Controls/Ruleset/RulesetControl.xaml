@@ -81,10 +81,10 @@
                  HorizontalContentAlignment="Stretch"
                  dd:DragDrop.IsDragSource="True"
                  dd:DragDrop.IsDropTarget="True"
-                 dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}">
+                 dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                         <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="移动"
                                            Margin="4 0"
                                            IconMargin="2"
@@ -95,7 +95,7 @@
             </dd:DragDrop.EffectMoveAdornerTemplate>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{DynamicResource MaterialDesignToolBarBackground}"
+                    <Border Background="{DynamicResource MahApps.Brushes.Control.Background}"
                             Padding="8"
                             CornerRadius="2"
                             Margin="-4">
@@ -149,10 +149,10 @@
                             <ItemsControl Grid.Row="1" ItemsSource="{Binding Rules}"
                                           dd:DragDrop.IsDragSource="True"
                                           dd:DragDrop.IsDropTarget="True"
-                                          dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}">
+                                          dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}">
                                 <dd:DragDrop.EffectMoveAdornerTemplate>
                                     <DataTemplate>
-                                        <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                                        <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                                             <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="移动"
                                                                Margin="4 0"
                                                                IconMargin="2"

@@ -17,8 +17,8 @@
                            mc:Ignorable="d"
                            d:DesignHeight="450" d:DesignWidth="800"
                            Title="提醒"
-                           TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                           Background="{DynamicResource MaterialDesignPaper}"
+                           TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                           Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                            FontFamily="{StaticResource HarmonyOsSans}"
                            TextElement.FontWeight="Regular"
                            TextElement.FontSize="14"
@@ -36,7 +36,7 @@
         <ci:BindingProxy x:Key="DataProxy"
                          Data="{Binding}"/>
 
-        <ScrollViewer Background="{DynamicResource MaterialDesignPaper}"
+        <ScrollViewer Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                       x:Key="NotificationSettingsDrawer"
                       DataContext="{Binding ViewModel.SelectedRegisterInfo}"
                       Width="500">
@@ -49,7 +49,7 @@
 
                 <!-- 启用提醒语音 -->
                 <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.TextToSpeech}"
-                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                         Header="启用提醒语音"
                                         Description="在发出提醒时用语音播报提醒内容。"
                                         IsOn="{Binding ProviderSettings.IsSpeechEnabled, Mode=TwoWay}" />
@@ -57,7 +57,7 @@
                 <!-- 启用提醒强调特效 -->
                 <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
                                         Margin="0 6 0 0"
-                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                         Header="启用提醒强调特效"
                                         IsEnabled="{Binding Data.SettingsService.Settings.IsCompatibleWindowTransparentEnabled, Converter={StaticResource InvertBooleanConverter}, Source={StaticResource DataProxy}}"
                                         Description="启用后，发出提醒时会播放全屏强调特效。"
@@ -67,10 +67,10 @@
                 <Border Margin="0 6 0 0">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding ProviderSettings.IsNotificationSoundEnabled, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.VolumeHigh}"
-                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                        Header="启用提醒音效"
                                                        Description="启用后，发出提醒时会播放音效。"
                                                        IsOn="{Binding ProviderSettings.IsNotificationSoundEnabled, Mode=TwoWay}"
@@ -81,7 +81,7 @@
                             <!-- 自定义音效 -->
                             <controls2:SettingsControl
                                 IconGlyph="{x:Static controls2:IconGlyphs.FileMusicOutline}" Header="自定义音效"
-                                Foreground="{DynamicResource MaterialDesignBody}"
+                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                 Description="设置自定义音效，留空以禁用。如果音效长于提醒显示时间，多出来的部分会被截断。">
                                 <controls2:SettingsControl.Switcher>
                                     <StackPanel Orientation="Horizontal"
@@ -105,7 +105,7 @@
                 <!-- 置顶提醒 -->
                 <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
                                         Margin="0 6 0 0"
-                                        Foreground="{DynamicResource MaterialDesignBody}"
+                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                         Header="置顶提醒"
                                         Description="在发出提醒时强制显示并置顶主界面。"
                                         IsOn="{Binding ProviderSettings.IsNotificationTopmostEnabled, Mode=TwoWay}" />
@@ -154,12 +154,12 @@
                                  dd:DragDrop.IsDropTarget="True"
                                  SelectionChanged="SelectorMain_OnSelected"
                                  HorizontalContentAlignment="Stretch"
-                                 dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}"
+                                 dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}"
                                  SelectedItem="{Binding ViewModel.NotificationSettingsSelectedProvider, Mode=TwoWay}">
 
                             <dd:DragDrop.EffectMoveAdornerTemplate>
                                 <DataTemplate>
-                                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                                    <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                                         <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ArrowUpDown}" Text="调整优先级"
                                                             Margin="4 0"
                                                             IconMargin="2"
@@ -271,18 +271,18 @@
                     </TabItem>
 
                     <TabItem Header="高级设置">
-                        <ScrollViewer Background="{DynamicResource MaterialDesignPaper}">
+                        <ScrollViewer Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                             <StackPanel Margin="0 0 0 8">
                                 
                                 <!-- 启用提醒语音 -->
                                 <Border>
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationSpeech, Mode=OneWay}"
-                                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                               Margin="0 0 0 0">
                                         <Expander.Header>
                                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.TextToSpeech}"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许启用提醒语音"
                                                                        Description="在发出提醒时用语音播报提醒内容。"
                                                                        IsOn="{Binding SettingsService.Settings.AllowNotificationSpeech, Mode=TwoWay}"
@@ -378,10 +378,10 @@
                                 <Border Margin="0 6 0 0">
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationEffect, Mode=OneWay}"
-                                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Expander.Header>
                                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许启用提醒强调特效"
                                                                        Description="启用后，发出提醒时会播放全屏强调特效。"
                                                                        IsOn="{Binding SettingsService.Settings.AllowNotificationEffect, Mode=TwoWay}"
@@ -397,7 +397,7 @@
                                             <!-- 提醒特效渲染精度 -->
                                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}" Header="提醒特效渲染精度"
                                                                        Margin="0 0 0 6"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Description="提醒特效渲染时的精度，使用较低的精度性能可以获得较好的性能。">
                                                 <controls2:SettingsControl.Switcher>
                                                     <Slider Minimum="0.1" Maximum="1.5"
@@ -412,7 +412,7 @@
 
                                             <!-- 在独立线程上呈现特效 -->
                                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.ViewQuiltOutline}" Header="在独立线程上呈现特效"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        IsOn="{Binding SettingsService.Settings.NotificationUseStandaloneEffectUiThread, Mode=TwoWay}"
                                                                        Description="启用后，将使用独立的 UI 线程呈现提醒特效，可能可以提升特效流畅性。如果出现呈现问题，可以尝试关闭此选项。">
                                             </controls2:SettingsControl>
@@ -424,10 +424,10 @@
                                 <Border Margin="0 6 0 0">
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationSound, Mode=OneWay}"
-                                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Expander.Header>
                                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.VolumeHigh}"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许启用提醒音效"
                                                                        Description="启用后，发出提醒时会播放音效。"
                                                                        IsOn="{Binding SettingsService.Settings.AllowNotificationSound, Mode=TwoWay}"
@@ -469,7 +469,7 @@
                                             <!-- 自定义音效 -->
                                             <controls2:SettingsControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
                                                                        IconGlyph="{x:Static controls2:IconGlyphs.FileMusicOutline}" Header="自定义音效"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Description="设置自定义音效，留空以禁用。如果音效长于提醒显示时间，多出来的部分会被截断。">
                                                 <controls2:SettingsControl.Switcher>
                                                     <StackPanel Orientation="Horizontal"
@@ -496,11 +496,11 @@
                                 <Border Margin="0 6 0 0">
                                     <Expander Background="Transparent"
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationTopmost, Mode=OneWay}"
-                                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Expander.Header>
                                             <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersPlus}"
                                                                        Margin="-12 0"
-                                                                       Foreground="{DynamicResource MaterialDesignBody}"
+                                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许置顶提醒"
                                                                        Description="在发出提醒时置顶提醒"
                                                                        IsOn="{Binding SettingsService.Settings.AllowNotificationTopmost, Mode=TwoWay}" />
@@ -570,7 +570,7 @@
                                 </Grid.ColumnDefinitions>
                                 <ToggleButton Grid.Column="0" Margin="0 0 6 0" VerticalAlignment="Center" IsChecked="{Binding ProviderSettings.IsSettingsEnabled}"/>
                                 <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                        Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                         Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.CogOutline}}"
                                         VerticalAlignment="Center"
                                         ToolTip="查看提醒高级设置…"

@@ -8,8 +8,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HomePage"
       Margin="8"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -20,10 +20,10 @@
         <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
             <Style.Resources>
                 <Style TargetType="ciCore:IconText">
-                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"></Setter>
+                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"></Setter>
                 </Style>
             </Style.Resources>
-            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="8 6"/>
             <Setter Property="TextElement.FontSize" Value="14"/>

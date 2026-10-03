@@ -12,7 +12,7 @@
         Height="500" Width="500"
         WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance local:AuthorizeWindow}"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" 
@@ -20,7 +20,7 @@
         SizeToContent="Height"
         MinHeight="300"
         MaxHeight="700"
-        Background="{DynamicResource MaterialDesignPaper}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         Title="ClassIsland" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:MyWindow.CommandBindings>
@@ -75,10 +75,10 @@
                  SelectedItem="{Binding ViewModel.SelectedCredentialItem}"
                  dd:DragDrop.IsDragSource="{Binding ViewModel.IsEditingMode}"
                  dd:DragDrop.IsDropTarget="{Binding ViewModel.IsEditingMode}"
-                 dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}">
+                 dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowUpDown}" Text="调整顺序"
                                             Margin="4 0"
                                             IconMargin="2"
@@ -100,7 +100,7 @@
                         </Grid.ColumnDefinitions>
 
                         <ciCore:IconText IconSize="20" Grid.Column="0" Grid.Row="0"
-                                                 Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                 Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                  Kind="{Binding ProviderInfo.IconKind}"
                                                  VerticalAlignment="Center"
                                                  HorizontalAlignment="Center"

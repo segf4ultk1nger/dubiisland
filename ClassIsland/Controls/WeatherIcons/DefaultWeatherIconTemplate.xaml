@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     xmlns:controls="clr-namespace:ClassIsland.Controls" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
-    <DataTemplate DataType="{x:Type system:String}" x:Key="MaterialDesignWeatherIconTemplate">
+    <DataTemplate DataType="{x:Type system:String}" x:Key="DefaultWeatherIconTemplate">
         <Border x:Name="OuterBorder" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent">
             <ciCore:IconText HorizontalAlignment="Center" VerticalAlignment="Center"
                                      IconSize="{Binding ActualHeight, ElementName=OuterBorder}">

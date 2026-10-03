@@ -20,7 +20,7 @@
             </StackPanel>
         </Button>
         <Popup x:Name="Pop" d:IsOpen="True" AllowsTransparency="True" StaysOpen="False" PopupAnimation="Fade">
-            <Border Background="{DynamicResource MaterialDesignPaper}" Margin="16">
+            <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Margin="16">
                 <Grid Height="300" Width="400">
                     <Grid.RowDefinitions>
                         <RowDefinition/>

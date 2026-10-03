@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Line VerticalAlignment="Center" Stroke="{DynamicResource MaterialDesignBody}" StrokeThickness="2"
+        <Line VerticalAlignment="Center" Stroke="{DynamicResource MahApps.Brushes.ThemeForeground}" StrokeThickness="2"
               HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="25" Opacity="0.8"
               Margin="0 0"/>
     </Grid>

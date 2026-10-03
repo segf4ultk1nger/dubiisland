@@ -16,8 +16,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="GeneralSettingsPage"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -62,7 +62,7 @@
                     <StackPanel Orientation="Horizontal">
                         <DatePicker SelectedDate="{Binding SettingsService.Settings.SingleWeekStartTime}"
                                     Width="120"
-                                    Foreground="{DynamicResource MaterialDesignBody}" />
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.CalendarMultiple}}"
                                 Click="ButtonWeekOffsetSettingsOpen_OnClick"
@@ -73,7 +73,7 @@
                                                 Placement="Mouse"
                                                 IsOpen="{Binding ViewModel.IsWeekOffsetSettingsOpen}"
                                                 PopupAnimation="Fade">
-                            <Border Background="{DynamicResource MaterialDesignPaper}"
+                            <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                     Margin="8"
                                     Button.Click="ButtonWeekOffsetSettingsButtons_OnClick">
                                 <Border.Effect>
@@ -93,7 +93,7 @@
                 <Expander Background="Transparent" IsExpanded="True">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.HideOutline}"
-                                                                          Foreground="{DynamicResource MaterialDesignBody}"
+                                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                           Header="隐藏窗口" HasSwitcher="False"
                                                                           Description="将在以下选定的情况隐藏主界面，以防止遮挡屏幕影响授课。"
                                                                           Margin="-12 0" />
@@ -135,7 +135,7 @@
                                                            IsOn="{Binding SettingsService.Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}">
                 <controls1:SettingsCard.Switcher>
                     <Grid>
-                        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   SelectedIndex="{Binding SettingsService.Settings.TaskBarIconClickBehavior}"
                                   HorizontalContentAlignment="Left">
                             <ComboBoxItem HorizontalContentAlignment="Left">
@@ -157,10 +157,10 @@
             <!-- 显示启动加载界面 -->
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent" IsExpanded="False"
-                                                  TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.RocketLaunchOutline}"
-                                                                          Foreground="{DynamicResource MaterialDesignBody}"
+                                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                           Header="显示启动加载界面"
                                                                           Description="启动时显示加载界面。"
                                                                           IsOn="{Binding SettingsService.Settings.IsSplashEnabled, Mode=TwoWay}"
@@ -241,10 +241,10 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                                                   IsExpanded="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=OneWay}"
-                                                  TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.TimerSyncOutline}"
-                                                                          Foreground="{DynamicResource MaterialDesignBody}"
+                                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                           Header="使用精确时间"
                                                                           Description="启用后，应用将使用从指定服务器同步的精确时间，而不是使用系统时间。"
                                                                           IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}"
@@ -265,7 +265,7 @@
                         <ComboBox VerticalAlignment="Stretch"
                                                           Style="{StaticResource MahApps.Styles.ComboBox}"
                                                           mah:TextBoxHelper.Watermark="时间服务器"
-                                                          Foreground="{DynamicResource MaterialDesignBody}"
+                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                           Text="{Binding SettingsService.Settings.ExactTimeServer}"
                                                           HorizontalContentAlignment="Left"
                                                           IsEditable="True"
@@ -294,11 +294,11 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                                                   IsExpanded="True"
-                                                  TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockArrow}"
                                                    Header="时间偏移"
-                                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                    Description="设定课程时间与实际时间的偏移值。增大偏移以抵消铃声提前，减小偏移以抵消铃声滞后。"
                                                    IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}"
                                                    Margin="-12 0">
@@ -306,7 +306,7 @@
                                 <TextBox Grid.Column="1" Grid.Row="1"
                                          VerticalAlignment="Center"
                                          MinWidth="147"
-                                         Foreground="{DynamicResource MaterialDesignBody}"
+                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                          Text="{Binding SettingsService.Settings.TimeOffsetSeconds, Converter={StaticResource IntToStringConverter}}"/>
                             </controls1:SettingsControl.Switcher>
                         </controls1:SettingsControl>
@@ -318,7 +318,7 @@
                             <controls1:SettingsControl.Switcher>
                                 <DockPanel Width="150">
                                     <ToggleButton DockPanel.Dock="Right" Margin="8 0 0 0" IsChecked="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"/>
-                                    <TextBox Foreground="{DynamicResource MaterialDesignBody}"
+                                    <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                      IsEnabled="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"
                                                                      Text="{Binding SettingsService.Settings.TimeAutoAdjustSeconds, Converter={StaticResource IntToStringConverter}}"/>
                                 </DockPanel>
@@ -341,13 +341,13 @@
             <!-- 简略信息 -->
             <Border Padding="14" 
                     Margin="0 0 0 8"
-                    BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                    BorderBrush="{DynamicResource MahApps.Brushes.Gray7}" 
                     BorderThickness="1" CornerRadius="8"
                     Visibility="{Binding SettingsService.Settings.ShowComponentsMigrateTip, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <StackPanel>
                         <controls1:IconText IconSize="24" Kind="{x:Static controls1:IconGlyphs.WidgetsOutline}"
-                                                 Foreground="{DynamicResource PrimaryHueMidBrush}" />
+                                                 Foreground="{DynamicResource MahApps.Brushes.Accent}" />
                         <TextBlock TextWrapping="Wrap" Margin="0 6 0 0">
                             【快速信息】功能已被【组件】取代，您在先前版本中的快速信息和课表显示设置已经转移到【组件】中，请前往【组件】页面调整相关设置。
                             利用组件功能，您可以更自由地定制 ClassIsland 主界面上显示的内容。
@@ -398,7 +398,7 @@
                 <controls1:SettingsCard.Switcher>
                     <DockPanel>
                         <ToggleButton DockPanel.Dock="Right" Margin="8 0 0 0" IsChecked="{Binding SettingsService.Settings.IsCriticalSafeMode}"/>
-                        <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   Width="120"
                                   Visibility="{Binding SettingsService.Settings.IsCriticalSafeMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                                   SelectedIndex="{Binding SettingsService.Settings.CriticalSafeModeMethod}">

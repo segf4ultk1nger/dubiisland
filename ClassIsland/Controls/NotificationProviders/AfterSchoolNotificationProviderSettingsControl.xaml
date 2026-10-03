@@ -14,12 +14,12 @@
     <ScrollViewer DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:AfterSchoolNotificationProviderSettingsControl}}">
         <StackPanel Margin="4">
             <!-- 附加设置覆盖提示 -->
-            <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Margin="0 0 0 4">
+            <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Margin="0 0 0 4">
                 <Grid>
                     <DockPanel Margin="8 0 4 0">
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MaterialDesignBody}"
+                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                 Click="ButtonShowAttachedSettingsInfo_OnClick">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
                         </Button>
@@ -43,7 +43,7 @@
                     <ci:NumbericTextBox MaxValue="3600" MinValue="3"
                                    Text="{Binding Settings.NotificationMsgDuration, Converter={StaticResource IntToStringConverter}}"
                                    Width="120"
-                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                    Style="{StaticResource MahApps.Styles.TextBox}" />
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>

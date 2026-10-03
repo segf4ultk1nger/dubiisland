@@ -34,7 +34,7 @@
                                        Description="天气预报的默认显示模式，可以在各个时间点覆盖该设置。">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
-                            <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                            <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                       SelectedIndex="{Binding Settings.ForecastShowMode, Converter={StaticResource ShowModeToIntConverter}}">
                                 <system:String>默认禁用</system:String>
                                 <system:String>默认启用</system:String>
@@ -48,7 +48,7 @@
                                        Description="极端天气提醒的默认显示模式，可以在各个时间点覆盖该设置。">
                     <controls1:SettingsCard.Switcher>
                         <Grid>
-                            <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
+                            <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                       SelectedIndex="{Binding Settings.AlertShowMode, Converter={StaticResource ShowModeToIntConverter}}">
                                 <system:String>默认禁用</system:String>
                                 <system:String>默认启用</system:String>

@@ -37,7 +37,7 @@
             </ContentPresenter.Style>
         </ContentPresenter>
         <!-- Right -->
-        <Grid Background="{DynamicResource MaterialDesignPaper}">
+        <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />

@@ -62,7 +62,7 @@ public class TimeLineBackgroundRulerControl : Control
         var c = 0;
         var p = 12;
         var bs = TimeSpan.FromHours(24).Ticks / BaseTicks * Scale / 36;
-        var body = (SolidColorBrush)FindResource("MaterialDesignBody");
+        var body = (SolidColorBrush)FindResource("MahApps.Brushes.ThemeForeground");
         var bodyA = new SolidColorBrush(body.Color)
         {
             Opacity = 0.3

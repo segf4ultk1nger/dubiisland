@@ -31,7 +31,7 @@
         <converters:BooleanToVisibilityConverter2 x:Key="BooleanToVisibilityConverter2" />
     </UserControl.Resources>
     <Border CornerRadius="4"
-            Background="{DynamicResource MaterialDesignPaper}"
+            Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
             ClipToBounds="True">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
@@ -41,7 +41,7 @@
                         Value="True">
                         <Setter Property="BorderThickness" Value="2.5"/>
                         <Setter Property="Padding" Value="10.5 10.5 10.5 6.5"/>
-                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                     </DataTrigger>
                     <DataTrigger
                         Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type controls:WizardOptionControl}, Mode=FindAncestor}}"
@@ -50,7 +50,7 @@
                         <Setter Property="Padding" Value="10.5 10.5 10.5 6.5"/>
                     </DataTrigger>
                 </Style.Triggers>
-                <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Padding" Value="12 12 12 8"/>
 
@@ -75,12 +75,12 @@
                                      Kind="{x:Static controls:IconGlyphs.ArrowRight}"
                                      VerticalAlignment="Center"
                                      HorizontalAlignment="Center"
-                                     Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                                     Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
             <!-- Header -->
             <TextBlock Grid.Column="1" Grid.Row="0"
                        IsHitTestVisible="False"
                        Margin="0 0 0 0"
-                       Foreground="{DynamicResource PrimaryHueMidBrush}"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        FontWeight="Bold"
                        FontSize="16"
                        d:Text="选项标题。"
@@ -90,7 +90,7 @@
                     VerticalAlignment="Top"
                     IsHitTestVisible="False"
                     Margin="-12 6 -12 6"
-                    Background="{DynamicResource MaterialDesignDivider}">
+                    Background="{DynamicResource MahApps.Brushes.Gray7}">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>
@@ -108,7 +108,7 @@
                     VerticalAlignment="Top"
                     IsHitTestVisible="False"
                     Margin="-12 6 -12 6"
-                    Background="{DynamicResource PrimaryHueMidBrush}" RenderTransformOrigin="0,0.5">
+                    Background="{DynamicResource MahApps.Brushes.Accent}" RenderTransformOrigin="0,0.5">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="0" ScaleY="1" />

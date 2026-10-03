@@ -74,7 +74,7 @@
                             Click="ButtonRead_OnClick"/>
                 </Grid>
                 <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
-                        Margin="24 6 0 0" Foreground="{DynamicResource MaterialDesignBody}"
+                        Margin="24 6 0 0" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                         CommandParameter="{Binding Announcement.DetailsUri, Mode=OneWay}"
                         Visibility="{Binding Announcement.HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}">

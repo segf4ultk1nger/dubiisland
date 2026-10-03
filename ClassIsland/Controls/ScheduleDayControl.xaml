@@ -70,7 +70,7 @@
                                     StaysOpen="True"
                                     PopupAnimation="Fade"
                                     IsOpen="{Binding IsClassPlanSelectionPopupOpen, Mode=TwoWay}">
-                <Border Background="{DynamicResource MaterialDesignPaper}" Margin="8" PreviewMouseDown="UIElement_OnPreviewMouseDown" MouseDown="UIElement_OnMouseDown" TextElement.FontSize="13">
+                <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Margin="8" PreviewMouseDown="UIElement_OnPreviewMouseDown" MouseDown="UIElement_OnMouseDown" TextElement.FontSize="13">
                     <Grid Margin="4" MaxHeight="360" Width="300">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -81,7 +81,7 @@
                                 Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
                                 HorizontalAlignment="Right"
                                 ToolTip="关闭" ClickMode="Press"
-                                Foreground="{DynamicResource MaterialDesignBody}"
+                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                 Margin="0 -4"
                                 Click="ButtonCloseSchedulePopup_OnClick" />
                         <TextBlock Text="选择要临时启用的课表"
@@ -89,7 +89,7 @@
                                    FontSize="14"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
-                                   Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                   Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                    FontWeight="Bold" />
                         <ListBox Grid.Row="1" ItemsSource="{Binding Source={StaticResource ClassPlanSource}}"
                                  Margin="0 12 0 0"

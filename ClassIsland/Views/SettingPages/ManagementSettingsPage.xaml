@@ -9,8 +9,8 @@
       xmlns:controls="clr-namespace:ClassIsland.Controls"
       mc:Ignorable="d" 
       d:DataContext="{d:DesignInstance local:ManagementSettingsPage}"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -23,7 +23,7 @@
     <ci:SettingsPageBase.Resources>
         <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
             <Setter Property="Height" Value="48"/>
-            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Padding" Value="24 0"/>
             <Setter Property="TextElement.FontSize" Value="14"/>

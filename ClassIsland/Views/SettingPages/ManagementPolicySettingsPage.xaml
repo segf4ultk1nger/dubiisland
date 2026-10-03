@@ -8,8 +8,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ManagementPolicySettingsPage"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -21,12 +21,12 @@
 
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" IsEnabled="{Binding ViewModel.IsLocked, Converter={StaticResource InvertBooleanConverter}}">
-            <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Margin="0 0 0 4">
+            <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Margin="0 0 0 4">
                 <Grid>
                     <DockPanel Margin="8 0 4 0">
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 DockPanel.Dock="Right"
-                                Foreground="{DynamicResource MaterialDesignBody}"
+                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                 Click="ButtonRestart_OnClick">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restart}" Text="重启应用"/>
                         </Button>

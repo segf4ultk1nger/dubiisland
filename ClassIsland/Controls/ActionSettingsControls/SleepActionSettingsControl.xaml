@@ -14,7 +14,7 @@
     <StackPanel Orientation="Horizontal">
         <TextBox VerticalAlignment="Center"
                  MinWidth="80"
-                 Foreground="{DynamicResource MaterialDesignBody}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                  Text="{Binding Settings.Value, Converter={StaticResource IntToStringConverter}}"/>
     </StackPanel>
 </ci:ActionSettingsControlBase>

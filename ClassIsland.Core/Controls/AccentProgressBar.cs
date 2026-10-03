@@ -4,12 +4,12 @@ using System.Windows.Controls;
 namespace ClassIsland.Core.Controls;
 
 /// <summary>
-/// 具有 MaterialDesign 外观的 <see cref="ProgressBar"/>。
+/// 带前景缩放的 <see cref="ProgressBar"/>。
 /// </summary>
-public class MaterialProgressBar : ProgressBar
+public class AccentProgressBar : ProgressBar
 {
     public static readonly DependencyProperty ForegroundScaleProperty = DependencyProperty.Register(
-        nameof(ForegroundScale), typeof(double), typeof(MaterialProgressBar), new PropertyMetadata(default(double)));
+        nameof(ForegroundScale), typeof(double), typeof(AccentProgressBar), new PropertyMetadata(default(double)));
 
     public double ForegroundScale
     {

@@ -59,10 +59,10 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="{Binding Settings.IsPauseEnabled, Mode=OneWay}"
-                          TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TimerPauseOutline}"
-                                                  Foreground="{DynamicResource MaterialDesignBody}"
+                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="定时暂停"
                                                   Description="启用后，将在滚动到指定位置后暂停滚动一段时间"
                                                   IsOn="{Binding Settings.IsPauseEnabled, Mode=TwoWay}"

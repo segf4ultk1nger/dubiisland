@@ -9,8 +9,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DebugBrushesSettingsPage"
       d:DataContext="{d:DesignInstance local:DebugBrushesSettingsPage}"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -25,184 +25,64 @@
                 </Style>
             </StackPanel.Resources>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SecondaryHueLightBrush}"
-                    ToolTip="SecondaryHueLightBrush">
-                <TextBlock Text="SecondaryHueLightBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Accent}"
+                    ToolTip="MahApps.Brushes.Accent">
+                <TextBlock Text="MahApps.Brushes.Accent" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SecondaryHueLightForegroundBrush}"
-                    ToolTip="SecondaryHueLightForegroundBrush">
-                <TextBlock Text="SecondaryHueLightForegroundBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Accent2}"
+                    ToolTip="MahApps.Brushes.Accent2">
+                <TextBlock Text="MahApps.Brushes.Accent2" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SecondaryHueMidBrush}"
-                    ToolTip="SecondaryHueMidBrush">
-                <TextBlock Text="SecondaryHueMidBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Accent3}"
+                    ToolTip="MahApps.Brushes.Accent3">
+                <TextBlock Text="MahApps.Brushes.Accent3" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SecondaryHueMidForegroundBrush}"
-                    ToolTip="SecondaryHueMidForegroundBrush">
-                <TextBlock Text="SecondaryHueMidForegroundBrush" />
+                    Background="{DynamicResource MahApps.Brushes.AccentBase}"
+                    ToolTip="MahApps.Brushes.AccentBase">
+                <TextBlock Text="MahApps.Brushes.AccentBase" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SecondaryHueDarkBrush}"
-                    ToolTip="SecondaryHueDarkBrush">
-                <TextBlock Text="SecondaryHueDarkBrush" />
+                    Background="{DynamicResource MahApps.Brushes.IdealForeground}"
+                    ToolTip="MahApps.Brushes.IdealForeground">
+                <TextBlock Text="MahApps.Brushes.IdealForeground" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SecondaryHueDarkForegroundBrush}"
-                    ToolTip="SecondaryHueDarkForegroundBrush">
-                <TextBlock Text="SecondaryHueDarkForegroundBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Highlight}"
+                    ToolTip="MahApps.Brushes.Highlight">
+                <TextBlock Text="MahApps.Brushes.Highlight" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryHueLightBrush}"
-                    ToolTip="PrimaryHueLightBrush">
-                <TextBlock Text="PrimaryHueLightBrush" />
+                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                    ToolTip="MahApps.Brushes.ThemeBackground">
+                <TextBlock Text="MahApps.Brushes.ThemeBackground" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryHueLightForegroundBrush}"
-                    ToolTip="PrimaryHueLightForegroundBrush">
-                <TextBlock Text="PrimaryHueLightForegroundBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                    ToolTip="MahApps.Brushes.Control.Background">
+                <TextBlock Text="MahApps.Brushes.Control.Background" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryHueMidBrush}"
-                    ToolTip="PrimaryHueMidBrush">
-                <TextBlock Text="PrimaryHueMidBrush" />
+                    Background="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                    ToolTip="MahApps.Brushes.ThemeForeground">
+                <TextBlock Text="MahApps.Brushes.ThemeForeground" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryHueMidForegroundBrush}"
-                    ToolTip="PrimaryHueMidForegroundBrush">
-                <TextBlock Text="PrimaryHueMidForegroundBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Gray}"
+                    ToolTip="MahApps.Brushes.Gray">
+                <TextBlock Text="MahApps.Brushes.Gray" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryHueDarkBrush}"
-                    ToolTip="PrimaryHueDarkBrush">
-                <TextBlock Text="PrimaryHueDarkBrush" />
+                    Background="{DynamicResource MahApps.Brushes.Gray2}"
+                    ToolTip="MahApps.Brushes.Gray2">
+                <TextBlock Text="MahApps.Brushes.Gray2" />
             </Border>
             <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryHueDarkForegroundBrush}"
-                    ToolTip="PrimaryHueDarkForegroundBrush">
-                <TextBlock Text="PrimaryHueDarkForegroundBrush" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignBackground}"
-                    ToolTip="MaterialDesignBackground">
-                <TextBlock Text="MaterialDesignBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignPaper}"
-                    ToolTip="MaterialDesignPaper">
-                <TextBlock Text="MaterialDesignPaper" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignCardBackground}"
-                    ToolTip="MaterialDesignCardBackground">
-                <TextBlock Text="MaterialDesignCardBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignToolBarBackground}"
-                    ToolTip="MaterialDesignToolBarBackground">
-                <TextBlock Text="MaterialDesignToolBarBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignBody}"
-                    ToolTip="MaterialDesignBody">
-                <TextBlock Text="MaterialDesignBody" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignBodyLight}"
-                    ToolTip="MaterialDesignBodyLight">
-                <TextBlock Text="MaterialDesignBodyLight" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignColumnHeader}"
-                    ToolTip="MaterialDesignColumnHeader">
-                <TextBlock Text="MaterialDesignColumnHeader" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignCheckBoxOff}"
-                    ToolTip="MaterialDesignCheckBoxOff">
-                <TextBlock Text="MaterialDesignCheckBoxOff" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignCheckBoxDisabled}"
-                    ToolTip="MaterialDesignCheckBoxDisabled">
-                <TextBlock Text="MaterialDesignCheckBoxDisabled" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignTextBoxBorder}"
-                    ToolTip="MaterialDesignTextBoxBorder">
-                <TextBlock Text="MaterialDesignTextBoxBorder" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignDivider}"
-                    ToolTip="MaterialDesignDivider">
-                <TextBlock Text="MaterialDesignDivider" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignSelection}"
-                    ToolTip="MaterialDesignSelection">
-                <TextBlock Text="MaterialDesignSelection" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignFlatButtonClick}"
-                    ToolTip="MaterialDesignFlatButtonClick">
-                <TextBlock Text="MaterialDesignFlatButtonClick" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignFlatButtonRipple}"
-                    ToolTip="MaterialDesignFlatButtonRipple">
-                <TextBlock Text="MaterialDesignFlatButtonRipple" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignToolTipBackground}"
-                    ToolTip="MaterialDesignToolTipBackground">
-                <TextBlock Text="MaterialDesignToolTipBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignChipBackground}"
-                    ToolTip="MaterialDesignChipBackground">
-                <TextBlock Text="MaterialDesignChipBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignSnackbarBackground}"
-                    ToolTip="MaterialDesignSnackbarBackground">
-                <TextBlock Text="MaterialDesignSnackbarBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignSnackbarMouseOver}"
-                    ToolTip="MaterialDesignSnackbarMouseOver">
-                <TextBlock Text="MaterialDesignSnackbarMouseOver" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignSnackbarRipple}"
-                    ToolTip="MaterialDesignSnackbarRipple">
-                <TextBlock Text="MaterialDesignSnackbarRipple" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignTextFieldBoxBackground}"
-                    ToolTip="MaterialDesignTextFieldBoxBackground">
-                <TextBlock Text="MaterialDesignTextFieldBoxBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignTextFieldBoxHoverBackground}"
-                    ToolTip="MaterialDesignTextFieldBoxHoverBackground">
-                <TextBlock Text="MaterialDesignTextFieldBoxHoverBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignTextFieldBoxDisabledBackground}"
-                    ToolTip="MaterialDesignTextFieldBoxDisabledBackground">
-                <TextBlock Text="MaterialDesignTextFieldBoxDisabledBackground" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignTextAreaBorder}"
-                    ToolTip="MaterialDesignTextAreaBorder">
-                <TextBlock Text="MaterialDesignTextAreaBorder" />
-            </Border>
-            <Border HorizontalAlignment="Stretch"
-                    Background="{DynamicResource MaterialDesignTextAreaInactiveBorder}"
-                    ToolTip="MaterialDesignTextAreaInactiveBorder">
-                <TextBlock Text="MaterialDesignTextAreaInactiveBorder" />
+                    Background="{DynamicResource MahApps.Brushes.Gray7}"
+                    ToolTip="MahApps.Brushes.Gray7">
+                <TextBlock Text="MahApps.Brushes.Gray7" />
             </Border>
         </StackPanel>
     </ScrollViewer>

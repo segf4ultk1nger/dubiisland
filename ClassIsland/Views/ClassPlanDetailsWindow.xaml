@@ -10,8 +10,8 @@
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services;assembly=ClassIsland.Core"
         mc:Ignorable="d"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
@@ -130,7 +130,7 @@
                                                         VerticalAlignment="Top"
                                                         Height="24"
                                                         Opacity="0.25"
-                                                        Background="{DynamicResource PrimaryHueMidBrush}">
+                                                        Background="{DynamicResource MahApps.Brushes.Accent}">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
@@ -147,7 +147,7 @@
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding State}" Value="Enabled">
-                                                                    <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding State}" Value="Override">
                                                                     <Setter Property="Background" Value="Orange"/>
@@ -197,7 +197,7 @@
         </StackPanel>
 
         <!-- AppBar -->
-        <Border Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Padding="16" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+        <Border Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Padding="16" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
             <Grid>
                 <StackPanel Orientation="Horizontal" Margin="4 0">
                     <StackPanel.Resources>

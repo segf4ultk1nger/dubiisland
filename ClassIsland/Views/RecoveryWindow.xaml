@@ -7,8 +7,8 @@
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:windows="clr-namespace:Walterlv.Windows;assembly=ClassIsland.Core"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
@@ -28,7 +28,7 @@
             </Grid.RowDefinitions>
             <Frame Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
 
-            <Border Grid.Column="0" Grid.Row="0" Padding="16" Margin="0 0 0 4" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+            <Border Grid.Column="0" Grid.Row="0" Padding="16" Margin="0 0 0 4" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                 <Grid Margin="4 0 4 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

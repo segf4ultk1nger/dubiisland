@@ -11,12 +11,12 @@
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
         mc:Ignorable="d"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
-        Background="{DynamicResource MaterialDesignPaper}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         Title="日志" Height="600" Width="1200"
         d:DataContext="{d:DesignInstance local:AppLogsWindow}"
@@ -81,10 +81,10 @@
                 <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Trace">
-                            <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
+                            <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.Gray}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Debug">
-                            <Setter Property="TextElement.Foreground" Value="{DynamicResource MaterialDesignBodyLight}"/>
+                            <Setter Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.Gray}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Information">
 

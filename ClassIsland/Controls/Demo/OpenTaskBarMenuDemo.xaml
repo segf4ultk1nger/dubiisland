@@ -177,7 +177,7 @@
                 <TranslateTransform X="0" Y="0"/>
             </TransformGroup>
         </Grid.RenderTransform>
-        <Grid x:Name="GridMain" Background="{DynamicResource PrimaryHueLightBrush}" RenderTransformOrigin="1,1">
+        <Grid x:Name="GridMain" Background="{DynamicResource MahApps.Brushes.Accent3}" RenderTransformOrigin="1,1">
 
             <Border Background="#BB000000" x:Name="ZoneHiddenTaskBarIcons" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,52,16" RenderTransformOrigin="0.5,0.5">
                 <Border.RenderTransform>
@@ -255,7 +255,7 @@
                     </TransformGroup>
                 </Image.RenderTransform>
             </Image>
-            <Border x:Name="ZoneMainMenu" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,58,16" Opacity="0" Background="{DynamicResource MaterialDesignPaper}">
+            <Border x:Name="ZoneMainMenu" Padding="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,58,16" Opacity="0" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                 <StackPanel HorizontalAlignment="Left">
                     <Border
                         Background="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"
@@ -299,7 +299,7 @@
                     <TranslateTransform X="0" Y="0"/>
                 </TransformGroup>
             </Grid.RenderTransform>
-            <Ellipse Width="16" Height="16" Stroke="{DynamicResource PrimaryHueMidBrush}">
+            <Ellipse Width="16" Height="16" Stroke="{DynamicResource MahApps.Brushes.Accent}">
                 <Ellipse.Fill>
                     <RadialGradientBrush>
                         <GradientStop Color="#33000000" Offset="0"/>

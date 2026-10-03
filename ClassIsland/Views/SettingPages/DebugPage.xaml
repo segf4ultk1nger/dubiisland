@@ -16,8 +16,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DebugPage"
       d:DataContext="{d:DesignInstance local:DebugPage}"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -32,7 +32,7 @@
                     <Setter Property="MinWidth" Value="2000" />
                     <Style.Resources>
                         <Style TargetType="controls2:IconText">
-                            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
                         </Style>
                     </Style.Resources>
                 </Style>
@@ -71,7 +71,7 @@
                                   Header="重置调试时间偏移"
                                   Click="ButtonReset_OnClick" />
                         <mah:TimePicker Grid.Column="1" Grid.Row="1" Margin="0 0 3 0"
-                                  Background="{DynamicResource MaterialDesignCardBackground}"
+                                  Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                   Style="{StaticResource MahApps.Styles.TimePickerBase}"
                                   SelectedDateTimeChanged="TargetTime_OnChanged"
                                   FontSize="16"
@@ -113,7 +113,7 @@
                     <TextBox
                         Text="{Binding SettingsService.Settings.DebugAnimationScale, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}"
                         MinWidth="150"
-                        Foreground="{DynamicResource MaterialDesignBody}"/>
+                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                 </controls2:SettingsControl.Switcher>
             </controls2:SettingsControl>
 

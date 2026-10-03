@@ -21,7 +21,7 @@
                  HorizontalAlignment="Center"
                  Width="{Binding EllipseSize}"
                  Height="{Binding EllipseSize}"
-                 Fill="{DynamicResource PrimaryHueMidBrush}" RenderTransformOrigin="0.5, 0.5">
+                 Fill="{DynamicResource MahApps.Brushes.Accent}" RenderTransformOrigin="0.5, 0.5">
             <Ellipse.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

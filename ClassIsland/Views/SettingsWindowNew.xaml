@@ -18,8 +18,8 @@
         xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
         xmlns:commands="http://classisland.tech/schemas/xaml/core"
         d:DataContext="{d:DesignInstance local:SettingsWindowNew}"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
@@ -221,7 +221,7 @@
                         …
                     </ToggleButton>
                     <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-                        <Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+                        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
                             <StackPanel>
                                 <StackPanel>
                                     <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Code}}" Header="实验性功能…"
@@ -329,7 +329,7 @@
                                Margin="4 0 0 0"/>
                 </Grid>
                 <Frame Content="{Binding ViewModel.FrameContent}"
-                       Background="{DynamicResource MaterialDesignPaper}"
+                       Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                        NavigationUIVisibility="Hidden"
                        x:Name="NavigationFrame" RenderTransformOrigin="0.5,0.5">
                     <Frame.RenderTransform>

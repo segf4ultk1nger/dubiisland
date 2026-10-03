@@ -11,8 +11,8 @@
                    mc:Ignorable="d"
                    d:DataContext="{d:DesignInstance local:WindowsPicker}"
                    Height="600" Width="1300"
-                   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                   Background="{DynamicResource MaterialDesignPaper}"
+                   TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                   Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                    TextElement.FontWeight="Regular"
                    TextElement.FontSize="14"
                    FontFamily="{StaticResource HarmonyOsSans}"
@@ -42,14 +42,14 @@
                         >
                             <Image Source="{Binding ScreenShot}" Height="150" Stretch="Uniform"
                                 />
-                            <Border Width="40" Height="40" CornerRadius="20" Margin="8" Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                            <Border Width="40" Height="40" CornerRadius="20" Margin="8" Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="6" Opacity="0.5" Direction="0" ShadowDepth="0"/>
                                 </Border.Effect>
                                 <controls1:IconText IconSize="32" Kind="{x:Static controls1:IconGlyphs.Check}"
                                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
-                            <Border Width="32" Height="32" CornerRadius="4" Margin="8" VerticalAlignment="Bottom" HorizontalAlignment="Left" Background="{DynamicResource MaterialDesignPaper}">
+                            <Border Width="32" Height="32" CornerRadius="4" Margin="8" VerticalAlignment="Bottom" HorizontalAlignment="Left" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="6" Opacity="0.5" Direction="0" ShadowDepth="0"/>
                                 </Border.Effect>
@@ -94,7 +94,7 @@
         </Grid>
 
         <!-- 标题栏 -->
-        <Border Grid.Row="0" Padding="16" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+        <Border Grid.Row="0" Padding="16" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <TextBlock Text="选择窗口" Style="{StaticResource Headline6TextBlock}"
@@ -116,7 +116,7 @@
 …
 </ToggleButton>
 <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
 
                         <StackPanel Margin="16">
                             <CheckBox IsChecked="{Binding ViewModel.IsFilteredFullscreen}"
@@ -136,7 +136,7 @@
               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
               Visibility="{Binding ViewModel.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                    Background="{DynamicResource MaterialDesignPaper}"
+                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                     Opacity="0.8"/>
             <controls1:StarRailLoadingControl VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>

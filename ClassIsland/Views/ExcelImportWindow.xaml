@@ -17,8 +17,8 @@
         xmlns:stickerControl="http://classisland.tech/schemas/xaml/core"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:ExcelImportWindow}"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         FontFamily="{StaticResource HarmonyOsSans}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
@@ -224,7 +224,7 @@
             <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0"
                   Margin="8 4"
                   Visibility="{Binding ViewModel.IsSelectingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Border x:Name="border" Background="{DynamicResource PrimaryHueMidBrush}"
+                <Border x:Name="border" Background="{DynamicResource MahApps.Brushes.Accent}"
                         Opacity="0"/>
                 <DockPanel Margin="8 0">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
@@ -728,7 +728,7 @@
                                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Grid.Column="0"
                                                                      VerticalAlignment="Center"
                                                                      HorizontalAlignment="Center"
-                                                                     Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                                     Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                                      Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                             <TextBlock Text="{Binding}" VerticalAlignment="Center" Grid.Column="1" />
                                         </Grid>
@@ -876,7 +876,7 @@
                                     <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
                                         <Style.Resources>
                                             <Style TargetType="controls1:IconText">
-                                                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
                                             </Style>
                                         </Style.Resources>
                                     </Style>
@@ -932,7 +932,7 @@
             <Grid Grid.Row="0" Grid.Column="0"
                   Grid.RowSpan="2" Grid.ColumnSpan="3"
                   Visibility="{Binding ViewModel.IsDragEntering, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Border Background="{DynamicResource MaterialDesignBackground}"
+                <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                         Opacity="0.8"/>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <controls1:IconText IconSize="64" Kind="{x:Static controls1:IconGlyphs.FileImport}"

@@ -21,8 +21,8 @@
         Height="250" Width="600"
         MinWidth="730"
         MinHeight="230"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
         FontFamily="{StaticResource HarmonyOsSans}"
@@ -346,7 +346,7 @@
                     d:Visibility="Visible"
                     Cursor="Wait"
                     x:Name="LoadingOverlay"
-                    Background="{DynamicResource MaterialDesignPaper}">
+                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>

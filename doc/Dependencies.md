@@ -16,7 +16,7 @@
 - [GuerrillaNtp](https://github.com/robertvazan/guerrillantp)
 - [H.NotifyIcon](https://github.com/HavenDV/H.NotifyIcon)
 - [HarmonyOS Sans](https://developer.harmonyos.com/cn/design/resource)
-- [MaterialDesignInXamlToolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)
+- [MahApps.Metro](https://github.com/MahApps/MahApps.Metro)
 - [MdXaml](https://github.com/whistyun/MdXaml)
 - [Microsoft.Data.Sqlite](https://github.com/dotnet/efcore)
 - [Microsoft.Extensions.Hosting](https://github.com/dotnet/runtime)

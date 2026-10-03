@@ -4,7 +4,7 @@
                     xmlns:controls="clr-namespace:ClassIsland.Controls">
     <DataTemplate DataType="{x:Type system:String}" x:Key="SimpleTextWeatherIconTemplate">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <TextBlock Text="~" Foreground="{DynamicResource MaterialDesignBody}"
+            <TextBlock Text="~" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                        x:Name="Separator"
                        VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock.Style>

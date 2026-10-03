@@ -12,8 +12,8 @@
                      mc:Ignorable="d"
                      d:DesignHeight="450" d:DesignWidth="800"
                      Title="ThemesSettingsPage"
-                     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                     Background="{DynamicResource MaterialDesignPaper}"
+                     TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                     Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                      FontFamily="{StaticResource HarmonyOsSans}"
                      TextElement.FontWeight="Regular"
                      TextElement.FontSize="14"
@@ -95,7 +95,7 @@
                 <system:String>已安装</system:String>
             </ListBox>
 
-            <Border Grid.Column="1" CornerRadius="4" Background="{DynamicResource MaterialDesignCardBackground}">
+            <Border Grid.Column="1" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             Click="ButtonBase_OnClick">
@@ -143,7 +143,7 @@
         
 
         <ListBox Grid.Row="2" HorizontalContentAlignment="Stretch"
-                     Background="{DynamicResource MaterialDesignPaper}"
+                     Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                      ItemsSource="{Binding Source={StaticResource ThemeSource}}"
                      VerticalContentAlignment="Stretch">
             <ListBox.ItemContainerStyle>
@@ -173,7 +173,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{DynamicResource MaterialDesignBackground}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased">
+                    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" SnapsToDevicePixels="True" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased">
                         <Border.Resources>
                         </Border.Resources>
                         <Grid Background="Transparent">
@@ -262,7 +262,7 @@
                                     <Grid Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="2 0">
 <ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" ToolTip="更多选项…" UseLayoutRounding="True" RenderOptions.EdgeMode="Aliased" Padding="4" Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.MoreHoriz}}"/>
 <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+<Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
 
                                         <StackPanel>
                                             <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FolderOutline}}" Header="打开主题文件夹…"
@@ -335,7 +335,7 @@
         </ListBox>
 
         <Border Grid.Row="0" Grid.RowSpan="3" 
-                Background="{DynamicResource MaterialDesignPaper}"
+                Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                 Visibility="{Binding SettingsService.Settings.IsThemeWarningVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ScrollViewer>
                 <StackPanel VerticalAlignment="Center"

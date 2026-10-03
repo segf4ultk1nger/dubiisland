@@ -14,11 +14,11 @@
                       HorizontalContentAlignment="Stretch"
                       dd:DragDrop.IsDragSource="True"
                       dd:DragDrop.IsDropTarget="True"
-                      dd:DragDrop.DropTargetAdornerBrush="{DynamicResource PrimaryHueMidBrush}"
+                      dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}"
                       HorizontalAlignment="Stretch">
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
-                    <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                    <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                         <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="调整触发器顺序"
                                      Margin="4 0"
                                      IconMargin="2"
@@ -30,7 +30,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border HorizontalAlignment="Stretch"
-                            Background="{DynamicResource MaterialDesignCardBackground}">
+                            Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                         <Grid Margin="0 4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

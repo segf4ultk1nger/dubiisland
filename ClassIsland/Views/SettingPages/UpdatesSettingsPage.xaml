@@ -14,8 +14,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="更新"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -85,12 +85,12 @@
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Foreground"
-                                                Value="{DynamicResource PrimaryHueLightBrush}">
+                                                Value="{DynamicResource MahApps.Brushes.Accent3}">
                                         </Setter>
                                     </Trigger>
                                 </Style.Triggers>
                                 <Setter Property="Foreground"
-                                        Value="{DynamicResource PrimaryHueMidBrush}" />
+                                        Value="{DynamicResource MahApps.Brushes.Accent}" />
                                 <Setter Property="ToolTipService.Placement" Value="Mouse" />
                             </Style>
                         </mdXaml:MarkdownScrollViewer.Resources>
@@ -328,7 +328,7 @@
                 </StackPanel>
 
                 <!-- 网络错误 -->
-                <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Padding="12 8" Margin="0 6" Background="{DynamicResource MaterialDesignPaper}">
+                <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Padding="12 8" Margin="0 6" Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
 <Border.Style>
 <Style TargetType="Border">
 <Style.Triggers>
@@ -590,7 +590,7 @@
                                 </Style>
                             </Grid.Style>
                             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                    Background="{DynamicResource MaterialDesignPaper}"
+                                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                     Opacity="0.8" />
                             <controls1:StarRailLoadingControl />
                         </Grid>
@@ -659,7 +659,7 @@
                                     <controls1:SettingsControl.Switcher>
                                         <Grid>
                                             <ComboBox Width="150"
-                                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       ItemsSource="{Binding UpdateService.Index.Channels}"
                                                       SelectedValue="{Binding SettingsService.Settings.SelectedUpdateChannelV2, Converter={StaticResource PreventNullConverter}}"
                                                       SelectedValuePath="Key">
@@ -688,7 +688,7 @@
                             <Expander Background="Transparent" IsExpanded="True">
                                 <Expander.Header>
                                     <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Web}"
-                                                               Foreground="{DynamicResource MaterialDesignBody}"
+                                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                Header="更新镜像源" HasSwitcher="False"
                                                                Description="从指定的镜像源下载应用更新，一定程度上可以解决在部分网络环境下更新受阻的问题。"
                                                                Margin="-12 0" />
@@ -707,7 +707,7 @@
                                                     <StackPanel Width="48">
                                                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}"
                                                             HorizontalAlignment="Center"
-                                                            Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                            Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                             Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                                     </StackPanel>
                                                     <TextBlock Text="{Binding Value.Name}" />
@@ -764,7 +764,7 @@
                                                         Style="{StaticResource MahApps.Styles.ProgressBar}"
                                                         IsIndeterminate="True"
                                                         Margin="8 -4 0 -4"
-                                                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                                        Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                         Visibility="{Binding Value.SpeedTestResult.IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                                 </StackPanel>
                                             </DataTemplate>

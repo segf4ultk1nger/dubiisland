@@ -53,7 +53,7 @@
     <Border Background="{StaticResource MyBackground}" 
             TextElement.Foreground="{StaticResource MyForeground}"
             Padding="17"
-            BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+            BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
             BorderThickness="1"
             Opacity="0.8"
             d:Opacity="1"

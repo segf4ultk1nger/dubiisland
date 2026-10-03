@@ -841,13 +841,13 @@ public partial class MainWindow : Window
             var brush = new SolidColorBrush(ViewModel.Settings.CustomForegroundColor);
             ResourceLoaderBorder.SetValue(ForegroundProperty, brush);
             ResourceLoaderBorder.SetValue(TextElement.ForegroundProperty, brush);
-            ResourceLoaderBorder.Resources["MaterialDesignBody"] = brush;
+            ResourceLoaderBorder.Resources["MahApps.Brushes.ThemeForeground"] = brush;
         }
         else
         {
-            if (ResourceLoaderBorder.Resources.Contains("MaterialDesignBody"))
+            if (ResourceLoaderBorder.Resources.Contains("MahApps.Brushes.ThemeForeground"))
             {
-                ResourceLoaderBorder.Resources.Remove("MaterialDesignBody");
+                ResourceLoaderBorder.Resources.Remove("MahApps.Brushes.ThemeForeground");
             }
             ResourceLoaderBorder.SetValue(ForegroundProperty, DependencyProperty.UnsetValue);
             ResourceLoaderBorder.SetValue(TextElement.ForegroundProperty, DependencyProperty.UnsetValue);

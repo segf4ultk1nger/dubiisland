@@ -20,7 +20,7 @@
         <!-- 放学提醒文字 -->
         <TextBox Text="{Binding Settings.NotificationMsg}"
                  mah:TextBoxHelper.Watermark="放学提醒文字"
-                 Foreground="{DynamicResource MaterialDesignBody}"
+                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                  Style="{StaticResource MahApps.Styles.TextBox}"
                  Margin="0 0 0 6"/>
 

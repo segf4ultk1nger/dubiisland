@@ -18,8 +18,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ComponentsSettingsPage"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -84,7 +84,7 @@
             <Setter Property="dd:DragDrop.IsDropTarget" Value="True"/>
             <Setter Property="dd:DragDrop.UseDefaultEffectDataTemplate" Value="False"/>
             <Setter Property="dd:DragDrop.SelectDroppedItems" Value="True"/>
-            <Setter Property="dd:DragDrop.DropTargetAdornerBrush" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="dd:DragDrop.DropTargetAdornerBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
             <Setter Property="dd:DragDrop.DropHandler" Value="{Binding}"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="ScrollViewer.PanningMode" Value="HorizontalOnly"/>
@@ -93,7 +93,7 @@
             <Setter Property="dd:DragDrop.EffectMoveAdornerTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                        <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                             <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ArrowAll}" Text="移动"
                                                 Margin="4 0"
                                                 IconMargin="2"
@@ -218,7 +218,7 @@
         </Grid>
         <!-- ROW 2 列表编辑区域 -->
         <Border Grid.Row="2"
-                Background="{DynamicResource MaterialDesignToolBarBackground}"
+                Background="{DynamicResource MahApps.Brushes.Control.Background}"
                 Margin="-8 8"/>
         <ListBox Grid.Row="2"
                  Margin="-8 8"
@@ -272,7 +272,7 @@
             <StackPanel Margin="0 0 0 0">
                 
                 <ListBox Margin="-8 -8 -8 -8"
-                         Background="{DynamicResource MaterialDesignToolBarBackground}"
+                         Background="{DynamicResource MahApps.Brushes.Control.Background}"
                          ItemsSource="{Binding ViewModel.SelectedComponentContainerChildren}"
                          SelectedItem="{Binding ViewModel.SelectedComponentSettingsChild}"
                          Style="{StaticResource ComponentListBoxStyle}"
@@ -297,7 +297,7 @@
                              VerticalContentAlignment="Stretch">
                         <dd:DragDrop.EffectCopyAdornerTemplate>
                             <DataTemplate>
-                                <Border Height="24" CornerRadius="12" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+                                <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                                     <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Add}" Text="添加"
                                                         Margin="4 0"
                                                         IconMargin="2"
@@ -391,10 +391,10 @@
                                         <Border Margin="0 0 0 6">
                                             <Expander Background="Transparent"
                                                       IsExpanded="{Binding IsResourceOverridingEnabled, Mode=OneWay}"
-                                                      TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                                      TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                                 <Expander.Header>
                                                     <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.FontSize}"
-                                                                               Foreground="{DynamicResource MaterialDesignBody}"
+                                                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                                Header="字体大小"
                                                                                Description="调整组件上各类字体的大小，将覆盖在【外观】中的设置。"
                                                                                IsOn="{Binding IsResourceOverridingEnabled, Mode=TwoWay}"
@@ -476,7 +476,7 @@
                                                             <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
                                                                 <Style.Triggers>
                                                                     <Trigger Property="IsSelected" Value="True">
-                                                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                                                     </Trigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -515,10 +515,10 @@
                                         <Border Margin="0 0 0 6" Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
                                             <Expander Background="Transparent"
                                                       IsExpanded="True"
-                                                      TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                                      TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                                 <Expander.Header>
                                                     <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.Resize}"
-                                                                              Foreground="{DynamicResource MaterialDesignBody}"
+                                                                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                               Header="宽度限制"
                                                                               IsOn="True"
                                                                               Description="限制控件的最大和最小宽度。"

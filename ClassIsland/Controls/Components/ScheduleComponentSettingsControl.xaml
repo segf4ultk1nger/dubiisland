@@ -42,12 +42,12 @@
         <ScrollViewer>
             <StackPanel>
                 <!-- 附加设置覆盖提示 -->
-                <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Margin="0 0 0 4">
+                <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Margin="0 0 0 4">
                     <Grid>
                         <DockPanel Margin="8 0 4 0">
                             <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     DockPanel.Dock="Right"
-                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     Click="ButtonShowAttachedSettings_OnClick">
                                 <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
                             </Button>
@@ -64,10 +64,10 @@
                 <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TableSearch}"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="显示时间点附加信息"
                                                 Description="在当前的时间点上显示当前时间点的附加信息。"
                                                 IsOn="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}"
@@ -86,7 +86,7 @@
                             <TextBlock Grid.Column="0" Text="要显示的附加信息" VerticalAlignment="Center" />
                             <ComboBox Grid.Row="0" Grid.Column="1"
                                       VerticalAlignment="Center"
-                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                       SelectedIndex="{Binding Settings.ExtraInfoType}"
                                       HorizontalContentAlignment="Left"
                                       HorizontalAlignment="Right">
@@ -139,7 +139,7 @@
                                 
                                 <TextBlock Text="当剩余时间不足" VerticalAlignment="Center"
                                            Opacity="0.75"/>
-                                <TextBox Foreground="{DynamicResource MaterialDesignBody}"
+                                <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                          Text="{Binding Settings.ExtraInfo4ShowSecondsSeconds, Converter={StaticResource IntToStringConverter}}"
                                          MinWidth="75" Margin="3 0 0 0" TextAlignment="Center"/>
                             </StackPanel>
@@ -150,10 +150,10 @@
                 <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.IsCountdownEnabled, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockEnd}"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="时间点结束倒计时"
                                                 Description="在当前时间点将要结束时显示倒计时。"
                                                 IsOn="{Binding Settings.IsCountdownEnabled, Mode=TwoWay}"
@@ -173,7 +173,7 @@
                             <ci:NumbericTextBox Grid.Row="0" MaxValue="36000" MinValue="0" Width="100"
                                                 Grid.Column="1"
                                                 VerticalAlignment="Center"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Style="{StaticResource MahApps.Styles.TextBox}"
                                                 Text="{Binding Settings.CountdownSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
 
@@ -220,10 +220,10 @@
                 <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.FileChartOutline}"
-                                                Foreground="{DynamicResource MaterialDesignBody}"
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                 Header="无课程时显示占位符"
                                                 Description="当当前没有加载课表或当日所有课程都已结束且不显示第二日课程时，显示指定的占位符。"
                                                 IsOn="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=TwoWay}"
@@ -244,7 +244,7 @@
                                       MaxWidth="300"
                                       Grid.Column="1"
                                       VerticalAlignment="Center"
-                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                       IsEditable="True"
                                       Text="{Binding Settings.PlaceholderTextNoClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <system:String>今天没有课程。</system:String>
@@ -265,7 +265,7 @@
                                       MaxWidth="300"
                                       Grid.Column="1"
                                       VerticalAlignment="Center"
-                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                       IsEditable="True"
                                       Text="{Binding Settings.PlaceholderTextAllClassEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                     <system:String>今日课程已全部结束。</system:String>

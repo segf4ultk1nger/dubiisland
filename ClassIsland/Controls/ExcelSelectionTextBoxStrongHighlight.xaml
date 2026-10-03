@@ -75,10 +75,10 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </UserControl.Resources>
-    <Border Padding="4" Margin="-4 0" BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+    <Border Padding="4" Margin="-4 0" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
             BorderThickness="2" CornerRadius="4">
         <Grid>
-            <Path x:Name="path" Fill="{DynamicResource PrimaryHueMidBrush}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,4,0" RenderTransformOrigin="0.5,0.5">
+            <Path x:Name="path" Fill="{DynamicResource MahApps.Brushes.Accent}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,4,0" RenderTransformOrigin="0.5,0.5">
                 <Path.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleX="1"/>

@@ -7,12 +7,12 @@
                    xmlns:controls="clr-namespace:ClassIsland.Controls"
                    xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
                    d:DataContext="{d:DesignInstance views:CrashWindow}"
-                   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                   TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                    TextElement.FontWeight="Regular"
                    TextElement.FontSize="13"
                    TextOptions.TextFormattingMode="Ideal" 
                    TextOptions.TextRenderingMode="Auto"        
-                   Background="{DynamicResource MaterialDesignPaper}"
+                   Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                    FontFamily="{StaticResource HarmonyOsSans}"
                    mc:Ignorable="d"
                    WindowStartupLocation="CenterScreen"
@@ -91,7 +91,7 @@
             </Button>
         </StackPanel>
 
-        <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="-12 -12 -12 8" Padding="16" Background="{DynamicResource PrimaryHueMidBrush}" TextElement.Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">
+        <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="-12 -12 -12 8" Padding="16" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <TextBlock Text="ClassIsland 发生错误 ヽ(*。>Д&lt;)o゜" Style="{StaticResource Headline6TextBlock}"

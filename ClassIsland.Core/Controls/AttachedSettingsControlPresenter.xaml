@@ -49,7 +49,7 @@
                             AllowsTransparency="True"
                            MouseDown="UIElement_OnMouseDown"
                             Visibility="{Binding ControlInfo.HasEnabledState, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Border Background="{DynamicResource MaterialDesignPaper}"
+                        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                 Width="350"
                                 Margin="8"
                                 MinHeight="300"

@@ -165,7 +165,7 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.ColumnSpan="2"
-                                            Background="{DynamicResource MaterialDesignBody}" Opacity="0.1"
+                                            Background="{DynamicResource MahApps.Brushes.ThemeForeground}" Opacity="0.1"
                                             CornerRadius="11" />
                                     <Image Grid.Column="0"
                                            Source="{Binding Images[icon]}" Height="22" />

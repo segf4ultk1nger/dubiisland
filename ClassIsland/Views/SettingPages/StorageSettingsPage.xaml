@@ -8,8 +8,8 @@
       xmlns:helpers="clr-namespace:ClassIsland.Shared.Helpers;assembly=ClassIsland.Shared"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      Background="{DynamicResource MaterialDesignPaper}"
+      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+      Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
@@ -40,7 +40,7 @@
                         </TextBlock>
                     </DockPanel>
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
-                            Margin="24 6 0 0" Foreground="{DynamicResource MaterialDesignBody}"
+                            Margin="24 6 0 0" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
                             CommandParameter="classisland://app/config-errors">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.OpenInNew}" Text="详细信息…"/>
@@ -60,10 +60,10 @@
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=OneWay}"
-                          TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Expander.Header>
                         <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.AutoMode}"
-                                                  Foreground="{DynamicResource MaterialDesignBody}"
+                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                   Header="启用自动备份"
                                                   Description="启用后，ClassIsland 将每隔一段时间自动备份当前的档案和配置文件。"
                                                   IsOn="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=TwoWay}"
@@ -81,7 +81,7 @@
                                 <TextBox
                                          Width="100"
                                          Text="{Binding SettingsService.Settings.AutoBackupIntervalDays, Converter={StaticResource IntToStringConverter}}"
-                                         Foreground="{DynamicResource MaterialDesignBody}"/>
+                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                             </ci:SettingsControl.Switcher>
                         </ci:SettingsControl>
                         <!-- 自动备份上限 -->
@@ -94,7 +94,7 @@
                                 <TextBox
                                          Width="100"
                                          Text="{Binding SettingsService.Settings.AutoBackupLimit, Converter={StaticResource IntToStringConverter}}"
-                                         Foreground="{DynamicResource MaterialDesignBody}"/>
+                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                             </ci:SettingsControl.Switcher>
                         </ci:SettingsControl>
                         <TextBlock TextWrapping="Wrap" Margin="0 0 0 6">

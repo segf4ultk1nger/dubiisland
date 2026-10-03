@@ -18,8 +18,8 @@
                    xmlns:commands="http://classisland.tech/schemas/xaml/core"
                    mc:Ignorable="d"
                    Height="600" Width="800"
-                   TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                   Background="{DynamicResource MaterialDesignPaper}"
+                   TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                   Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                    TextElement.FontWeight="Regular"
                    TextElement.FontSize="14"
                    FontFamily="{StaticResource HarmonyOsSans}"
@@ -78,9 +78,9 @@
 
     </Window.Resources>
     <ww:AsyncBox LoadingViewType="controls:WelcomeWindowIntroControl" x:Name="AsyncBox">
-        <Grid TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+        <Grid TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                 <Grid Loaded="FrameworkElement_OnLoaded"
-                      TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+                      TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
@@ -226,7 +226,7 @@
                                             <DatePicker
                                                 SelectedDate="{Binding ViewModel.Settings.SingleWeekStartTime}"
                                                 Width="120"
-                                                Foreground="{DynamicResource MaterialDesignBody}" />
+                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                                         </controls1:SettingsCard.Switcher>
                                     </controls1:SettingsCard>
                                     <controls1:SettingsCard Grid.Row="1" Margin="0 6 0 0"
@@ -286,7 +286,7 @@
                                                         </demo:ThemeDemo.Clip>
                                                     </demo:ThemeDemo>
                                                 </Grid>
-                                                <TextBlock Text="跟随系统" Foreground="{DynamicResource MaterialDesignBody}"/>
+                                                <TextBlock Text="跟随系统" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                             </StackPanel>
                                         </RadioButton>
                                         <RadioButton Grid.Column="1" VerticalContentAlignment="Bottom"
@@ -294,7 +294,7 @@
                                                      IsChecked="{Binding ViewModel.Settings.Theme, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=1}">
                                             <StackPanel>
                                                 <demo:ThemeDemo ThemeMode="Light"/>
-                                                <TextBlock Text="明亮" Foreground="{DynamicResource MaterialDesignBody}"/>
+                                                <TextBlock Text="明亮" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                             </StackPanel>
                                         </RadioButton>
                                         <RadioButton Grid.Column="2" VerticalContentAlignment="Bottom"
@@ -302,7 +302,7 @@
                                                      IsChecked="{Binding ViewModel.Settings.Theme, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=2}">
                                             <StackPanel>
                                                 <demo:ThemeDemo ThemeMode="Dark"/>
-                                                <TextBlock Text="黑暗" Foreground="{DynamicResource MaterialDesignBody}"/>
+                                                <TextBlock Text="黑暗" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                                             </StackPanel>
                                         </RadioButton>
                                     </Grid>

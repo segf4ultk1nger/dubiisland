@@ -10,14 +10,14 @@
     <Border Padding="14"
             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:InfoCard}}"
             Margin="0 0 0 8"
-            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderBrush="{DynamicResource MahApps.Brushes.Gray7}"
             BorderThickness="1" CornerRadius="8"
             >
         <Grid>
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <local:IconText IconSize="24" Kind="{Binding IconKind}"
-                                            Foreground="{DynamicResource PrimaryHueMidBrush}" />
+                                            Foreground="{DynamicResource MahApps.Brushes.Accent}" />
                     <TextBlock Margin="4 2 0 0" Text="{Binding Title}" FontWeight="Bold"/>
                 </StackPanel>
                 <TextBlock TextWrapping="Wrap" Margin="0 6 0 0"

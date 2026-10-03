@@ -27,12 +27,12 @@
                     </Style>
                 </StackPanel.Resources>
                 <!-- 附加设置覆盖提示 -->
-                <Border Background="{DynamicResource MaterialDesignToolBarBackground}" Margin="0 0 0 4">
+                <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Margin="0 0 0 4">
                     <Grid>
                         <DockPanel Margin="8 0 4 0">
                             <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                     DockPanel.Dock="Right"
-                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     Click="ButtonShowAttachedSettingsInfo_OnClick">
                                 <controls1:IconText Kind="{x:Static controls1:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
                             </Button>
@@ -49,10 +49,10 @@
                 <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.IsClassOnPreparingNotificationEnabled, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockEnd}"
-                                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在课前准备时发出提醒"
                                                       Description="在上课前一段时间发出醒目提醒，提示做好上课准备。"
                                                       IsOn="{Binding Settings.IsClassOnPreparingNotificationEnabled, Mode=TwoWay}"
@@ -73,7 +73,7 @@
                                         <controls1:NumbericTextBox MaxValue="3600" MinValue="0"
                                                                    Text="{Binding Settings.InDoorClassPreparingDeltaTime, Converter={StaticResource IntToStringConverter}}"
                                                                    Width="120"
-                                                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                    Style="{StaticResource MahApps.Styles.TextBox}" />
                                     </Grid>
                                 </controls1:SettingsControl.Switcher>
@@ -88,7 +88,7 @@
                                         <controls1:NumbericTextBox MaxValue="3600" MinValue="0"
                                                                    Text="{Binding Settings.OutDoorClassPreparingDeltaTime, Converter={StaticResource IntToStringConverter}}"
                                                                    Width="120"
-                                                                   Foreground="{DynamicResource MaterialDesignBody}"
+                                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                    Style="{StaticResource MahApps.Styles.TextBox}" />
                                     </Grid>
                                 </controls1:SettingsControl.Switcher>
@@ -96,25 +96,25 @@
                             <!-- 准备上课提醒文字 -->
                             <TextBox Text="{Binding Settings.ClassOnPreparingText}"
                                      mah:TextBoxHelper.Watermark="室内课程准备上课提醒文字（留空以禁用）"
-                                     Foreground="{DynamicResource MaterialDesignBody}"
+                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0 0 0 6" />
                             <!-- 准备上课遮罩文字 -->
                             <TextBox Text="{Binding Settings.ClassOnPreparingMaskText}"
                                      mah:TextBoxHelper.Watermark="室内课程准备上课遮罩文字"
-                                     Foreground="{DynamicResource MaterialDesignBody}"
+                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0 0 0 6" />
                             <!-- 户外课程准备上课提醒文字 -->
                             <TextBox Text="{Binding Settings.OutdoorClassOnPreparingText}"
                                     mah:TextBoxHelper.Watermark="户外课程准备上课提醒文字（留空以禁用）"
-                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     Style="{StaticResource MahApps.Styles.TextBox}"
                                     Margin="0 0 0 6" />
                             <!-- 户外课程准备上课遮罩文字 -->
                             <TextBox Text="{Binding Settings.OutdoorClassOnPreparingMaskText}"
                                      mah:TextBoxHelper.Watermark="户外课程准备上课遮罩文字"
-                                    Foreground="{DynamicResource MaterialDesignBody}"
+                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     Style="{StaticResource MahApps.Styles.TextBox}"
                                     Margin="0 0 0 6" />
                         </StackPanel>
@@ -124,10 +124,10 @@
                 <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.IsClassOnNotificationEnabled, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.BookOutline}"
-                                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在上课时发出提醒"
                                                       Description="在上课时发出醒目提醒，提示已经上课。"
                                                       IsOn="{Binding Settings.IsClassOnNotificationEnabled, Mode=TwoWay}"
@@ -141,7 +141,7 @@
                             <!-- 上课遮罩文字 -->
                             <TextBox Text="{Binding Settings.ClassOnMaskText}"
                                      mah:TextBoxHelper.Watermark="上课遮罩文字"
-                                     Foreground="{DynamicResource MaterialDesignBody}"
+                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0 0 0 6" />
                             
@@ -152,10 +152,10 @@
                 <Border Margin="0 0 0 6">
                     <Expander Background="Transparent"
                               IsExpanded="{Binding Settings.IsClassOffNotificationEnabled, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
                             <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}"
-                                                      Foreground="{DynamicResource MaterialDesignBody}"
+                                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在下课时发出提醒"
                                                       Description="在下课时发出醒目提醒，提示已经下课。"
                                                       IsOn="{Binding Settings.IsClassOffNotificationEnabled, Mode=TwoWay}"
@@ -169,7 +169,7 @@
                             <!-- 下课提醒文字 -->
                             <TextBox Text="{Binding Settings.ClassOffOverlayText}"
                                      mah:TextBoxHelper.Watermark="下课提醒文字（留空以禁用）"
-                                     Foreground="{DynamicResource MaterialDesignBody}"
+                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                      Style="{StaticResource MahApps.Styles.TextBox}"
                                      Margin="0 0 0 6" />
 

@@ -18,9 +18,6 @@ namespace ClassIsland.Services;
 
 public class ThemeService : IHostedService, IThemeService
 {
-    private const string MahAppsMaterialAliasesUriString =
-        "pack://application:,,,/ClassIsland.Core;component/Themes/MahAppsMaterialAliases.xaml";
-
     public async Task StartAsync(CancellationToken cancellationToken)
     {
     }
@@ -83,54 +80,7 @@ public class ThemeService : IHostedService, IThemeService
                 new Uri("pack://application:,,,/ClassIsland;component/Themes/DarkTheme.xaml")
         };
         Application.Current.Resources.MergedDictionaries[0] = resource;
-        ApplyMaterialBrushAliases();
         FreezeApplicationResources();
-    }
-
-    private static void ApplyMaterialBrushAliases()
-    {
-        var app = Application.Current;
-        if (app == null)
-        {
-            return;
-        }
-
-        var dictionaries = app.Resources.MergedDictionaries;
-        for (var i = dictionaries.Count - 1; i >= 0; i--)
-        {
-            var source = dictionaries[i].Source;
-            if (source != null &&
-                string.Equals(source.OriginalString, MahAppsMaterialAliasesUriString, StringComparison.OrdinalIgnoreCase))
-            {
-                dictionaries.RemoveAt(i);
-            }
-        }
-
-        Alias(app, "MaterialDesignPaper", "MahApps.Brushes.ThemeBackground");
-        Alias(app, "MaterialDesignBackground", "MahApps.Brushes.ThemeBackground");
-        Alias(app, "MaterialDesignCardBackground", "MahApps.Brushes.ThemeBackground");
-        Alias(app, "MaterialDesignToolBarBackground", "MahApps.Brushes.Control.Background", "MahApps.Brushes.ThemeBackground");
-        Alias(app, "MaterialDesignBody", "MahApps.Brushes.ThemeForeground", "MahApps.Brushes.Text");
-        Alias(app, "MaterialDesignBodyLight", "MahApps.Brushes.Gray", "MahApps.Brushes.Gray2", "MahApps.Brushes.ThemeForeground");
-        Alias(app, "MaterialDesignDivider", "MahApps.Brushes.Gray7", "MahApps.Brushes.Separator");
-        Alias(app, "MaterialDesignSelection", "MahApps.Brushes.Highlight", "MahApps.Brushes.Accent");
-        Alias(app, "PrimaryHueLightBrush", "MahApps.Brushes.Accent3", "MahApps.Brushes.Accent");
-        Alias(app, "PrimaryHueMidBrush", "MahApps.Brushes.Accent");
-        Alias(app, "PrimaryHueDarkBrush", "MahApps.Brushes.AccentBase", "MahApps.Brushes.Accent");
-        Alias(app, "PrimaryHueMidForegroundBrush", "MahApps.Brushes.IdealForeground", "MahApps.Brushes.ThemeForeground");
-        Alias(app, "SecondaryHueMidBrush", "MahApps.Brushes.Accent2", "MahApps.Brushes.Accent");
-    }
-
-    private static void Alias(Application app, string targetKey, params string[] sourceKeys)
-    {
-        foreach (var sourceKey in sourceKeys)
-        {
-            if (app.TryFindResource(sourceKey) is Brush brush)
-            {
-                app.Resources[targetKey] = brush;
-                return;
-            }
-        }
     }
 
     /// <summary>

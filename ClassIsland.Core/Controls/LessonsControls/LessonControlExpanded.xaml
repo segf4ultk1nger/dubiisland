@@ -150,7 +150,7 @@
                     </TabItem>
                     <TabItem>
                         <Grid VerticalAlignment="Bottom">
-                            <Border Background="{DynamicResource PrimaryHueMidBrush}"
+                            <Border Background="{DynamicResource MahApps.Brushes.Accent}"
                                     Height="{Binding ActualHeight, ElementName=BorderStroke}"
                                     ClipToBounds="True"
                                     BorderThickness="1"
@@ -160,7 +160,7 @@
                                     CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource SizeDoubleToCornerRadiusConverter}}">
                             </Border>
                             <Border ClipToBounds="True"
-                                    BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                                    BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                                     BorderThickness="1"
                                     Padding="8 0"
                                     x:Name="BorderStroke"

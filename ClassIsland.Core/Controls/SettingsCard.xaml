@@ -6,15 +6,15 @@
              xmlns:converters1="clr-namespace:ClassIsland.Core.Converters"
              xmlns:controls1="clr-namespace:ClassIsland.Core.Controls"
              mc:Ignorable="d" 
-             Foreground="{DynamicResource MaterialDesignBody}"
+             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters1:BooleanToVisibilityReConverter x:Key="BooleanToVisibilityReConverter"/>
     </UserControl.Resources>
-    <Border HorizontalAlignment="Stretch" VerticalAlignment="Center" TextElement.Foreground="{DynamicResource MaterialDesignBody}" Padding="12 10 16 10">
+    <Border HorizontalAlignment="Stretch" VerticalAlignment="Center" TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Padding="12 10 16 10">
         <controls1:SettingsControl 
-            Foreground="{DynamicResource MaterialDesignBody}"
+            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
             Header="{Binding Header, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
             Description="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
             IconGlyph="{Binding IconGlyph, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
