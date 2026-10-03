@@ -27,7 +27,6 @@
     <PackageReference Include="CsesSharp" Version="1.0.0" />
     <PackageReference Include="DotNetCampus.LatestCSharpFeatures" Version="13.0.1" />
     <PackageReference Include="Google.Protobuf" Version="3.27.0-rc1" />
-    <PackageReference Include="Grpc" Version="2.46.6" />
     <PackageReference Include="Grpc.Tools" Version="2.62.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,13 +39,13 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protobuf\Service\*.proto" />
-    <Protobuf Include="Protobuf\Server\*.proto" />
-    <Protobuf Include="Protobuf\Client\*.proto" />
-    <Protobuf Include="Protobuf\Command\*.proto" />
-    <Protobuf Include="Protobuf\Enum\*.proto" />
-    <Protobuf Include="Protobuf\Management\*.proto" />
-    <Protobuf Include="Protobuf\AuditEvent\*.proto" />
+    <Protobuf Include="Protobuf\Service\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobuf\Server\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobuf\Client\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobuf\Command\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobuf\Enum\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobuf\Management\*.proto" GrpcServices="None" />
+    <Protobuf Include="Protobuf\AuditEvent\*.proto" GrpcServices="None" />
   </ItemGroup>
 
   <Import Project="..\GeneratePackage.props" />

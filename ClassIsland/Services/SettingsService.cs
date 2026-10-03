@@ -99,6 +99,12 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
             MigrateSettings(out requiresRestarting);
         }
 
+        // 字体不再内置，把旧版设置里指向内置字体的值回退到系统字体。
+        if (Settings.MainWindowFont?.Contains("Assets/Fonts") == true)
+        {
+            Settings.MainWindowFont = "Microsoft YaHei UI";
+        }
+
         Settings.LastAppVersion = Assembly.GetExecutingAssembly().GetName().Version!;
 
         if (requiresRestarting)

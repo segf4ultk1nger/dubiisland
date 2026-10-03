@@ -399,9 +399,9 @@
                                             <Style TargetType="TextBlock">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Source}"
-                                                                 Value="/ClassIsland;component/Assets/Fonts/#HarmonyOS Sans SC">
+                                                                 Value="Microsoft YaHei UI">
                                                         <Setter Property="Text"
-                                                                Value="（默认）HarmonyOS Sans SC" />
+                                                                Value="（默认）Microsoft YaHei UI" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                                 <Setter Property="Text" Value="{Binding Source}" />
