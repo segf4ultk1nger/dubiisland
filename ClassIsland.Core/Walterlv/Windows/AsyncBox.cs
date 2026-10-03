@@ -35,6 +35,8 @@ public class AsyncBox : FrameworkElement
 
     private bool _isChildReadyToLoad;
 
+    private bool _isHosting;
+
     private Type _loadingViewType;
 
     public event EventHandler? LoadingViewLoaded;
@@ -128,6 +130,15 @@ public class AsyncBox : FrameworkElement
 
             return;
         }
+
+        // HostVisual 只能连接一个 VisualTarget。Loaded 可能在 await 期间再次触发，
+        // 这里同步占位，避免重复创建 VisualTargetPresentationSource。
+        if (_isHosting || _targetSource != null)
+        {
+            return;
+        }
+
+        _isHosting = true;
 
         var dispatcher = await GetAsyncDispatcherAsync();
         if (VisualTreeHelper.GetParent(_contentPresenter) != null || VisualTreeHelper.GetParent(_hostVisual) != null)

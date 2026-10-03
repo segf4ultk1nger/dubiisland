@@ -35,26 +35,6 @@
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-            <Border Background="#17800080" Margin="0 0 0 4" Panel.ZIndex="1" Visibility="{Binding SettingsService.Settings.ShowSellingAnnouncement, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <StackPanel Margin="8 4">
-                    <DockPanel>
-                        <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}" />
-                        <TextBlock TextWrapping="Wrap"
-                                   VerticalAlignment="Center"
-                                   Margin="4 0 0 0">
-                            <Run Text="ClassIsland 是开源免费的软件，官方没有提供任何形式的付费支持服务，源代码仓库地址在" />
-                            <ci:NavHyperlink CommandParameter="https://github.com/ClassIsland/ClassIsland/">https://github.com/ClassIsland/ClassIsland/</ci:NavHyperlink>
-                            <Run Text="。如果您通过有偿协助等付费方式取得本应用，在遇到问题时请在与卖家约定的服务框架下，优先向卖家求助。如果卖家没有提供您预期的服务，请退款或通过其它形式积极维护您的合法权益。" />
-                        </TextBlock>
-                    </DockPanel>
-                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
-                            Margin="24 6 0 0" Foreground="{DynamicResource MaterialDesignBody}"
-                            Click="ButtonCloseSellingAnnouncementBanner_OnClick">
-                        <ci:IconText Kind="{x:Static controls1:IconGlyphs.Close}" Text="不再显示"/>
-                    </Button>
-                </StackPanel>
-            </Border>
-
             <!-- Announcements -->
             <ItemsControl ItemsSource="{Binding AnnouncementService.Announcements, Mode=OneWay}"
                           Margin="0 0 0 8"
@@ -118,7 +98,7 @@
                                                                           Description="将在以下选定的情况隐藏主界面，以防止遮挡屏幕影响授课。"
                                                                           Margin="-12 0" />
                     </Expander.Header>
-                    <TabControl Margin="36 -16 64 12" HorizontalContentAlignment="Left"
+                    <TabControl Margin="36 0 64 12" HorizontalContentAlignment="Left"
                                 SelectedIndex="{Binding SettingsService.Settings.HideMode}">
                         <TabItem Header="基础模式">
                             <StackPanel Margin="6 6 0 0">

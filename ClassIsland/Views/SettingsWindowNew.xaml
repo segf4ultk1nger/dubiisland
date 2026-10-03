@@ -13,9 +13,8 @@
         xmlns:ci="clr-namespace:ClassIsland"
         xmlns:windows="clr-namespace:Walterlv.Windows;assembly=ClassIsland.Core"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:converters1="clr-namespace:ClassIsland.Converters"
-        xmlns:services="clr-namespace:ClassIsland.Core.Services.Registry;assembly=ClassIsland.Core"
+        xmlns:attributes="clr-namespace:ClassIsland.Core.Attributes;assembly=ClassIsland.Core"
         xmlns:commands="http://classisland.tech/schemas/xaml/core"
         d:DataContext="{d:DesignInstance local:SettingsWindowNew}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -144,86 +143,35 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
-        <CollectionViewSource x:Key="NavigationCollectionViewSource"
-                              Source="{x:Static services:SettingsWindowRegistryService.Registered}"
-                              Filter="NavigationCollectionViewSource_OnFilter"
-                              IsLiveFilteringRequested="True">
-            <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Category"/>
-            </CollectionViewSource.GroupDescriptions>
-            <CollectionViewSource.SortDescriptions>
-                <componentModel:SortDescription PropertyName="Category"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <converters1:SettingsWindowIsFirstGroupConverter x:Key="SettingsWindowIsFirstGroupConverter" />
-        <DataTemplate x:Key="SettingsNavigationListTemplate">
-            <Grid Width="250">
-                <ListBox ItemsSource="{Binding Source={StaticResource NavigationCollectionViewSource}}"
-                         SelectedItem="{Binding ViewModel.SelectedPageInfo}"
-                         SelectionChanged="NavigationListBox_OnSelectionChanged"
-                         Style="{StaticResource NavigationPrimaryListBox}"
-                         IsSynchronizedWithCurrentItem="False"
-                         IsEnabled="{Binding ViewModel.IsNavigating, Converter={StaticResource InvertBooleanConverter}}"
-                         ItemContainerStyle="{StaticResource NavigationPrimaryListBoxItemYou}">
-                    <ListBox.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.ContainerStyle>
-                                <Style TargetType="{x:Type GroupItem}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                <StackPanel>
-                                                    <Separator Height="0.5"
-                                                               Margin="0 4 0 4"
-                                                               Visibility="{Binding Converter={StaticResource SettingsWindowIsFirstGroupConverter}, Mode=OneWay, ConverterParameter={StaticResource NavigationCollectionViewSource}}"/>
-                                                    <ItemsPresenter />
-                                                </StackPanel>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </GroupStyle.ContainerStyle>
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <Separator/>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListBox.GroupStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <controls:IconText IconSize="18" VerticalAlignment="Center">
-                                    <controls:IconText.Style>
-                                        <Style TargetType="controls:IconText">
-                                            <Style.Triggers>
-                                                <!-- TODO: 添加对BitmapImage支持 -->
-                                                <DataTrigger
-                                                    Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}"
-                                                    Value="True">
-                                                    <Setter Property="Kind"
-                                                            Value="{Binding SelectedPackIcon}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                            <Setter Property="Kind"
-                                                    Value="{Binding UnSelectedPackIcon}" />
-                                        </Style>
-                                    </controls:IconText.Style>
-                                </controls:IconText>
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
-                                           Margin="12 0 0 0" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel IsVirtualizingWhenGrouping="True"
-                                                    IsVirtualizing="True"
-                                                    IsContainerVirtualizable="True"/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
+        <!-- 导航项：设置页面 -->
+        <DataTemplate DataType="{x:Type attributes:SettingsPageInfo}">
+            <Grid Height="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength, Mode=OneWay}"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <controls:IconText IconSize="18" Grid.Column="0"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <controls:IconText.Style>
+                        <Style TargetType="controls:IconText">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}" Value="True">
+                                    <Setter Property="Kind" Value="{Binding SelectedPackIcon}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="Kind" Value="{Binding UnSelectedPackIcon}"/>
+                        </Style>
+                    </controls:IconText.Style>
+                </controls:IconText>
+                <TextBlock Grid.Column="1" Text="{Binding Name}"
+                           VerticalAlignment="Center" Margin="4 0 12 0"
+                           TextTrimming="CharacterEllipsis"/>
             </Grid>
+        </DataTemplate>
+
+        <!-- 导航分组分隔线 -->
+        <DataTemplate DataType="{x:Type mah:HamburgerMenuSeparatorItem}">
+            <Separator Margin="8 4"/>
         </DataTemplate>
     </controls:MyWindow.Resources>
     <controls:MyWindow.CommandBindings>
@@ -237,12 +185,102 @@
                     Click="ButtonGoBack_OnClick"
                     Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.ArrowLeft}, Size=16}" />
-            <Button ToolTip="导航栏"
-                    Visibility="{Binding ViewModel.IsViewCompressed, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Click="ButtonBaseToggleNavigationDrawer_OnClick"
-                    Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Menu}, Size=16}" />
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands ShowSeparators="False">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="ToggleButton"
+                           BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
+                        <Style.Resources>
+                            <converters:SolidColorBrushOpacityConverter
+                                x:Key="SolidColorBrushOpacityConverter" />
+                        </Style.Resources>
+                        <Setter Property="Foreground"
+                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
+                        <Setter Property="BorderBrush"
+                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
+                        <Setter Property="Margin" Value="0 0 6 0" />
+                    </Style>
+                </StackPanel.Resources>
+                <ToggleButton Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="部分设置需要重启应用后生效。" Click="ButtonRestartApp_OnClick">
+                    <TextBlock>
+                        <Run Text="需要重启" />
+                    </TextBlock>
+                </ToggleButton>
+                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此ClassIsland实例。">
+                    <ToggleButton.CommandParameter>
+                        <controls2:ManagementInfoControl />
+                    </ToggleButton.CommandParameter>
+                    <TextBlock>
+                        <Run Text="由贵单位管理" />
+                    </TextBlock>
+                </ToggleButton>
+                <TextBlock Text="{x:Static ci:App.AppVersion}"
+                           Margin="8 0 0 0"
+                           VerticalAlignment="Center"
+                           ToolTip="应用版本" />
+                <Grid Margin="8 0 0 0">
+                    <ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" ToolTip="更多选项…" IsChecked="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}" Padding="4">
+                        …
+                    </ToggleButton>
+                    <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
+                        <Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
+                            <StackPanel>
+                                <StackPanel>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Code}}" Header="实验性功能…"
+                                              Click="MenuItemExperimentalSettings_OnClick" />
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WindowMaximize}}"
+                                              Header="调试窗口规则…"
+                                              Click="MenuItemDebugWindowRule_OnClick"/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.SwapHorizontal}}"
+                                              Header="创建快捷换课图标"
+                                              Click="MenuItemAddClassSwapShortcut_OnClick"/>
+                                    <Separator/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WorkOutline}}" Header="集控选项…"
+                                              Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
+                                              CommandParameter="classisland://app/settings/management?ci_keepHistory=true">
+                                    </MenuItem>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseAddOutline}}" Header="加入管理…"
+                                              Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
+                                              Command="{x:Static dialogs:DialogService.OpenDialogCommand}">
+                                        <MenuItem.CommandParameter>
+                                            <controls2:JoinManagementDialog/>
+                                        </MenuItem.CommandParameter>
+                                    </MenuItem>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseOffOutline}}" Header="退出管理…"
+                                              Click="MenuItemExitManagement_OnClick" 
+                                              Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    </MenuItem>
+                                    <Separator/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FileDocumentOutline}}"
+                                              Header="日志…"
+                                              Click="MenuItemAppLogs_OnClick"/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.DatabaseExportOutline}}"
+                                              Header="导出诊断数据"
+                                              Click="MenuItemExportDiagnosticInfo_OnClick"/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WrenchCheckOutline}}"
+                                              Header="重启到恢复模式"
+                                              Click="MenuItemRestartToRecovery_OnClick"/>
+                                    <Separator/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderTextOutline}}"
+                                              Header="打开日志目录…"
+                                              Click="MenuItemOpenLogFolder_OnClick"/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderFileOutline}}"
+                                              Header="打开数据目录…"
+                                              Click="MenuItemOpenDataFolder_OnClick"/>
+                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderDownloadOutline}}"
+                                              Header="打开应用目录…"
+                                              Click="MenuItemOpenAppFolder_OnClick"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </StackPanel>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
     <Grid x:Name="RootGrid">
         <Grid.LayoutTransform>
             <TransformGroup>
@@ -252,184 +290,79 @@
                 <TranslateTransform/>
             </TransformGroup>
         </Grid.LayoutTransform>
+        <mah:HamburgerMenu x:Name="HamburgerMenuControl"
+                           ItemsSource="{Binding MenuItems}"
+                           SelectedItem="{Binding ViewModel.SelectedPageInfo, Mode=TwoWay}"
+                           IsPaneOpen="{Binding ViewModel.IsNavigationDrawerOpened, Mode=TwoWay}"
+                           OpenPaneLength="250"
+                           CompactPaneLength="48"
+                           DisplayMode="CompactInline">
+            <mah:HamburgerMenu.Style>
+                <Style TargetType="mah:HamburgerMenu" BasedOn="{StaticResource MahApps.Styles.HamburgerMenu}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ViewModel.IsViewCompressed, Mode=OneWay}" Value="True">
+                            <Setter Property="DisplayMode" Value="CompactOverlay"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </mah:HamburgerMenu.Style>
+            <!-- 页面内容 -->
             <Grid>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <ContentControl Grid.Column="0"
-                                        Content="{Binding}"
-                                        ContentTemplate="{StaticResource SettingsNavigationListTemplate}"
-                                        Visibility="{Binding ViewModel.IsViewCompressed, Converter={StaticResource InverseBoolToVisConverter}}"/>
-                        <!-- 页面内容 -->
-                        <Grid Grid.Column="1">
-                            <Grid
-                                HorizontalAlignment="Left"
-                                        VerticalAlignment="Bottom"
-                                Margin="32 8 8 16"
-                                        Opacity="0.75">
-                                <Grid.Visibility>
-                                    <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
-                                        <Binding Path="SettingsService.Settings.ShowEchoCaveWhenSettingsPageLoading"/>
-                                        <Binding Path="ManagementService.Policy.DisableEasterEggs" Converter="{StaticResource BooleanToBooleanReConverter}"/>
-                                    </MultiBinding>
-                                </Grid.Visibility>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <controls:IconText Kind="{x:Static controls:IconGlyphs.BulbOnOutline}" VerticalAlignment="Center"
-                                                         Grid.Column="0"/>
-                                <TextBlock Text="{Binding ViewModel.CurrentEchoCaveText}"
-                                           Grid.Column="1"
-                                           TextWrapping="Wrap"
-                                           FontWeight="Regular"
-                                           VerticalAlignment="Center"
-                                           Margin="4 0 0 0"/>
-                            </Grid>
-                            <Frame Content="{Binding ViewModel.FrameContent}"
-                                   Background="{DynamicResource MaterialDesignPaper}"
-                                   NavigationUIVisibility="Hidden"
-                                   x:Name="NavigationFrame" RenderTransformOrigin="0.5,0.5">
-                                <Frame.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform />
-                                        <SkewTransform />
-                                        <RotateTransform />
-                                        <TranslateTransform X="0" />
-                                    </TransformGroup>
-                                </Frame.RenderTransform>
-                                <d:Frame.Content>
-                                    <Page Background="Pink">
-                                        <TextBlock TextWrapping="Wrap"
-                                                   Text="{StaticResource TestStringLong}" />
-                                    </Page>
-                                </d:Frame.Content>
-                            </Frame>
-                            <windows:AsyncBox LoadingViewType="controls2:LoadingMask" x:Name="LoadingAsyncBox"/>
-                        </Grid>
-                    </Grid>
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="8 4">
-                                <StackPanel.Resources>
-                                    <Style TargetType="ToggleButton"
-                                           BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
-                                        <Style.Resources>
-                                            <converters:SolidColorBrushOpacityConverter
-                                                x:Key="SolidColorBrushOpacityConverter" />
-                                        </Style.Resources>
-                                        <Setter Property="Foreground"
-                                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
-                                        <Setter Property="BorderBrush"
-                                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
-<Setter Property="Margin" Value="0 0 6 0" />
-                                    </Style>
-                                </StackPanel.Resources>
-                                <ToggleButton Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="部分设置需要重启应用后生效。" Click="ButtonRestartApp_OnClick">
-                                    <TextBlock>
-                                        <Run Text="需要重启" />
-                                    </TextBlock>
-                                </ToggleButton>
-                                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此ClassIsland实例。">
-                                    <ToggleButton.CommandParameter>
-                                        <controls2:ManagementInfoControl />
-                                    </ToggleButton.CommandParameter>
-                                    <TextBlock>
-                                        <Run Text="由贵单位管理" />
-                                    </TextBlock>
-                                </ToggleButton>
-                                <TextBlock Text="{x:Static ci:App.AppVersion}"
-                                           Margin="8 0 0 0"
-                                           VerticalAlignment="Center"
-                                           ToolTip="应用版本" />
-                                <Grid Margin="8 0 0 0">
-<ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" ToolTip="更多选项…" IsChecked="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}" Padding="4">
-…
-</ToggleButton>
-<Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-<Border Background="{DynamicResource MaterialDesignPaper}" Padding="4">
-
-                                    <StackPanel>
-                                        <StackPanel>
-                                            <!--<MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WarningCircleOutline}}" Header="查看崩溃报告…"/>
-                                        <Separator/>-->
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Code}}" Header="实验性功能…"
-                                                  Click="MenuItemExperimentalSettings_OnClick" />
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WindowMaximize}}"
-                                                      Header="调试窗口规则…"
-                                                      Click="MenuItemDebugWindowRule_OnClick"/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.SwapHorizontal}}"
-                                                      Header="创建快捷换课图标"
-                                                      Click="MenuItemAddClassSwapShortcut_OnClick"/>
-                                            <Separator/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WorkOutline}}" Header="集控选项…"
-                                                      Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
-                                                      CommandParameter="classisland://app/settings/management?ci_keepHistory=true">
-                                            </MenuItem>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseAddOutline}}" Header="加入管理…"
-                                                  Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
-                                                  Command="{x:Static dialogs:DialogService.OpenDialogCommand}">
-                                                <MenuItem.CommandParameter>
-                                                    <controls2:JoinManagementDialog/>
-                                                </MenuItem.CommandParameter>
-                                            </MenuItem>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseOffOutline}}" Header="退出管理…"
-                                                  Click="MenuItemExitManagement_OnClick" 
-                                                  Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FileDocumentOutline}}"
-                                                  Header="日志…"
-                                                  Click="MenuItemAppLogs_OnClick"/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.DatabaseExportOutline}}"
-                                                  Header="导出诊断数据"
-                                                  Click="MenuItemExportDiagnosticInfo_OnClick"/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WrenchCheckOutline}}"
-                                                      Header="重启到恢复模式"
-                                                      Click="MenuItemRestartToRecovery_OnClick"/>
-                                            <Separator/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderTextOutline}}"
-                                                      Header="打开日志目录…"
-                                                      Click="MenuItemOpenLogFolder_OnClick"/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderFileOutline}}"
-                                                      Header="打开数据目录…"
-                                                      Click="MenuItemOpenDataFolder_OnClick"/>
-                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderDownloadOutline}}"
-                                                      Header="打开应用目录…"
-                                                      Click="MenuItemOpenAppFolder_OnClick"/>
-                                            
-                                        </StackPanel>
-
-                                    </StackPanel>
-                                
-</Border>
-</Popup>
-</Grid>
-                    </StackPanel>
+                <Grid
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Margin="32 8 8 16"
+                    Opacity="0.75">
+                    <Grid.Visibility>
+                        <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
+                            <Binding Path="SettingsService.Settings.ShowEchoCaveWhenSettingsPageLoading"/>
+                            <Binding Path="ManagementService.Policy.DisableEasterEggs" Converter="{StaticResource BooleanToBooleanReConverter}"/>
+                        </MultiBinding>
+                    </Grid.Visibility>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <controls:IconText Kind="{x:Static controls:IconGlyphs.BulbOnOutline}" VerticalAlignment="Center"
+                                             Grid.Column="0"/>
+                    <TextBlock Text="{Binding ViewModel.CurrentEchoCaveText}"
+                               Grid.Column="1"
+                               TextWrapping="Wrap"
+                               FontWeight="Regular"
+                               VerticalAlignment="Center"
+                               Margin="4 0 0 0"/>
                 </Grid>
-                <mah:FlyoutsControl>
-                    <mah:Flyout Position="Left"
-                                Width="250"
-                                IsModal="True"
-                                TitleVisibility="Collapsed"
-                                IsOpen="{Binding ViewModel.IsNavigationDrawerOpened, Mode=TwoWay}">
-                        <ContentControl Content="{Binding}"
-                                        ContentTemplate="{StaticResource SettingsNavigationListTemplate}"/>
-                    </mah:Flyout>
-                    <mah:Flyout Position="Right"
-                                Width="420"
-                                IsModal="True"
-                                TitleVisibility="Collapsed"
-                                IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}">
-                        <ContentControl Content="{Binding ViewModel.DrawerContent}"/>
-                    </mah:Flyout>
-                </mah:FlyoutsControl>
+                <Frame Content="{Binding ViewModel.FrameContent}"
+                       Background="{DynamicResource MaterialDesignPaper}"
+                       NavigationUIVisibility="Hidden"
+                       x:Name="NavigationFrame" RenderTransformOrigin="0.5,0.5">
+                    <Frame.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform />
+                            <TranslateTransform X="0" />
+                        </TransformGroup>
+                    </Frame.RenderTransform>
+                    <d:Frame.Content>
+                        <Page Background="Pink">
+                            <TextBlock TextWrapping="Wrap"
+                                       Text="{StaticResource TestStringLong}" />
+                        </Page>
+                    </d:Frame.Content>
+                </Frame>
+                <windows:AsyncBox LoadingViewType="controls2:LoadingMask" x:Name="LoadingAsyncBox"/>
             </Grid>
+        </mah:HamburgerMenu>
+        <mah:FlyoutsControl>
+            <mah:Flyout Position="Right"
+                        Width="420"
+                        IsModal="True"
+                        TitleVisibility="Collapsed"
+                        IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}">
+                <ContentControl Content="{Binding ViewModel.DrawerContent}"/>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="16" TextWrapping="Wrap" FontWeight="Medium" Text="{Binding ViewModel.StatusMessage}"/>
     </Grid>
 </controls:MyWindow>

@@ -4,10 +4,15 @@
                     xmlns:ci="http://classisland.tech/schemas/xaml/core"
                     xmlns:classIsland="clr-namespace:ClassIsland"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
-                    xmlns:notification="clr-namespace:ClassIsland.Core.Models.Notification;assembly=ClassIsland.Core">
+                    xmlns:notification="clr-namespace:ClassIsland.Core.Models.Notification;assembly=ClassIsland.Core"
+                    xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Assets/Fonts/Fonts.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:BooleanToVisibilityReConverter x:Key="InverseBoolToVisConverter" />
+    <converters:BooleanToVisibilityReConverter x:Key="InverseBooleanToVisibilityConverter" />
+    <converters:BooleanToBooleanReConverter x:Key="InvertBooleanConverter" />
     <ci:InvertBooleanAndToVisibilityMultiConverter x:Key="InvertBooleanAndToVisibilityMultiConverter" />
 
     <!--#region StoryBoards-->

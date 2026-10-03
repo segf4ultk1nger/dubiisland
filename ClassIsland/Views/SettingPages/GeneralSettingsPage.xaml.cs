@@ -78,11 +78,6 @@ public partial class GeneralSettingsPage : SettingsPageBase
         ViewModel.IsWeekOffsetSettingsOpen = true;
     }
 
-    private void ButtonCloseSellingAnnouncementBanner_OnClick(object sender, RoutedEventArgs e)
-    {
-        SettingsService.Settings.ShowSellingAnnouncement = false;
-    }
-
     private async void ButtonRefreshSplashPreview_OnClick(object sender, RoutedEventArgs e)
     {
         SplashService.ResetSplashText();

@@ -9,7 +9,7 @@ public class SettingsNewViewModel : ObservableRecipient
     private object? _frameContent;
     private SettingsPageInfo? _selectedPageInfo = null;
     private bool _isViewCompressed = false;
-    private bool _isNavigationDrawerOpened = false;
+    private bool _isNavigationDrawerOpened = true;
     private bool _canGoBack = false;
     private object? _drawerContent;
     private string _statusMessage = "";

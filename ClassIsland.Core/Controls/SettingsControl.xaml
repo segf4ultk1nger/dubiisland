@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
              Foreground="{DynamicResource MaterialDesignBody}"
              FontFamily="{StaticResource HarmonyOsSans}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <ToggleButton x:Key="ToggleButton" IsChecked="{Binding IsOn, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
+        <mah:ToggleSwitch x:Key="ToggleButton" OnContent="" OffContent="" IsOn="{Binding IsOn, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
         <!-- Header TextBlock style -->
         <Style TargetType="TextBlock" x:Key="HeaderTextBlockStyle">
             <Style.Triggers>

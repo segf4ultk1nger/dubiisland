@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:ClassIsland.Core.Converters"
                     xmlns:controls="clr-namespace:ClassIsland.Core.Controls"
+                    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:lessonsControls="clr-namespace:ClassIsland.Core.Controls.LessonsControls"
@@ -10,6 +11,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+        <!-- TimePickerBase 定义在 Themes/DateTimePicker.xaml，Controls.xaml 不会合并它，缺了会导致档案编辑窗口的 TimePicker 崩溃 -->
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/DateTimePicker.xaml" />
         <!--<ResourceDictionary Source="/Assets/Fonts/Fonts.xaml"/>-->
         <ResourceDictionary Source="pack://application:,,,/ClassIsland.Core;component/Themes/Generic.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ClassIsland.Core;component/Themes/RichTextStyles.xaml"/>
@@ -19,7 +22,11 @@
         某一日，祂从天坠落。人们抬头仰望，于是看见了星空。星月送来神的女儿，她愿成为人的伴侣。长风化作她的轺车，四海落成她的园圃。鸟雀衔来善的种子，百花编织爱的颂歌。她便是这样降生于世，行于大地，与人类一同长大，与世界一起发芽。而今，终焉之时将至。而今，归去之时已至。就此告别吧，美丽的世界。此后，将有群星闪耀，因为我如今来过。此后，将有百花绽放，因为我从未离去。请将我的箭、我的花、与我的爱，织成新生的种子，带向那枯萎的大地。然后，便让它开出永恒而无瑕的…人性之华吧。我名为爱莉希雅……最初的律者，人之律者。
     </system:String>
 
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:BooleanToVisibilityReConverter x:Key="InverseBoolToVisConverter" />
+    <converters:BooleanToVisibilityReConverter x:Key="InverseBooleanToVisibilityConverter" />
     <converters:BooleanToBooleanReConverter x:Key="BooleanToBooleanReConverter" />
+    <converters:BooleanToBooleanReConverter x:Key="InvertBooleanConverter" />
     <converters:TimeSpanToDateTimeConverter x:Key="TimeSpanToDateTimeConverter" />
     <Style x:Key="Headline5TextBlock" TargetType="TextBlock">
         <Setter Property="FontSize" Value="24"/>
@@ -44,6 +51,13 @@
     </Style>
     <Style TargetType="ProgressBar" BasedOn="{StaticResource MahApps.Styles.ProgressBar}"/>
     <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
+    <!-- 去掉 MahApps 默认 Expander 展开时给 header 上的主题色底和边框 -->
+    <Style TargetType="Expander" BasedOn="{StaticResource MahApps.Styles.Expander}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="mah:HeaderedControlHelper.HeaderBackground" Value="Transparent"/>
+    </Style>
     <Style TargetType="Image">
         <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
         <Setter Property="UseLayoutRounding" Value="True"/>

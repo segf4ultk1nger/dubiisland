@@ -759,6 +759,7 @@ public partial class App : AppBase, IAppHost
         {
             var spanShowSplash = spanLaunching.StartChild("startup-show-splash");
 
+            ThemeService.FreezeApplicationResources();
             ThreadedUiDispatcher.Invoke(() =>
             {
                 GetService<SplashWindowBase>().Show();

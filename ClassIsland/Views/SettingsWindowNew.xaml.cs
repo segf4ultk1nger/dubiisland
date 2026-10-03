@@ -1,6 +1,7 @@
 using ClassIsland.Core.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -26,6 +27,7 @@ using ClassIsland.Core.Services;
 using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using ClassIsland.ViewModels;
+using MahApps.Metro.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ClassIsland.Services;
@@ -51,6 +53,11 @@ public partial class SettingsWindowNew : MyWindow
     private const string KeepHistoryParameterName = "ci_keepHistory";
 
     public SettingsNewViewModel ViewModel { get; } = new();
+
+    /// <summary>
+    /// 汉堡菜单项（设置页面 + 分组分隔线）
+    /// </summary>
+    public ObservableCollection<object> MenuItems { get; } = new();
 
     [NotNull]
     public NavigationService? NavigationService { get; set; }
@@ -93,6 +100,7 @@ public partial class SettingsWindowNew : MyWindow
         NavigationService.LoadCompleted += NavigationServiceOnLoadCompleted;
         NavigationService.Navigating += NavigationServiceOnNavigating;
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        RebuildMenu();
 
         if (ManagementService.Policy.DisableSettingsEditing)
         {
@@ -114,11 +122,67 @@ public partial class SettingsWindowNew : MyWindow
     {
         if (e.PropertyName == nameof(SettingsService.Settings.IsDebugOptionsEnabled))
         {
-            if (FindResource("NavigationCollectionViewSource") is CollectionViewSource source)
-            {
-                source.View.Refresh();
-            }
+            RebuildMenu();
         }
+    }
+
+    /// <summary>
+    /// 重建汉堡菜单项。按分类分组，组间插入分隔线。
+    /// </summary>
+    private void RebuildMenu()
+    {
+        MenuItems.Clear();
+        var firstGroup = true;
+        foreach (var category in new[]
+                 {
+                     SettingsPageCategory.Internal,
+                     SettingsPageCategory.External,
+                     SettingsPageCategory.About,
+                     SettingsPageCategory.Debug
+                 })
+        {
+            var pages = SettingsWindowRegistryService.Registered
+                .Where(p => p.Category == category && PassesNavigationFilter(p))
+                .ToList();
+            if (pages.Count == 0)
+            {
+                continue;
+            }
+
+            if (!firstGroup)
+            {
+                MenuItems.Add(new HamburgerMenuSeparatorItem());
+            }
+
+            foreach (var page in pages)
+            {
+                MenuItems.Add(page);
+            }
+
+            firstGroup = false;
+        }
+    }
+
+    private bool PassesNavigationFilter(SettingsPageInfo item)
+    {
+        if (item.HideDefault)
+        {
+            return false;
+        }
+        if (item.Category is SettingsPageCategory.Internal or SettingsPageCategory.External && ManagementService.Policy.DisableSettingsEditing)
+        {
+            return false;
+        }
+        if (item.Category == SettingsPageCategory.Debug && ManagementService.Policy.DisableDebugMenu)
+        {
+            return false;
+        }
+        if (item.Category == SettingsPageCategory.Debug && !SettingsService.Settings.IsDebugOptionsEnabled)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     protected override async void OnContentRendered(EventArgs e)
@@ -354,13 +418,14 @@ public partial class SettingsWindowNew : MyWindow
     private void SettingsWindowNew_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         var wasCompressed = ViewModel.IsViewCompressed;
-        ViewModel.IsViewCompressed = Width < 800;
-        if (WindowState == WindowState.Maximized)
-            ViewModel.IsViewCompressed = false;
-        if (!ViewModel.IsViewCompressed)
-            ViewModel.IsNavigationDrawerOpened = false;
-        else if (!wasCompressed)
-            ViewModel.IsNavigationDrawerOpened = true;
+        ViewModel.IsViewCompressed = Width < 800 && WindowState != WindowState.Maximized;
+        if (ViewModel.IsViewCompressed == wasCompressed)
+        {
+            return;
+        }
+
+        // 宽屏：CompactInline，菜单展开；窄屏：Overlay，菜单收起。
+        ViewModel.IsNavigationDrawerOpened = !ViewModel.IsViewCompressed;
     }
 
     private void ButtonBaseToggleNavigationDrawer_OnClick(object sender, RoutedEventArgs e)

@@ -1486,11 +1486,6 @@ public partial class ProfileSettingsWindow : MyWindow
         }
     }
 
-    private void ButtonHideSellingAnnouncementBanner_OnClick(object sender, RoutedEventArgs e)
-    {
-        MainViewModel.Settings.ShowSellingAnnouncement = false;
-    }
-
     private void MenuItemExportExcel_OnClick(object sender, RoutedEventArgs e)
     {
         var win = IAppHost.GetService<ExcelExportWindow>();

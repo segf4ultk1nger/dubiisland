@@ -21,7 +21,6 @@ public class ThemeService : IHostedService, IThemeService
     private const string MahAppsMaterialAliasesUriString =
         "pack://application:,,,/ClassIsland.Core;component/Themes/MahAppsMaterialAliases.xaml";
 
-    private static readonly Uri MahAppsMaterialAliasesUri = new(MahAppsMaterialAliasesUriString);
     public async Task StartAsync(CancellationToken cancellationToken)
     {
     }
@@ -84,7 +83,91 @@ public class ThemeService : IHostedService, IThemeService
                 new Uri("pack://application:,,,/ClassIsland;component/Themes/DarkTheme.xaml")
         };
         Application.Current.Resources.MergedDictionaries[0] = resource;
-        EnsureMahAppsMaterialAliasesLast();
+        ApplyMaterialBrushAliases();
+        FreezeApplicationResources();
+    }
+
+    private static void ApplyMaterialBrushAliases()
+    {
+        var app = Application.Current;
+        if (app == null)
+        {
+            return;
+        }
+
+        var dictionaries = app.Resources.MergedDictionaries;
+        for (var i = dictionaries.Count - 1; i >= 0; i--)
+        {
+            var source = dictionaries[i].Source;
+            if (source != null &&
+                string.Equals(source.OriginalString, MahAppsMaterialAliasesUriString, StringComparison.OrdinalIgnoreCase))
+            {
+                dictionaries.RemoveAt(i);
+            }
+        }
+
+        Alias(app, "MaterialDesignPaper", "MahApps.Brushes.ThemeBackground");
+        Alias(app, "MaterialDesignBackground", "MahApps.Brushes.ThemeBackground");
+        Alias(app, "MaterialDesignCardBackground", "MahApps.Brushes.ThemeBackground");
+        Alias(app, "MaterialDesignToolBarBackground", "MahApps.Brushes.Control.Background", "MahApps.Brushes.ThemeBackground");
+        Alias(app, "MaterialDesignBody", "MahApps.Brushes.ThemeForeground", "MahApps.Brushes.Text");
+        Alias(app, "MaterialDesignBodyLight", "MahApps.Brushes.Gray", "MahApps.Brushes.Gray2", "MahApps.Brushes.ThemeForeground");
+        Alias(app, "MaterialDesignDivider", "MahApps.Brushes.Gray7", "MahApps.Brushes.Separator");
+        Alias(app, "MaterialDesignSelection", "MahApps.Brushes.Highlight", "MahApps.Brushes.Accent");
+        Alias(app, "PrimaryHueLightBrush", "MahApps.Brushes.Accent3", "MahApps.Brushes.Accent");
+        Alias(app, "PrimaryHueMidBrush", "MahApps.Brushes.Accent");
+        Alias(app, "PrimaryHueDarkBrush", "MahApps.Brushes.AccentBase", "MahApps.Brushes.Accent");
+        Alias(app, "PrimaryHueMidForegroundBrush", "MahApps.Brushes.IdealForeground", "MahApps.Brushes.ThemeForeground");
+        Alias(app, "SecondaryHueMidBrush", "MahApps.Brushes.Accent2", "MahApps.Brushes.Accent");
+    }
+
+    private static void Alias(Application app, string targetKey, params string[] sourceKeys)
+    {
+        foreach (var sourceKey in sourceKeys)
+        {
+            if (app.TryFindResource(sourceKey) is Brush brush)
+            {
+                app.Resources[targetKey] = brush;
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Splash is created on the AsyncBox dispatcher. Shared brushes must be frozen
+    /// on the main thread first, or that dispatcher seals them and MainWindow cannot use them.
+    /// </summary>
+    public static void FreezeApplicationResources()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        FreezeDictionary(Application.Current.Resources);
+    }
+
+    private static void FreezeDictionary(ResourceDictionary dictionary)
+    {
+        foreach (var merged in dictionary.MergedDictionaries)
+        {
+            FreezeDictionary(merged);
+        }
+
+        foreach (var key in dictionary.Keys)
+        {
+            try
+            {
+                if (dictionary[key] is Freezable freezable && freezable.CanFreeze && !freezable.IsFrozen)
+                {
+                    freezable.Freeze();
+                }
+            }
+            catch (Exception)
+            {
+                // Deferred theme resources can fail to materialize, or a brush can refuse to freeze.
+            }
+        }
     }
 
     private bool ResolveUseLight(int themeMode)
@@ -141,22 +224,4 @@ public class ThemeService : IHostedService, IThemeService
         ControlzExThemeManager.Current.ChangeTheme(Application.Current, runtimeTheme);
     }
 
-    private static void EnsureMahAppsMaterialAliasesLast()
-    {
-        var dictionaries = Application.Current.Resources.MergedDictionaries;
-        for (var i = dictionaries.Count - 1; i >= 0; i--)
-        {
-            var source = dictionaries[i].Source;
-            if (source != null &&
-                string.Equals(source.OriginalString, MahAppsMaterialAliasesUriString, StringComparison.OrdinalIgnoreCase))
-            {
-                dictionaries.RemoveAt(i);
-            }
-        }
-
-        dictionaries.Add(new ResourceDictionary
-        {
-            Source = MahAppsMaterialAliasesUri
-        });
-    }
 }
