@@ -126,40 +126,42 @@
         <mah:WindowCommands>
             <Button ToolTip="返回"
                     Click="ButtonGoBack_OnClick"
-                    Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.ArrowLeft}, Size=16}" />
+                    Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <remix:PackIconRemixIcon Kind="ArrowLeftLine" Width="16" Height="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="返回" Margin="4 0 0 0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands ShowSeparators="False">
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Resources>
-                    <Style TargetType="ToggleButton"
-                           BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
-                        <Style.Resources>
-                            <converters:SolidColorBrushOpacityConverter
-                                x:Key="SolidColorBrushOpacityConverter" />
-                        </Style.Resources>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource MahApps.Styles.Button.Chromeless}">
                         <Setter Property="Foreground"
                                 Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
-                        <Setter Property="BorderBrush"
-                                Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
+                        <Setter Property="Padding" Value="6 0" />
                         <Setter Property="Margin" Value="0 0 6 0" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
                 </StackPanel.Resources>
-                <ToggleButton Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="部分设置需要重启应用后生效。" Click="ButtonRestartApp_OnClick">
-                    <TextBlock>
-                        <Run Text="需要重启" />
-                    </TextBlock>
-                </ToggleButton>
-                <ToggleButton Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此LegacyIsland实例。">
-                    <ToggleButton.CommandParameter>
+                <Button Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="部分设置需要重启应用后生效。" Click="ButtonRestartApp_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <remix:PackIconRemixIcon Kind="RestartLine" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="需要重启" Margin="4 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{x:Static dialogs:DialogService.OpenDialogCommand}" ToolTip="查看您的单位/组织如何管理此LegacyIsland实例。">
+                    <Button.CommandParameter>
                         <controls2:ManagementInfoControl />
-                    </ToggleButton.CommandParameter>
-                    <TextBlock>
-                        <Run Text="由贵单位管理" />
-                    </TextBlock>
-                </ToggleButton>
+                    </Button.CommandParameter>
+                    <StackPanel Orientation="Horizontal">
+                        <remix:PackIconRemixIcon Kind="SuitcaseLine" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="由贵单位管理" Margin="4 0 0 0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
                 <TextBlock Text="{x:Static ci:App.AppVersion}"
                            Margin="8 0 0 0"
                            VerticalAlignment="Center"
