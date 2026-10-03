@@ -21,15 +21,15 @@ using ClassIsland.Shared.Helpers;
 using ClassIsland.ViewModels.SettingsPages;
 using CommunityToolkit.Mvvm.Input;
 using GongSolutions.Wpf.DragDrop;
-using MaterialDesignThemes.Wpf;
 using Path = System.IO.Path;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Views.SettingPages;
 
 /// <summary>
 /// ComponentsSettingsPage.xaml 的交互逻辑
 /// </summary>
-[SettingsPageInfo("components", "组件", PackIconKind.WidgetsOutline, PackIconKind.Widgets, SettingsPageCategory.Internal)]
+[SettingsPageInfo("components", "组件", IconGlyphs.WidgetsOutline, IconGlyphs.Widgets, SettingsPageCategory.Internal)]
 public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 {
     public IComponentsService ComponentsService { get; }

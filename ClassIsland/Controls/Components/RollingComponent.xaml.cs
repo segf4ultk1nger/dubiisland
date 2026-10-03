@@ -17,15 +17,15 @@ using System.Windows.Shapes;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Helpers;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Controls.Components;
 
 /// <summary>
 /// RollingComponent.xaml 的交互逻辑
 /// </summary>
 [ContainerComponent]
-[ComponentInfo("70FCD5EA-3FAE-4E06-ACA2-4F4DF47F9ACD", "滚动组件", PackIconKind.FormatTextRotationNone, "滚动显示组件内的内容。")]
+[ComponentInfo("70FCD5EA-3FAE-4E06-ACA2-4F4DF47F9ACD", "滚动组件", IconGlyphs.FormatTextRotationNone, "滚动显示组件内的内容。")]
 public partial class RollingComponent
 {
     public IRulesetService RulesetService { get; }

@@ -65,7 +65,7 @@
                     HorizontalAlignment="Right"
                     Margin="0 8 0 0"
                     Click="ButtonClose_OnClick">
-                <local:IconText Kind="Close" Text="关闭"/>
+                <local:IconText Kind="{x:Static local:IconGlyphs.Close}" Text="关闭"/>
             </Button>
             <Grid Grid.Row="0"
                   Grid.RowSpan="2"

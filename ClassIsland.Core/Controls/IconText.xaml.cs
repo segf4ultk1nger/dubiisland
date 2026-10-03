@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.Core.Controls;
 
@@ -19,12 +18,27 @@ public partial class IconText : UserControl
     }
 
     public static readonly DependencyProperty KindProperty = DependencyProperty.Register(
-        nameof(Kind), typeof(PackIconKind), typeof(IconText), new PropertyMetadata(default(PackIconKind)));
+        nameof(Kind), typeof(string), typeof(IconText), new PropertyMetadata(default(string)));
 
-    public PackIconKind Kind
+    public string Kind
     {
-        get => (PackIconKind)GetValue(KindProperty);
+        get => (string)GetValue(KindProperty);
         set => SetValue(KindProperty, value);
+    }
+
+    public static readonly DependencyProperty IconSizeProperty = DependencyProperty.Register(
+        nameof(IconSize), typeof(double), typeof(IconText), new PropertyMetadata(16d, null, CoerceIconSize));
+
+    static object CoerceIconSize(DependencyObject d, object baseValue) =>
+        baseValue is double size && size > 0 && !double.IsNaN(size) && !double.IsInfinity(size) ? size : 16d;
+
+    /// <summary>
+    /// Glyph size in pixels. Matches the old Pack icon width/height, and defaults to 16.
+    /// </summary>
+    public double IconSize
+    {
+        get => (double)GetValue(IconSizeProperty);
+        set => SetValue(IconSizeProperty, value);
     }
 
     public static readonly DependencyProperty IconMarginProperty = DependencyProperty.Register(

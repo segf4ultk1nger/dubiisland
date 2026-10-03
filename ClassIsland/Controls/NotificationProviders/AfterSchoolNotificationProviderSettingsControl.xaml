@@ -10,7 +10,7 @@
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:notificationProviderSettings="clr-namespace:ClassIsland.Models.NotificationProviderSettings"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ScrollViewer DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:AfterSchoolNotificationProviderSettingsControl}}">
         <StackPanel Margin="4">
             <!-- 附加设置覆盖提示 -->
@@ -23,9 +23,9 @@
                                 materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                                 Foreground="{DynamicResource MaterialDesignBody}"
                                 Click="ButtonShowAttachedSettingsInfo_OnClick">
-                            <ci:IconText Kind="MoreCircleOutline" Text="查看…"/>
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
                         </Button>
-                        <materialDesign:PackIcon Kind="LayersOutline"
+                        <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.LayersOutline}"
                                                  Margin="0 0 4 0"
                                                  VerticalAlignment="Center"/>
                         <TextBlock Text="此处的设置可以在档案设置中被附加设置覆盖。"
@@ -40,7 +40,7 @@
                      materialDesign:HintAssist.Hint="提醒显示内容"
                      Padding="8"
                      Text="{Binding Settings.NotificationMsg}"/>
-            <ci:SettingsCard IconGlyph="ClockOutline" Header="放学提醒显示持续时长" Margin="0 6 0 0" Description="显示放学提醒的时长。">
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}" Header="放学提醒显示持续时长" Margin="0 6 0 0" Description="显示放学提醒的时长。">
                 <ci:SettingsCard.Switcher>
                     <ci:NumbericTextBox MaxValue="3600" MinValue="3"
                                    Text="{Binding Settings.NotificationMsgDuration, Converter={StaticResource IntToStringConverter}}"

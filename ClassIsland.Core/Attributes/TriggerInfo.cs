@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Attributes;
 
 /// <summary>
@@ -10,7 +10,7 @@ namespace ClassIsland.Core.Attributes;
 /// <param name="name">触发器名称</param>
 /// <param name="iconKind">触发器图表类型</param>
 [AttributeUsage(AttributeTargets.Class)]
-public class TriggerInfo(string id, string name, PackIconKind iconKind=PackIconKind.ClockOutline) : Attribute
+public class TriggerInfo(string id, string name, string iconKind=IconGlyphs.ClockOutline) : Attribute
 {
     /// <summary>
     /// 触发器 ID
@@ -25,7 +25,7 @@ public class TriggerInfo(string id, string name, PackIconKind iconKind=PackIconK
     /// <summary>
     /// 触发器图标类型
     /// </summary>
-    public PackIconKind IconKind { get; } = iconKind;
+    public string IconKind { get; } = iconKind;
 
     /// <summary>
     /// 触发器类型

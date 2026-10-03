@@ -25,7 +25,7 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{StaticResource HarmonyOsSans}"
-        Title="FeatureDebugWindow" Height="450" Width="800">
+        Title="FeatureDebugWindow" Height="450" Width="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid>
         <TabControl HorizontalContentAlignment="Left">
             <TabItem Header="WeatherIcon">
@@ -163,13 +163,13 @@
             </TabItem>
             <TabItem Header="IconControl">
                 <StackPanel HorizontalAlignment="Center">
-                    <ci:IconControl PackIconKind="Github"
-                                    FallbackPackIconKind="QuestionMarkCircleOutline"
+                    <ci:IconControl Glyph="{x:Static ciCore:IconGlyphs.Github}"
+                                    FallbackGlyph="{x:Static ciCore:IconGlyphs.QuestionMarkCircleOutline}"
                                     Width="64" Height="64"
-                                    IconKind="Image"
+                                    IconKind="{x:Static ciCore:IconGlyphs.Image}"
                                     ImageSource="/Assets/HoYoStickers/光辉矢愿_想我了吗.png"/>
-                    <ci:StickerControl PackIconKind="Github"
-                                    FallbackPackIconKind="QuestionMarkCircleOutline"
+                    <ci:StickerControl Glyph="{x:Static ciCore:IconGlyphs.Github}"
+                                    FallbackGlyph="{x:Static ciCore:IconGlyphs.QuestionMarkCircleOutline}"
                                     Width="64" Height="64"
                                     StickerToolTip="帕姆_点赞"
                                     ImageSource="/Assets/HoYoStickers/帕姆_点赞.png"/>

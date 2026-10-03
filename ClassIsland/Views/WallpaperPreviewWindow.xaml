@@ -33,14 +33,14 @@
                     HorizontalAlignment="Left"
                     IsEnabled="{Binding WallpaperPickingService.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToBooleanReConverter}}"
                     Margin="8">
-                <controls1:IconText Kind="Refresh" Text="刷新" />
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新" />
             </Button>
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
                     IsCancel="True"
                     Margin="8">
-                <controls1:IconText Kind="Close" Text="关闭" />
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Close}" Text="关闭" />
             </Button>
         </Grid>
         <ProgressBar VerticalAlignment="Bottom"

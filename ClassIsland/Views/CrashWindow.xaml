@@ -32,12 +32,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <materialDesign:PackIcon Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left"
+        <controls1:IconText IconSize="56" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left"
                                  Grid.RowSpan="2"
                                  VerticalAlignment="Top" Margin="0 16 12 0"
-                                 Kind="ErrorOutline"
-                                 Foreground="#EE2222"
-                                 Height="56" Width="56" />
+                                 Kind="{x:Static controls1:IconGlyphs.ErrorOutline}"
+                                 Foreground="#EE2222" />
 
         <TextBlock Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" FontSize="14">
             <Run Text="ClassIsland 碰到了严重错误而无法正常运行。您可以保存下方的错误信息并向他人寻求帮助。如果您认为这是由软件本身的错误所致，请点击下方“反馈问题”按钮。"/>
@@ -61,7 +60,7 @@
                                   Visibility="{Binding IsCritical, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid TextElement.FontSize="13">
                 <DockPanel Margin="8 4 4 4">
-                    <materialDesign:PackIcon Kind="ErrorOutline"
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ErrorOutline}"
                                              Margin="0 0 4 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Text="这个异常无法被忽略，您需要重启或退出应用。很抱歉对您的使用造成不便。"
@@ -75,26 +74,26 @@
             <Button Style="{StaticResource MaterialDesignPaperButton}" Margin="0 0 6 0"
                     Visibility="{Binding IsCritical, Mode=OneTime, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Click="ButtonDebug_OnClick">
-                <controls1:IconText Kind="BugOutline" Text="调试" IconMargin="3 0 0 0"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.BugOutline}" Text="调试" IconMargin="3 0 0 0"/>
             </Button>
             <Button Style="{StaticResource MaterialDesignPaperButton}" Margin="0 0 6 0"
                     Visibility="{Binding AllowIgnore, Mode=OneTime, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Click="ButtonIgnore_OnClick">
-                <controls1:IconText Kind="Close" Text="忽略" IconMargin="3 0 0 0"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Close}" Text="忽略" IconMargin="3 0 0 0"/>
             </Button>
             <Button Style="{StaticResource MaterialDesignPaperButton}" Margin="0 0 6 0" Click="ButtonExit_OnClick">
-                <controls1:IconText Kind="ExitToApp" Text="退出应用" IconMargin="3 0 0 0"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ExitToApp}" Text="退出应用" IconMargin="3 0 0 0"/>
             </Button>
             <Button Click="ButtonRestart_OnClick">
-                <controls1:IconText Kind="Restart" Text="重启应用" IconMargin="3 0 0 0"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Restart}" Text="重启应用" IconMargin="3 0 0 0"/>
             </Button>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" HorizontalAlignment="Left" Orientation="Horizontal">
             <Button Style="{StaticResource MaterialDesignPaperButton}" Click="ButtonCopy_OnClick" Margin="0 0 6 0">
-                <controls1:IconText Kind="ContentCopy" Text="复制" IconMargin="3 0 0 0"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ContentCopy}" Text="复制" IconMargin="3 0 0 0"/>
             </Button>
             <Button Style="{StaticResource MaterialDesignPaperButton}" Click="ButtonFeedback_OnClick">
-                <controls1:IconText Kind="FeedbackOutline" Text="反馈问题" IconMargin="3 0 0 0"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FeedbackOutline}" Text="反馈问题" IconMargin="3 0 0 0"/>
             </Button>
         </StackPanel>
 

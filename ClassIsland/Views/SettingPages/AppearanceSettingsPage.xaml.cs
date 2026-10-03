@@ -5,15 +5,15 @@ using System.Windows.Input;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
-using MaterialDesignThemes.Wpf;
 using ClassIsland.Core.Enums.SettingsWindow;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Views.SettingPages;
 
 /// <summary>
 /// AppearanceSettingsPage.xaml 的交互逻辑
 /// </summary>
-[SettingsPageInfo("appearance", "外观", PackIconKind.ThemeOutline, PackIconKind.Theme, SettingsPageCategory.Internal)]
+[SettingsPageInfo("appearance", "外观", IconGlyphs.ThemeOutline, IconGlyphs.Theme, SettingsPageCategory.Internal)]
 public partial class AppearanceSettingsPage : SettingsPageBase
 {
     public AppearanceSettingsViewModel ViewModel { get; } = new();

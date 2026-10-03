@@ -8,9 +8,9 @@ using ClassIsland.Core.Models.Notification;
 using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Interfaces;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Hosting;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Abstractions.Services.NotificationProviders;
 
 /// <summary>
@@ -102,11 +102,10 @@ public abstract class NotificationProviderBase : INotificationProvider, INotific
         }
         else
         {
-            IconElement = new PackIcon()
+            IconElement = new IconText()
             {
                 Kind = info.PackIcon,
-                Width = 24,
-                Height = 24
+                IconSize = 24
             };
         }
 

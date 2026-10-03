@@ -11,7 +11,7 @@
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
              xmlns:controls="clr-namespace:ClassIsland.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ActionSettingsControlBase.Resources>
         <ScrollViewer x:Key="SettingsDrawer" d:DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:NotificationActionSettingsControl}}">
             <StackPanel Width="400" Margin="16">
@@ -73,7 +73,7 @@
         <Button Style="{StaticResource MaterialDesignFlatButton}"
                 HorizontalAlignment="Left"
                 Click="ButtonShowSettings_OnClick">
-            <ci:IconText Kind="CogOutline" Text="提醒设置…"/>
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.CogOutline}" Text="提醒设置…"/>
         </Button>
         
     </Grid>

@@ -19,7 +19,7 @@
       TextOptions.TextRenderingMode="Auto"
       d:DesignHeight="450" d:DesignWidth="800"
       Loaded="ManagementSettingsPage_OnLoaded"
-      Title="ManagementSettingsPage">
+      Title="ManagementSettingsPage" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
 
     <ci:SettingsPageBase.Resources>
         <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
@@ -65,7 +65,7 @@
                             CommandParameter="https://docs.classisland.tech/management/">
                         <Grid>
                             <TextBlock Text="了解更多" />
-                            <materialDesign:PackIcon Kind="ExternalLink" HorizontalAlignment="Right"
+                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.ExternalLink}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center"/>
                         </Grid>
                     </Button>

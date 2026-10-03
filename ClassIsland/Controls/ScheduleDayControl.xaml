@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Loaded="ScheduleDayControl_OnLoaded"
-             Unloaded="ScheduleDayControl_OnUnloaded">
+             Unloaded="ScheduleDayControl_OnUnloaded" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <UserControl.Resources>
         <ci:PreventNullConverter x:Key="PreventNullConverter" />
     </UserControl.Resources>
@@ -50,14 +50,14 @@
                             <DataTrigger Binding="{Binding HasOrderedSchedule, Mode=OneWay}" Value="True">
                                 <Setter Property="Badge">
                                     <Setter.Value>
-                                        <materialDesign:PackIcon Kind="Check"/>
+                                        <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.Check}"/>
                                     </Setter.Value>
                                 </Setter>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </materialDesign:Badged.Style>
-                <Button Content="{materialDesign:PackIcon FileDocumentMultipleOutline}"
+                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentMultipleOutline}}"
                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                         ToolTip="预定临时课表"
                         Margin="0 -4 -4 0"
@@ -65,7 +65,7 @@
                         ClickMode="Press"
                         Click="ButtonOrderSchedule_OnClick" />
             </materialDesign:Badged>
-            <Button Content="{materialDesign:PackIcon Clear}"
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Clear}}"
                     Style="{StaticResource MaterialDesignToolForegroundButton}"
                     ToolTip="清除临时课表"
                     VerticalAlignment="Bottom"
@@ -96,7 +96,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                Content="{materialDesign:PackIcon Close}"
+                                Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
                                 HorizontalAlignment="Right"
                                 ToolTip="关闭" ClickMode="Press"
                                 Foreground="{DynamicResource MaterialDesignBody}"
@@ -135,11 +135,11 @@
                         <StackPanel Orientation="Horizontal" Grid.Row="2">
                             <Button Style="{StaticResource MaterialDesignFlatButton}"
                                     Click="ButtonConfirmTempClassPlan_OnClick" ClickMode="Press">
-                                <ci:IconText Kind="Check" Text="确定" />
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Check}" Text="确定" />
                             </Button>
                             <Button Style="{StaticResource MaterialDesignFlatButton}"
                                     Click="ButtonClearTempClassPlan_OnClick" ClickMode="Press">
-                                <ci:IconText Kind="Clear" Text="清除" />
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Clear}" Text="清除" />
                             </Button>
                         </StackPanel>
                     </Grid>

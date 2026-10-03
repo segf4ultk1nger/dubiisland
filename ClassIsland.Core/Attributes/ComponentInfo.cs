@@ -1,6 +1,6 @@
-﻿using MaterialDesignThemes.Wpf;
-using System.Drawing;
+﻿using System.Drawing;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Attributes;
 
 /// <summary>
@@ -22,7 +22,7 @@ public class ComponentInfo : Attribute
     /// <summary>
     /// 组件图标
     /// </summary>
-    public PackIconKind PackIcon { get; } = PackIconKind.WidgetsOutline;
+    public string PackIcon { get; } = IconGlyphs.WidgetsOutline;
 
     /// <summary>
     /// 组件位图图标uri
@@ -61,20 +61,23 @@ public class ComponentInfo : Attribute
 
     internal List<string> MigrateSources { get; } = new();
 
-    /// <inheritdoc />
-    public ComponentInfo(string guid, string name, PackIconKind icon, string description = "") : this(guid, name,
+    /// <summary>
+    /// 使用字形或位图图标初始化组件信息。单个 Segoe 字形视为图标，较长的路径视为位图。
+    /// </summary>
+    public ComponentInfo(string guid, string name, string iconOrBitmapUri, string description) : this(guid, name,
         description)
     {
-        PackIcon = icon;
+        if (IsGlyph(iconOrBitmapUri))
+            PackIcon = iconOrBitmapUri;
+        else
+        {
+            BitmapIconUri = iconOrBitmapUri;
+            UseBitmapIcon = true;
+        }
     }
 
-    /// <inheritdoc />
-    public ComponentInfo(string guid, string name, string bitmapIconUri, string description = "") : this(guid, name,
-        description)
-    {
-        BitmapIconUri = bitmapIconUri;
-        UseBitmapIcon = true;
-    }
+    static bool IsGlyph(string value) =>
+        value.Length is > 0 and <= 2 && value.IndexOfAny(['/', '\\', '.']) < 0;
 
     /// <inheritdoc />
     public ComponentInfo(string guid, string name, string description = "")

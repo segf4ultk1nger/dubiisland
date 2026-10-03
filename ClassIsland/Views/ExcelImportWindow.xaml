@@ -238,7 +238,7 @@
                                    VerticalAlignment="Center"/>
                         <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
                                 ToolTip="确定"
-                                Content="{materialDesign:PackIcon Check}"
+                                Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Check}}"
                                 Click="ButtonExitSelectingMode_OnClick"/>
                     </StackPanel>
                     <TextBlock Text="在下方表格中选择区域" Style="{StaticResource MaterialDesignHeadline6TextBlock}"
@@ -272,13 +272,13 @@
                 </reoGrid:ReoGridControl.Style>
                 <reoGrid:ReoGridControl.CellsContextMenu>
                     <ContextMenu FontFamily="{DynamicResource HarmonyOsSans}">
-                        <MenuItem Icon="{materialDesign:PackIcon ContentCopy}" Header="复制" Click="MenuItemCopy_OnClick" InputGestureText="Ctrl+C"/>
-                        <MenuItem Icon="{materialDesign:PackIcon ContentPaste}" Header="粘贴" Click="MenuItemPaste_OnClick" InputGestureText="Ctrl+V"/>
-                        <MenuItem Icon="{materialDesign:PackIcon ContentCut}" Header="剪切" Click="MenuItemCut_OnClick" InputGestureText="Ctrl+X"/>
-                        <MenuItem Icon="{materialDesign:PackIcon ClearOutline}" Header="清除内容" Click="MenuItemClearContent_OnClick" InputGestureText="Del"/>
+                        <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ContentCopy}}" Header="复制" Click="MenuItemCopy_OnClick" InputGestureText="Ctrl+C"/>
+                        <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ContentPaste}}" Header="粘贴" Click="MenuItemPaste_OnClick" InputGestureText="Ctrl+V"/>
+                        <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ContentCut}}" Header="剪切" Click="MenuItemCut_OnClick" InputGestureText="Ctrl+X"/>
+                        <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ClearOutline}}" Header="清除内容" Click="MenuItemClearContent_OnClick" InputGestureText="Del"/>
                         <Separator/>
-                        <MenuItem Icon="{materialDesign:PackIcon TableMergeCells}" Header="合并单元格" Click="MenuItemCellMerge_OnClick"/>
-                        <MenuItem Icon="{materialDesign:PackIcon Cancel}" Header="取消单元格合并" Click="MenuItemCancelCellMerge_OnClick"/>
+                        <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.TableMergeCells}}" Header="合并单元格" Click="MenuItemCellMerge_OnClick"/>
+                        <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Cancel}}" Header="取消单元格合并" Click="MenuItemCancelCellMerge_OnClick"/>
                     </ContextMenu>
                 </reoGrid:ReoGridControl.CellsContextMenu>
             </reoGrid:ReoGridControl>
@@ -313,8 +313,8 @@
                     <materialDesign:TransitionerSlide ForwardWipe="{x:Null}" BackwardWipe="{x:Null}">
                         <StackPanel VerticalAlignment="Center"
                                     HorizontalAlignment="Center">
-                            <materialDesign:PackIcon Width="75" Height="75"
-                                                     Kind="FileTableOutline"
+                            <controls1:IconText IconSize="75"
+                                                     Kind="{x:Static controls1:IconGlyphs.FileTableOutline}"
                                                      HorizontalAlignment="Center" Margin="0 0 0 16"/>
                             <TextBlock Text="从表格导入课表" HorizontalAlignment="Center"
                                        FontSize="20" FontWeight="Bold"/>
@@ -327,7 +327,7 @@
                             <Button Style="{StaticResource MaterialDesignPaperButton}" Margin="0 6 0 0"
                                     HorizontalAlignment="Center"
                                     Click="ButtonBrowseExcelFile_OnClick">
-                                <controls1:IconText Kind="FolderOutline" Text="浏览文件…"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FolderOutline}" Text="浏览文件…"/>
                             </Button>
                         </StackPanel>
                     </materialDesign:TransitionerSlide>
@@ -338,7 +338,7 @@
                             <stickerControl:StickerControl ImageSource="/Assets/HoYoStickers/帕姆_点赞.png" 
                                    Width="81" Height="81"
                                    StickerToolTip="帕姆_点赞"
-                                   PackIconKind="FileExcelOutline"
+                                   Glyph="{x:Static controls1:IconGlyphs.FileExcelOutline}"
                                    Margin="0 0 0 24"/>
 
                             <TextBlock Text="正在加载你的表格……" HorizontalAlignment="Center"
@@ -367,7 +367,7 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Button.Style>
-                                    <controls1:IconText Kind="ArrowRight" Text="开始"/>
+                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="开始"/>
                                 </Button>
                             </StackPanel>
                         </StackPanel>
@@ -391,7 +391,7 @@
                             <Button HorizontalAlignment="Left" Margin="0 8 0 0"
                                     Style="{StaticResource MaterialDesignPaperButton}"
                                     Command="{x:Static local:ExcelImportWindow.NavigateBackCommand}">
-                                <controls1:IconText Kind="ArrowLeft" Text="上一步"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步"/>
                             </Button>
                         </StackPanel>
                     </materialDesign:TransitionerSlide>
@@ -423,7 +423,7 @@
                             <Button Grid.Row="2" HorizontalAlignment="Left" Margin="0 8 0 0"
                                     Style="{StaticResource MaterialDesignPaperButton}"
                                     Command="{x:Static local:ExcelImportWindow.NavigateBackCommand}">
-                                <controls1:IconText Kind="ArrowLeft" Text="上一步" />
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                             </Button>
                         </Grid>
                     </materialDesign:TransitionerSlide>
@@ -444,7 +444,7 @@
                                                             SelectionPropertyName="TimePointSourcePosition"
                                                             materialDesign:HintAssist.Hint="选择时间安排区域"
                                                             TextChanged="TextBoxTimeLayoutRange_OnTextChanged"/>
-                            <controls1:IconText Kind="Warning" Text="选择区域无效。"
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Warning}" Text="选择区域无效。"
                                                Visibility="{Binding ViewModel.IsTimeLayoutRangeValid, Converter={StaticResource InverseBoolToVisConverter}}"
                                                Foreground="IndianRed" Margin="0 16 0 0"/>
                             <Button Command="{x:Static local:ExcelImportWindow.NavigateCommand}"
@@ -457,7 +457,7 @@
                                         <Binding Path="ViewModel.IsSelectingMode" Converter="{StaticResource BooleanToBooleanReConverter}" />
                                     </MultiBinding>
                                 </Button.IsEnabled>
-                                <controls1:IconText Kind="ArrowRight" Text="下一步"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步"/>
                             </Button>
                         </StackPanel>
                     </materialDesign:TransitionerSlide>
@@ -485,7 +485,7 @@
                                     Margin="0 8 0 0"
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Click="ButtonOpenProfileSettingsWindow_OnClick">
-                                <controls1:IconText Kind="FileDocumentEditOutline" Text="打开档案编辑窗口"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileDocumentEditOutline}" Text="打开档案编辑窗口"/>
                             </Button>
                             <Button Command="{x:Static local:ExcelImportWindow.NavigateCommand}"
                                     CommandParameter="SelectVerticalMode"
@@ -505,7 +505,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
-                                <controls1:IconText Kind="ArrowRight" Text="下一步"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步"/>
                             </Button>
                         </StackPanel>
                     </materialDesign:TransitionerSlide>
@@ -578,7 +578,7 @@
                                                             SelectionPropertyName="SubjectSourcePosition"
                                                             materialDesign:HintAssist.Hint="选择课程区域"
                                                             TextChanged="TextBoxClassPlanRange_OnTextChanged"/>
-                            <controls1:IconText Kind="Warning" Text="选择区域无效。"
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Warning}" Text="选择区域无效。"
                                                Margin="0 16 0 0"
                                                Foreground="IndianRed" Visibility="{Binding ViewModel.IsSubjectsSourceRangeValid, Converter={StaticResource InverseBoolToVisConverter}}"/>
                             <controls:NavigationButtonsControl NavigationNextCommandParameter="RowClassesTimeRelationshipImportMan"
@@ -596,8 +596,8 @@
                             </TextBlock>
                             <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
                                 <ToggleButton
-                                    materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=ArrowDown}"
-                                    Content="{materialDesign:PackIcon Kind=ArrowRight}"
+                                    materialDesign:ToggleButtonAssist.OnContent="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowDown}}"
+                                    Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}"
                                     IsChecked="{Binding ViewModel.IsVerticalLayout}"
                                     Style="{StaticResource MaterialDesignActionToggleButton}" />
                                 <TextBlock VerticalAlignment="Center" FontSize="16" Margin="6 0 0 0">
@@ -633,7 +633,7 @@
                             <!--<Button HorizontalAlignment="Left" Margin="0 8 0 0"
                                     Style="{StaticResource MaterialDesignPaperButton}"
                                     Command="{x:Static local:ExcelImportWindow.NavigateBackCommand}">
-                                <controls:IconText Kind="ArrowLeft" Text="上一步"/>
+                                <controls:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步"/>
                             </Button>-->
                         </StackPanel>
                     </materialDesign:TransitionerSlide>
@@ -709,7 +709,7 @@
                                     CommandParameter="SelectClassPlanArea"
                                     HorizontalAlignment="Left"
                                     IsEnabled="{Binding ViewModel.IsSelectingMode, Converter={StaticResource BooleanToBooleanReConverter}}">
-                                <controls1:IconText Kind="ArrowRight" Text="下一步"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步"/>
                             </Button>
                         </Grid>
                     </materialDesign:TransitionerSlide>
@@ -741,7 +741,7 @@
                                                 <ColumnDefinition Width="32" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <materialDesign:PackIcon Kind="Check" Grid.Column="0"
+                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Grid.Column="0"
                                                                      VerticalAlignment="Center"
                                                                      HorizontalAlignment="Center"
                                                                      Foreground="{DynamicResource PrimaryHueMidBrush}"
@@ -883,7 +883,7 @@
                                      Margin="0 8 0 16">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <controls1:IconText Kind="FileChartOutline" Text="{Binding Name}" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileChartOutline}" Text="{Binding Name}" />
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
@@ -891,17 +891,17 @@
                                 <StackPanel.Resources>
                                     <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                         <Style.Resources>
-                                            <Style TargetType="materialDesign:PackIcon">
+                                            <Style TargetType="controls1:IconText">
                                                 <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                                             </Style>
                                         </Style.Resources>
                                     </Style>
                                 </StackPanel.Resources>
-                                <MenuItem Icon="{materialDesign:PackIcon ArrowRight}" Header="继续导入课表。"
+                                <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}" Header="继续导入课表。"
                                           Click="MenuItemContinueImportClassPlan_OnClick" />
-                                <MenuItem Icon="{materialDesign:PackIcon UndoVariant}" Header="使用新的时间表继续导入课表。"
+                                <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.UndoVariant}}" Header="使用新的时间表继续导入课表。"
                                           Click="MenuItemResetTimeLayout_OnClick" />
-                                <MenuItem Icon="{materialDesign:PackIcon Check}" Header="完成导入。"
+                                <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Check}}" Header="完成导入。"
                                           Click="MenuItemCompleteImport_OnClick" />
                             </StackPanel>
                         </Grid>
@@ -915,14 +915,14 @@
                                    StickerToolTip="光辉矢愿_回眸"
                                    Focusable="True"
                                    Width="63"
-                                   PackIconKind="CheckCircleOutline"
+                                   Glyph="{x:Static controls1:IconGlyphs.CheckCircleOutline}"
                                    HorizontalAlignment="Left"/>
                             <TextBlock>
                                 <Run Text="恭喜！您已经完成了课表导入！现在您可以关闭本页面了。"/>
                             </TextBlock>
                             <WrapPanel HorizontalAlignment="Left" Margin="0 16 0 0">
                                 <Button Click="ButtonFinished_OnClick">
-                                    <controls1:IconText Kind="Check" Text="完成"/>
+                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="完成"/>
                                 </Button>
                             </WrapPanel>
                         </StackPanel>
@@ -951,9 +951,8 @@
                 <Border Background="{DynamicResource MaterialDesignBackground}"
                         Opacity="0.8"/>
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="FileImport"
+                    <controls1:IconText IconSize="64" Kind="{x:Static controls1:IconGlyphs.FileImport}"
                                              HorizontalAlignment="Center"
-                                             Height="64" Width="64"
                                              Margin="0 0 0 8"/>
                     <TextBlock Text="将表格文件拖入到此处，松手即可开始导入。"
                                FontSize="14"

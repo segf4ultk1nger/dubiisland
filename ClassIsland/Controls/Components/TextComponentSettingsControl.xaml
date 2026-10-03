@@ -8,12 +8,12 @@
                         xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
                         xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                         mc:Ignorable="d" 
-                        d:DesignHeight="450" d:DesignWidth="800">
+                        d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ScrollViewer>
         <StackPanel
             Style="{StaticResource SettingsPageStackPanelStyle}"
             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:TextComponentSettingsControl}}">
-            <ci:SettingsCard IconGlyph="Text"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Text}"
                     Header="文本内容"
                     Description="要显示的文本。">
                 <ci:SettingsCard.Switcher>
@@ -22,7 +22,7 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
 
-            <ci:SettingsCard IconGlyph="PaintBucket"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.PaintBucket}"
                              Header="字体颜色"
                              Description="选择要显示文本的颜色。">
                 <ci:SettingsCard.Switcher>
@@ -31,7 +31,7 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
 
-            <ci:SettingsCard IconGlyph="FontSize"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.FontSize}"
                              Header="字体大小"
                              Description="修改要显示的文本的大小。">
                 <ci:SettingsCard.Switcher>

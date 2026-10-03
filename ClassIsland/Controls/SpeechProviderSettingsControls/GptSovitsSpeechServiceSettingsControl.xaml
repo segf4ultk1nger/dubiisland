@@ -7,7 +7,7 @@
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:SpeechProviderControlBase.Resources>
         <ci:BindingProxy x:Key="BindingProxy" Data="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:GptSovitsSpeechServiceSettingsControl}}"/>
         <Grid Width="300" Margin="16" x:Key="SpeechPresets" 
@@ -25,7 +25,7 @@
                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                             HorizontalAlignment="Left"
                             Click="ButtonSaveGptSovitsPreset_OnClick">
-                        <ci:IconText Kind="Floppy" Text="保存预设"/>
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Floppy}" Text="保存预设"/>
                     </Button>
                 </WrapPanel>
             </StackPanel>
@@ -50,27 +50,27 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" >
                                     <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Content="{materialDesign:PackIcon Download}"
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Download}}"
                                             Margin="0 -8"
                                             ToolTip="加载"
                                             Command="{Binding Data.LoadGptSoVitsPresetCommand, Source={StaticResource BindingProxy}}"
                                             CommandParameter="{Binding}"/>
 
                                     <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Content="{materialDesign:PackIcon Upload}"
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Upload}}"
                                             Margin="0 -8"
                                             ToolTip="覆盖"
                                             Visibility="{Binding IsInternal, Converter={StaticResource InverseBoolToVisConverter}}"
                                             Command="{Binding Data.OverwriteGptSoVitsPresetCommand, Source={StaticResource BindingProxy}}"
                                             CommandParameter="{Binding}"/>
                                     <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Content="{materialDesign:PackIcon ContentCopy}"
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}"
                                             Margin="0 -8"
                                             ToolTip="创建副本"
                                             Command="{Binding Data.DuplicateGptSoVitsPresetCommand, Source={StaticResource BindingProxy}}"
                                             CommandParameter="{Binding}"/>
                                     <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                            Content="{materialDesign:PackIcon Remove}"
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Remove}}"
                                             Margin="0 -8"
                                             ToolTip="移除"
                                             Visibility="{Binding IsInternal, Converter={StaticResource InverseBoolToVisConverter}}"
@@ -92,12 +92,12 @@
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Left"
                     Click="ButtonOpenGptSovitsPresetsDrawer_OnClick">
-                <ci:IconText Kind="ListBoxOutline" Text="语音预设…" />
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ListBoxOutline}" Text="语音预设…" />
             </Button>
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Left"
                     Click="ButtonSaveGptSovitsPreset2_OnClick">
-                <ci:IconText Kind="Floppy" Text="保存预设" />
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Floppy}" Text="保存预设" />
             </Button>
         </WrapPanel>
 

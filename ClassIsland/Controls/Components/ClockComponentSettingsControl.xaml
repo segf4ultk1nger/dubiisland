@@ -19,17 +19,17 @@
     </controls1:ComponentBase.Resources>
     <ScrollViewer DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClockComponentSettingsControl}}">
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
-            <controls:SettingsCard IconGlyph="ClockCheckOutline"
+            <controls:SettingsCard IconGlyph="{x:Static controls:IconGlyphs.ClockCheckOutline}"
                                    Header="使用实际时间"
                                    Description="显示不经过时间偏移的系统时间。"
                                    IsOn="{Binding Settings.ShowRealTime, Mode=TwoWay}" />
 
-            <controls:SettingsCard IconGlyph="ClockDigital"
+            <controls:SettingsCard IconGlyph="{x:Static controls:IconGlyphs.ClockDigital}"
                                    Header="显示秒数"
                                    Description="启用后，时钟将显示精准到秒的时间。"
                                    IsOn="{Binding Settings.ShowSeconds, Mode=TwoWay}" />
 
-            <controls:SettingsCard IconGlyph="CameraTimer"
+            <controls:SettingsCard IconGlyph="{x:Static controls:IconGlyphs.CameraTimer}"
                                    Header="闪动时间分隔符"
                                    Description="模拟电子时钟的分隔符闪动效果。"
                                    IsOn="{Binding Settings.FlashTimeSeparator, Mode=TwoWay}"

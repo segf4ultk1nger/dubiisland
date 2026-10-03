@@ -1,4 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Models.Action;
 
 /// <summary>
@@ -7,7 +7,7 @@ namespace ClassIsland.Core.Models.Action;
 /// <param name="id">行动ID，例如“classisland.example”。</param>
 /// <param name="name">行动显示名称。</param>
 /// <param name="iconKind">行动图标。</param>
-public class ActionRegistryInfo(string id, string name = "", PackIconKind iconKind = PackIconKind.BacteriaOutline)
+public class ActionRegistryInfo(string id, string name = "", string iconKind = IconGlyphs.BacteriaOutline)
 {
     /// <summary>
     /// 行动 ID。
@@ -17,7 +17,7 @@ public class ActionRegistryInfo(string id, string name = "", PackIconKind iconKi
     /// <summary>
     /// 行动显示图标类型。
     /// </summary>
-    public PackIconKind IconKind { get; internal set; } = iconKind;
+    public string IconKind { get; internal set; } = iconKind;
 
     /// <summary>
     /// 行动显示名称。

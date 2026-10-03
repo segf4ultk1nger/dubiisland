@@ -9,14 +9,14 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Views.SettingPages;
 
 /// <summary>
 /// WindowSettingsPage.xaml 的交互逻辑
 /// </summary>
-[SettingsPageInfo("window", "窗口", PackIconKind.WindowMaximize, PackIconKind.WindowMaximize, SettingsPageCategory.Internal)]
+[SettingsPageInfo("window", "窗口", IconGlyphs.WindowMaximize, IconGlyphs.WindowMaximize, SettingsPageCategory.Internal)]
 public partial class WindowSettingsPage : SettingsPageBase
 {
     public SettingsService SettingsService { get; }

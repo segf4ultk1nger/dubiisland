@@ -1,4 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using ClassIsland.Core.Controls;
 
 namespace ClassIsland.Core.Attributes;
 
@@ -17,7 +17,7 @@ public class NotificationChannelInfo(string guid, string name, string descriptio
     /// <summary>
     /// 图表类型
     /// </summary>
-    public PackIconKind PackIcon { get; } = PackIconKind.BellRing;
+    public string PackIcon { get; } = IconGlyphs.BellRing;
 
     /// <summary>
     /// 渠道名称
@@ -42,7 +42,7 @@ public class NotificationChannelInfo(string guid, string name, string descriptio
     /// <summary>
     /// 初始化一个 <see cref="NotificationChannelInfo"/> 实例
     /// </summary>
-    public NotificationChannelInfo(string guid, string name, PackIconKind icon, string description = "", Type? settingsControlType = null) : this(guid, name,
+    public NotificationChannelInfo(string guid, string name, string icon, string description = "", Type? settingsControlType = null) : this(guid, name,
         description, settingsControlType)
     {
         PackIcon = icon;

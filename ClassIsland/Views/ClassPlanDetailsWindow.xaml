@@ -20,7 +20,7 @@
         TextOptions.TextRenderingMode="Auto"
         Title="课表详细信息"
         d:DataContext="{d:DesignInstance local:ClassPlanDetailsWindow}"
-        Height="500" Width="800">
+        Height="500" Width="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MinWidth="300" MaxWidth="500"/>
@@ -105,7 +105,7 @@
                                 HorizontalAlignment="Right"
                                 Style="{StaticResource MaterialDesignToolForegroundButton}"
                                 Click="ButtonRefresh2_OnClick"
-                                Content="{materialDesign:PackIcon Refresh}" />
+                                Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Refresh}}" />
                     </WrapPanel>
                     <TextBlock Grid.Row="1" TextWrapping="Wrap"
                                Margin="4">
@@ -193,7 +193,7 @@
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </Style>
             </StackPanel.Style>
-            <materialDesign:PackIcon Kind="FileChartOutline" Width="72" Height="72"
+            <ciCore:IconText IconSize="72" Kind="{x:Static ciCore:IconGlyphs.FileChartOutline}"
                                      HorizontalAlignment="Center"/>
             <TextBlock Text="在左侧课表中选择一节课程，然后在此处查看详细信息。" TextWrapping="Wrap"
                        Margin="0 8 0 0"/>
@@ -228,7 +228,7 @@
                                    BasedOn="{StaticResource MaterialDesignOutlineChip}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ViewModel.ClassPlan.IsOverlay}" Value="True">
-                                        <Setter Property="Icon" Value="{materialDesign:PackIcon LayersOutline}" />
+                                        <Setter Property="Icon" Value="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.LayersOutline}}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                                 <Setter Property="Foreground"
@@ -240,7 +240,7 @@
                                         Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
                                 <Setter Property="Margin" Value="0 -8 6 -8" />
 
-                                <Setter Property="Icon" Value="{materialDesign:PackIcon FileDocumentOutline}" />
+                                <Setter Property="Icon" Value="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentOutline}}" />
                             </Style>
                         </materialDesign:Chip.Style>
                         <TextBlock>
@@ -255,7 +255,7 @@
                         HorizontalAlignment="Right"
                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                         Click="ButtonBase_OnClick"
-                        Content="{materialDesign:PackIcon Refresh, Size=24}" />
+                        Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Refresh}, Size=24}" />
             </Grid>
         </materialDesign:ColorZone>
         <windows:AsyncBox Grid.Column="0" Grid.ColumnSpan="3"

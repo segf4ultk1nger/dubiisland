@@ -7,13 +7,12 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:ClassIsland.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherForecastNotificationProvider}}">
         <StackPanel Orientation="Horizontal" 
                     VerticalAlignment="Center" HorizontalAlignment="Center"
                     Visibility="{Binding IsOverlay, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <materialDesign:PackIcon Kind="AlertCircleOutline" VerticalAlignment="Center"
-                                     Height="20" Width="20"/>
+            <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.AlertCircleOutline}" VerticalAlignment="Center"/>
             <TextBlock Text="天气预报" FontSize="{DynamicResource MainWindowEmphasizedFontSize}" Margin="8 0" FontWeight="Bold"/>
             <controls:WeatherPackIconControl Code="{Binding Info.ForecastDaily.Weather.Value[0].To}" VerticalAlignment="Center"
                                      Height="20" AllowColor="False"/>
@@ -31,8 +30,8 @@
                     </Run><Run Text="~">
                     </Run><Run Text="{Binding Info.ForecastDaily.Temperature.Value[0].To}"/><Run Text="℃"/>
                 </TextBlock>
-                <!--<materialDesign:PackIcon Width="22" Height="22" 
-                                         Kind="RainChanceOutline"
+                <!--<ciCore:IconText IconSize="22" 
+                                         Kind="{x:Static ciCore:IconGlyphs.RainChanceOutline}"
                                          VerticalAlignment="Center"
                                          Margin="0 0 2 0"/>
                 <TextBlock FontSize="16" VerticalAlignment="Center" FontWeight="Medium">
@@ -59,8 +58,8 @@
                     </Run><Run Text="~">
                     </Run><Run Text="{Binding Info.ForecastDaily.Temperature.Value[1].To}"/><Run Text="℃"/>
                 </TextBlock>
-                <!--<materialDesign:PackIcon Width="22" Height="22" 
-                                         Kind="RainChanceOutline"
+                <!--<ciCore:IconText IconSize="22" 
+                                         Kind="{x:Static ciCore:IconGlyphs.RainChanceOutline}"
                                          VerticalAlignment="Center"
                                          Margin="0 0 2 0"/>
                 <TextBlock FontSize="16" VerticalAlignment="Center">

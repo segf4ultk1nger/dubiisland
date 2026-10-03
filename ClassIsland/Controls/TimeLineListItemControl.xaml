@@ -22,39 +22,39 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <!-- Icon -->
-        <materialDesign:PackIcon Grid.Column="0" Grid.Row="0"
+        <controls:IconText Grid.Column="0" Grid.Row="0"
             Margin="0 0 2 0"
             VerticalAlignment="Center">
-            <materialDesign:PackIcon.Style>
-                <Style TargetType="materialDesign:PackIcon">
+            <controls:IconText.Style>
+                <Style TargetType="controls:IconText">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                             Value="0">
-                            <Setter Property="Kind" Value="BookOutline" />
+                            <Setter Property="Kind" Value="{x:Static controls:IconGlyphs.BookOutline}" />
                             <Setter Property="ToolTip" Value="上课时间" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                             Value="1">
                             <Setter Property="Kind"
-                                Value="ClockOutline" />
+                                Value="{x:Static controls:IconGlyphs.ClockOutline}" />
                             <Setter Property="ToolTip" Value="课间休息" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                             Value="2">
                             <Setter Property="Kind"
-                                Value="ArrowSplitHorizontal" />
+                                Value="{x:Static controls:IconGlyphs.ArrowSplitHorizontal}" />
                             <Setter Property="ToolTip" Value="分割线" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                                      Value="3">
                             <Setter Property="Kind"
-                                    Value="Airplane" />
+                                    Value="{x:Static controls:IconGlyphs.Airplane}" />
                             <Setter Property="ToolTip" Value="行动" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </materialDesign:PackIcon.Style>
-        </materialDesign:PackIcon>
+            </controls:IconText.Style>
+        </controls:IconText>
 
         <!-- Time -->
         <TextBlock Grid.Column="1" Grid.Row="0"
@@ -69,7 +69,7 @@
 
         <!-- Last Time -->
         <controls:IconText Grid.Column="1" Grid.Row="1"
-                           Kind="ClockAutoOutline"
+                           Kind="{x:Static controls:IconGlyphs.ClockAutoOutline}"
                            Text="{Binding TimePoint.Last}"
                            Margin="0 0 0 0" ToolTip="持续时间" />
 

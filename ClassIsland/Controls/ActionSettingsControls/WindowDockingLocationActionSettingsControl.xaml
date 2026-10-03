@@ -9,19 +9,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:ClassIsland.Controls.ActionSettingsControls"
     mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800">
+    d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <StackPanel Orientation="Horizontal"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WindowDockingLocationActionSettingsControl}}">
         <TextBlock Text="移动到" VerticalAlignment="Center" Margin="0 0 4 0"/>
         <ComboBox Foreground="{DynamicResource MaterialDesignBody}"
                   SelectedIndex="{Binding Settings.Value}"
                   HorizontalContentAlignment="Left">
-            <ci:IconText Kind="ArrowTopLeft" Text="左上角" />
-            <ci:IconText Kind="FormatVerticalAlignTop" Text="中上侧" />
-            <ci:IconText Kind="ArrowTopRight" Text="右上角" />
-            <ci:IconText Kind="ArrowBottomLeft" Text="左下角" />
-            <ci:IconText Kind="FormatVerticalAlignBottom" Text="中下侧" />
-            <ci:IconText Kind="ArrowBottomRight" Text="右下角" />
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowTopLeft}" Text="左上角" />
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.FormatVerticalAlignTop}" Text="中上侧" />
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowTopRight}" Text="右上角" />
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowBottomLeft}" Text="左下角" />
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.FormatVerticalAlignBottom}" Text="中下侧" />
+            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowBottomRight}" Text="右下角" />
         </ComboBox>
     </StackPanel>
 </ci:ActionSettingsControlBase>

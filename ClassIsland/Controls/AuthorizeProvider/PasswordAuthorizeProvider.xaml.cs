@@ -6,14 +6,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClassIsland.Core.Attributes;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Controls.AuthorizeProvider;
 
 /// <summary>
 /// PasswordAuthorizeProvider.xaml 的交互逻辑
 /// </summary>
-[AuthorizeProviderInfo("classisland.authProviders.password", "密码", PackIconKind.Password)]
+[AuthorizeProviderInfo("classisland.authProviders.password", "密码", IconGlyphs.Password)]
 public partial class PasswordAuthorizeProvider
 {
     public static readonly DependencyProperty AuthorizeFailedProperty = DependencyProperty.Register(

@@ -1,7 +1,7 @@
 ﻿using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Controls.AttachedSettingsControls;
 
 /// <summary>
@@ -10,7 +10,7 @@ namespace ClassIsland.Controls.AttachedSettingsControls;
 [AttachedSettingsUsage(AttachedSettingsTargets.ClassPlan | AttachedSettingsTargets.TimeLayout |
                        AttachedSettingsTargets.Lesson | AttachedSettingsTargets.Subject |
                        AttachedSettingsTargets.TimePoint)]
-[AttachedSettingsControlInfo("08F0D9C3-C770-4093-A3D0-02F3D90C24BC", "上课提醒设置", PackIconKind.BellNotificationOutline)]
+[AttachedSettingsControlInfo("08F0D9C3-C770-4093-A3D0-02F3D90C24BC", "上课提醒设置", IconGlyphs.BellNotificationOutline)]
 public partial class ClassNotificationAttachedSettingsControl
 {
     public ClassNotificationAttachedSettingsControl()

@@ -30,7 +30,7 @@
 
     <Style TargetType="{x:Type controls:FileBrowserButton}" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Content" Value="{materialDesign:PackIcon Folder}"/>
+        <Setter Property="Content" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Folder}}"/>
         <Setter Property="ToolTip" Value="浏览…"/>
     </Style>
 
@@ -219,11 +219,11 @@
                                                                 </DropShadowEffect>
                                                             </Border.Effect>
                                                             <StackPanel Orientation="Horizontal">
-                                                                <!--<Button Content="{materialDesign:PackIcon Edit}"
+                                                                <!--<Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Edit}}"
                                                                         Command="{x:Static views:ProfileSettingsWindow.OpenTimeLayoutItemEditorCommand}"
                                                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                                                         ToolTip="编辑时间点…" Margin="0 0 4 0" />-->
-                                                                <Button Content="{materialDesign:PackIcon Delete}"
+                                                                <Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Delete}}"
                                                                         Foreground="IndianRed"
                                                                         Command="{x:Static views:ProfileSettingsWindow.RemoveSelectedTimeLayoutItemCommand}"
                                                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
@@ -269,11 +269,11 @@
                                                                 </DropShadowEffect>
                                                             </Border.Effect>
                                                             <StackPanel Orientation="Horizontal">
-                                                                <!--<Button Content="{materialDesign:PackIcon Edit}"
+                                                                <!--<Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Edit}}"
                                                                         Command="{x:Static views:ProfileSettingsWindow.OpenTimeLayoutItemEditorCommand}"
                                                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                                                         ToolTip="编辑时间点…" Margin="0 0 4 0" />-->
-                                                                <Button Content="{materialDesign:PackIcon Delete}"
+                                                                <Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Delete}}"
                                                                         Foreground="IndianRed"
                                                                         Command="{x:Static views:ProfileSettingsWindow.RemoveSelectedTimeLayoutItemCommand}"
                                                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
@@ -292,10 +292,10 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu FontFamily="{StaticResource HarmonyOsSans}" IsEnabled="{Binding IsReadOnly, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:TimeLineListControl}, Converter={StaticResource InvertBooleanConverter}}">
-                                <!--<MenuItem Icon="{materialDesign:PackIcon EditOutline}" Header="编辑时间点…" Command="{x:Static views:ProfileSettingsWindow.OpenTimeLayoutItemEditorCommand}"/>
-                                <MenuItem Icon="{materialDesign:PackIcon FormatColorFill}" Header="覆盖课程…"/>
+                                <!--<MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.EditOutline}}" Header="编辑时间点…" Command="{x:Static views:ProfileSettingsWindow.OpenTimeLayoutItemEditorCommand}"/>
+                                <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FormatColorFill}}" Header="覆盖课程…"/>
                                 <Separator/>-->
-                                <MenuItem Icon="{materialDesign:PackIcon DeleteOutline}" Header="删除时间点" Command="{x:Static views:ProfileSettingsWindow.RemoveSelectedTimeLayoutItemCommand}"/>
+                                <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.DeleteOutline}}" Header="删除时间点" Command="{x:Static views:ProfileSettingsWindow.RemoveSelectedTimeLayoutItemCommand}"/>
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
@@ -352,11 +352,11 @@
                                                         <DropShadowEffect Direction="0" ShadowDepth="0" Opacity="0.4" BlurRadius="8"></DropShadowEffect>
                                                     </Border.Effect>
                                                     <StackPanel Orientation="Horizontal" >
-                                                        <!--<Button Content="{materialDesign:PackIcon Edit}"
+                                                        <!--<Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Edit}}"
                                                                 Command="{x:Static views:ProfileSettingsWindow.OpenTimeLayoutItemEditorCommand}"
                                                                 Style="{StaticResource MaterialDesignToolForegroundButton}"
                                                                 ToolTip="编辑时间点…" Margin="0 0 4 0"/>-->
-                                                        <Button Content="{materialDesign:PackIcon Delete}"
+                                                        <Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Delete}}"
                                                                 Foreground="IndianRed"
                                                                 Command="{x:Static views:ProfileSettingsWindow.RemoveSelectedTimeLayoutItemCommand}"
                                                                 Style="{StaticResource MaterialDesignToolForegroundButton}"

@@ -75,7 +75,7 @@
                             Style="{StaticResource MaterialDesignFlatButton}"
                             FocusVisualStyle="{StaticResource {x:Static SystemParameters.FocusVisualStyleKey}}"
                             Margin="4 0 0 0">
-                        <controls:IconText Kind="{Binding PackIconKind}"
+                        <controls:IconText Kind="{Binding Glyph}"
                                         Text="{Binding Name}"/>
                     </Button>
 

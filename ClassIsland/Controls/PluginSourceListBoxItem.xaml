@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ClassIsland.Controls" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignWidth="500">
+             d:DesignWidth="500" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:PluginSourceListBoxItem}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -22,9 +22,9 @@
         <StackPanel Orientation="Horizontal"
                     Grid.Column="3">
             <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                    Content="{materialDesign:PackIcon Kind=Pencil}"/>
+                    Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Pencil}}"/>
             <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                    Content="{materialDesign:PackIcon Kind=Remove}"/>
+                    Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Remove}}"/>
         </StackPanel>
     </Grid>
 </UserControl>

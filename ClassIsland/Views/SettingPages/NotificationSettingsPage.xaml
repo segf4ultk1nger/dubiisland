@@ -48,14 +48,14 @@
                            Visibility="{Binding ProviderSettings.IsSettingsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                 <!-- 启用提醒语音 -->
-                <controls2:SettingsCard IconGlyph="TextToSpeech"
+                <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.TextToSpeech}"
                                         Foreground="{DynamicResource MaterialDesignBody}"
                                         Header="启用提醒语音"
                                         Description="在发出提醒时用语音播报提醒内容。"
                                         IsOn="{Binding ProviderSettings.IsSpeechEnabled, Mode=TwoWay}" />
 
                 <!-- 启用提醒强调特效 -->
-                <controls2:SettingsCard IconGlyph="LayersOutline"
+                <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
                                         Margin="0 6 0 0"
                                         Foreground="{DynamicResource MaterialDesignBody}"
                                         Header="启用提醒强调特效"
@@ -69,7 +69,7 @@
                               IsExpanded="{Binding ProviderSettings.IsNotificationSoundEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <controls2:SettingsControl IconGlyph="VolumeHigh"
+                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.VolumeHigh}"
                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                        Header="启用提醒音效"
                                                        Description="启用后，发出提醒时会播放音效。"
@@ -80,7 +80,7 @@
                                     IsEnabled="{Binding ProviderSettings.IsNotificationSoundEnabled}">
                             <!-- 自定义音效 -->
                             <controls2:SettingsControl
-                                IconGlyph="FileMusicOutline" Header="自定义音效"
+                                IconGlyph="{x:Static controls2:IconGlyphs.FileMusicOutline}" Header="自定义音效"
                                 Foreground="{DynamicResource MaterialDesignBody}"
                                 Description="设置自定义音效，留空以禁用。如果音效长于提醒显示时间，多出来的部分会被截断。">
                                 <controls2:SettingsControl.Switcher>
@@ -103,7 +103,7 @@
                     </Expander>
                 </materialDesign:Card>
                 <!-- 置顶提醒 -->
-                <controls2:SettingsCard IconGlyph="LayersOutline"
+                <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
                                         Margin="0 6 0 0"
                                         Foreground="{DynamicResource MaterialDesignBody}"
                                         Header="置顶提醒"
@@ -139,7 +139,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- 提醒开关 -->
-                <controls2:SettingsCard Grid.Row="0" IconGlyph="BellNotificationOutline"
+                <controls2:SettingsCard Grid.Row="0" IconGlyph="{x:Static controls2:IconGlyphs.BellNotificationOutline}"
                                         Margin="0 0 0 6"
                                         Header="启用提醒"
                                         IsOn="{Binding SettingsService.Settings.IsNotificationEnabled, Mode=TwoWay}"
@@ -162,7 +162,7 @@
                                 <DataTemplate>
                                     <materialDesign:ColorZone Mode="PrimaryMid" Height="24"
                                                               CornerRadius="12">
-                                        <controls2:IconText Kind="ArrowUpDown" Text="调整优先级"
+                                        <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ArrowUpDown}" Text="调整优先级"
                                                             Margin="4 0"
                                                             IconMargin="2"
                                                             TextElement.FontWeight="Medium"
@@ -285,7 +285,7 @@
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
                                               Margin="0 0 0 0">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="TextToSpeech"
+                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.TextToSpeech}"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        Header="允许启用提醒语音"
                                                                        Description="在发出提醒时用语音播报提醒内容。"
@@ -364,13 +364,13 @@
                                                 <Button Click="ButtonTestSpeeching_OnClick"
                                                         HorizontalAlignment="Left"
                                                         Style="{StaticResource MaterialDesignFlatButton}">
-                                                    <controls2:IconText Kind="Play"
+                                                    <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Play}"
                                                                         Text="测试语音" />
                                                 </Button>
                                                 <Button Click="ButtonOpenSpeechSettings_OnClick"
                                                         HorizontalAlignment="Left"
                                                         Style="{StaticResource MaterialDesignFlatButton}">
-                                                    <controls2:IconText Kind="ExternalLink"
+                                                    <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ExternalLink}"
                                                                         Text="系统文本转语音设置" />
                                                 </Button>
                                             </WrapPanel>
@@ -384,7 +384,7 @@
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationEffect, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="LayersOutline"
+                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        Header="允许启用提醒强调特效"
                                                                        Description="启用后，发出提醒时会播放全屏强调特效。"
@@ -399,7 +399,7 @@
                                                       Margin="0 0 0 6" />
                                             
                                             <!-- 提醒特效渲染精度 -->
-                                            <controls2:SettingsControl IconGlyph="LayersOutline" Header="提醒特效渲染精度"
+                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}" Header="提醒特效渲染精度"
                                                                        Margin="0 0 0 6"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        Description="提醒特效渲染时的精度，使用较低的精度性能可以获得较好的性能。">
@@ -415,7 +415,7 @@
                                             </controls2:SettingsControl>
 
                                             <!-- 在独立线程上呈现特效 -->
-                                            <controls2:SettingsControl IconGlyph="ViewQuiltOutline" Header="在独立线程上呈现特效"
+                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.ViewQuiltOutline}" Header="在独立线程上呈现特效"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        IsOn="{Binding SettingsService.Settings.NotificationUseStandaloneEffectUiThread, Mode=TwoWay}"
                                                                        Description="启用后，将使用独立的 UI 线程呈现提醒特效，可能可以提升特效流畅性。如果出现呈现问题，可以尝试关闭此选项。">
@@ -430,7 +430,7 @@
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationSound, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="VolumeHigh"
+                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.VolumeHigh}"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        Header="允许启用提醒音效"
                                                                        Description="启用后，发出提醒时会播放音效。"
@@ -472,7 +472,7 @@
 
                                             <!-- 自定义音效 -->
                                             <controls2:SettingsControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                                                                       IconGlyph="FileMusicOutline" Header="自定义音效"
+                                                                       IconGlyph="{x:Static controls2:IconGlyphs.FileMusicOutline}" Header="自定义音效"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        Description="设置自定义音效，留空以禁用。如果音效长于提醒显示时间，多出来的部分会被截断。">
                                                 <controls2:SettingsControl.Switcher>
@@ -502,7 +502,7 @@
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationTopmost, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="LayersPlus"
+                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersPlus}"
                                                                        Margin="-12 0"
                                                                        Foreground="{DynamicResource MaterialDesignBody}"
                                                                        Header="允许置顶提醒"
@@ -559,7 +559,7 @@
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </Style>
                             </StackPanel.Style>
-                            <materialDesign:PackIcon Kind="Cog" Width="72" Height="72"
+                            <controls2:IconText IconSize="72" Kind="{x:Static controls2:IconGlyphs.Cog}"
                                                      HorizontalAlignment="Center" />
                             <TextBlock Text="该提醒提供方没有设置。" TextWrapping="Wrap"
                                        Margin="0 8 0 0" />
@@ -577,7 +577,7 @@
                                               IsChecked="{Binding ProviderSettings.IsSettingsEnabled}" />
                                 <Button Grid.Column="1" Style="{StaticResource MaterialDesignToolButton}"
                                         Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                        Content="{materialDesign:PackIcon CogOutline}"
+                                        Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.CogOutline}}"
                                         VerticalAlignment="Center"
                                         ToolTip="查看提醒高级设置…"
                                         Margin="0 0 6 0"
@@ -604,7 +604,7 @@
                     </StackPanel.Style>
                     <ci:StickerControl ImageSource="/Assets/HoYoStickers/普罗米修斯_查询.png" Width="72" Height="72"
                            StickerToolTip="普罗米修斯_查询"
-                           PackIconKind="BellNotificationOutline"/>
+                           Glyph="{x:Static controls2:IconGlyphs.BellNotificationOutline}"/>
                     <TextBlock Text="在左侧选择一个提醒提供方，然后在此处进行设置。" TextWrapping="Wrap"
                                Margin="0 4 0 0" />
                 </StackPanel>

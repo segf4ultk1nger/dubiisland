@@ -6,12 +6,12 @@ using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Automation;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Models.Automation.Triggers;
-using MaterialDesignThemes.Wpf;
 using TimeCrontab;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Services.Automation.Triggers;
 
-[TriggerInfo("classisland.cron", "cron", PackIconKind.Repeat)]
+[TriggerInfo("classisland.cron", "cron", IconGlyphs.Repeat)]
 public class CronTrigger : TriggerBase<CronTriggerSettings>
 {
     private Crontab? _crontab;

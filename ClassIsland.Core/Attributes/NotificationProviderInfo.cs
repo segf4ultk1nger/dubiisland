@@ -1,4 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using ClassIsland.Core.Controls;
 
 namespace ClassIsland.Core.Attributes;
 
@@ -21,7 +21,7 @@ public class NotificationProviderInfo : Attribute
     /// <summary>
     /// 提醒提供方图标
     /// </summary>
-    public PackIconKind PackIcon { get; } = PackIconKind.BellRing;
+    public string PackIcon { get; } = IconGlyphs.BellRing;
 
     /// <summary>
     /// 提醒提供方位图图标uri
@@ -59,20 +59,23 @@ public class NotificationProviderInfo : Attribute
     public List<NotificationChannelInfo> RegisteredChannels { get; } = [];
 
 
-    /// <inheritdoc />
-    public NotificationProviderInfo(string guid, string name, PackIconKind icon, string description = "") : this(guid, name,
+    /// <summary>
+    /// 使用字形或位图图标初始化提醒提供方。单个 Segoe 字形视为图标，较长的路径视为位图。
+    /// </summary>
+    public NotificationProviderInfo(string guid, string name, string iconOrBitmapUri, string description) : this(guid, name,
         description)
     {
-        PackIcon = icon;
+        if (IsGlyph(iconOrBitmapUri))
+            PackIcon = iconOrBitmapUri;
+        else
+        {
+            BitmapIconUri = iconOrBitmapUri;
+            UseBitmapIcon = true;
+        }
     }
 
-    /// <inheritdoc />
-    public NotificationProviderInfo(string guid, string name, string bitmapIconUri, string description = "") : this(guid, name,
-        description)
-    {
-        BitmapIconUri = bitmapIconUri;
-        UseBitmapIcon = true;
-    }
+    static bool IsGlyph(string value) =>
+        value.Length is > 0 and <= 2 && value.IndexOfAny(['/', '\\', '.']) < 0;
 
     /// <inheritdoc />
     public NotificationProviderInfo(string guid, string name, string description = "")

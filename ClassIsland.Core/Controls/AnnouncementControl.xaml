@@ -40,29 +40,29 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Column="0" Height="20" Width="20">
-                        <materialDesign:PackIcon.Style>
-                            <Style TargetType="materialDesign:PackIcon">
+                    <local:IconText IconSize="20" Grid.Column="0">
+                        <local:IconText.Style>
+                            <Style TargetType="local:IconText">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Announcement.Severity}" Value="Announcement">
-                                        <Setter Property="Kind" Value="BullhornOutline"/>
+                                        <Setter Property="Kind" Value="{x:Static local:IconGlyphs.BullhornOutline}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Announcement.Severity}" Value="Info">
-                                        <Setter Property="Kind" Value="InfoCircleOutline"/>
+                                        <Setter Property="Kind" Value="{x:Static local:IconGlyphs.InfoCircleOutline}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Announcement.Severity}" Value="Important">
-                                        <Setter Property="Kind" Value="MessageAlertOutline"/>
+                                        <Setter Property="Kind" Value="{x:Static local:IconGlyphs.MessageAlertOutline}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Announcement.Severity}" Value="Warning">
-                                        <Setter Property="Kind" Value="WarningOutline"/>
+                                        <Setter Property="Kind" Value="{x:Static local:IconGlyphs.WarningOutline}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Announcement.Severity}" Value="Critical">
-                                        <Setter Property="Kind" Value="ErrorOutline"/>
+                                        <Setter Property="Kind" Value="{x:Static local:IconGlyphs.ErrorOutline}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </materialDesign:PackIcon.Style>
-                    </materialDesign:PackIcon>
+                        </local:IconText.Style>
+                    </local:IconText>
                     <TextBlock Grid.Column="1" TextWrapping="Wrap"
                                VerticalAlignment="Top"
                                Margin="4 0 0 0"
@@ -71,7 +71,7 @@
                     <Button Grid.Column="2" VerticalAlignment="Top"
                             Style="{StaticResource MaterialDesignToolForegroundButton}"
                             Margin="0 -7"
-                            Content="{materialDesign:PackIcon Close}"
+                            Content="{local:GlyphIcon {x:Static local:IconGlyphs.Close}}"
                             ToolTip="关闭"
                             Click="ButtonRead_OnClick"/>
                 </Grid>
@@ -81,7 +81,7 @@
                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                         CommandParameter="{Binding Announcement.DetailsUri, Mode=OneWay}"
                         Visibility="{Binding Announcement.HasDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <local:IconText Kind="OpenInNew" Text="详细信息"/>
+                    <local:IconText Kind="{x:Static local:IconGlyphs.OpenInNew}" Text="详细信息"/>
                 </Button>
             </StackPanel>
         </materialDesign:ColorZone>

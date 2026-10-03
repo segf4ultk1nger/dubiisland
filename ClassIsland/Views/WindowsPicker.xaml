@@ -51,7 +51,7 @@
                                 <materialDesign:ColorZone.Effect>
                                     <DropShadowEffect BlurRadius="6" Opacity="0.5" Direction="0" ShadowDepth="0"/>
                                 </materialDesign:ColorZone.Effect>
-                                <materialDesign:PackIcon Kind="Check" Width="32" Height="32"
+                                <controls1:IconText IconSize="32" Kind="{x:Static controls1:IconGlyphs.Check}"
                                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </materialDesign:ColorZone>
                             <materialDesign:ColorZone Mode="Light"
@@ -86,7 +86,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <materialDesign:PackIcon Grid.Column="0" Kind="WindowMaximize" VerticalAlignment="Center"/>
+            <controls1:IconText Grid.Column="0" Kind="{x:Static controls1:IconGlyphs.WindowMaximize}" VerticalAlignment="Center"/>
             <TextBox Grid.Column="1" Margin="8 0"
                      VerticalAlignment="Center"
                      Text="{Binding ViewModel.SelectedClassName}"
@@ -94,10 +94,10 @@
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button Style="{StaticResource MaterialDesignPaperButton}" Margin="0 0 6 0"
                         Click="ButtonCancel_OnClick">
-                    <controls1:IconText Kind="Cancel" Text="取消"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Cancel}" Text="取消"/>
                 </Button>
                 <Button Click="ButtonDone_OnClick">
-                    <controls1:IconText Kind="Check" Text="确定"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="确定"/>
                 </Button>
             </StackPanel>
         </Grid>
@@ -120,7 +120,7 @@
                     <Button ToolTip="刷新"
                             Padding="0"
                             Style="{StaticResource MaterialDesignToolForegroundButton}"
-                            Content="{materialDesign:PackIcon Refresh, Size=24}"
+                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Refresh}, Size=24}"
                             Click="ButtonRefresh_OnClick"
                             Margin="0 0 16 0"/>
                     <materialDesign:PopupBox ToolTip="更多选项…"

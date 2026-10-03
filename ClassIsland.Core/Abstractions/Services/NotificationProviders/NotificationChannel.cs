@@ -5,10 +5,10 @@ using ClassIsland.Core.Models.Notification;
 using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Interfaces;
-using MaterialDesignThemes.Wpf;
 using System.Windows.Media.Imaging;
 using ClassIsland.Core.Abstractions.Controls;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Abstractions.Services.NotificationProviders;
 
 /// <summary>
@@ -64,11 +64,10 @@ public class NotificationChannel : INotificationSender, INotificationProvider
         var info = ChannelInfo;
         Name = info.Name;
         Description = info.Description;
-        IconElement = new PackIcon()
+        IconElement = new IconText()
         {
             Kind = info.PackIcon,
-            Width = 24,
-            Height = 24
+            IconSize = 24
         };
 
         __NotificationHostService.RegisterNotificationChannel(this);

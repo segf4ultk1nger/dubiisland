@@ -10,7 +10,7 @@
                         xmlns:ci="http://classisland.tech/schemas/xaml/core"
                         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                         mc:Ignorable="d" 
-                        d:DesignHeight="450" d:DesignWidth="800">
+                        d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherComponentSettingsControl}}">
         <ScrollViewer>
             <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
@@ -20,8 +20,7 @@
                                           Margin="0 0 0 5">
                     <Grid>
                         <DockPanel Margin="8 4">
-                            <materialDesign:PackIcon Kind="Info"
-                                                     Height="20" Width="20"/>
+                            <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.Info}"/>
                             <TextBlock TextWrapping="Wrap"
                                        VerticalAlignment="Center"
                                        Margin="4 0 0 0" >
@@ -35,7 +34,7 @@
                         </DockPanel>
                     </Grid>
                 </materialDesign:ColorZone>
-                <ci:SettingsCard IconGlyph="CardTextOutline"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CardTextOutline}"
                                  Header="显示天气信息"
                                  Description="显示当前天气信息摘要。"
                                  Margin="0 0 0 6">
@@ -54,11 +53,11 @@
                         </StackPanel>
                     </ci:SettingsCard.Switcher>
                 </ci:SettingsCard>
-                <ci:SettingsCard IconGlyph="AlertCircleCheckOutline" Header="显示预警信号"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AlertCircleCheckOutline}" Header="显示预警信号"
                                  Description="启用后，预警将以图标形式显示在天气组件上。"
                                  Margin="0 0 0 6"
                                  IsOn="{Binding Settings.ShowAlerts, Mode=TwoWay}"/>
-                <ci:SettingsCard IconGlyph="MessageAlertOutline"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MessageAlertOutline}"
                                  Header="显示预警类型"
                                  Description="设置何种情况下显示预警类型。"
                                  Margin="0 0 0 6">
@@ -72,7 +71,7 @@
                         </Grid>
                     </ci:SettingsCard.Switcher>
                 </ci:SettingsCard>
-                <ci:SettingsCard IconGlyph="WeatherPouring" Header="显示降水提示"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.WeatherPouring}" Header="显示降水提示"
                                  Description="启用后，将显示降水即将到来的时间和降水剩余时间。正数代表降水即将到来的时间，负数代表剩余时间。"
                                  IsOn="{Binding Settings.ShowRainTime, Mode=TwoWay}"/>
             </StackPanel>

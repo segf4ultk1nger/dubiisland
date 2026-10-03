@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using ClassIsland.Core.Enums;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Attributes;
 
 /// <summary>
@@ -11,7 +11,7 @@ namespace ClassIsland.Core.Attributes;
 public class AttachedSettingsControlInfo(
     string guid,
     string name,
-    PackIconKind iconKind = PackIconKind.CogOutline,
+    string iconKind = IconGlyphs.CogOutline,
     bool hasEnabledState = true) : Attribute
 {
     /// <summary>
@@ -27,7 +27,7 @@ public class AttachedSettingsControlInfo(
     /// <summary>
     /// 附加设置图标类型
     /// </summary>
-    public PackIconKind IconKind { get; } = iconKind;
+    public string IconKind { get; } = iconKind;
 
     /// <summary>
     /// 是否具有开关状态

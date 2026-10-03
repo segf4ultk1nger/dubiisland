@@ -17,7 +17,7 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       Loaded="RecoverBackupPage_OnLoaded"
-      DataContext="{Binding RelativeSource={RelativeSource Self}}">
+      DataContext="{Binding RelativeSource={RelativeSource Self}}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Page.Resources>
         <ci:IntToRadioButtonSelectionConverter x:Key="IntToRadioButtonSelectionConverter" />
     </Page.Resources>
@@ -51,7 +51,7 @@
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-                <ci:IconText Kind="Restore" Text="恢复到选定备份"/>
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restore}" Text="恢复到选定备份"/>
             </Button>
         </StackPanel>
     </Grid>

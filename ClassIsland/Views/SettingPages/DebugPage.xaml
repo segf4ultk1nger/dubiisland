@@ -30,7 +30,7 @@
                 <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                     <Setter Property="MinWidth" Value="2000" />
                     <Style.Resources>
-                        <Style TargetType="materialDesign:PackIcon">
+                        <Style TargetType="controls2:IconText">
                             <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                         </Style>
                     </Style.Resources>
@@ -41,12 +41,12 @@
             </StackPanel.Resources>
             <TextBlock Text="调试" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
             <TextBlock Margin="0 12" Foreground="IndianRed" Text="仅供调试，除非你能知道您在做什么，请不要使用以下按钮。"/>
-            <MenuItem Icon="{materialDesign:PackIcon Close}"
+            <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Close}}"
                       Header="关闭调试菜单"
                       Click="ButtonCloseDebug_OnClick" />
             <Separator />
             
-            <MenuItem Icon="{materialDesign:PackIcon LightningBoltOutline}"
+            <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.LightningBoltOutline}}"
                       Header="特性调试窗口"
                       Click="MenuItemFeatureDebugWindow_OnClick"/>
             <UniformGrid>
@@ -73,7 +73,7 @@
                     </Viewbox>
                     <UniformGrid>
                         <MenuItem Grid.Column="0" Grid.Row="1"
-                                  Icon="{materialDesign:PackIcon ClockRemoveOutline}"
+                                  Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ClockRemoveOutline}}"
                                   Header="重置调试时间偏移"
                                   Click="ButtonReset_OnClick" />
                         <materialDesign:TimePicker Grid.Column="1" Grid.Row="1" Margin="0 0 3 0"
@@ -90,30 +90,30 @@
             </materialDesign:Card>
 
             <UniformGrid>
-                <MenuItem Icon="{materialDesign:PackIcon FlashOutline}" Header="触发上课" Click="MenuItemDebugTriggerOnClass_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon PlayOutline}" Header="启动主计时器" Click="MenuItemStartMainTimer_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon FlashOutline}" Header="触发下课" Click="MenuItemDebugTriggerAfterClass_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon Pause}" Header="停止主计时器" Click="MenuItemStopMainTimer_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon RubbishBinOutline}" Header="垃圾回收" Click="MenuItemGcCollect_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.FlashOutline}}" Header="触发上课" Click="MenuItemDebugTriggerOnClass_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.PlayOutline}}" Header="启动主计时器" Click="MenuItemStartMainTimer_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.FlashOutline}}" Header="触发下课" Click="MenuItemDebugTriggerAfterClass_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Pause}}" Header="停止主计时器" Click="MenuItemStopMainTimer_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.RubbishBinOutline}}" Header="垃圾回收" Click="MenuItemGcCollect_OnClick" />
                 <MenuItem IsCheckable="True" Header="正在集控管理" IsChecked="{Binding ManagementService.IsManagementEnabled}"
                           IsEnabled="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneTime}" />
             </UniformGrid>
             <Separator />
 
             <UniformGrid>
-                <MenuItem Icon="{materialDesign:PackIcon ArrowLeftRight}" Header="显示快速信息迁移提示" Click="MenuItemShowComponentsMigrateTips_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon CogOutline}" Header="覆盖设置版本" Click="MenuItemOverwriteSettingsVersion_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon ToyBrickOutline}" Header="显示插件使用须知" Click="MenuItemShowPluginMarketWarning_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon RelationManyToMany}" Header="转储课表关系图" Click="MenuItemDumpProfileRelations_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon ScriptTextOutline}" Header="显示自动化使用须知" Click="MenuItemShowAutomationWarning_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon RelationManyToMany}" Header="测试课表找下级" Click="MenuItemFindNext_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon LanguageMarkdownOutline}" Header="打开 Markdown 文档" Click="MenuItemOpenMdDocs_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon MessageAlertOutline}" Header="显示测试通知" Click="MenuItemShowTestNotification_OnClick" />
-                <MenuItem Icon="{materialDesign:PackIcon MapOutline}" Header="测试定位" Click="MenuItemTryGetLocation_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ArrowLeftRight}}" Header="显示快速信息迁移提示" Click="MenuItemShowComponentsMigrateTips_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.CogOutline}}" Header="覆盖设置版本" Click="MenuItemOverwriteSettingsVersion_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ToyBrickOutline}}" Header="显示插件使用须知" Click="MenuItemShowPluginMarketWarning_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.RelationManyToMany}}" Header="转储课表关系图" Click="MenuItemDumpProfileRelations_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ScriptTextOutline}}" Header="显示自动化使用须知" Click="MenuItemShowAutomationWarning_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.RelationManyToMany}}" Header="测试课表找下级" Click="MenuItemFindNext_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.LanguageMarkdownOutline}}" Header="打开 Markdown 文档" Click="MenuItemOpenMdDocs_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.MessageAlertOutline}}" Header="显示测试通知" Click="MenuItemShowTestNotification_OnClick" />
+                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.MapOutline}}" Header="测试定位" Click="MenuItemTryGetLocation_OnClick" />
             </UniformGrid>
 
             <!-- 动画缩放 -->
-            <controls2:SettingsControl IconGlyph="BugOutline"
+            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.BugOutline}"
                                        Header="动画缩放"
                                        Description="主界面缩放动画播放倍速。"
                                        Margin="0 13 0 0">
@@ -126,7 +126,7 @@
             </controls2:SettingsControl>
 
             <!-- 时间流速 -->
-            <controls2:SettingsControl IconGlyph="ClockFast"
+            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.ClockFast}"
                                        Header="时间流速"
                                        Description="持续调整时间偏移，以控制时间流速。"
                                        Margin="0 13 0 0">
@@ -145,7 +145,7 @@
                                  Text="{Binding SettingsService.Settings.DebugTimeSpeed, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}"
                                  MinWidth="102"/>
                         <Button Grid.Column="2" Click="ButtonResetTimeSpeed_OnClick" ToolTip="重置时间流速" Style="{StaticResource MaterialDesignFlatButton}"
-                                Content="{materialDesign:PackIcon ClockRemoveOutline}"/>
+                                Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ClockRemoveOutline}}"/>
                     </Grid>
                 </controls2:SettingsControl.Switcher>
             </controls2:SettingsControl>
@@ -160,7 +160,7 @@
                 <Expander.Resources>
                     <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                         <Style.Resources>
-                            <Style TargetType="materialDesign:PackIcon">
+                            <Style TargetType="controls2:IconText">
                                 <Setter Property="Foreground"
                                         Value="Red" />
                             </Style>
@@ -169,24 +169,24 @@
                 </Expander.Resources>
                 <Expander.Header>
                     <ci:SettingsControl HasSwitcher="False"
-                                        IconGlyph="Bomb"
+                                        IconGlyph="{x:Static controls2:IconGlyphs.Bomb}"
                                         Header="危险操作"
                                         Description="没事别按。"/>
                 </Expander.Header>
                 <StackPanel>
-                    <MenuItem Icon="{materialDesign:PackIcon Bomb}"
+                    <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Bomb}}"
                               Header="崩溃测试"
                               Click="ButtonCrash_OnClick" />
-                    <MenuItem Icon="{materialDesign:PackIcon Bomb}"
+                    <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Bomb}}"
                               Header="崩溃测试（延迟3秒）"
                               Click="ButtonDelayCrash_OnClick"/>
-                    <MenuItem Icon="{materialDesign:PackIcon Bomb}"
+                    <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Bomb}}"
                               Header="崩溃测试（Task）"
                               Click="MenuItemCrashOnTask_OnClick" />
-                    <MenuItem Icon="{materialDesign:PackIcon Dangerous}"
+                    <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Dangerous}}"
                               Header="崩溃测试（扔到栈顶）"
                               Click="MenuItemCrashTestGlobal_OnClick" />
-                    <MenuItem Icon="{materialDesign:PackIcon Dangerous}"
+                    <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.Dangerous}}"
                               Header="Environment.FailFast();"
                               Click="MenuItemFailFast_OnClick" />
                 </StackPanel>

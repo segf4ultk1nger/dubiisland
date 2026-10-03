@@ -6,14 +6,13 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Controls;
 using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Services;
-using MaterialDesignThemes.Wpf;
 
 namespace ClassIsland.Views.SettingPages;
 
 /// <summary>
 /// PrivacySettingsPage.xaml 的交互逻辑
 /// </summary>
-[SettingsPageInfo("privacy", "隐私", PackIconKind.ShieldAccountOutline, PackIconKind.ShieldAccount, SettingsPageCategory.Internal)]
+[SettingsPageInfo("privacy", "隐私", IconGlyphs.ShieldAccountOutline, IconGlyphs.ShieldAccount, SettingsPageCategory.Internal)]
 public partial class PrivacySettingsPage : SettingsPageBase
 {
     public SettingsService SettingsService { get; }

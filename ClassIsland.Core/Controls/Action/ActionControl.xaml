@@ -25,7 +25,7 @@
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
                     <materialDesign:ColorZone Mode="PrimaryMid" Height="24" CornerRadius="12">
-                        <controls:IconText Kind="ArrowUpDown" Text="调整行动顺序"
+                        <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="调整行动顺序"
                                      Margin="4 0"
                                      IconMargin="2"
                                      TextElement.FontWeight="Medium"
@@ -42,7 +42,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
-                                    Content="{materialDesign:PackIcon Remove}"
+                                    Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Remove}}"
                                     Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     ToolTip="删除"
                                     Command="{x:Static local:ActionControl.RemoveActionCommand}"
@@ -89,15 +89,13 @@
                                                          StaysOpen="True"
                                                          Padding="0">
                                     <materialDesign:PopupBox.ToggleContent>
-                                        <materialDesign:PackIcon Foreground="Red"
-                                                                 Width="20"
-                                                                 Height="20"
+                                        <controls:IconText IconSize="20" Foreground="Red"
                                                                  VerticalAlignment="Center"
-                                                                 Kind="Alert"
+                                                                 Kind="{x:Static controls:IconGlyphs.Alert}"
                                                                  Grid.Column="2"
                                                                  ToolTip="上次运行此行动时出现错误，点击查看错误信息。">
-                                            <materialDesign:PackIcon.Style>
-                                                <Style TargetType="materialDesign:PackIcon">
+                                            <controls:IconText.Style>
+                                                <Style TargetType="controls:IconText">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Exception}"
                                                                      Value="{x:Null}">
@@ -106,8 +104,8 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </materialDesign:PackIcon.Style>
-                                        </materialDesign:PackIcon>
+                                            </controls:IconText.Style>
+                                        </controls:IconText>
                                     </materialDesign:PopupBox.ToggleContent>
                                     <StackPanel MaxWidth="650"
                                                 materialDesign:ElevationAssist.Elevation="Dp4">
@@ -136,7 +134,7 @@
         <Button Style="{StaticResource MaterialDesignFlatButton}"
                 Click="ButtonAddAction_OnClick"
                 HorizontalAlignment="Left">
-            <controls:IconText Kind="Plus"
+            <controls:IconText Kind="{x:Static controls:IconGlyphs.Plus}"
                                Text="添加行动" />
         </Button>
     </StackPanel>

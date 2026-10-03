@@ -55,7 +55,7 @@
                     materialDesign:ButtonProgressAssist.IsIndeterminate="True"
                     materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding ViewModel.IsRefreshingContributors}"
                     IsEnabled="{Binding ViewModel.IsRefreshingContributors, Converter={StaticResource InvertBooleanConverter}}">
-                <controls1:IconText Kind="Refresh" Text="刷新"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
             </Button>
             <ListView Grid.Row="3" Margin="0 2 0 0"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -116,8 +116,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <materialDesign:PackIcon Grid.Row="0" Grid.Column="0"
-                                                     Kind="PackageVariant" VerticalAlignment="Center"
+                            <controls1:IconText Grid.Row="0" Grid.Column="0"
+                                                     Kind="{x:Static controls1:IconGlyphs.PackageVariant}" VerticalAlignment="Center"
                                                      Margin="0 0 6 0" />
                             <TextBlock Grid.Row="0" Grid.Column="1"
                                        Text="{Binding Title}"
@@ -307,25 +307,25 @@
                             <!-- Links -->
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
                                 <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Content="{materialDesign:PackIcon Web, Size=20}"
+                                        Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Web}, Size=20}"
                                         Margin="0 0 4 0"
                                         ToolTip="项目主页"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://classisland.tech"/>
                                 <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Content="{materialDesign:PackIcon BookOpenVariant, Size=20}"
+                                        Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.BookOpenVariant}, Size=20}"
                                         Margin="0 0 4 0"
                                         ToolTip="文档"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://docs.classisland.tech"/>
                                 <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Content="{materialDesign:PackIcon GitHub, Size=20}"
+                                        Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.GitHub}, Size=20}"
                                         Margin="0 0 4 0"
                                         ToolTip="GitHub"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://github.com/ClassIsland/ClassIsland"/>
                                 <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                        Content="{materialDesign:PackIcon ForumOutline, Size=20}"
+                                        Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ForumOutline}, Size=20}"
                                         ToolTip="加入社区"
                                         Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                         CommandParameter="https://docs.classisland.tech/community/"/>
@@ -342,7 +342,7 @@
                             CommandParameter="https://github.com/ClassIsland/ClassIsland/issues/">
                         <Grid>
                             <TextBlock Text="问题反馈/功能建议" />
-                            <materialDesign:PackIcon Kind="ExternalLink" HorizontalAlignment="Right"
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ExternalLink}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center"/>
                         </Grid>
                     </Button>
@@ -351,7 +351,7 @@
                             CommandParameter="https://github.com/ClassIsland/voting/discussions/categories/classisland?discussions_q=is%3Aopen+category%3AClassIsland+sort%3Atop">
                         <Grid>
                             <TextBlock Text="功能投票" />
-                            <materialDesign:PackIcon Kind="ExternalLink" HorizontalAlignment="Right"
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ExternalLink}" HorizontalAlignment="Right"
                                                      VerticalAlignment="Center"/>
                         </Grid>
                     </Button>

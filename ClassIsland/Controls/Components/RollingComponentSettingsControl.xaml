@@ -9,7 +9,7 @@
                   xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   mc:Ignorable="d"
-                  d:DesignHeight="450" d:DesignWidth="800">
+                  d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
         <ci:RulesetControl x:Key="RulesetControl"/>
     </ci:ComponentBase.Resources>
@@ -30,15 +30,14 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <DockPanel Margin="8 4">
-                        <materialDesign:PackIcon Kind="InfoOutline"
-                                                 Height="20" Width="20"/>
+                        <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.InfoOutline}"/>
                         <TextBlock TextWrapping="Wrap"
                                    VerticalAlignment="Center"
                                    Margin="4 0 0 0" >
                             <Run Text="滚动组件仅在组件内容超出滚动组件宽度时才会开始滚动。您可能需要在【高级设置】中为本组件设置【最大宽度】或【固定宽度】以限制组件的宽度，这样在组件内容超出限制的宽度时内容才会开始滚动。"/>
                         </TextBlock>
                     </DockPanel>
-                    <Button Content="{materialDesign:PackIcon Close}"
+                    <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
                             Grid.Column="1" Style="{StaticResource MaterialDesignToolForegroundButton}"
                             Margin="0 -8"
                             ToolTip="关闭"
@@ -47,7 +46,7 @@
             </materialDesign:ColorZone>
 
             <!-- 滚动速度 -->
-            <ci:SettingsCard IconGlyph="CarSpeedLimiter"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CarSpeedLimiter}"
                              Header="滚动速度"
                              Description="组件内容的滚动速度"
                              Margin="0 0 0 6">
@@ -66,7 +65,7 @@
                           IsExpanded="{Binding Settings.IsPauseEnabled, Mode=OneWay}"
                           TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                     <Expander.Header>
-                        <ci:SettingsControl IconGlyph="TimerPauseOutline"
+                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TimerPauseOutline}"
                                                   Foreground="{DynamicResource MaterialDesignBody}"
                                                   Header="定时暂停"
                                                   Description="启用后，将在滚动到指定位置后暂停滚动一段时间"
@@ -76,7 +75,7 @@
                     <StackPanel Margin="36 0 48 12"
                                 IsEnabled="{Binding Settings.IsPauseEnabled}">
                         <!-- 暂停时长 -->
-                        <ci:SettingsControl IconGlyph="ClockOutline"
+                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}"
                                             Header="暂停时长"
                                             Description="每次暂停时停留的时长"
                                             Margin="0 0 0 4"
@@ -90,7 +89,7 @@
                             </ci:SettingsControl.Switcher>
                         </ci:SettingsControl>
                         <!-- 暂停位置 -->
-                        <ci:SettingsControl IconGlyph="TimelineTextOutline"
+                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TimelineTextOutline}"
                                          Header="暂停位置"
                                          Description="暂停时的滚动偏移值"
                                          Margin="0 0 0 4"
@@ -108,7 +107,7 @@
             </materialDesign:Card>
 
             <!-- 满足规则时停止 -->
-            <ci:SettingsCard IconGlyph="Stop"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
                              Header="满足规则时停止"
                              Description="在指定规则满足时停止滚动。停止时会停止滚动，并回到初始位置。"
                              Margin="0 0 0 6">
@@ -118,7 +117,7 @@
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Click="ButtonOpenStopRuleset_OnClick"
                                 Visibility="{Binding Settings.StopOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ci:IconText Kind="TagMultipleOutline" Text="编辑规则集…" />
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
                         <ToggleButton VerticalAlignment="Center"
                                       IsChecked="{Binding Settings.StopOnRule}" />

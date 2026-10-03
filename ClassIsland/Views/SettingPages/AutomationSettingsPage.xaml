@@ -25,7 +25,7 @@
                      TextOptions.TextFormattingMode="Ideal"
                      TextOptions.TextRenderingMode="Auto"
                      d:DataContext="{d:DesignInstance local:AutomationSettingsPage}"
-                     Title="AutomationSettingsPage">
+                     Title="AutomationSettingsPage" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:SettingsPageBase.CommandBindings>
         <CommandBinding Command="{x:Static local:AutomationSettingsPage.RemoveCommand}" Executed="CommandRemove_OnExecuted" />
         <CommandBinding Command="{x:Static local:AutomationSettingsPage.DuplicateCommand}" Executed="CommandDuplicate_OnExecuted" />
@@ -89,13 +89,13 @@
                         </Grid.RowDefinitions>
 
                         <!-- 自动化开关 -->
-                        <ci:SettingsCard IconGlyph="ScriptTextOutline"
+                        <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ScriptTextOutline}"
                                          Header="启用自动化"
                                          Description="自动化是一种在自定义规则满足时做出行动的功能。"
                                          Margin="6 12">
                             <ci:SettingsCard.Switcher>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="{materialDesign:PackIcon HelpCircleOutline}"
+                                    <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.HelpCircleOutline}}"
                                             ToolTip="自动化帮助文档…"
                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                             CommandParameter="https://docs.classisland.tech/app/automation"
@@ -113,7 +113,7 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Bottom"
                                     Margin="6 6">
-                                <ci:IconText Kind="Add"
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Add}"
                                              Text="添加自动化" />
                             </Button>
 
@@ -130,19 +130,19 @@
                                           MaxWidth="300"
                                           SelectedItem="{Binding SettingsService.Settings.CurrentAutomationConfig}"
                                           materialDesign:HintAssist.Hint="配置方案" />
-                                <Button Content="{materialDesign:PackIcon Refresh}"
+                                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Refresh}}"
                                         ToolTip="刷新配置方案"
                                         VerticalAlignment="Center"
                                         Margin="2 0"
                                         Click="ButtonRefresh_OnClick"
                                         Style="{StaticResource MaterialDesignToolForegroundButton}" />
-                                <Button Content="{materialDesign:PackIcon FileDocumentPlusOutline}"
+                                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentPlusOutline}}"
                                         ToolTip="新建配置方案…"
                                         VerticalAlignment="Center"
                                         Margin="2 0"
                                         Click="ButtonCreateConfig_OnClick"
                                         Style="{StaticResource MaterialDesignToolForegroundButton}" />
-                                <Button Content="{materialDesign:PackIcon FolderOpenOutline}"
+                                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FolderOpenOutline}}"
                                         ToolTip="打开配置文件夹…"
                                         VerticalAlignment="Center"
                                         Click="ButtonOpenConfigFolder_OnClick"
@@ -167,7 +167,7 @@
                                         <materialDesign:ColorZone Mode="PrimaryMid"
                                                                   Height="24"
                                                                   CornerRadius="12">
-                                            <ci:IconText Kind="ArrowUpDown"
+                                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ArrowUpDown}"
                                                          Text="排序"
                                                          Margin="4 0"
                                                          IconMargin="2"
@@ -185,27 +185,27 @@
                                                         DockPanel.Dock="Right">
                                                 <ToggleButton ToolTip="启用"
                                                               IsChecked="{Binding ActionSet.IsEnabled}" />
-                                                <Button Content="{materialDesign:PackIcon Kind=ContentCopy}"
+                                                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}"
                                                         ToolTip="复制"
                                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                                         Command="{x:Static local:AutomationSettingsPage.DuplicateCommand}"
                                                         CommandParameter="{Binding}"
                                                         Padding="15 0 10 0" />
 
-                                                <Button Content="{materialDesign:PackIcon Kind=Close}"
+                                                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
                                                         ToolTip="删除"
                                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                                         Command="{x:Static local:AutomationSettingsPage.RemoveCommand}"
                                                         CommandParameter="{Binding}"
                                                         Padding="5 0 5 0" />
                                             </StackPanel>
-                                            <materialDesign:PackIcon Kind="ScriptTextOutline"
+                                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.ScriptTextOutline}"
                                                                      VerticalAlignment="Center"
                                                                      HorizontalAlignment="Left"
                                                                      DockPanel.Dock="Left"
                                                                      Margin="3 2 0 0">
-                                                <materialDesign:PackIcon.Style>
-                                                    <Style TargetType="materialDesign:PackIcon">
+                                                <ciCore:IconText.Style>
+                                                    <Style TargetType="ciCore:IconText">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding ActionSet.Name}"
                                                                          Value="">
@@ -216,8 +216,8 @@
                                                         <Setter Property="Visibility"
                                                                 Value="Collapsed" />
                                                     </Style>
-                                                </materialDesign:PackIcon.Style>
-                                            </materialDesign:PackIcon>
+                                                </ciCore:IconText.Style>
+                                            </ciCore:IconText>
                                             <TextBlock Text="{Binding ActionSet.Name}"
                                                        TextTrimming="CharacterEllipsis"
                                                        VerticalAlignment="Center"
@@ -274,7 +274,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
-                                <ci:IconText Kind="MotionPlayOutline" Text="触发" />
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MotionPlayOutline}" Text="触发" />
                             </Button>
 
                             <Button Command="{x:Static local:AutomationSettingsPage.DebugInvokeRevertActionCommand}"
@@ -290,7 +290,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
-                                <ci:IconText Kind="UndoVariant" Text="恢复" />
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.UndoVariant}" Text="恢复" />
                             </Button>
                         </StackPanel>
                     </Grid>
@@ -330,7 +330,7 @@
                                         <GroupBox.HeaderTemplate>
                                             <DataTemplate>
                                                 <ci:IconText Text="当以下事件触发时"
-                                                             Kind="AlertOctagonOutline" />
+                                                             Kind="{x:Static ciCore:IconGlyphs.AlertOctagonOutline}" />
                                             </DataTemplate>
                                         </GroupBox.HeaderTemplate>
                                         <action:TriggerSettingsControl Triggers="{Binding Triggers}"/>
@@ -346,7 +346,7 @@
                                                     <ToggleButton IsChecked="{Binding IsConditionEnabled, Mode=TwoWay}"
                                                                   Margin="0 0 4 0"/>
                                                     <ci:IconText Text="并且满足以下规则时"
-                                                                 Kind="TagMultipleOutline" />
+                                                                 Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </GroupBox.HeaderTemplate>
@@ -365,7 +365,7 @@
                                         <GroupBox.HeaderTemplate>
                                             <DataTemplate>
                                                 <ci:IconText Text="触发行动"
-                                                             Kind="Airplane" />
+                                                             Kind="{x:Static ciCore:IconGlyphs.Airplane}" />
                                             </DataTemplate>
                                         </GroupBox.HeaderTemplate>
                                         <action:ActionControl ActionSet="{Binding ActionSet}" />
@@ -377,14 +377,14 @@
                                                     <GroupBox.HeaderTemplate>
                                                         <DataTemplate>
                                                             <ci:IconText Text="当规则不再满足时，恢复行动。"
-                                                                         Kind="AirplaneLanding" />
+                                                                         Kind="{x:Static ciCore:IconGlyphs.AirplaneLanding}" />
                                                         </DataTemplate>
                                                     </GroupBox.HeaderTemplate>
                                                     <TextBlock Text="Coming S∞n" />
                                                 </GroupBox>-->
 
                                     <ci:IconText Text="当规则不再满足时，将自动恢复行动。"
-                                                 Kind="AirplaneLanding"
+                                                 Kind="{x:Static ciCore:IconGlyphs.AirplaneLanding}"
                                                  Visibility="{Binding ActionSet.IsRevertEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                  Margin="10 2 0 10" />
                                 </StackPanel>
@@ -410,7 +410,7 @@
                             <ci:StickerControl ImageSource="/Assets/HoYoStickers/光辉矢愿_瞄准.png"
                                    Width="72"
                                    Height="72"
-                                   PackIconKind="ScriptOutline"
+                                   Glyph="{x:Static ciCore:IconGlyphs.ScriptOutline}"
                                    StickerToolTip="光辉矢愿_瞄准" />
                             <TextBlock Text="在左侧选择或添加一个自动化，然后在此处进行设置。"
                                        TextWrapping="Wrap"
@@ -436,19 +436,15 @@
                         <Image Grid.Column="0"
                                Source="/Assets/AppLogo.png"
                                ToolTip="ClassIsland"/>
-                        <materialDesign:PackIcon Grid.Column="1"
+                        <ciCore:IconText IconSize="25" Grid.Column="1"
                                                  VerticalAlignment="Center"
-                                                 Width="25"
-                                                 Height="25"
                                                  Margin="16 0"
-                                                 Kind="Plus"
+                                                 Kind="{x:Static ciCore:IconGlyphs.Plus}"
                                                  ToolTip="现已推出" />
-                        <materialDesign:PackIcon Grid.Column="2"
-                                                 Kind="ScriptTextKey"
+                        <ciCore:IconText IconSize="75" Grid.Column="2"
+                                                 Kind="{x:Static ciCore:IconGlyphs.ScriptTextKey}"
                                                  VerticalAlignment="Stretch"
                                                  HorizontalAlignment="Stretch"
-                                                 Height="75"
-                                                 Width="75"
                                                  ToolTip="自动化" />
                     </Grid>
                     <TextBlock Text="自动化"
@@ -473,7 +469,7 @@
                             Style="{StaticResource MaterialDesignFlatSecondaryButton}"
                             ToolTip="docs.classisland.tech/app/automation"
                             ToolTipService.Placement="Right">
-                        <ci:IconText Kind="ExternalLink"
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ExternalLink}"
                                      Text="阅读自动化帮助" />
                     </Button>
 
@@ -481,7 +477,7 @@
                             Margin="0 16 0 0"
                             Padding="8">
                         <StackPanel>
-                            <ci:IconText Kind="Warning"
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Warning}"
                                          Text="警告"
                                          Margin="0 0 0 4"
                                          HorizontalAlignment="Center" />
@@ -498,7 +494,7 @@
                     <Button HorizontalAlignment="Center"
                             Margin="0 16 0 0"
                             Click="ButtonAgreeAutomationNotice_OnClick">
-                        <ci:IconText Kind="Check"
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Check}"
                                      Text="同意并开始使用自动化" />
                     </Button>
                 </StackPanel>

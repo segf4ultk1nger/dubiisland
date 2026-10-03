@@ -1,6 +1,6 @@
 using ClassIsland.Core.Enums.SettingsWindow;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
@@ -8,11 +8,11 @@ public class SettingsPageInfo : Attribute
 {
     public string Name { get; } = "";
     public string Id { get; } = "";
-    public PackIconKind UnSelectedPackIcon { get; } = PackIconKind.CogOutline;
-    public PackIconKind SelectedPackIcon { get; } = PackIconKind.Cog;
-    public string UnSelectedBitmapUri { get; } = "";
-    public string SelectedBitmapUri { get; } = "";
-    public bool UseBitmapIcon { get; } = false;
+    public string UnSelectedPackIcon { get; private set; } = IconGlyphs.CogOutline;
+    public string SelectedPackIcon { get; private set; } = IconGlyphs.Cog;
+    public string UnSelectedBitmapUri { get; private set; } = "";
+    public string SelectedBitmapUri { get; private set; } = "";
+    public bool UseBitmapIcon { get; private set; } = false;
 
     public bool HideDefault { get; } = false;
 
@@ -30,28 +30,30 @@ public class SettingsPageInfo : Attribute
         HideDefault = hideDefault;
     }
 
-    public SettingsPageInfo(string id, string name, PackIconKind unSelectedIcon, PackIconKind selectedIcon, SettingsPageCategory category = SettingsPageCategory.External) : this(id, name, category)
+    public SettingsPageInfo(string id, string name, string unSelected, string selected, SettingsPageCategory category = SettingsPageCategory.External) : this(id, name, category)
     {
-        UnSelectedPackIcon = unSelectedIcon;
-        SelectedPackIcon = selectedIcon;
+        ApplyIcons(unSelected, selected);
     }
 
-    public SettingsPageInfo(string id, string name, PackIconKind unSelectedIcon, PackIconKind selectedIcon, bool hideDefault, SettingsPageCategory category = SettingsPageCategory.External) : this(id, name, unSelectedIcon, selectedIcon, category)
+    public SettingsPageInfo(string id, string name, string unSelected, string selected, bool hideDefault, SettingsPageCategory category = SettingsPageCategory.External) : this(id, name, unSelected, selected, category)
     {
         HideDefault = hideDefault;
     }
 
-    public SettingsPageInfo(string id, string name, string unSelectedBitmapUri, string selectedBitmapUri,
-        SettingsPageCategory category = SettingsPageCategory.External) : this(id, name, category)
+    void ApplyIcons(string unSelected, string selected)
     {
-        UnSelectedBitmapUri = unSelectedBitmapUri;
-        SelectedBitmapUri = selectedBitmapUri;
+        if (IsGlyph(unSelected) && IsGlyph(selected))
+        {
+            UnSelectedPackIcon = unSelected;
+            SelectedPackIcon = selected;
+            return;
+        }
+
+        UnSelectedBitmapUri = unSelected;
+        SelectedBitmapUri = selected;
         UseBitmapIcon = true;
     }
 
-    public SettingsPageInfo(string id, string name, string unSelectedBitmapUri, string selectedBitmapUri, bool hideDefault,
-        SettingsPageCategory category = SettingsPageCategory.External) : this(id, name, unSelectedBitmapUri, selectedBitmapUri, category)
-    {
-        HideDefault = hideDefault;
-    }
+    static bool IsGlyph(string value) =>
+        value.Length is > 0 and <= 2 && value.IndexOfAny(['/', '\\', '.']) < 0;
 }

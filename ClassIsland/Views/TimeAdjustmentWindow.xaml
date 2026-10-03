@@ -18,7 +18,7 @@
         WindowStartupLocation="CenterOwner"
         Closed="TimeAdjustmentWindow_OnClosed"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.6*"/>
@@ -36,7 +36,7 @@
                            VerticalAlignment="Bottom"
                            HorizontalAlignment="Left"
                            Margin="0 0 4 0" />
-                <Button Content="{materialDesign:PackIcon ClockOutline}"
+                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClockOutline}}"
                         ToolTip="编辑"
                         Margin="4 -8"
                         Click="ButtonBase_OnClick"
@@ -57,12 +57,12 @@
                                               DisplayAutomation="ToSeconds"/>
                     </Border>
                 </materialDesign:PopupEx>
-                <Button Content="{materialDesign:PackIcon BellNotificationOutline}"
+                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.BellNotificationOutline}}"
                         ToolTip="对齐到下个铃声"
                         Margin="4 -8"
                         Click="ButtonAdjustToNextEvent_OnClick"
                         Style="{StaticResource MaterialDesignToolForegroundButton}"/>
-                <Button Content="{materialDesign:PackIcon ClockStart}"
+                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClockStart}}"
                         ToolTip="对齐到下个整分钟"
                         Margin="4 -8"
                         Click="ButtonAdjustToNextMinute_OnClick"
@@ -91,8 +91,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
-            <materialDesign:PackIcon Kind="ArrowRight"
-                                     Width="32" Height="32" Margin="16 24 16 0"/>
+            <ciCore:IconText IconSize="32" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Margin="16 24 16 0"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top"
@@ -105,7 +104,7 @@
                      Text="{Binding SettingsService.Settings.TimeOffsetSeconds, Converter={StaticResource IntToStringConverter}, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Margin="0 16 0 0"
                     Style="{StaticResource MaterialDesignFloatingActionButton}"
-                    Content="{materialDesign:PackIcon ClockCheckOutline, Size=22}"
+                    Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClockCheckOutline}, Size=22}"
                     ToolTip="校准"
                     Click="ButtonApplyAdjustment_OnClick"/>
 

@@ -15,12 +15,12 @@
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
       TextOptions.TextFormattingMode="Ideal"
-      TextOptions.TextRenderingMode="Auto">
+      TextOptions.TextRenderingMode="Auto" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
 
     <Page.Resources>
         <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
             <Style.Resources>
-                <Style TargetType="materialDesign:PackIcon">
+                <Style TargetType="ciCore:IconText">
                     <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"></Setter>
                 </Style>
             </Style.Resources>
@@ -51,7 +51,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="ArrowRight" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="继续使用 ClassIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                 </Grid>
@@ -66,7 +66,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="ArrowRight" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="以安全模式继续使用 ClassIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -86,7 +86,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="ArrowRight" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.ArrowRight}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="以诊断模式继续使用 ClassIsland" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -106,7 +106,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="FolderTextOutline" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.FolderTextOutline}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="打开日志目录" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                 </Grid>
@@ -124,7 +124,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="Restore" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.Restore}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="恢复备份" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -144,7 +144,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="Upload" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.Upload}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="更新应用" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -167,7 +167,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="GarbageCanEmpty" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.GarbageCanEmpty}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="清除临时文件" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -187,7 +187,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="SettingsRefreshOutline" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.SettingsRefreshOutline}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="重置应用设置" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -207,7 +207,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="FileRemoveOutline" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.FileRemoveOutline}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Text="重置全部配置" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" 
@@ -227,7 +227,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Kind="Remove" Grid.Column="0" Margin="8 0 16 0"
+                    <ciCore:IconText Grid.Row="0" Kind="{x:Static ciCore:IconGlyphs.Remove}" Grid.Column="0" Margin="8 0 16 0"
                                              VerticalAlignment="Center"
                                              Foreground="Red"/>
                     <TextBlock Grid.Row="0" Text="重置全部信息" Grid.Column="1" FontWeight="Medium" VerticalAlignment="Center"/>

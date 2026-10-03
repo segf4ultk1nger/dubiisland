@@ -102,7 +102,7 @@
                             materialDesign:RippleAssist.Feedback="Red"
                             HorizontalAlignment="Left"
                             >
-                        <commands:IconText Kind="WarningOutline" Text="千万别点" />
+                        <commands:IconText Kind="{x:Static controls:IconGlyphs.WarningOutline}" Text="千万别点" />
                     </Button></Expander>
             </StackPanel>
         </ScrollViewer>
@@ -197,10 +197,9 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon VerticalAlignment="Center"
-                                                         Width="18" Height="18">
-                                    <materialDesign:PackIcon.Style>
-                                        <Style TargetType="materialDesign:PackIcon">
+                                <controls:IconText IconSize="18" VerticalAlignment="Center">
+                                    <controls:IconText.Style>
+                                        <Style TargetType="controls:IconText">
                                             <Style.Triggers>
                                                 <!-- TODO: 添加对BitmapImage支持 -->
                                                 <DataTrigger
@@ -213,8 +212,8 @@
                                             <Setter Property="Kind"
                                                     Value="{Binding UnSelectedPackIcon}" />
                                         </Style>
-                                    </materialDesign:PackIcon.Style>
-                                </materialDesign:PackIcon>
+                                    </controls:IconText.Style>
+                                </controls:IconText>
                                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
                                            Margin="12 0 0 0" />
                             </StackPanel>
@@ -241,11 +240,11 @@
             <Button ToolTip="返回"
                     Click="ButtonGoBack_OnClick"
                     Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Content="{materialDesign:PackIcon ArrowLeft, Size=16}" />
+                    Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.ArrowLeft}, Size=16}" />
             <Button ToolTip="导航栏"
                     Visibility="{Binding ViewModel.IsViewCompressed, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Click="ButtonBaseToggleNavigationDrawer_OnClick"
-                    Content="{materialDesign:PackIcon Menu, Size=16}" />
+                    Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Menu}, Size=16}" />
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <Grid x:Name="RootGrid">
@@ -289,7 +288,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <materialDesign:PackIcon Kind="BulbOnOutline" VerticalAlignment="Center"
+                                <controls:IconText Kind="{x:Static controls:IconGlyphs.BulbOnOutline}" VerticalAlignment="Center"
                                                          Grid.Column="0"/>
                                 <TextBlock Text="{Binding ViewModel.CurrentEchoCaveText}"
                                            Grid.Column="1"
@@ -342,7 +341,7 @@
                                     Visibility="{Binding ViewModel.IsRequestedRestart, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     ToolTip="部分设置需要重启应用后生效。"
                                     Click="ButtonRestartApp_OnClick"
-                                    Icon="{materialDesign:PackIcon Restart}">
+                                    Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Restart}}">
                                     <TextBlock>
                                         <Run Text="需要重启" />
                                     </TextBlock>
@@ -351,7 +350,7 @@
                                     Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
                                     Command="{x:Static dialogs:DialogService.OpenDialogCommand}"
                                     ToolTip="查看您的单位/组织如何管理此ClassIsland实例。"
-                                    Icon="{materialDesign:PackIcon WorkOutline}">
+                                    Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WorkOutline}}">
                                     <materialDesign:Chip.CommandParameter>
                                         <controls2:ManagementInfoControl />
                                     </materialDesign:Chip.CommandParameter>
@@ -367,50 +366,50 @@
                                                          IsPopupOpen="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}">
                                     <StackPanel>
                                         <StackPanel>
-                                            <!--<MenuItem Icon="{materialDesign:PackIcon WarningCircleOutline}" Header="查看崩溃报告…"/>
+                                            <!--<MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WarningCircleOutline}}" Header="查看崩溃报告…"/>
                                         <Separator/>-->
-                                            <MenuItem Icon="{materialDesign:PackIcon Code}" Header="实验性功能…"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Code}}" Header="实验性功能…"
                                                   Click="MenuItemExperimentalSettings_OnClick" />
-                                            <MenuItem Icon="{materialDesign:PackIcon WindowMaximize}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WindowMaximize}}"
                                                       Header="调试窗口规则…"
                                                       Click="MenuItemDebugWindowRule_OnClick"/>
-                                            <MenuItem Icon="{materialDesign:PackIcon SwapHorizontal}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.SwapHorizontal}}"
                                                       Header="创建快捷换课图标"
                                                       Click="MenuItemAddClassSwapShortcut_OnClick"/>
                                             <Separator/>
-                                            <MenuItem Icon="{materialDesign:PackIcon WorkOutline}" Header="集控选项…"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WorkOutline}}" Header="集控选项…"
                                                       Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                       CommandParameter="classisland://app/settings/management?ci_keepHistory=true">
                                             </MenuItem>
-                                            <MenuItem Icon="{materialDesign:PackIcon BriefcaseAddOutline}" Header="加入管理…"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseAddOutline}}" Header="加入管理…"
                                                   Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
                                                   Command="{x:Static dialogs:DialogService.OpenDialogCommand}">
                                                 <MenuItem.CommandParameter>
                                                     <controls2:JoinManagementDialog/>
                                                 </MenuItem.CommandParameter>
                                             </MenuItem>
-                                            <MenuItem Icon="{materialDesign:PackIcon BriefcaseOffOutline}" Header="退出管理…"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseOffOutline}}" Header="退出管理…"
                                                   Click="MenuItemExitManagement_OnClick" 
                                                   Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                                             </MenuItem>
                                             <Separator/>
-                                            <MenuItem Icon="{materialDesign:PackIcon FileDocumentOutline}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FileDocumentOutline}}"
                                                   Header="日志…"
                                                   Click="MenuItemAppLogs_OnClick"/>
-                                            <MenuItem Icon="{materialDesign:PackIcon DatabaseExportOutline}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.DatabaseExportOutline}}"
                                                   Header="导出诊断数据"
                                                   Click="MenuItemExportDiagnosticInfo_OnClick"/>
-                                            <MenuItem Icon="{materialDesign:PackIcon WrenchCheckOutline}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WrenchCheckOutline}}"
                                                       Header="重启到恢复模式"
                                                       Click="MenuItemRestartToRecovery_OnClick"/>
                                             <Separator/>
-                                            <MenuItem Icon="{materialDesign:PackIcon FolderTextOutline}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderTextOutline}}"
                                                       Header="打开日志目录…"
                                                       Click="MenuItemOpenLogFolder_OnClick"/>
-                                            <MenuItem Icon="{materialDesign:PackIcon FolderFileOutline}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderFileOutline}}"
                                                       Header="打开数据目录…"
                                                       Click="MenuItemOpenDataFolder_OnClick"/>
-                                            <MenuItem Icon="{materialDesign:PackIcon FolderDownloadOutline}"
+                                            <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderDownloadOutline}}"
                                                       Header="打开应用目录…"
                                                       Click="MenuItemOpenAppFolder_OnClick"/>
                                             

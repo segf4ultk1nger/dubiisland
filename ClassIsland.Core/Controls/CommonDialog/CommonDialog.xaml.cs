@@ -13,8 +13,8 @@ using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Core.Enums;
 using ClassIsland.Core.Helpers.Native;
 using ClassIsland.Shared;
-using MaterialDesignThemes.Wpf;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Controls.CommonDialog;
 
 /// <summary>
@@ -185,7 +185,7 @@ public partial class CommonDialog : MyWindow, INotifyPropertyChanged
         {
             new()
             {
-                PackIconKind = PackIconKind.Check,
+                Glyph = IconGlyphs.Check,
                 Name = "确定",
                 IsPrimary = true
             }

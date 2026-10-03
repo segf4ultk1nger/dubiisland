@@ -24,7 +24,6 @@ using ClassIsland.Core.Models.Plugin;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
 using CommunityToolkit.Mvvm.Input;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using YamlDotNet.Serialization.NamingConventions;
@@ -39,7 +38,7 @@ namespace ClassIsland.Views.SettingPages;
 /// PluginsSettingsPage.xaml 的交互逻辑
 /// </summary>
 ///
-[SettingsPageInfo("classisland.plugins", "插件", PackIconKind.ToyBrickOutline, PackIconKind.ToyBrick, SettingsPageCategory.External)]
+[SettingsPageInfo("classisland.plugins", "插件", IconGlyphs.ToyBrickOutline, IconGlyphs.ToyBrick, SettingsPageCategory.External)]
 public partial class PluginsSettingsPage : SettingsPageBase
 {
     public PluginsSettingsPageViewModel ViewModel { get; } = new();
@@ -264,7 +263,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
                 .SetContent("此插件的部分必选依赖项未安装且无法从市场获取。如果继续安装此插件，此插件将可能无法工作。您要继续安装此插件吗？\n\n" +
                             "未找到的必选依赖项：\n" + string.Join("\n", missingPlugins))
                 .AddCancelAction()
-                .AddAction("继续", PackIconKind.ArrowRight)
+                .AddAction("继续", IconGlyphs.ArrowRight)
                 .ShowDialog();
             if (result != 1)
             {

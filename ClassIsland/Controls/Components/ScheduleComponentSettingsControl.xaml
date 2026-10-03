@@ -12,7 +12,7 @@
                   xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                   xmlns:system="clr-namespace:System;assembly=System.Runtime"
                   mc:Ignorable="d"
-                  d:DesignHeight="450" d:DesignWidth="800">
+                  d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
         <StackPanel x:Key="MigrateConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
             <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}">
@@ -52,9 +52,9 @@
                                     materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                                     Foreground="{DynamicResource MaterialDesignBody}"
                                     Click="ButtonShowAttachedSettings_OnClick">
-                                <ci:IconText Kind="MoreCircleOutline" Text="查看…"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
                             </Button>
-                            <materialDesign:PackIcon Kind="LayersOutline"
+                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.LayersOutline}"
                                                      Margin="0 0 4 0"
                                                      VerticalAlignment="Center"/>
                             <TextBlock Text="此处的设置可以在档案设置中被附加设置覆盖。"
@@ -69,7 +69,7 @@
                               IsExpanded="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <ci:SettingsControl IconGlyph="TableSearch"
+                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TableSearch}"
                                                 Foreground="{DynamicResource MaterialDesignBody}"
                                                 Header="显示时间点附加信息"
                                                 Description="在当前的时间点上显示当前时间点的附加信息。"
@@ -156,7 +156,7 @@
                               IsExpanded="{Binding Settings.IsCountdownEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <ci:SettingsControl IconGlyph="ClockEnd"
+                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockEnd}"
                                                 Foreground="{DynamicResource MaterialDesignBody}"
                                                 Header="时间点结束倒计时"
                                                 Description="在当前时间点将要结束时显示倒计时。"
@@ -191,25 +191,25 @@
                     </Expander>
                 </materialDesign:Card>
                 <!-- 上课时仅显示当前课程 -->
-                <ci:SettingsCard IconGlyph="HideOutline"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
                                  Header="上课时仅显示当前课程"
                                  Description="在处于上课类型的时间点时，只显示当前时间点。"
                                  IsOn="{Binding Settings.ShowCurrentLessonOnlyOnClass, Mode=TwoWay}"
                                  Margin="0 0 0 6" />
                 <!-- 不显示已结束的课程 -->
-                <ci:SettingsCard IconGlyph="HideOutline"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
                  Header="不显示已结束的课程"
                  Description="隐藏已结束的课程，只显示当前课程与暂未开始的课程。"
                  IsOn="{Binding Settings.HideFinishedClass, Mode=TwoWay}"
                  Margin="0 0 0 6" />
                 <!-- 标记换课课程 -->
-                <ci:SettingsCard IconGlyph="SwapHorizontal"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.SwapHorizontal}"
                                  Header="标记换课课程"
                                  Description="将临时层中的换课课程以高亮色标记，仅支持使用“换课”修改的课程。"
                                  IsOn="{Binding Settings.HighlightChangedClass, Mode=TwoWay}"
                                  Margin="0 0 0 6" />
                 <!-- 课程表文本间距 -->
-                <ci:SettingsCard IconGlyph="ArrowExpandHorizontal"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ArrowExpandHorizontal}"
                                  Header="课程表文本间距"
                                  Description="使课程表显示更紧凑或宽松。"
                                  Margin="0 0 0 6">
@@ -227,7 +227,7 @@
                               IsExpanded="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <ci:SettingsControl IconGlyph="FileChartOutline"
+                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.FileChartOutline}"
                                                 Foreground="{DynamicResource MaterialDesignBody}"
                                                 Header="无课程时显示占位符"
                                                 Description="当当前没有加载课表或当日所有课程都已结束且不显示第二日课程时，显示指定的占位符。"
@@ -282,7 +282,7 @@
                     </Expander>
                 </materialDesign:Card>
                 <!-- 放学后显示明天课表 -->
-                <ci:SettingsCard IconGlyph="CalendarOutline"
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CalendarOutline}"
                                  Header="显示明天课表"
                                  Description="设置什么时候显示明天课表。"
                                  Margin="0 0 0 6">
@@ -300,7 +300,7 @@
                         Style="{StaticResource MaterialDesignFlatButton}"
                         Click="ButtonImportLegacySettings_OnClick"
                         Visibility="{Binding SettingsService.Settings.IsMigratedFromv1_4, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ci:IconText Kind="Import" Text="导入旧版设置"/>
+                    <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Import}" Text="导入旧版设置"/>
                 </Button>
             </StackPanel>
         </ScrollViewer>

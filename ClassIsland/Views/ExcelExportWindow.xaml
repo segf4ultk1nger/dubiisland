@@ -23,7 +23,7 @@
         TextOptions.TextRenderingMode="Auto"
         Loaded="ExcelExportWindow_OnLoaded"
         Closed="ExcelExportWindow_OnClosed"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:MyWindow.Resources>
         <ci:BindingProxy x:Key="DataProxy" Data="{Binding}"/>
         <converters:ReoHorAlignmentToIntConverter x:Key="ReoHorAlignmentToIntConverter"/>
@@ -67,13 +67,13 @@
             </reoGrid:ReoGridControl.Style>
             <reoGrid:ReoGridControl.CellsContextMenu>
                 <ContextMenu FontFamily="{DynamicResource HarmonyOsSans}">
-                    <MenuItem Icon="{materialDesign:PackIcon ContentCopy}" Header="复制" Click="MenuItemCopy_OnClick" InputGestureText="Ctrl+C"/>
-                    <MenuItem Icon="{materialDesign:PackIcon ContentPaste}" Header="粘贴" Click="MenuItemPaste_OnClick" InputGestureText="Ctrl+V"/>
-                    <MenuItem Icon="{materialDesign:PackIcon ContentCut}" Header="剪切" Click="MenuItemCut_OnClick" InputGestureText="Ctrl+X"/>
-                    <MenuItem Icon="{materialDesign:PackIcon ClearOutline}" Header="清除内容" Click="MenuItemClearContent_OnClick" InputGestureText="Del"/>
+                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}" Header="复制" Click="MenuItemCopy_OnClick" InputGestureText="Ctrl+C"/>
+                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentPaste}}" Header="粘贴" Click="MenuItemPaste_OnClick" InputGestureText="Ctrl+V"/>
+                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCut}}" Header="剪切" Click="MenuItemCut_OnClick" InputGestureText="Ctrl+X"/>
+                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ClearOutline}}" Header="清除内容" Click="MenuItemClearContent_OnClick" InputGestureText="Del"/>
                     <Separator/>
-                    <MenuItem Icon="{materialDesign:PackIcon TableMergeCells}" Header="合并单元格" Click="MenuItemCellMerge_OnClick"/>
-                    <MenuItem Icon="{materialDesign:PackIcon Cancel}" Header="取消单元格合并" Click="MenuItemCancelCellMerge_OnClick"/>
+                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.TableMergeCells}}" Header="合并单元格" Click="MenuItemCellMerge_OnClick"/>
+                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Cancel}}" Header="取消单元格合并" Click="MenuItemCancelCellMerge_OnClick"/>
                 </ContextMenu>
             </reoGrid:ReoGridControl.CellsContextMenu>
         </reoGrid:ReoGridControl>
@@ -81,13 +81,13 @@
         <ToolBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1"
                  ToolBarTray.IsLocked="True"
                  Visibility="{Binding ViewModel.IsSelectingMode, Converter={StaticResource InverseBoolToVisConverter}}">
-            <Button Content="{materialDesign:PackIcon ContentSaveOutline}" ToolTip="保存…" Click="ButtonSaveToFile_OnClick"/>
-            <Button Content="{materialDesign:PackIcon MicrosoftExcel}" ToolTip="保存并在默认 Excel 文件编辑器中打开…"
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentSaveOutline}}" ToolTip="保存…" Click="ButtonSaveToFile_OnClick"/>
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.MicrosoftExcel}}" ToolTip="保存并在默认 Excel 文件编辑器中打开…"
                     Click="ButtonSaveAndOpenInExcel_OnClick"/>
             <Separator/>
-            <Button Content="{materialDesign:PackIcon Undo}" ToolTip="撤销" Click="ButtonUndo_OnClick"
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Undo}}" ToolTip="撤销" Click="ButtonUndo_OnClick"
                     IsEnabled="{Binding ViewModel.CanUndo}"/>
-            <Button Content="{materialDesign:PackIcon Redo}" ToolTip="重做" Click="ButtonRedo_OnClick"
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Redo}}" ToolTip="重做" Click="ButtonRedo_OnClick"
                     IsEnabled="{Binding ViewModel.CanRedo}"/>
             <Separator/>
             <ComboBox materialDesign:TextFieldAssist.HasLeadingIcon="True"
@@ -111,29 +111,29 @@
                      Text="{Binding ViewModel.SelectedRange.Style.FontSize, Converter={StaticResource IntToStringConverter}}"
                      ToolTip="字号"
                      Width="75"/>
-            <Button Content="{materialDesign:PackIcon FormatFontSizeDecrease}" ToolTip="减小字号"
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FormatFontSizeDecrease}}" ToolTip="减小字号"
                     Click="ButtonBaseFontSizeDecrease_OnClick"/>
-            <Button Content="{materialDesign:PackIcon FormatFontSizeIncrease}" ToolTip="增大字号"
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FormatFontSizeIncrease}}" ToolTip="增大字号"
                     Click="ButtonBaseFontSizeIncrease_OnClick"/>
             <ListBox SelectionMode="Multiple" SelectionChanged="SelectorFontFormat_OnSelectionChanged">
-                <ListBoxItem Content="{materialDesign:PackIcon FormatBold}" ToolTip="加粗"
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FormatBold}}" ToolTip="加粗"
                              IsSelected="{Binding ViewModel.SelectedRange.Style.Bold}"/>
-                <ListBoxItem Content="{materialDesign:PackIcon FormatItalic}" ToolTip="斜体"
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FormatItalic}}" ToolTip="斜体"
                              IsSelected="{Binding ViewModel.SelectedRange.Style.Italic}"/>
-                <ListBoxItem Content="{materialDesign:PackIcon FormatUnderline}" ToolTip="下划线"
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FormatUnderline}}" ToolTip="下划线"
                              IsSelected="{Binding ViewModel.SelectedRange.Style.Underline}"/>
             </ListBox>
             <Separator/>
             <ListBox SelectionMode="Single" SelectedIndex="{Binding ViewModel.SelectedRange.Style.HorizontalAlign, Converter={StaticResource ReoHorAlignmentToIntConverter}}">
-                <ListBoxItem Content="{materialDesign:PackIcon Cancel}" ToolTip="无对齐" Visibility="Collapsed"/>
-                <ListBoxItem Content="{materialDesign:PackIcon AlignHorizontalLeft}" ToolTip="左对齐"/>
-                <ListBoxItem Content="{materialDesign:PackIcon AlignHorizontalCenter}" ToolTip="居中"/>
-                <ListBoxItem Content="{materialDesign:PackIcon AlignHorizontalRight}" ToolTip="右对齐"/>
-                <ListBoxItem Content="{materialDesign:PackIcon AlignHorizontalDistribute}" ToolTip="两端对齐"/>
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Cancel}}" ToolTip="无对齐" Visibility="Collapsed"/>
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.AlignHorizontalLeft}}" ToolTip="左对齐"/>
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.AlignHorizontalCenter}}" ToolTip="居中"/>
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.AlignHorizontalRight}}" ToolTip="右对齐"/>
+                <ListBoxItem Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.AlignHorizontalDistribute}}" ToolTip="两端对齐"/>
             </ListBox>
             <Separator/>
-            <Button Content="{materialDesign:PackIcon TableMergeCells}" ToolTip="合并单元格" Click="ButtonMergeCells_OnClick"/>
-            <Button Content="{materialDesign:PackIcon TableSplitCell}" ToolTip="取消单元格合并" Click="ButtonUnMergeCells_OnClick"/>
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.TableMergeCells}}" ToolTip="合并单元格" Click="ButtonMergeCells_OnClick"/>
+            <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.TableSplitCell}}" ToolTip="取消单元格合并" Click="ButtonUnMergeCells_OnClick"/>
 
         </ToolBar>
 
@@ -141,7 +141,7 @@
                  ToolBarTray.IsLocked="True"
                  Visibility="{Binding ViewModel.IsSelectingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Button Command="{Binding ExitSelectingModeCommand}">
-                <ci:IconText Kind="Check" Text="完成选择"/>
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Check}" Text="完成选择"/>
             </Button>
             <Separator/>
             <TextBlock VerticalAlignment="Center" FontSize="14" FontWeight="Medium"
@@ -160,7 +160,7 @@
             <TabControl.Resources>
                 
             </TabControl.Resources>
-            <TabItem Header="{materialDesign:PackIcon FileChartOutline, Size=18}" Padding="4" 
+            <TabItem Header="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileChartOutline}, Size=18}" Padding="4" 
                      MinWidth="42" Height="42">
                 
                 <Grid Margin="12" ToolTip="{x:Null}">
@@ -204,7 +204,7 @@
                     </ListBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="{materialDesign:PackIcon StyleOutline, Size=18}" Padding="4" 
+            <TabItem Header="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.StyleOutline}, Size=18}" Padding="4" 
                      MinWidth="42" Height="42">
                 <ScrollViewer>
                     <StackPanel Margin="12">
@@ -266,12 +266,12 @@
 
                         <Button Margin="0 12 0 0" HorizontalAlignment="Left"
                                 Click="ButtonRegenerate_OnClick">
-                            <ci:IconText Kind="Refresh" Text="刷新内容"/>
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Refresh}" Text="刷新内容"/>
                         </Button>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="{materialDesign:PackIcon ContentSaveOutline, Size=18}" Padding="4" 
+            <TabItem Header="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentSaveOutline}, Size=18}" Padding="4" 
                      MinWidth="42" Height="42">
                 <ScrollViewer>
                     <StackPanel Margin="12">
@@ -279,7 +279,7 @@
 
                         <Button Margin="0 12 0 0" HorizontalAlignment="Left"
                                 Click="ButtonSaveToFile_OnClick">
-                            <ci:IconText Kind="ContentSave" Text="保存到 Excel 表格"/>
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.ContentSave}" Text="保存到 Excel 表格"/>
                         </Button>
                         <TextBlock Text="保存到 Excel 表格，然后您可以在其它应用中查看导出后的课表，以及打印和分发课表。" Margin="0 4 0 0"
                                    TextWrapping="Wrap"/>
@@ -287,7 +287,7 @@
                         <Button Margin="0 12 0 0" HorizontalAlignment="Left"
                                 Style="{StaticResource MaterialDesignPaperButton}"
                                 Click="ButtonSaveAndOpenInExcel_OnClick">
-                            <ci:IconText Kind="MicrosoftExcel" Text="保存并在默认 Excel 文件编辑器中打开"/>
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MicrosoftExcel}" Text="保存并在默认 Excel 文件编辑器中打开"/>
                         </Button>
                         <TextBlock Text="保存到 Excel 表格，并在默认的 Excel 文件编辑器中打开保存后的表格以继续编辑此文件。" Margin="0 4 0 0"
                                    TextWrapping="Wrap"/>

@@ -40,22 +40,22 @@
                 Style="{StaticResource MaterialDesignFilterChipPrimaryOutlineListBox}"
             >
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredCritical}">
-                    <controls1:IconText Kind="LightningBolt" Text="灾难"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LightningBolt}" Text="灾难"/>
                 </ListBoxItem>
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredError}">
-                    <controls1:IconText Kind="Error" Text="错误"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Error}" Text="错误"/>
                 </ListBoxItem>
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredWarning}">
-                    <controls1:IconText Kind="Warning" Text="警告"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Warning}" Text="警告"/>
                 </ListBoxItem>
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredInfo}">
-                    <controls1:IconText Kind="InfoCircleOutline" Text="信息"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.InfoCircleOutline}" Text="信息"/>
                 </ListBoxItem>
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredDebug}">
-                    <controls1:IconText Kind="Bug" Text="调试"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Bug}" Text="调试"/>
                 </ListBoxItem>
                 <ListBoxItem IsSelected="{Binding ViewModel.IsFilteredTrace}">
-                    <controls1:IconText Kind="Text" Text="追踪"/>
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Text}" Text="追踪"/>
                 </ListBoxItem>
             </ListBox>
             
@@ -113,32 +113,32 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon Grid.Column="0" Margin="0 0 4 0">
-                            <materialDesign:PackIcon.Style>
-                                <Style TargetType="materialDesign:PackIcon">
+                        <controls1:IconText Grid.Column="0" Margin="0 0 4 0">
+                            <controls1:IconText.Style>
+                                <Style TargetType="controls1:IconText">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding LogLevel}" Value="Trace">
-                                            <Setter Property="Kind" Value="Text"/>
+                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.Text}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogLevel}" Value="Debug">
-                                            <Setter Property="Kind" Value="BugOutline"/>
+                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.BugOutline}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogLevel}" Value="Information">
-                                            <Setter Property="Kind" Value="InfoCircleOutline"/>
+                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.InfoCircleOutline}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogLevel}" Value="Warning">
-                                            <Setter Property="Kind" Value="Warning"/>
+                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.Warning}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogLevel}" Value="Error">
-                                            <Setter Property="Kind" Value="Error"/>
+                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.Error}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding LogLevel}" Value="Critical">
-                                            <Setter Property="Kind" Value="LightningBolt"/>
+                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.LightningBolt}"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </materialDesign:PackIcon.Style>
-                        </materialDesign:PackIcon>
+                            </controls1:IconText.Style>
+                        </controls1:IconText>
                         <StackPanel Grid.Column="1">
                             <TextBlock TextWrapping="Wrap">
                                 [<Run Text="{Binding Time, ConverterCulture=zh-cn}" />] <Run Text="{Binding CategoryName}" /><Run Text=":" />
@@ -153,15 +153,15 @@
         <WrapPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Click="ButtonClearLogs_OnClick">
-                <controls1:IconText Kind="Clear" Text="清空日志"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Clear}" Text="清空日志"/>
             </Button>
             <!--<Button Style="{StaticResource MaterialDesignFlatButton}"
                     Click="ButtonScrollToBottom_OnClick">
-                <controls:IconText Kind="ArrowBottom" Text="滚动到最底"/>
+                <controls:IconText Kind="{x:Static controls1:IconGlyphs.ArrowBottom}" Text="滚动到最底"/>
             </Button>-->
             <Button Style="{StaticResource MaterialDesignFlatButton}"
                     Click="ButtonCopySelectedLogs_OnClick">
-                <controls1:IconText Kind="ContentCopy" Text="复制选中"/>
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ContentCopy}" Text="复制选中"/>
             </Button>
         </WrapPanel>
     </Grid>

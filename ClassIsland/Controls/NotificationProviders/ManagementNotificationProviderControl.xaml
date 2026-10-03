@@ -7,16 +7,14 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Loaded="ManagementNotificationProviderControl_OnLoaded">
+             Loaded="ManagementNotificationProviderControl_OnLoaded" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ManagementNotificationProviderControl}}">
         <StackPanel Orientation="Horizontal" 
                     VerticalAlignment="Center" HorizontalAlignment="Center"
                     Visibility="{Binding IsOverlay, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <materialDesign:PackIcon Kind="AlertCircleOutline" VerticalAlignment="Center"
-                                     Height="20" Width="20"/>
+            <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.AlertCircleOutline}" VerticalAlignment="Center"/>
             <TextBlock Text="{Binding Payload.MessageMask}" FontSize="{DynamicResource MainWindowEmphasizedFontSize}" Margin="8 0" FontWeight="Bold"/>
-            <materialDesign:PackIcon Kind="Announcement" VerticalAlignment="Center"
-                                     Height="20" Width="20"/>
+            <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.Announcement}" VerticalAlignment="Center"/>
         </StackPanel>
         <Grid Visibility="{Binding IsOverlay, Converter={StaticResource InverseBoolToVisConverter}}">
             <Grid.ColumnDefinitions>

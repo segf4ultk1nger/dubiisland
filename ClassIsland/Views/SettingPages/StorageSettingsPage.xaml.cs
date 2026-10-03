@@ -8,17 +8,17 @@ using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Models;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using CommonDialog = ClassIsland.Core.Controls.CommonDialog.CommonDialog;
 using Path = System.IO.Path;
 
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Views.SettingPages;
 
 /// <summary>
 /// StorageSettingsPage.xaml 的交互逻辑
 /// </summary>
-[SettingsPageInfo("storage", "存储", PackIconKind.DatabaseOutline, PackIconKind.Database, SettingsPageCategory.Internal)]
+[SettingsPageInfo("storage", "存储", IconGlyphs.DatabaseOutline, IconGlyphs.Database, SettingsPageCategory.Internal)]
 public partial class StorageSettingsPage
 {
     public StorageSettingsViewModel ViewModel { get; } = new();

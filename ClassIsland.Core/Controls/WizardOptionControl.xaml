@@ -73,10 +73,10 @@
                                    Margin="-12"
                                    Feedback="{DynamicResource PrimaryHueMidBrush}"/>
             <!-- Icon -->
-            <materialDesign:PackIcon Grid.Column="0" Grid.Row="0"
+            <controls:IconText Grid.Column="0" Grid.Row="0"
                                      IsHitTestVisible="False"
                                      Margin="0 0 8 0"
-                                     Kind="ArrowRight"
+                                     Kind="{x:Static controls:IconGlyphs.ArrowRight}"
                                      VerticalAlignment="Center"
                                      HorizontalAlignment="Center"
                                      Foreground="{DynamicResource PrimaryHueMidBrush}"/>

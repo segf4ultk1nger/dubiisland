@@ -36,9 +36,9 @@
                                     materialDesign:RippleAssist.Feedback="{DynamicResource MaterialDesignBody}"
                                     Foreground="{DynamicResource MaterialDesignBody}"
                                     Click="ButtonShowAttachedSettingsInfo_OnClick">
-                                <controls1:IconText Kind="MoreCircleOutline" Text="查看…"/>
+                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
                             </Button>
-                            <materialDesign:PackIcon Kind="LayersOutline"
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LayersOutline}"
                                                      Margin="0 0 4 0"
                                                      VerticalAlignment="Center"/>
                             <TextBlock Text="此处的设置可以在档案设置中被附加设置覆盖。"
@@ -53,7 +53,7 @@
                               IsExpanded="{Binding Settings.IsClassOnPreparingNotificationEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="ClockEnd"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockEnd}"
                                                       Foreground="{DynamicResource MaterialDesignBody}"
                                                       Header="在课前准备时发出提醒"
                                                       Description="在上课前一段时间发出醒目提醒，提示做好上课准备。"
@@ -66,7 +66,7 @@
                             <CheckBox Content="启用语音" Margin="0 0 0 6"
                                       IsChecked="{Binding Settings.IsSpeechEnabledOnClassPreparing}"/>
                             <!-- 室内课程课前提醒时间 -->
-                            <controls1:SettingsControl IconGlyph="ClockAlertOutline" Header="室内课程课前提醒时间"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAlertOutline}" Header="室内课程课前提醒时间"
                                                       Description="在室内课程的上课前指定时间进行上课提醒。"
                                                       IsCompact="True"
                                                       Margin="0 0 0 6">
@@ -82,7 +82,7 @@
                                 </controls1:SettingsControl.Switcher>
                             </controls1:SettingsControl>
                             <!-- 室外课程课前提醒时间 -->
-                            <controls1:SettingsControl IconGlyph="ClockAlertOutline" Header="室外课程课前提醒时间"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAlertOutline}" Header="室外课程课前提醒时间"
                                                       Description="在室外课程的上课前指定时间进行上课提醒。"
                                                       IsCompact="True"
                                                       Margin="0 0 0 6">
@@ -130,7 +130,7 @@
                               IsExpanded="{Binding Settings.IsClassOnNotificationEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="BookOutline"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.BookOutline}"
                                                       Foreground="{DynamicResource MaterialDesignBody}"
                                                       Header="在上课时发出提醒"
                                                       Description="在上课时发出醒目提醒，提示已经上课。"
@@ -158,7 +158,7 @@
                               IsExpanded="{Binding Settings.IsClassOffNotificationEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="ClockOutline"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}"
                                                       Foreground="{DynamicResource MaterialDesignBody}"
                                                       Header="在下课时发出提醒"
                                                       Description="在下课时发出醒目提醒，提示已经下课。"
@@ -181,7 +181,7 @@
                     </Expander>
                 </materialDesign:Card>
                 <!-- 显示教科任老师名字 -->
-                <controls1:SettingsCard IconGlyph="Teacher"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Teacher}"
                                        Header="显示科任老师名字"
                                        Description="在显示课程相关的提醒时同时展示并播报对应科任老师的名字"
                                        IsOn="{Binding Settings.ShowTeacherName, Mode=TwoWay}"

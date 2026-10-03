@@ -27,7 +27,7 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       Loaded="PluginsSettingsPage_OnLoaded"
-      Unloaded="PluginsSettingsPage_OnUnloaded">
+      Unloaded="PluginsSettingsPage_OnUnloaded" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
 
     <ci:SettingsPageBase.Resources>
         <CollectionViewSource x:Key="PluginSource" 
@@ -37,10 +37,8 @@
             <Grid>
                 <StackPanel VerticalAlignment="Center"
                             HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Plugin"
+                    <ciCore:IconText IconSize="72" Kind="{x:Static ciCore:IconGlyphs.Plugin}"
                                              HorizontalAlignment="Center"
-                                             Width="72"
-                                             Height="72"
                                              Margin="0 0 0 8"/>
                     <TextBlock Text="在左侧选择一个插件以查看详细。"
                                HorizontalAlignment="Center"
@@ -67,8 +65,8 @@
                                                     VerticalAlignment="Top"
                                                     ClipToBounds="True"
                                                     Margin="0 0 8 0 "
-                                                    FallbackPackIconKind="Plugin"
-                                                    IconKind="Image"
+                                                    FallbackGlyph="{x:Static ciCore:IconGlyphs.Plugin}"
+                                                    IconKind="{x:Static ciCore:IconGlyphs.Image}"
                                                     ImageSource="{Binding RealIconPath, FallbackValue={x:Null}}"/>
                     <StackPanel Grid.Column="1" >
                         <TextBlock Text="{Binding Manifest.Name}"
@@ -97,14 +95,14 @@
                                                     Margin="0 0 6  0"
                                                     Click="ButtonUninstall_OnClick"
                                                     Visibility="{Binding IsUninstalling, Converter={StaticResource InverseBoolToVisConverter}}">
-                                <ci:IconText Kind="Remove" Text="卸载"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Remove}" Text="卸载"/>
                             </Button>
                             <Button Style="{StaticResource MaterialDesignFlatButton}" 
                                                     VerticalAlignment="Center"
                                                     Margin="0 0 6  0"
                                                     Click="ButtonUndoUninstall_OnClick"
                                                     Visibility="{Binding IsUninstalling, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <ci:IconText Kind="Undo" Text="撤销卸载"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Undo}" Text="撤销卸载"/>
                             </Button>
                             <TextBlock Opacity="0.8"
                                        VerticalAlignment="Center">
@@ -143,7 +141,7 @@
                                 </MultiBinding>
                             </WrapPanel.Visibility>
                             <Button Click="ButtonInstallPlugin_OnClick">
-                                <ci:IconText Kind="MonitorDownload" Text="安装"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MonitorDownload}" Text="安装"/>
                             </Button>
                         </WrapPanel>
                         <WrapPanel Orientation="Horizontal" IsEnabled="{Binding DownloadProgress.IsDownloading, Converter={StaticResource InvertBooleanConverter}}"
@@ -157,13 +155,13 @@
                                 </MultiBinding>
                             </WrapPanel.Visibility>
                             <Button Click="ButtonInstallPlugin_OnClick">
-                                <ci:IconText Kind="Upload" Text="更新"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Upload}" Text="更新"/>
                             </Button>
                         </WrapPanel>
                         <WrapPanel Orientation="Horizontal" Margin="0 0 0 4"
                                    Visibility="{Binding RestartRequired, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button Click="ButtonRestart_OnClick">
-                                <ci:IconText Kind="Restart" Text="重启以应用更改"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restart}" Text="重启以应用更改"/>
                             </Button>
                         </WrapPanel>
                         <!-- Download Progresses -->
@@ -183,8 +181,7 @@
                             </materialDesign:ColorZone.Style>
                             <Grid>
                                 <DockPanel Margin="8 4">
-                                    <materialDesign:PackIcon Kind="ErrorOutline"
-                                                             Height="20" Width="20"/>
+                                    <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.ErrorOutline}"/>
                                     <TextBlock TextWrapping="Wrap"
                                                VerticalAlignment="Center"
                                                Margin="4 0 0 0" >
@@ -202,10 +199,10 @@
                                              Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}"
                                              IsPopupOpen="{Binding ViewModel.IsPluginOperationsPopupOpened, RelativeSource={RelativeSource FindAncestor, AncestorType=local:PluginsSettingsPage}, Mode=TwoWay}">
                         <StackPanel ButtonBase.Click="ButtonBase_OnClick">
-                            <MenuItem Icon="{materialDesign:PackIcon PackageOutline}" Header="打包插件" Click="MenuItemPackPlugin_OnClick"/>
+                            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.PackageOutline}}" Header="打包插件" Click="MenuItemPackPlugin_OnClick"/>
                             <Separator/>
-                            <MenuItem Icon="{materialDesign:PackIcon FolderOutline}" Header="打开插件文件夹…" Click="MenuItemOpenPluginFolder_OnClick"/>
-                            <MenuItem Icon="{materialDesign:PackIcon DatabaseOutline}" Header="打开配置文件夹…" Click="MenuItemOpenPluginConfigFolder_OnClick"/>
+                            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FolderOutline}}" Header="打开插件文件夹…" Click="MenuItemOpenPluginFolder_OnClick"/>
+                            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.DatabaseOutline}}" Header="打开配置文件夹…" Click="MenuItemOpenPluginConfigFolder_OnClick"/>
                         </StackPanel>
                     </materialDesign:PopupBox>
                 </Grid>
@@ -314,7 +311,7 @@
             <StackPanel Grid.Row="0">
                 <TextBlock Text="管理插件源" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
                 
-                <ci:IconText Kind="SourceRepository" Text="内置插件源" Margin="0 12 0 8"/>
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.SourceRepository}" Text="内置插件源" Margin="0 12 0 8"/>
                 <ComboBox materialDesign:HintAssist.Hint="内置插件源镜像"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           SelectedValue="{Binding SettingsService.Settings.OfficialSelectedMirror, Mode=TwoWay}"
@@ -328,13 +325,13 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <Separator Margin="0 16 0 8"/>
-                <ci:IconText Kind="SourceRepositoryMultiple" Text="自定义插件源" Margin="0 0 0 8"/>
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.SourceRepositoryMultiple}" Text="自定义插件源" Margin="0 0 0 8"/>
                 <WrapPanel Margin="0 0 0 0">
                     <Button Style="{StaticResource MaterialDesignFlatButton}" Click="ButtonAddPluginSource_OnClick">
-                        <ci:IconText Kind="Add" Text="添加"/>
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Add}" Text="添加"/>
                     </Button>
                     <Button Style="{StaticResource MaterialDesignFlatButton}" Click="ButtonRemovePluginSource_OnClick">
-                        <ci:IconText Kind="Remove" Text="删除"/>
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Remove}" Text="删除"/>
                     </Button>
                 </WrapPanel>
             </StackPanel>
@@ -384,7 +381,7 @@
                     <ci:StickerControl ImageSource="/Assets/HoYoStickers/光辉矢愿_不可以看.png"
                                        Height="72" Width="72"
                                        StickerToolTip="光辉矢愿_不可以看"
-                                       FallbackPackIconKind="ToyBrickSearch"
+                                       FallbackGlyph="{x:Static ciCore:IconGlyphs.ToyBrickSearch}"
                                        Margin="0 0 0 8" />
                     <TextBlock Margin="0 0 0 6">
                         <TextBlock.Style>
@@ -421,7 +418,7 @@
                                 <Setter Property="Visibility" Value="Collapsed" />
                             </Style>
                         </Button.Style>
-                        <ci:IconText Kind="MarketplaceOutline" Text="前往插件市场" />
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MarketplaceOutline}" Text="前往插件市场" />
                     </Button>
                 </StackPanel>
             </Grid>
@@ -489,17 +486,17 @@
                                                      ToolTip="更多选项…"
                                                      IsPopupOpen="{Binding ViewModel.IsPluginMarketOperationsPopupOpened, RelativeSource={RelativeSource FindAncestor, AncestorType=local:PluginsSettingsPage}, Mode=TwoWay}">
                                 <StackPanel ButtonBase.Click="ButtonBase2_OnClick">
-                                    <MenuItem Icon="{materialDesign:PackIcon Reload}" Header="从缓存重载插件源" 
+                                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Reload}}" Header="从缓存重载插件源" 
                                               Click="MenuItemReloadFromCache_OnClick"
                                               IsEnabled="{Binding PluginMarketService.IsLoadingPluginSource, Converter={StaticResource InvertBooleanConverter}}"/>
-                                    <MenuItem Icon="{materialDesign:PackIcon SourceRepositoryMultiple}" Header="管理插件源…"
+                                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.SourceRepositoryMultiple}}" Header="管理插件源…"
                                               Click="MenuItemManagePluginSources_OnClick"
                                               IsEnabled="{Binding PluginMarketService.IsLoadingPluginSource, Converter={StaticResource InvertBooleanConverter}}"/>
                                     <Separator/>
-                                    <MenuItem Icon="{materialDesign:PackIcon PackageDown}" Header="从本地安装…"
+                                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.PackageDown}}" Header="从本地安装…"
                                               Click="ButtonInstallFromLocal_OnClick"/>
                                     <Separator/>
-                                    <MenuItem Icon="{materialDesign:PackIcon FolderOutline}" Header="打开插件文件夹…"
+                                    <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FolderOutline}}" Header="打开插件文件夹…"
                                               Click="MenuItemOpenPluginsFolder_OnClick"/>
                                 </StackPanel>
                             </materialDesign:PopupBox>
@@ -507,7 +504,7 @@
                                     Style="{StaticResource MaterialDesignFlatButton}"
                                     Click="ButtonBaseRefreshPlugins_OnClick"
                                     IsEnabled="{Binding PluginMarketService.IsLoadingPluginSource, Converter={StaticResource InvertBooleanConverter}}">
-                                <ci:IconText Kind="Refresh" Text="刷新"/>
+                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Refresh}" Text="刷新"/>
                             </Button>
 
                         </DockPanel>
@@ -541,8 +538,7 @@
                             </materialDesign:ColorZone.Style>
                             <Grid>
                                 <DockPanel Margin="8 4">
-                                    <materialDesign:PackIcon Kind="ErrorOutline"
-                                                             Height="20" Width="20"/>
+                                    <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.ErrorOutline}"/>
                                     <TextBlock TextWrapping="Wrap"
                                                VerticalAlignment="Center"
                                                Margin="4 0 0 0" >
@@ -604,8 +600,8 @@
                                                             VerticalAlignment="Center"
                                                             ClipToBounds="True"
                                                             Margin="0 0 6 0 "
-                                                            FallbackPackIconKind="Plugin"
-                                                            IconKind="Image"
+                                                            FallbackGlyph="{x:Static ciCore:IconGlyphs.Plugin}"
+                                                            IconKind="{x:Static ciCore:IconGlyphs.Image}"
                                                             ImageSource="{Binding Value.RealIconPath, FallbackValue={x:Null}}"/>
                                     <!-- 标题 -->
                                     <TextBlock Grid.Column="1" Grid.Row="0"
@@ -626,59 +622,54 @@
                                                Orientation="Horizontal"
                                                VerticalAlignment="Top" HorizontalAlignment="Right">
                                         <StackPanel Orientation="Horizontal" ToolTip="下载量" Margin="2 0 0 0">
-                                            <materialDesign:PackIcon Width="16" Height="16"
-                                                                     Kind="Download" VerticalAlignment="Center"/>
+                                            <ciCore:IconText IconSize="16"
+                                                                     Kind="{x:Static ciCore:IconGlyphs.Download}" VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Value.DownloadCount, Converter={StaticResource LargeNumberToFriendlyNumberConverter}}"
                                                        FontSize="12" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" ToolTip="Stars" Margin="4 0 0 0">
-                                            <materialDesign:PackIcon Width="16" Height="16"
-                                                                     Kind="Star" VerticalAlignment="Center"/>
+                                            <ciCore:IconText IconSize="16"
+                                                                     Kind="{x:Static ciCore:IconGlyphs.Star}" VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Value.StarsCount, Converter={StaticResource LargeNumberToFriendlyNumberConverter}}"
                                                        FontSize="12" VerticalAlignment="Center"/>
                                         </StackPanel>
-                                        <materialDesign:PackIcon ToolTip="此插件将在重启后被卸载。"
+                                        <ciCore:IconText IconSize="16" ToolTip="此插件将在重启后被卸载。"
                                                                  Foreground="Orange"
-                                                                 Width="16" Height="16"
                                                                  VerticalAlignment="Center"
                                                                  Visibility="{Binding Value.IsUninstalling, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                                  Margin="4 0 0 0"
-                                                                 Kind="Delete"/>
-                                        <materialDesign:PackIcon ToolTip="插件需要重启以应用更改。"
+                                                                 Kind="{x:Static ciCore:IconGlyphs.Delete}"/>
+                                        <ciCore:IconText IconSize="16" ToolTip="插件需要重启以应用更改。"
                                                                  Foreground="Orange"
-                                                                 Width="16" Height="16"
                                                                  VerticalAlignment="Center"
                                                                  Visibility="{Binding Value.RestartRequired, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                                  Margin="2 0 0 0"
-                                                                 Kind="Restart"/>
-                                        <materialDesign:PackIcon Foreground="Red"
+                                                                 Kind="{x:Static ciCore:IconGlyphs.Restart}"/>
+                                        <ciCore:IconText IconSize="16" Foreground="Red"
                                                                          ToolTip="加载此插件时出现错误。"
-                                                                         Width="16" Height="16"
                                                                          Margin="2 0 0 0"
                                                                          VerticalAlignment="Center"
-                                                                         Kind="Alert">
-                                            <materialDesign:PackIcon.Style>
-                                                <Style TargetType="materialDesign:PackIcon">
+                                                                         Kind="{x:Static ciCore:IconGlyphs.Alert}">
+                                            <ciCore:IconText.Style>
+                                                <Style TargetType="ciCore:IconText">
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Value.Exception}" Value="{x:Null}">
                                                             <Setter Property="Visibility" Value="Collapsed"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </materialDesign:PackIcon.Style>
-                                        </materialDesign:PackIcon>
-                                        <materialDesign:PackIcon ToolTip="更新可用。"
-                                                                 Width="16" Height="16"
+                                            </ciCore:IconText.Style>
+                                        </ciCore:IconText>
+                                        <ciCore:IconText IconSize="16" ToolTip="更新可用。"
                                                                  VerticalAlignment="Center"
                                                                  Visibility="{Binding Value.IsUpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                                  Margin="2 0 0 0"
-                                                                 Kind="Upload"/>
-                                        <materialDesign:PackIcon ToolTip="此插件已安装。"
-                                                                 Width="16" Height="16"
+                                                                 Kind="{x:Static ciCore:IconGlyphs.Upload}"/>
+                                        <ciCore:IconText IconSize="16" ToolTip="此插件已安装。"
                                                                  VerticalAlignment="Center"
                                                                  Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                                  Margin="2 0 0 0"
-                                                                 Kind="CheckUnderline"/>
+                                                                 Kind="{x:Static ciCore:IconGlyphs.CheckUnderline}"/>
                                     </WrapPanel>
                                     
                                     <!-- 操作按钮 -->
@@ -697,7 +688,7 @@
                                             Command="{Binding InstallPluginCommand, RelativeSource={RelativeSource AncestorType=local:PluginsSettingsPage}}"
                                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Value.DownloadProgress.IsDownloading}"
                                             materialDesign:ButtonProgressAssist.Value="{Binding Value.DownloadProgress.Progress}"
-                                            Content="{materialDesign:PackIcon MonitorDownload}">
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.MonitorDownload}}">
                                             <Button.Visibility>
                                                 <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
                                                     <Binding Path="Value.IsLocal" Converter="{StaticResource InvertBooleanConverter}"/>
@@ -714,7 +705,7 @@
                                             Command="{Binding InstallPluginCommand, RelativeSource={RelativeSource AncestorType=local:PluginsSettingsPage}}"
                                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding Value.DownloadProgress.IsDownloading}"
                                             materialDesign:ButtonProgressAssist.Value="{Binding Value.DownloadProgress.Progress}"
-                                            Content="{materialDesign:PackIcon Upload}">
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Upload}}">
                                             <Button.Visibility>
                                                 <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
                                                     <Binding Path="Value.IsLocal"/>
@@ -729,7 +720,7 @@
                                             Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                                             Width="28" Height="28"
                                             Click="ButtonRestart_OnClick"
-                                            Content="{materialDesign:PackIcon Restart}"
+                                            Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Restart}}"
                                             Visibility="{Binding Value.RestartRequired, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         </Button>
 
@@ -776,16 +767,13 @@
                             <ColumnDefinition Width="75" />
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/AppLogo.png" />
-                        <materialDesign:PackIcon Grid.Column="1"
+                        <ciCore:IconText IconSize="25" Grid.Column="1"
                                                  VerticalAlignment="Center"
-                                                 Width="25" Height="25"
                                                  Margin="16 0"
-                                                 Kind="Plus" />
-                        <materialDesign:PackIcon Grid.Column="2" Kind="Plugin"
+                                                 Kind="{x:Static ciCore:IconGlyphs.Plus}" />
+                        <ciCore:IconText IconSize="75" Grid.Column="2" Kind="{x:Static ciCore:IconGlyphs.Plugin}"
                                                  VerticalAlignment="Stretch"
-                                                 HorizontalAlignment="Stretch"
-                                                 Height="75"
-                                                 Width="75" />
+                                                 HorizontalAlignment="Stretch" />
                     </Grid>
                     <TextBlock Text="插件"
                                HorizontalAlignment="Center"
@@ -805,7 +793,7 @@
                             Margin="0 8 0 0"
                             Padding="8">
                         <StackPanel>
-                            <materialDesign:PackIcon Kind="Warning"
+                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.Warning}"
                                                      Margin="0 0 0 4"
                                                      HorizontalAlignment="Center"/>
                             <TextBlock TextAlignment="Center"
@@ -818,7 +806,7 @@
                     <Button HorizontalAlignment="Center"
                             Margin="0 16 0 0"
                             Click="ButtonAgreePluginNotice_OnClick">
-                        <ci:IconText Kind="Check" Text="同意并开始使用插件"></ci:IconText>
+                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Check}" Text="同意并开始使用插件"></ci:IconText>
                     </Button>
                 </StackPanel></ScrollViewer>
         </Border>
@@ -827,9 +815,8 @@
             <Border Background="{DynamicResource MaterialDesignBackground}"
                     Opacity="0.75"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <materialDesign:PackIcon Kind="FileImport"
+                <ciCore:IconText IconSize="64" Kind="{x:Static ciCore:IconGlyphs.FileImport}"
                                  HorizontalAlignment="Center"
-                                 Height="64" Width="64"
                                  Margin="0 0 0 8"/>
                 <TextBlock Text="将插件拖入到此处，松手即可安装。"
                    FontSize="14"

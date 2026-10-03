@@ -20,7 +20,7 @@
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
                     <materialDesign:ColorZone Mode="PrimaryMid" Height="24" CornerRadius="12">
-                        <controls:IconText Kind="ArrowUpDown" Text="调整触发器顺序"
+                        <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="调整触发器顺序"
                                      Margin="4 0"
                                      IconMargin="2"
                                      TextElement.FontWeight="Medium"
@@ -38,7 +38,7 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
-                                    Content="{materialDesign:PackIcon Remove}"
+                                    Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Remove}}"
                                     Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     ToolTip="删除"
                                     Command="{Binding RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType=local:TriggerSettingsControl}}"
@@ -76,7 +76,7 @@
         <Button Style="{StaticResource MaterialDesignFlatButton}"
                 Click="ButtonAddTrigger_OnClick"
                 HorizontalAlignment="Left">
-            <controls:IconText Kind="Plus"
+            <controls:IconText Kind="{x:Static controls:IconGlyphs.Plus}"
                                Text="添加触发器" />
         </Button>
     </StackPanel>

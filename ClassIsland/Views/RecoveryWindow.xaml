@@ -20,7 +20,7 @@
         Closed="RecoveryWindow_OnClosed"
         Title="恢复" Height="600" Width="450"
         WindowStartupLocation="CenterScreen"
-        d:DataContext="{d:DesignInstance local:RecoveryWindow}">
+        d:DataContext="{d:DesignInstance local:RecoveryWindow}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <windows:AsyncBox LoadingViewType="controls:RecoverySplashControl">
         <Grid>
             <Grid.RowDefinitions>
@@ -50,7 +50,7 @@
                                 Click="ButtonGoBack_OnClick"
                                 Visibility="{Binding ViewModel.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                Content="{materialDesign:PackIcon ArrowLeft, Size=24}" />
+                                Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ArrowLeft}, Size=24}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Column="1">

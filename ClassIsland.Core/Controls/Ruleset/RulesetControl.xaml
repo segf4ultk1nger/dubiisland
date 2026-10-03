@@ -58,16 +58,16 @@
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                           materialDesign:HintAssist.Hint="模式">
                     <ComboBoxItem>
-                        <controls:IconText Kind="SelectMultiple" Text="当以下任意条件组满足时"/>
+                        <controls:IconText Kind="{x:Static controls:IconGlyphs.SelectMultiple}" Text="当以下任意条件组满足时"/>
                     </ComboBoxItem>
                     <ComboBoxItem>
-                        <controls:IconText Kind="SelectGroup" Text="当以下所有条件组满足时"/>
+                        <controls:IconText Kind="{x:Static controls:IconGlyphs.SelectGroup}" Text="当以下所有条件组满足时"/>
                     </ComboBoxItem>
                 </ComboBox>
                 <CheckBox Content="反转" IsChecked="{Binding Ruleset.IsReversed}"/>
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                         Click="ButtonAddRule_OnClick">
-                    <controls:IconText Kind="Add" Text="添加组"/>
+                    <controls:IconText Kind="{x:Static controls:IconGlyphs.Add}" Text="添加组"/>
                 </Button>
                 <Ellipse Grid.Column="1" Width="8" Height="8" 
                          Margin="4 0 4 0"
@@ -86,7 +86,7 @@
             <dd:DragDrop.EffectMoveAdornerTemplate>
                 <DataTemplate>
                     <materialDesign:ColorZone Mode="PrimaryMid" Height="24" CornerRadius="12">
-                        <controls:IconText Kind="ArrowUpDown" Text="移动"
+                        <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="移动"
                                            Margin="4 0"
                                            IconMargin="2"
                                            TextElement.FontWeight="Medium"
@@ -112,17 +112,17 @@
                                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                                           materialDesign:HintAssist.Hint="模式">
                                     <ComboBoxItem>
-                                        <controls:IconText Kind="SelectMultiple" Text="当以下任意条件满足时"/>
+                                        <controls:IconText Kind="{x:Static controls:IconGlyphs.SelectMultiple}" Text="当以下任意条件满足时"/>
                                     </ComboBoxItem>
                                     <ComboBoxItem>
-                                        <controls:IconText Kind="SelectGroup" Text="当以下所有条件满足时"/>
+                                        <controls:IconText Kind="{x:Static controls:IconGlyphs.SelectGroup}" Text="当以下所有条件满足时"/>
                                     </ComboBoxItem>
                                 </ComboBox>
                                 <CheckBox Content="反转" IsChecked="{Binding IsReversed}"/>
                                 <Button Style="{StaticResource MaterialDesignFlatButton}"
                                         Command="{x:Static local:RulesetControl.AddRuleCommand}"
                                         CommandParameter="{Binding}">
-                                    <controls:IconText Kind="Add" Text="规则"/>
+                                    <controls:IconText Kind="{x:Static controls:IconGlyphs.Add}" Text="规则"/>
                                 </Button>
                             </WrapPanel>
 
@@ -134,14 +134,14 @@
                                 <ToggleButton ToolTip="启用规则集"
                                               IsChecked="{Binding IsEnabled}"
                                               Margin="0 0 4 0"/>
-                                <Button Content="{materialDesign:PackIcon ContentDuplicate}"
+                                <Button Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.ContentDuplicate}}"
                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                         ToolTip="复制"
                                         Command="{x:Static local:RulesetControl.DuplicateGroupCommand}"
                                         CommandParameter="{Binding}"
                                         Margin="0 0 4 0"
                                 />
-                                <Button Content="{materialDesign:PackIcon Remove}"
+                                <Button Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Remove}}"
                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                         Command="{x:Static local:RulesetControl.RemoveGroupCommand}"
                                         CommandParameter="{Binding}"
@@ -156,7 +156,7 @@
                                 <dd:DragDrop.EffectMoveAdornerTemplate>
                                     <DataTemplate>
                                         <materialDesign:ColorZone Mode="PrimaryMid" Height="24" CornerRadius="12">
-                                            <controls:IconText Kind="ArrowUpDown" Text="移动"
+                                            <controls:IconText Kind="{x:Static controls:IconGlyphs.ArrowUpDown}" Text="移动"
                                                                Margin="4 0"
                                                                IconMargin="2"
                                                                TextElement.FontWeight="Medium"
@@ -174,7 +174,7 @@
                                                 <ColumnDefinition Width="2*" />
                                                 <ColumnDefinition Width="3*" />
                                             </Grid.ColumnDefinitions>
-                                            <Button Grid.Column="0" Content="{materialDesign:PackIcon Remove}"
+                                            <Button Grid.Column="0" Content="{controls:GlyphIcon {x:Static controls:IconGlyphs.Remove}}"
                                                     Style="{StaticResource MaterialDesignToolForegroundButton}"
                                                     ToolTip="删除"
                                                     Command="{x:Static local:RulesetControl.RemoveRuleCommand}"

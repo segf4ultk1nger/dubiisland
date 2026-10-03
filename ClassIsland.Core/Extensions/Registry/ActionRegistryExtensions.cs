@@ -1,8 +1,8 @@
 ﻿using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Action;
-using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
+using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Extensions.Registry;
 
 /// <summary>
@@ -23,7 +23,7 @@ public static class ActionRegistryExtensions
         (this IServiceCollection services,
          string id,
          string name = "",
-         PackIconKind iconKind = PackIconKind.BacteriaOutline,
+         string iconKind = IconGlyphs.BacteriaOutline,
          ActionRegistryInfo.HandleDelegate? onHandle = null)
     {
         Register(id, name, iconKind, onHandle);
@@ -45,7 +45,7 @@ public static class ActionRegistryExtensions
         (this IServiceCollection services,
          string id,
          string name = "",
-         PackIconKind iconKind = PackIconKind.BacteriaOutline,
+         string iconKind = IconGlyphs.BacteriaOutline,
          ActionRegistryInfo.HandleDelegate? onHandle = null)
          where TSettingsControl : ActionSettingsControlBase
     {
@@ -60,7 +60,7 @@ public static class ActionRegistryExtensions
     private static ActionRegistryInfo Register
         (string id,
          string name = "",
-         PackIconKind iconKind = PackIconKind.BacteriaOutline,
+         string iconKind = IconGlyphs.BacteriaOutline,
          ActionRegistryInfo.HandleDelegate? onHandle = null)
     {
         if (IActionService.Actions.ContainsKey(id))

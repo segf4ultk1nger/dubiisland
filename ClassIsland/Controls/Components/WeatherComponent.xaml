@@ -12,7 +12,7 @@
                         xmlns:ci="http://classisland.tech/schemas/xaml/core"
                         xmlns:converters="clr-namespace:ClassIsland.Converters"
                         mc:Ignorable="d"
-                        d:DesignHeight="450" d:DesignWidth="800">
+                        d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <controls:ComponentBase.Resources>
         <ci:SizeDoubleToCornerRadiusConverter x:Key="SizeDoubleToCornerRadiusConverter" />
         <converters:WindDirectionConverter x:Key="WindDirectionConverter" />
@@ -35,8 +35,8 @@
                 </TabItem>
                 <TabItem Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Height="22" Width="22"
-                                                 Kind="WaterPercent"
+                        <ciCore:IconText IconSize="22"
+                                                 Kind="{x:Static ciCore:IconGlyphs.WaterPercent}"
                                                  VerticalAlignment="Center"/>
                         <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
                             <Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Humidity.Value}">
@@ -47,17 +47,17 @@
                 </TabItem>
                 <TabItem Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Height="22" Width="22"
-                                                 Kind="Windsock"
+                        <ciCore:IconText IconSize="22"
+                                                 Kind="{x:Static ciCore:IconGlyphs.Windsock}"
                                                  VerticalAlignment="Center"/>
-                        <materialDesign:PackIcon Height="22" Width="22"
+                        <ciCore:IconText IconSize="22"
                                                  Margin="6 0 0 0"
-                                                 Kind="Navigation"
+                                                 Kind="{x:Static ciCore:IconGlyphs.Navigation}"
                                                  VerticalAlignment="Center">
-                            <materialDesign:PackIcon.RenderTransform>
+                            <ciCore:IconText.RenderTransform>
                                 <RotateTransform Angle="{Binding SettingsService.Settings.LastWeatherInfo.Current.Wind.Direction.Value, Converter={StaticResource WindDirectionConverter}}" CenterX="11" CenterY="11"/>
-                            </materialDesign:PackIcon.RenderTransform>
-                        </materialDesign:PackIcon>
+                            </ciCore:IconText.RenderTransform>
+                        </ciCore:IconText>
                         <TextBlock VerticalAlignment="Center" Margin="0 0 0 0">
                             <Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Wind.Speed.Value}">
                             </Run>
@@ -67,10 +67,10 @@
                 </TabItem>
                 <TabItem Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Leaf" Width="22" Height="22"
+                        <ciCore:IconText IconSize="22" Kind="{x:Static ciCore:IconGlyphs.Leaf}"
                                                  VerticalAlignment="Center">
-                            <materialDesign:PackIcon.Style>
-                                <Style TargetType="materialDesign:PackIcon">
+                            <ciCore:IconText.Style>
+                                <Style TargetType="ciCore:IconText">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SettingsService.Settings.LastWeatherInfo.Aqi.AqiLevel}" Value="1">
                                             <Setter Property="TextElement.Foreground" Value="{DynamicResource AqiLevel1Brush}"/>
@@ -92,8 +92,8 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </materialDesign:PackIcon.Style>
-                        </materialDesign:PackIcon>
+                            </ciCore:IconText.Style>
+                        </ciCore:IconText>
                         <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
                             <Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Aqi.Aqi}">
                             </Run>
@@ -102,8 +102,8 @@
                 </TabItem>
                 <TabItem Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Height="22" Width="22"
-                                                 Kind="Gauge" VerticalAlignment="Center"/>
+                        <ciCore:IconText IconSize="22"
+                                                 Kind="{x:Static ciCore:IconGlyphs.Gauge}" VerticalAlignment="Center"/>
                         <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
                             <Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Pressure.Value}">
                             </Run>
@@ -113,8 +113,8 @@
                 </TabItem>
                 <TabItem Visibility="Collapsed">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Height="22" Width="22"
-                                                 Kind="HomeThermometerOutline"
+                        <ciCore:IconText IconSize="22"
+                                                 Kind="{x:Static ciCore:IconGlyphs.HomeThermometerOutline}"
                                                  VerticalAlignment="Center"/>
                         <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
                             <Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.FeelsLike.Value}">
@@ -210,7 +210,7 @@
                         VerticalAlignment="Bottom"
                         CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource SizeDoubleToCornerRadiusConverter}}">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="WeatherPouring" VerticalAlignment="Center"
+                        <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.WeatherPouring}" VerticalAlignment="Center"
                                                  Margin="0 0 4 0"/>
                         <TextBlock FontSize="{DynamicResource MainWindowSecondaryFontSize}"
                                    VerticalAlignment="Center" FontWeight="Regular">

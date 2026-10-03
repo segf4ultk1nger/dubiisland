@@ -30,13 +30,13 @@
                     <ToggleButton DockPanel.Dock="Right"
                                   IsChecked="{Binding AssociatedAttachedSettings.IsAttachSettingsEnabled}"
                                   ToolTip="是否在此处启用特定的设置"
-                                  Content="{materialDesign:PackIcon LayersOutline}"
+                                  Content="{local:GlyphIcon {x:Static local:IconGlyphs.LayersOutline}}"
                                   Visibility="{Binding ControlInfo.HasEnabledState, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <Button DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignToolForegroundButton}"
                             Margin="4 -4"
                             ToolTip="查看此设置的继承情况…"
-                            Content="{materialDesign:PackIcon LayersSearchOutline}"
+                            Content="{local:GlyphIcon {x:Static local:IconGlyphs.LayersSearchOutline}}"
                             Click="ButtonShowDetails_OnClick">
                         <Button.Visibility>
                             <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
@@ -133,14 +133,14 @@
                                 <WrapPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal"
                                            Margin="4 0 4 4">
                                     <Button HorizontalAlignment="Left"
-                                            Content="{materialDesign:PackIcon HelpCircleOutline}"
+                                            Content="{local:GlyphIcon {x:Static local:IconGlyphs.HelpCircleOutline}}"
                                             ToolTip="附加设置帮助…"
                                             Margin="4 0 0 0"
                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                             CommandParameter="https://docs.classisland.tech/app/advanced#%E9%99%84%E5%8A%A0%E8%AE%BE%E7%BD%AE"
                                             Style="{StaticResource MaterialDesignToolForegroundButton}" />
                                     <Button HorizontalAlignment="Left"
-                                            Content="{materialDesign:PackIcon Refresh}"
+                                            Content="{local:GlyphIcon {x:Static local:IconGlyphs.Refresh}}"
                                             ToolTip="刷新"
                                             Margin="4 0 0 0"
                                             Click="ButtonRefresh_OnClick"
@@ -157,7 +157,7 @@
                         <controls:IconText Kind="{Binding ControlInfo.IconKind, Mode=OneWay}"
                                      Text="{Binding ControlInfo.Name, Mode=OneWay, FallbackValue=''}"
                                      Visibility="{Binding IsDependencyMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-                        <controls:IconText Kind="{Binding DependencyItemPackIconKind, Mode=OneWay}"
+                        <controls:IconText Kind="{Binding DependencyItemGlyph, Mode=OneWay}"
                                      Text="{Binding DependencyItemTitle, Mode=OneWay, FallbackValue=''}"
                                      Visibility="{Binding IsDependencyMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <controls:IconText.Style>

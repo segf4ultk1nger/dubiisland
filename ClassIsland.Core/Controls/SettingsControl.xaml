@@ -41,10 +41,9 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <!-- icon -->
-        <materialDesign:PackIcon Grid.Column="0"
+        <controls:IconText IconSize="18" Grid.Column="0"
                                  Margin="0 0 6 0"
                                  VerticalAlignment="Center"
-                                 Height="18" Width="18"
                                  Kind="{Binding IconGlyph, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}" />
 
         <!-- text -->

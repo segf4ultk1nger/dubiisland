@@ -82,7 +82,7 @@
                         <Setter Property="Visibility" Value="Collapsed" />
                     </Style>
                 </StackPanel.Style>
-                <materialDesign:PackIcon Kind="Search" Width="81" Height="81" HorizontalAlignment="Center" />
+                <controls1:IconText IconSize="81" Kind="{x:Static controls1:IconGlyphs.Search}" HorizontalAlignment="Center" />
                 <TextBlock Text="找不到符合条件的城市。请更换搜索关键字，然后再试一次。" TextWrapping="Wrap"
                            TextAlignment="Center"
                            Margin="0 8 0 0" />
@@ -92,7 +92,7 @@
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-            <controls1:IconText Kind="WeatherSunny" Text="天气预览" Margin="0 0 0 8" />
+            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WeatherSunny}" Text="天气预览" Margin="0 0 0 8" />
             <StackPanel Orientation="Horizontal">
                 <controls2:WeatherPackIconControl Width="32" Height="32"
                                                   Code="{Binding SettingsService.Settings.LastWeatherInfo.Current.Weather}"
@@ -137,14 +137,14 @@
             </ItemsControl>
 
             <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="CogOutline" Text="设置" Margin="0 0 0 8" />
+            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="设置" Margin="0 0 0 8" />
             
             <materialDesign:Card Margin="0 0 0 6">
                 <Expander Background="Transparent"
                           IsExpanded="True"
                           TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                     <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="Earth"
+                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Earth}"
                                                   Foreground="{DynamicResource MaterialDesignBody}"
                                                   Header="天气位置"
                                                   Description="设置 ClassIsland 用于查询天气的位置信息及获取这些位置信息的方式。"
@@ -168,7 +168,7 @@
                     </Expander.Header>
                     <StackPanel Margin="36 0 48 12">
                         <!-- 城市选择 -->
-                        <controls1:SettingsControl IconGlyph="HomeCityOutline" Header="城市选择"
+                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.HomeCityOutline}" Header="城市选择"
                                                 Description="选择当前所在的城市，以用于天气查询。"
                                                 Margin="0 0 0 6"
                                                 IsCompact="True">
@@ -176,7 +176,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding SettingsService.Settings.CityName}"
                                                VerticalAlignment="Center" />
-                                    <Button Content="{materialDesign:PackIcon EditOutline}" ToolTip="编辑"
+                                    <Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.EditOutline}}" ToolTip="编辑"
                                             Margin="6 0 0 0"
                                             Click="ButtonEditCurrentCity_OnClick"
                                             Foreground="{DynamicResource PrimaryHueMidBrush}">
@@ -208,7 +208,7 @@
                                     <Setter Property="Visibility" Value="Collapsed"/>
                                 </Style>
                             </StackPanel.Style>
-                            <controls1:SettingsControl IconGlyph="MapOutline" Header="位置坐标"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.MapOutline}" Header="位置坐标"
                                                        Description="输入用于获取天气信息的经纬坐标"
                                                        Margin="0 0 0 6"
                                                        IsCompact="True">
@@ -250,11 +250,11 @@
                                                     VerticalAlignment="Center" HorizontalAlignment="Center"
                                                     Click="ButtonShowPos_OnClick"
                                                     Visibility="{Binding ViewModel.HideLocationPos, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                <controls1:IconText Kind="ShowOutline" Text="显示坐标"/>
+                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ShowOutline}" Text="显示坐标"/>
                                             </Button>
                                         </Grid>
                                         <Button Style="{StaticResource MaterialDesignToolButton}"
-                                                Content="{materialDesign:PackIcon CrosshairsGps}"
+                                                Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.CrosshairsGps}}"
                                                 ToolTip="定位"
                                                 Foreground="{DynamicResource PrimaryHueMidBrush}"
                                                 Click="ButtonGetCurrentPos_OnClick" />
@@ -262,7 +262,7 @@
                                 </controls1:SettingsControl.Switcher>
                             </controls1:SettingsControl>
                             <!-- 自动获取位置 -->
-                            <controls1:SettingsControl IconGlyph="AutoMode"
+                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}"
                                                    Header="自动获取位置"
                                                    IsCompact="True"
                                                    Description="启用后，将在应用每次启动时自动更新位置信息。"
@@ -278,7 +278,7 @@
                           IsExpanded="True"
                           TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                     <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="FilterOutline"
+                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.FilterOutline}"
                                                    Foreground="{DynamicResource MaterialDesignBody}"
                                                    Header="排除的气象预警"
                                                    HasSwitcher="False"
@@ -297,7 +297,7 @@
                 </Expander>
             </materialDesign:Card>
             <!-- 天气图标包 -->
-            <controls1:SettingsCard IconGlyph="WeatherPartlyCloudy"
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.WeatherPartlyCloudy}"
                                     Header="天气图标包"
                                     Description="调整在显示天气类型时使用的图标外观。"
                                     Margin="0 0 0 6"

@@ -197,8 +197,7 @@
                                                               Panel.ZIndex="1">
                                         <StackPanel Margin="8 4">
                                             <DockPanel>
-                                                <materialDesign:PackIcon Kind="MessageAlertOutline"
-                                                                         Height="20" Width="20" />
+                                                <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}" />
                                                 <TextBlock TextWrapping="Wrap"
                                                            VerticalAlignment="Center"
                                                            Margin="4 0 0 0">
@@ -217,11 +216,11 @@
                                             Style="{StaticResource MaterialDesignFlatButton}"
                                             IsEnabled="{Binding ViewModel.IsLicenseAgreed, Mode=OneWay}"
                                             Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
-                                        <controls1:IconText Kind="WorkOutline" Text="加入管理" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WorkOutline}" Text="加入管理" />
                                     </Button>
                                     <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}"
                                             IsEnabled="{Binding ViewModel.IsLicenseAgreed, Mode=OneWay}">
-                                        <controls1:IconText Kind="ArrowRight" Text="下一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
@@ -243,7 +242,7 @@
                                                FontWeight="Light"
                                                Text="您后续也可以在应用设置中再次调整这些选项。" />
 
-                                    <controls1:SettingsCard IconGlyph="CalendarOutline" Header="学期开始时间"
+                                    <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CalendarOutline}" Header="学期开始时间"
                                                            Margin="0 6 0 0"
                                                            Description="此时间将作为学期的第一天，用于多周轮换课表的计算。">
                                         <controls1:SettingsCard.Switcher>
@@ -254,7 +253,7 @@
                                         </controls1:SettingsCard.Switcher>
                                     </controls1:SettingsCard>
                                     <controls1:SettingsCard Grid.Row="1" Margin="0 6 0 0"
-                                                           IconGlyph="ReportLine"
+                                                           IconGlyph="{x:Static controls1:IconGlyphs.ReportLine}"
                                                            Header="启用匿名使用情况分析"
                                                            IsOn="{Binding ViewModel.Settings.IsSentryEnabled, Mode=TwoWay}"
                                                            Description="启用后，应用将收集并上传应用的使用情况与错误信息，以帮助改进此应用。上传的信息不包含您的个人信息。" />
@@ -263,10 +262,10 @@
                                     <Button Style="{StaticResource MaterialDesignPaperButton}"
                                             Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
                                             Margin="0 0 6 0">
-                                        <controls1:IconText Kind="ArrowLeft" Text="上一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
                                     <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
-                                        <controls1:IconText Kind="ArrowRight" Text="下一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
@@ -285,7 +284,7 @@
                                     <TextBlock Text="外观"
                                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                                                Margin="0 0 0 8" />
-                                    <controls1:IconText Kind="ThemeLightDark" Text="明暗主题" />
+                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ThemeLightDark}" Text="明暗主题" />
                                     <Grid SnapsToDevicePixels="True">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />
@@ -331,9 +330,9 @@
                                         </RadioButton>
                                     </Grid>
                                     <Separator Margin="0 16 0 8" />
-                                    <controls1:IconText Kind="CogOutline" Text="其它设置" Margin="0 0 0 6" />
+                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="其它设置" Margin="0 0 0 6" />
                                     <!-- 界面缩放 -->
-                                    <controls1:SettingsCard IconGlyph="ZoomInOutline" Header="界面缩放"
+                                    <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ZoomInOutline}" Header="界面缩放"
                                                            Description="主界面的缩放比例。"
                                                            Margin="0 0 0 6">
                                         <controls1:SettingsCard.Switcher>
@@ -348,7 +347,7 @@
                                         </controls1:SettingsCard.Switcher>
                                     </controls1:SettingsCard>
                                     <!-- 背景透明度 -->
-                                    <controls1:SettingsCard IconGlyph="SquareTransparent" Header="背景不透明度"
+                                    <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.SquareTransparent}" Header="背景不透明度"
                                                            Description="课表背景颜色的不透明度。"
                                                            Margin="0 0 0 6">
                                         <controls1:SettingsCard.Switcher>
@@ -366,10 +365,10 @@
                                     <Button Style="{StaticResource MaterialDesignPaperButton}"
                                             Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
                                             Margin="0 0 6 0">
-                                        <controls1:IconText Kind="ArrowLeft" Text="上一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
                                     <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
-                                        <controls1:IconText Kind="ArrowRight" Text="下一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
@@ -402,28 +401,28 @@
                                             </StackPanel.Resources>
                                             <CheckBox IsChecked="{Binding ViewModel.CreateStartupShortcut}">
                                                 <controls1:SettingsControl HasSwitcher="False"
-                                                                          IconGlyph="AutoStart" Header="开机自启"
+                                                                          IconGlyph="{x:Static controls1:IconGlyphs.AutoStart}" Header="开机自启"
                                                                           Description="在系统启动时自动运行本应用。" />
                                             </CheckBox>
                                             <!--<CheckBox>
                                                 <controls:SettingsControl HasSwitcher="False"
-                                                                          IconGlyph="Link" Header="文件关联"
+                                                                          IconGlyph="{x:Static controls1:IconGlyphs.Link}" Header="文件关联"
                                                                           Description="注册*.cip文件格式关联，便于导入档案文件。" />
                                             </CheckBox>-->
                                             <CheckBox IsChecked="{Binding ViewModel.CreateDesktopShortcut}">
                                                 <controls1:SettingsControl HasSwitcher="False"
-                                                                          IconGlyph="Monitor" Header="创建桌面快捷方式"
+                                                                          IconGlyph="{x:Static controls1:IconGlyphs.Monitor}" Header="创建桌面快捷方式"
                                                                           Description="在桌面上添加软件快捷方式。" />
                                             </CheckBox>
                                             <CheckBox IsChecked="{Binding ViewModel.CreateStartMenuShortcut}">
                                                 <controls1:SettingsControl HasSwitcher="False"
-                                                                          IconGlyph="MicrosoftWindows"
+                                                                          IconGlyph="{x:Static controls1:IconGlyphs.MicrosoftWindows}"
                                                                           Header="创建开始菜单快捷方式"
                                                                           Description="在开始菜单上添加软件快捷方式。" />
                                             </CheckBox>
                                             <CheckBox IsChecked="{Binding ViewModel.RegisterUrlScheme}">
                                                 <controls1:SettingsControl HasSwitcher="False"
-                                                                           IconGlyph="Code"
+                                                                           IconGlyph="{x:Static controls1:IconGlyphs.Code}"
                                                                            Header="注册 Url 协议"
                                                                            Description="允许第三方应用或网页通过 Url 协议 classisland:// 调用本应用的部分功能，详见帮助文档。" />
                                             </CheckBox>
@@ -431,7 +430,7 @@
                                                       IsChecked="{Binding ViewModel.CreateClassSwapShortcut}"
                                                       IsEnabled="{Binding ViewModel.RegisterUrlScheme}">
                                                 <controls1:SettingsControl HasSwitcher="False"
-                                                                           IconGlyph="SwapHorizontal"
+                                                                           IconGlyph="{x:Static controls1:IconGlyphs.SwapHorizontal}"
                                                                            Header="在桌面创建换课快捷方式"
                                                                            Description="打开此快捷方式可以一键开始换课。" />
                                             </CheckBox>
@@ -442,10 +441,10 @@
                                     <Button Style="{StaticResource MaterialDesignPaperButton}"
                                             Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
                                             Margin="0 0 6 0">
-                                        <controls1:IconText Kind="ArrowLeft" Text="上一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
                                     <Button Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
-                                        <controls1:IconText Kind="ArrowRight" Text="下一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
@@ -506,7 +505,7 @@
                                                         </Grid.RowDefinitions>
                                                         <controls1:InfoCard Grid.Column="0"
                                                                             Grid.Row="0"
-                                                                            IconKind="HelpCircleOutline"
+                                                                            IconKind="{x:Static controls1:IconGlyphs.HelpCircleOutline}"
                                                                             Margin="4 0"
                                                                             VerticalAlignment="Top"
                                                                             Title="阅读文档"
@@ -516,14 +515,14 @@
                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="https://docs.classisland.tech/">
-                                                                        <commands:IconText Kind="Internet" Text="在线阅读…"/>
+                                                                        <commands:IconText Kind="{x:Static controls1:IconGlyphs.Internet}" Text="在线阅读…"/>
                                                                     </Button>
                                                                 </WrapPanel>
                                                             </controls1:InfoCard.ActionButton>
                                                         </controls1:InfoCard>
                                                         <controls1:InfoCard Grid.Column="1"
                                                                             Grid.Row="0"
-                                                                            IconKind="Youtube"
+                                                                            IconKind="{x:Static controls1:IconGlyphs.Youtube}"
                                                                             Margin="4 0"
                                                                             VerticalAlignment="Top"
                                                                             Title="观看教程视频"
@@ -533,14 +532,14 @@
                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="https://www.bilibili.com/video/BV1fA4m1A7uZ/">
-                                                                        <commands:IconText Kind="Youtube" Text="观看入门教程视频…"/>
+                                                                        <commands:IconText Kind="{x:Static controls1:IconGlyphs.Youtube}" Text="观看入门教程视频…"/>
                                                                     </Button>
                                                                 </WrapPanel>
                                                             </controls1:InfoCard.ActionButton>
                                                         </controls1:InfoCard>
                                                         <controls1:InfoCard Grid.Column="0"
                                                                             Grid.Row="1"
-                                                                            IconKind="BookEdit"
+                                                                            IconKind="{x:Static controls1:IconGlyphs.BookEdit}"
                                                                             Margin="4 0"
                                                                             VerticalAlignment="Top"
                                                                             Title="创建档案"
@@ -550,14 +549,14 @@
                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="classisland://app/profile/">
-                                                                        <commands:IconText Kind="LeadPencil" Text="打开编辑档案界面…"/>
+                                                                        <commands:IconText Kind="{x:Static controls1:IconGlyphs.LeadPencil}" Text="打开编辑档案界面…"/>
                                                                     </Button>
                                                                 </WrapPanel>
                                                             </controls1:InfoCard.ActionButton>
                                                         </controls1:InfoCard>
                                                         <controls1:InfoCard Grid.Column="1"
                                                                             Grid.Row="1"
-                                                                            IconKind="ApplicationImport"
+                                                                            IconKind="{x:Static controls1:IconGlyphs.ApplicationImport}"
                                                                             VerticalAlignment="Top"
                                                                             Margin="4 0"
                                                                             Title="从其他软件导入"
@@ -568,7 +567,7 @@
                                                                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                                                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                                                             CommandParameter="https://migrate.classisland.tech/">
-                                                                        <commands:IconText Kind="Internet" Text="打开导入工具网页…"/>
+                                                                        <commands:IconText Kind="{x:Static controls1:IconGlyphs.Internet}" Text="打开导入工具网页…"/>
                                                                     </Button>
                                                                 </WrapPanel>
                                                             </controls1:InfoCard.ActionButton>
@@ -583,17 +582,17 @@
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Style="{StaticResource MaterialDesignPaperButton}"
                                             Click="ButtonCompleteFlipBack_OnClick">
-                                        <controls1:IconText Kind="ArrowLeft" Text="上一步" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                                     </Button>
                                     <Button Click="ButtonFlipNext_OnClick" 
                                             Margin="6 0 0 0"
                                             Visibility="{Binding ViewModel.IsFlipEnd, Converter={StaticResource InverseBoolToVisConverter}}">
-                                        <controls1:IconText Kind="ArrowRight" Text="下一页" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一页" />
                                     </Button>
                                     <Button Click="ButtonClose_OnClick"
                                             Margin="6 0 0 0"
                                             Visibility="{Binding ViewModel.IsFlipEnd, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <controls1:IconText Kind="Check" Text="完成" />
+                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="完成" />
                                     </Button>
                                 </StackPanel>
                             </Grid>

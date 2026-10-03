@@ -22,7 +22,7 @@
                     HorizontalAlignment="Left"
                     Click="ButtonRefresh_OnClick">
                 <Button.Content>
-                    <local:IconText Kind="Refresh" Text="刷新"/>
+                    <local:IconText Kind="{x:Static local:IconGlyphs.Refresh}" Text="刷新"/>
                 </Button.Content>
             </Button>
         </StackPanel>

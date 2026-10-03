@@ -40,7 +40,7 @@
         Loaded="MainWindow_OnLoaded"
         SizeToContent="Height"
         ShowActivated="False"
-        materialDesign:ShadowAssist.CacheMode="{x:Null}">
+        materialDesign:ShadowAssist.CacheMode="{x:Null}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:MainWindow.TrayIconLeftClickedCommand}"
                         Executed="TrayIconOnClicked_OnExecuted"/>
@@ -99,7 +99,7 @@
             </MenuItem>
             <MenuItem Header="更新可用…" Click="MenuItemUpdates_OnClick" IsEnabled="{Binding ViewModel.Settings.IsWelcomeWindowShowed}">
                 <MenuItem.Icon>
-                    <materialDesign:PackIcon Kind="UploadOutline"/>
+                    <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.UploadOutline}"/>
                 </MenuItem.Icon>
                 <MenuItem.Style>
                     <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
@@ -111,10 +111,10 @@
                     </Style>
                 </MenuItem.Style>
             </MenuItem>
-            <MenuItem Icon="{materialDesign:PackIcon HelpCircleOutline}" Header="帮助…" Click="MenuItemHelps_OnClick" 
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.HelpCircleOutline}}" Header="帮助…" Click="MenuItemHelps_OnClick" 
                       Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             <Separator/>
-            <MenuItem Icon="{materialDesign:PackIcon EyeOutLine}" Header="显示主界面" Click="MenuItemSwitchMainWindowVisibility_OnClick">
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.EyeOutLine}}" Header="显示主界面" Click="MenuItemSwitchMainWindowVisibility_OnClick">
                 <MenuItem.Visibility>
                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
                         <Binding Path="ViewModel.Settings.IsMainWindowVisible" Mode="OneWay" Converter="{StaticResource InvertBooleanConverter}" />
@@ -122,7 +122,7 @@
                     </MultiBinding>
                 </MenuItem.Visibility>
             </MenuItem>
-            <MenuItem Icon="{materialDesign:PackIcon EyeOffOutline}" Header="隐藏主界面" Click="MenuItemSwitchMainWindowVisibility_OnClick">
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.EyeOffOutline}}" Header="隐藏主界面" Click="MenuItemSwitchMainWindowVisibility_OnClick">
                 <MenuItem.Visibility>
                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
                         <Binding Path="ViewModel.Settings.IsMainWindowVisible" Mode="OneWay"/>
@@ -130,7 +130,7 @@
                     </MultiBinding>
                 </MenuItem.Visibility>
             </MenuItem>
-            <MenuItem Icon="{materialDesign:PackIcon NotificationClearAll}" Header="清除全部提醒" Click="MenuItemClearAllNotifications_OnClick">
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.NotificationClearAll}}" Header="清除全部提醒" Click="MenuItemClearAllNotifications_OnClick">
                 <MenuItem.Visibility>
                     <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}" Mode="OneWay">
                         <Binding Path="ViewModel.Settings.IsWelcomeWindowShowed" Mode="OneWay"/>
@@ -139,11 +139,11 @@
                 </MenuItem.Visibility>
             </MenuItem>
             <Separator Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <MenuItem Icon="{materialDesign:PackIcon FileDocumentEditOutline}" Header="编辑档案…" Click="ButtonSettings_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <MenuItem Icon="{materialDesign:PackIcon SettingsOutline}" Header="应用设置…" Click="MenuItemSettings_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <MenuItem Icon="{materialDesign:PackIcon FileChartOutline}" Header="加载临时课表…" Click="MenuItemTemporaryClassPlan_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentEditOutline}}" Header="编辑档案…" Click="ButtonSettings_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.SettingsOutline}}" Header="应用设置…" Click="MenuItemSettings_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileChartOutline}}" Header="加载临时课表…" Click="MenuItemTemporaryClassPlan_OnClick" Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}">
             </MenuItem>
-            <MenuItem Icon="{materialDesign:PackIcon SwapHorizontal}" Header="换课…" Click="MenuItemClassSwap_OnClick">
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.SwapHorizontal}}" Header="换课…" Click="MenuItemClassSwap_OnClick">
                 <MenuItem.Style>
                     <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                         <Style.Triggers>
@@ -156,10 +156,10 @@
                 </MenuItem.Style>
             </MenuItem>
             <Separator Visibility="{Binding ViewModel.Settings.IsWelcomeWindowShowed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <MenuItem Icon="{materialDesign:PackIcon Restart}"  Header="重启" Click="MenuItemRestartApp_OnClick"/>
-            <MenuItem Icon="{materialDesign:PackIcon ExitToApp}"  Header="退出" Click="MenuItemExitApp_OnClick"/>
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Restart}}"  Header="重启" Click="MenuItemRestartApp_OnClick"/>
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ExitToApp}}"  Header="退出" Click="MenuItemExitApp_OnClick"/>
             <Separator Visibility="{Binding ViewModel.Settings.IsDebugEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <MenuItem Icon="{materialDesign:PackIcon BugOutline}" Header="调试"
+            <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.BugOutline}}" Header="调试"
                       Visibility="{Binding ViewModel.Settings.IsDebugEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <MenuItem Header="SizeToContentTest" Click="ButtonResizeDebug_OnClick"/>
                 <Separator/>

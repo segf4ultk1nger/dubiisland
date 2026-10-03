@@ -1,5 +1,4 @@
 ﻿using ClassIsland.Core.Controls.CommonDialog;
-using MaterialDesignThemes.Wpf;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -78,7 +77,7 @@ public class CommonDialogBuilder
     /// <param name="width">位图宽度（px），默认为 64</param>
     /// <param name="height">位图高度（px），默认为 64</param>
     /// <remarks>
-    /// 如果您想设置一个内置的表情包图标，建议使用 <see cref="SetIconKind"/> 方法。此方法可以在【禁用彩蛋】策略启用时自动切换到对应的 <see cref="PackIcon"/> 图标。
+    /// 如果您想设置一个内置的表情包图标，建议使用 <see cref="SetIconKind"/> 方法。此方法可以在【禁用彩蛋】策略启用时自动切换到对应的 <see cref="IconText"/> 图标。
     /// </remarks>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
     public CommonDialogBuilder SetBitmapIcon(Uri uri, double width = 64, double height = 64) =>
@@ -95,10 +94,10 @@ public class CommonDialogBuilder
         return managementService?.Policy.DisableEasterEggs == true
             ? kind switch
             {
-                CommonDialogIconKind.Information => SetPackIcon(PackIconKind.InfoCircle),
-                CommonDialogIconKind.Hint => SetPackIcon(PackIconKind.WarningCircle),
-                CommonDialogIconKind.Forbidden => SetPackIcon(PackIconKind.AlertOctagon),
-                CommonDialogIconKind.Error => SetPackIcon(PackIconKind.CloseCircle),
+                CommonDialogIconKind.Information => SetPackIcon(IconGlyphs.InfoCircle),
+                CommonDialogIconKind.Hint => SetPackIcon(IconGlyphs.WarningCircle),
+                CommonDialogIconKind.Forbidden => SetPackIcon(IconGlyphs.AlertOctagon),
+                CommonDialogIconKind.Error => SetPackIcon(IconGlyphs.CloseCircle),
                 _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
             }
             : kind switch
@@ -116,19 +115,18 @@ public class CommonDialogBuilder
     }
 
     /// <summary>
-    /// 设置自定义 <see cref="PackIcon"/> 图标。
+    /// 设置自定义 <see cref="IconText"/> 图标。
     /// </summary>
     /// <param name="kind">自定义图标的图表类型</param>
     /// <param name="width">图标宽度（px），默认为 64</param>
     /// <param name="height">图标高度（px），默认为 64</param>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
-    public CommonDialogBuilder SetPackIcon(PackIconKind kind, double width = 64, double height = 64)
+    public CommonDialogBuilder SetPackIcon(string kind, double width = 64, double height = 64)
     {
-        Dialog.DialogIcon = new PackIcon()
+        Dialog.DialogIcon = new IconText()
         {
             Kind = kind,
-            Width = width,
-            Height = height
+            IconSize = Math.Max(width, height)
         };
         return this;
     }
@@ -162,12 +160,12 @@ public class CommonDialogBuilder
     /// <param name="icon">操作的图标包类型</param>
     /// <param name="isPrimary">操作是否是主要操作，按下 Enter 时将默认选择</param>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
-    public CommonDialogBuilder AddAction(string name, PackIconKind icon, bool isPrimary=false)
+    public CommonDialogBuilder AddAction(string name, string icon, bool isPrimary=false)
     {
         return AddAction(new DialogAction()
         {
             Name = name,
-            PackIconKind = icon,
+            Glyph = icon,
             IsPrimary = isPrimary
         });
     }
@@ -176,25 +174,25 @@ public class CommonDialogBuilder
     /// 添加一个“确定”操作按钮。
     /// </summary>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
-    public CommonDialogBuilder AddConfirmAction() => AddAction("确定", PackIconKind.Check);
+    public CommonDialogBuilder AddConfirmAction() => AddAction("确定", IconGlyphs.Check);
 
     /// <summary>
     /// 添加一个“是”操作按钮。
     /// </summary>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
-    public CommonDialogBuilder AddYesAction() => AddAction("是", PackIconKind.Check);
+    public CommonDialogBuilder AddYesAction() => AddAction("是", IconGlyphs.Check);
 
     /// <summary>
     /// 添加一个“否”操作按钮。
     /// </summary>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
-    public CommonDialogBuilder AddNoAction() => AddAction("否", PackIconKind.Close);
+    public CommonDialogBuilder AddNoAction() => AddAction("否", IconGlyphs.Close);
 
     /// <summary>
     /// 添加一个“取消”操作按钮。
     /// </summary>
     /// <returns>原来的 <see cref="CommonDialogBuilder"/> 对象</returns>
-    public CommonDialogBuilder AddCancelAction() => AddAction("取消", PackIconKind.Cancel);
+    public CommonDialogBuilder AddCancelAction() => AddAction("取消", IconGlyphs.Cancel);
 
     /// <summary>
     /// 获得构建的 <see cref="CommonDialog"/> 对象。

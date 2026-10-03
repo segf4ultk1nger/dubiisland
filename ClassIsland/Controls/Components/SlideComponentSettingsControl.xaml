@@ -9,7 +9,7 @@
              xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
         <ci:RulesetControl x:Key="RulesetControl"/>
     </ci:ComponentBase.Resources>
@@ -20,7 +20,7 @@
                 
             </StackPanel.Resources>
             <!-- 轮换间隔 -->
-            <ci:SettingsCard IconGlyph="TimerOutline"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.TimerOutline}"
                              Header="轮换间隔"
                              Description="组件自动轮换的间隔时间"
                              Margin="0 0 0 6">
@@ -33,7 +33,7 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
             <!-- 轮换模式 -->
-            <ci:SettingsCard IconGlyph="AutoMode"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AutoMode}"
                              Header="轮换模式"
                              Description="设定轮换组件的行为"
                              Margin="0 0 0 6">
@@ -49,7 +49,7 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
             <!-- 满足规则时暂停 -->
-            <ci:SettingsCard IconGlyph="Pause"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Pause}"
                              Header="满足规则时暂停"
                              Description="在指定规则满足时暂停轮播，暂停会保留当前轮播到的组件。"
                              Margin="0 0 0 6">
@@ -59,7 +59,7 @@
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Click="ButtonOpenPauseRuleset_OnClick"
                                 Visibility="{Binding Settings.IsPauseOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ci:IconText Kind="TagMultipleOutline" Text="编辑规则集…" />
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
                         <ToggleButton VerticalAlignment="Center"
                                       IsChecked="{Binding Settings.IsPauseOnRuleEnabled}" />
@@ -67,7 +67,7 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
             <!-- 满足规则时停止 -->
-            <ci:SettingsCard IconGlyph="Stop"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
                              Header="满足规则时停止"
                              Description="在指定规则满足时停止轮播。停止时会停止轮播，并回到第一个组件。如果此处的规则和暂停规则同时满足，会停止轮播而不是暂停。"
                              Margin="0 0 0 6">
@@ -77,7 +77,7 @@
                                 Style="{StaticResource MaterialDesignFlatButton}"
                                 Click="ButtonOpenStopRuleset_OnClick"
                                 Visibility="{Binding Settings.IsStopOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ci:IconText Kind="TagMultipleOutline" Text="编辑规则集…" />
+                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
                         <ToggleButton VerticalAlignment="Center"
                                       IsChecked="{Binding Settings.IsStopOnRuleEnabled}" />
@@ -85,14 +85,14 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
             <!-- 启用动画 -->
-            <ci:SettingsCard IconGlyph="AnimationPlayOutline"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AnimationPlayOutline}"
                              Header="启用动画"
                              Description="启用后，将在切换组件时播放过渡动画。"
                              Visibility="{Binding Settings.UseOldPresentingBehavior, Converter={StaticResource InverseBoolToVisConverter}}"
                              IsOn="{Binding Settings.IsAnimationEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 使用旧版轮播行为 -->
-            <ci:SettingsCard IconGlyph="UndoVariant"
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.UndoVariant}"
                                Header="使用旧版轮播行为"
                                Description="启用后，将使用旧版的轮播行为，只在轮播到对应组件时加载组件内容。如果当前的轮播组件出现问题，可尝试启用此选项回滚到旧版的行为。"
                                IsOn="{Binding Settings.UseOldPresentingBehavior, Mode=TwoWay}"

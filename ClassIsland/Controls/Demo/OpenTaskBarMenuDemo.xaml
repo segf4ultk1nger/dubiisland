@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ClassIsland.Controls.Demo"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="281.25" d:DesignWidth="500" ClipToBounds="True" Width="500" Height="281.25">
+             d:DesignHeight="281.25" d:DesignWidth="500" ClipToBounds="True" Width="500" Height="281.25" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <UserControl.Resources>
         <Storyboard x:Key="Loop" RepeatBehavior="Forever" SpeedRatio="0.8">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ZoneHiddenTaskBarIcons" Storyboard.TargetProperty="(UIElement.Opacity)">
@@ -223,22 +223,22 @@
                 <Grid x:Name="GridTaskBar" >
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center"
                                 Margin="2">
-                        <materialDesign:PackIcon Kind="MicrosoftWindows" Height="12" Width="12" VerticalAlignment="Center" Margin="0 0 4 0"/>
-                        <materialDesign:PackIcon Kind="Magnify" Height="12" Width="12" VerticalAlignment="Center" Margin="0 0 4 0"/>
+                        <ciCore:IconText IconSize="12" Kind="{x:Static ciCore:IconGlyphs.MicrosoftWindows}" VerticalAlignment="Center" Margin="0 0 4 0"/>
+                        <ciCore:IconText IconSize="12" Kind="{x:Static ciCore:IconGlyphs.Magnify}" VerticalAlignment="Center" Margin="0 0 4 0"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="2">
-                        <materialDesign:PackIcon Kind="ChevronUp" Width="10" Height="10" Margin="0 0 2 0" 
+                        <ciCore:IconText IconSize="10" Kind="{x:Static ciCore:IconGlyphs.ChevronUp}" Margin="0 0 2 0" 
                                                  x:Name="IconTaskBarNotifyExpand"
                                                  VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                            <materialDesign:PackIcon.RenderTransform>
+                            <ciCore:IconText.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
                                     <SkewTransform/>
                                     <RotateTransform/>
                                     <TranslateTransform/>
                                 </TransformGroup>
-                            </materialDesign:PackIcon.RenderTransform>
-                        </materialDesign:PackIcon>
+                            </ciCore:IconText.RenderTransform>
+                        </ciCore:IconText>
                         <Border Background="White" Width="4" Height="4" Opacity="0.75" Margin="0 0 4 0"/>
                         <Border Background="White" Width="4" Height="4" Opacity="0.75" Margin="0 0 4 0"/>
                         <Border Background="White" Width="4" Height="4" Opacity="0.75" Margin="0 0 4 0"/>

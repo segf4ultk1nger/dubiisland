@@ -136,8 +136,8 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Column="1"
-                            materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon SwapHorizontal}"
-                            Content="{materialDesign:PackIcon ArrowRight}"
+                            materialDesign:ToggleButtonAssist.OnContent="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.SwapHorizontal}}"
+                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}"
                             IsChecked="{Binding SettingsService.Settings.IsSwapMode}">
                             <ToggleButton.Style>
                                 <Style TargetType="ToggleButton"
@@ -219,7 +219,7 @@
                         Margin="0 0 4 0"
                         IsCancel="True"
                         ToolTip="取消换课操作。">
-                    <controls1:IconText Kind="Cancel" Text="取消" />
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Cancel}" Text="取消" />
                 </Button>
                 <Button Margin="0 0 4 0"
                         Click="ButtonPrev_OnClick"
@@ -233,7 +233,7 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                    <controls1:IconText Kind="ArrowLeft" Text="上一步" />
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowLeft}" Text="上一步" />
                 </Button>
             </StackPanel>
             <StackPanel Grid.Row="3"
@@ -256,7 +256,7 @@
                     </StackPanel.Style>
                     <Button Margin="12 0 0 0" Click="ButtonNext_OnClick"
                             ToolTip="进入下一步。">
-                        <controls1:IconText Kind="ArrowRight" Text="下一步" />
+                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}" Text="下一步" />
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -297,7 +297,7 @@
                     </CheckBox>
                     <Button Margin="12 0 0 0" ToolTip="确认并应用换课。"
                             Click="ButtonConfirmClassChanging_OnClick">
-                        <controls1:IconText Kind="Check" Text="确认换课" />
+                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="确认换课" />
                     </Button>
                 </StackPanel>
             </StackPanel>
@@ -325,7 +325,7 @@
                                    BasedOn="{StaticResource MaterialDesignOutlineChip}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ClassPlan.IsOverlay}" Value="True">
-                                        <Setter Property="Icon" Value="{materialDesign:PackIcon LayersOutline}" />
+                                        <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.LayersOutline}}" />
                                     </DataTrigger>
                                 </Style.Triggers>
                                 <Setter Property="Foreground"
@@ -337,14 +337,14 @@
                                         Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground), Converter={StaticResource SolidColorBrushOpacityConverter}, ConverterParameter=0.5, Mode=OneWay}" />
                                 <Setter Property="Margin" Value="0 -8 6 -8" />
 
-                                <Setter Property="Icon" Value="{materialDesign:PackIcon FileDocumentOutline}" />
+                                <Setter Property="Icon" Value="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileDocumentOutline}}" />
                             </Style>
                         </materialDesign:Chip.Style>
                         <TextBlock>
                             <Run Text="{Binding ClassPlan.Name}" />
                         </TextBlock>
                     </materialDesign:Chip>
-                    <materialDesign:PackIcon Kind="ArrowRight"
+                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowRight}"
                                              VerticalAlignment="Center"
                                              Margin="4 0" />
                     <TextBlock VerticalAlignment="Center">

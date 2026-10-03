@@ -18,7 +18,7 @@
         <Grid
             DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=components:CountDownComponentSettingsControl}}">
             <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
-                <controls1:SettingsCard IconGlyph="TagOutline" Header="倒计时名称"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.TagOutline}" Header="倒计时名称"
                     Description="会作为设定日期事件名称显示。">
                     <controls1:SettingsCard.Switcher>
                         <TextBox Text="{Binding Settings.CountDownName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -26,7 +26,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
 
-                <controls1:SettingsCard IconGlyph="CalendarOutline" Header="结束日期"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CalendarOutline}" Header="结束日期"
                                         Description="倒计时为 0 天时的日期。">
                     <controls1:SettingsCard.Switcher>
                         <DatePicker SelectedDate="{Binding Settings.OverTime, Mode=TwoWay}"
@@ -34,7 +34,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
 
-                <controls1:SettingsCard IconGlyph="PaintBucket" Header="字体颜色"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaintBucket}" Header="字体颜色"
                                         Description="事件名称和倒计时的字体颜色。">
                     <controls1:SettingsCard.Switcher>
                         <controls1:ColorPicker Color="{Binding Settings.FontColor,Mode=TwoWay}"
@@ -42,7 +42,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 
-                <controls1:SettingsCard IconGlyph="FontSize" Header="字体大小"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FontSize}" Header="字体大小"
                                         Description="事件名称和倒计时的字体大小。">
                     <controls1:SettingsCard.Switcher>
                         <Slider Width="180" Margin="10,8,0,0"
@@ -52,11 +52,11 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 
-                <controls1:SettingsCard IconGlyph="Ruler" Header="紧凑模式"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Ruler}" Header="紧凑模式"
                                         Description="启用后，将隐藏“距离”、“还有”和“仅剩”。"
                                         IsOn="{Binding Settings.IsCompactModeEnabled, Mode=TwoWay}"/>
                 
-                <controls1:SettingsCard IconGlyph="LinkVariant" Header="倒计时连接词"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.LinkVariant}" Header="倒计时连接词"
                                         Description="选择倒计时的连接词。">
                     <controls1:SettingsCard.Switcher>
                         <ComboBox Text="{Binding Settings.CountDownConnector, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -68,7 +68,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
 
-                <controls1:SettingsCard IconGlyph="PaletteOutline" Header="倒计时连接词使用强调颜色"
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteOutline}" Header="倒计时连接词使用强调颜色"
                                         Description="启用后，倒计时连接词颜色与字体颜色一致，否则为默认颜色。"
                                         IsOn="{Binding Settings.IsConnectorColorEmphasized, Mode=TwoWay}" />
             </StackPanel>

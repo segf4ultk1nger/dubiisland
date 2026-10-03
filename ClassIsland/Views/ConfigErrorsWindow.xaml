@@ -16,7 +16,7 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Title="配置文件错误" Height="600" Width="1200"
-        d:DataContext="{d:DesignInstance local:ConfigErrorsWindow}">
+        d:DataContext="{d:DesignInstance local:ConfigErrorsWindow}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -27,7 +27,7 @@
 
         <ToolBar ToolBarTray.IsLocked="True" Grid.Row="0">
             <Button Click="ButtonRestoreBackups_OnClick">
-                <ci:IconText Kind="Restore" Text="恢复备份"></ci:IconText>
+                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restore}" Text="恢复备份"></ci:IconText>
             </Button>
         </ToolBar>
 
@@ -43,23 +43,23 @@
                 <DataGridTemplateColumn Header="" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <materialDesign:PackIcon>
-                                <materialDesign:PackIcon.Style>
-                                    <Style TargetType="materialDesign:PackIcon">
+                            <ciCore:IconText>
+                                <ciCore:IconText.Style>
+                                    <Style TargetType="ciCore:IconText">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Level}" Value="0">
-                                                <Setter Property="Kind" Value="WarningOutline"/>
+                                                <Setter Property="Kind" Value="{x:Static ciCore:IconGlyphs.WarningOutline}"/>
                                                 <Setter Property="Foreground" Value="Yellow"/>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Level}" Value="1">
-                                                <Setter Property="Kind" Value="ErrorOutline"/>
+                                                <Setter Property="Kind" Value="{x:Static ciCore:IconGlyphs.ErrorOutline}"/>
                                                 <Setter Property="Foreground" Value="Red"/>
 
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </materialDesign:PackIcon.Style>
-                            </materialDesign:PackIcon>
+                                </ciCore:IconText.Style>
+                            </ciCore:IconText>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -90,7 +90,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="{materialDesign:PackIcon ContentCopy}"
+                                <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}"
                                         Style="{StaticResource MaterialDesignToolForegroundButton}"
                                         ToolTip="复制详细信息"
                                         CommandParameter="{Binding}"
