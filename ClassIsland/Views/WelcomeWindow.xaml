@@ -49,31 +49,6 @@
 
             </Button>
         </Grid>
-        <!-- 退出确认 -->
-        <StackPanel x:Key="ExitAppConfirmDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource Headline6TextBlock}">
-                <Run Text="退出应用"/>
-            </TextBlock>
-            <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
-                <Run Text="您需要完成设置才能开始使用本应用。关闭此窗口将直接退出应用。"></Run>
-            </TextBlock>
-            <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="退出" HorizontalAlignment="Right" IsDefault="True" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
-                    <Button.CommandParameter>
-                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                            True
-                        </system:Boolean>
-                    </Button.CommandParameter>
-                </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
-                    <Button.CommandParameter>
-                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                            False
-                        </system:Boolean>
-                    </Button.CommandParameter>
-                </Button>
-            </StackPanel>
-        </StackPanel>
         <converters1:IntToRadioButtonSelectionConverter x:Key="IntToRadioButtonSelectionConverter" />
 
     </Window.Resources>

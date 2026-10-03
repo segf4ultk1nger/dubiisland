@@ -65,6 +65,23 @@ public static class DialogService
     public static bool IsOpen(string? identifier) => OpenSessions.ContainsKey(Key(identifier));
 
     /// <summary>
+    /// 在已注册的 <see cref="MetroWindow"/> 上使用 MahApps 的标准消息对话框显示标题、消息和按钮组。
+    /// </summary>
+    public static async Task<MessageDialogResult> ShowMessageAsync(string? identifier, string title, string message,
+        MessageDialogStyle style = MessageDialogStyle.Affirmative, MetroDialogSettings? settings = null)
+    {
+        if (!Windows.TryGetValue(Key(identifier), out var window))
+            throw new InvalidOperationException($"没有找到标识为“{identifier}”的对话框窗口。");
+
+        await EnsureLoadedAsync(window);
+
+        if (!window.Dispatcher.CheckAccess())
+            return await window.Dispatcher.InvokeAsync(() => window.ShowMessageAsync(title, message, style, settings)).Task.Unwrap();
+
+        return await window.ShowMessageAsync(title, message, style, settings);
+    }
+
+    /// <summary>
     /// 关闭指定标识的对话框，并以 <paramref name="result"/> 完成 <see cref="ShowAsync"/>。
     /// </summary>
     public static void Close(string? identifier, object? result)

@@ -28,6 +28,7 @@ using ClassIsland.Core.Services.Registry;
 using ClassIsland.Shared;
 using ClassIsland.ViewModels;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ClassIsland.Services;
@@ -423,6 +424,8 @@ public partial class SettingsWindowNew : MyWindow
         ViewModel.IsDrawerOpen = false;
     }
 
+    private bool _isRestartDialogOpen;
+
     private void ButtonRestartApp_OnClick(object sender, RoutedEventArgs e)
     {
         ShowRestartDialog();
@@ -430,12 +433,28 @@ public partial class SettingsWindowNew : MyWindow
 
     private async void ShowRestartDialog()
     {
-        if (DialogService.IsOpen(SettingsPageBase.DialogHostIdentifier))
+        if (_isRestartDialogOpen)
             return;
-        var r = await DialogService.ShowAsync(FindResource("RestartDialog"), SettingsPageBase.DialogHostIdentifier);
-        if (r as bool? != true)
-            return;
-        AppBase.Current.Restart();
+        _isRestartDialogOpen = true;
+        try
+        {
+            var r = await DialogService.ShowMessageAsync(SettingsPageBase.DialogHostIdentifier,
+                "需要重启", "部分设置需要重启以应用。", MessageDialogStyle.AffirmativeAndNegative,
+                new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "立即重启",
+                    NegativeButtonText = "稍后",
+                    DefaultButtonFocus = MessageDialogResult.Negative
+                });
+            if (r == MessageDialogResult.Affirmative)
+            {
+                AppBase.Current.Restart();
+            }
+        }
+        finally
+        {
+            _isRestartDialogOpen = false;
+        }
     }
 
     private void CommandBindingRestartApp_OnExecuted(object sender, ExecutedRoutedEventArgs e)

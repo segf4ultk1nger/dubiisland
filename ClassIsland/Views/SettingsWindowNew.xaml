@@ -33,31 +33,6 @@
         Closing="SettingsWindowNew_OnClosing"
         dialogs:DialogService.Identifier="{x:Static controls1:SettingsPageBase.DialogHostIdentifier}">
     <controls:MyWindow.Resources>
-        <StackPanel VerticalAlignment="Stretch" Margin="16" MaxWidth="400" x:Key="RestartDialog">
-            <TextBlock Style="{StaticResource Headline6TextBlock}">
-                <Run Text="需要重启"/>
-            </TextBlock>
-            <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
-                <Run Text="部分设置需要重启以应用。"/>
-            </TextBlock>
-            <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="稍后" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
-                    <Button.CommandParameter>
-                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                            False
-                        </system:Boolean>
-                    </Button.CommandParameter>
-                </Button>
-                <Button Content="立即重启" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
-                    <Button.CommandParameter>
-                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                            True
-                        </system:Boolean>
-                    </Button.CommandParameter>
-                </Button>
-            </StackPanel>
-        </StackPanel>
-
         <ScrollViewer Width="332" x:Key="ExperimentalSettings"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="16">

@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
+using MahApps.Metro.Controls.Dialogs;
 
 using ClassIsland.Controls;
 using ClassIsland.Core;
@@ -403,8 +404,12 @@ public partial class ProfileSettingsWindow : MyWindow
             return;
         }
 
-        var r = (bool?)await DialogService.ShowAsync(FindResource("DeleteTimeLayoutConfirm"), ViewModel.DialogHostId.ToString());
-        if (r == true)
+        var timeLayoutName = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value.Name;
+        var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), $"删除{timeLayoutName}",
+            $"确定要删除时间表{timeLayoutName}吗？如果有与此时间表关联的课程表，那么这些课程表在时间表删除后将无法正常工作！",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "删除", NegativeButtonText = "取消" });
+        if (r == MessageDialogResult.Affirmative)
         {
             SentrySdk.Metrics.Increment(eventName, tags: new Dictionary<string, string>
             {
@@ -458,8 +463,11 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonSubject_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = (bool?)await DialogService.ShowAsync(FindResource("DeleteSubjectConfirm"), ViewModel.DialogHostId.ToString());
-        if (r == true)
+        var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), "删除科目",
+            "确定要删除选中的科目吗？如果有包含此科目的课程表，那么这些课程表在科目删除后将无法正常工作！",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "删除", NegativeButtonText = "取消" });
+        if (r == MessageDialogResult.Affirmative)
         {
             SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.subject.remove", tags: new Dictionary<string, string>
             {
@@ -533,8 +541,12 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonDeleteClassPlan_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = (bool?)await DialogService.ShowAsync(FindResource("DeleteClassPlanConfirm"), ViewModel.DialogHostId.ToString());
-        if (r == true)
+        var classPlanName = ((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem).Value.Name;
+        var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), $"删除{classPlanName}",
+            $"确定要删除课表{classPlanName}吗？",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "删除", NegativeButtonText = "取消" });
+        if (r == MessageDialogResult.Affirmative)
         {
             SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.classPlan.remove", tags: new Dictionary<string, string>
             {
@@ -792,10 +804,12 @@ public partial class ProfileSettingsWindow : MyWindow
             ViewModel.StatusMessage = "无法删除已加载或将要加载的档案。";
             return;
         }
-        var r = await DialogService.ShowAsync(FindResource("DeleteProfileDialog"), ViewModel.DialogHostId.ToString());
-        Debug.WriteLine(r);
+        var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), "删除档案",
+            "你确定要删除这个档案吗？一旦删除，这个操作将无法撤销，该档案的所有数据都将丢失！",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "删除", NegativeButtonText = "取消" });
 
-        if ((bool?)r == true)
+        if (r == MessageDialogResult.Affirmative)
         {
             SentrySdk.Metrics.Increment("views.ProfileSettingsWindow.profile.remove", tags: new Dictionary<string, string>
             {
@@ -1154,8 +1168,11 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonUnTrustedProfile_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await DialogService.ShowAsync(FindResource("ProfileTrustWarning"), ViewModel.DialogHostId.ToString());
-        if (r as bool? != true)
+        var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), "不信任的档案",
+            "当前档案不受信任，部分功能（如行动时间点等）将禁用。如果您信任此档案并希望启用这些受限的功能，请将此档案设置为信任。",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "信任此档案", NegativeButtonText = "取消" });
+        if (r != MessageDialogResult.Affirmative)
         {
             return;
         }

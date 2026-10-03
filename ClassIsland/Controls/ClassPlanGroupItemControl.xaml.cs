@@ -10,6 +10,7 @@ using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Models.Profile;
 using ClassIsland.Core.Services;
+using MahApps.Metro.Controls.Dialogs;
 using ClassIsland.Views;
 
 namespace ClassIsland.Controls;
@@ -125,8 +126,11 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
 
     private async void MenuItemDisband_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await DialogService.ShowAsync(FindResource("DisbandConfirmDialog"), _parentDialogId);
-        if (r as bool? != true)
+        var r = await DialogService.ShowMessageAsync(_parentDialogId, "解散课表群",
+            "你确定要解散这个课表群吗？解散后，课表群内的课表将被移动到默认课表群中。",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "解散", NegativeButtonText = "取消" });
+        if (r != MessageDialogResult.Affirmative)
         {
             return;
         }
@@ -136,8 +140,12 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
 
     private async void MenuItemDelete_OnClick(object sender, RoutedEventArgs e)
     {
-        var r = await DialogService.ShowAsync(FindResource("DeleteConfirmDialog"), _parentDialogId);
-        if (r as bool? != true)
+        var r = await DialogService.ShowMessageAsync(_parentDialogId, "删除课表群",
+            "你确定要删除这个课表群吗？删除后，此课表群内的课表也将全部删除。这个操作无法撤销！\n" +
+            "如果您只是想移除课表群而保留课表，请解散课表群。",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "删除", NegativeButtonText = "取消" });
+        if (r != MessageDialogResult.Affirmative)
         {
             return;
         }

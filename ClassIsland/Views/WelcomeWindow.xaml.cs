@@ -11,6 +11,7 @@ using ClassIsland.Core.Controls;
 using ClassIsland.Helpers;
 using ClassIsland.Services;
 using ClassIsland.Core.Services;
+using MahApps.Metro.Controls.Dialogs;
 using ClassIsland.ViewModels;
 
 using Microsoft.Extensions.Logging;
@@ -106,8 +107,11 @@ public partial class WelcomeWindow : MyWindow
         {
             return;
         }
-        var r = await DialogService.ShowAsync(FindResource("ExitAppConfirmDialog"), ViewModel.DialogId.ToString());
-        if ((bool?)r == true)
+        var r = await DialogService.ShowMessageAsync(ViewModel.DialogId.ToString(),
+            "退出应用", "您需要完成设置才能开始使用本应用。关闭此窗口将直接退出应用。",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "退出", NegativeButtonText = "取消" });
+        if (r == MessageDialogResult.Affirmative)
         {
             ViewModel.IsExitConfirmed = true;
             Close();

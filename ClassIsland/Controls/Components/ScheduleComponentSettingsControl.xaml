@@ -13,30 +13,6 @@
                   mc:Ignorable="d"
                   d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ci:ComponentBase.Resources>
-        <StackPanel x:Key="MigrateConfirm" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
-            <TextBlock Style="{StaticResource Headline6TextBlock}">
-                <Run Text="导入旧版设置"/>
-            </TextBlock>
-            <TextBlock Margin="0 6 0 0" TextWrapping="Wrap">
-                <Run Text="此操作将从 1.4 及以前的课表设置导入课表组件设置，并覆盖当前课表组件的设置。"/>
-            </TextBlock>
-            <StackPanel Orientation="Horizontal" Margin="0 8 0 0" HorizontalAlignment="Right">
-                <Button Content="继续" IsDefault="True" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" >
-                    <Button.CommandParameter>
-                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                            True
-                        </system:Boolean>
-                    </Button.CommandParameter>
-                </Button>
-                <Button Content="取消" HorizontalAlignment="Right" Style="{DynamicResource MahApps.Styles.Button.Flat}" Command="{x:Static dialogs:DialogService.CloseDialogCommand}" Margin="6 0 0 0">
-                    <Button.CommandParameter>
-                        <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">
-                            False
-                        </system:Boolean>
-                    </Button.CommandParameter>
-                </Button>
-            </StackPanel>
-        </StackPanel>
     </ci:ComponentBase.Resources>
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ScheduleComponentSettingsControl}}">
         <ScrollViewer>

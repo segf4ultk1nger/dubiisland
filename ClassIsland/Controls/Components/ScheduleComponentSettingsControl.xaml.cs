@@ -7,6 +7,7 @@ using ClassIsland.Core.Controls;
 using ClassIsland.Core.Services;
 using ClassIsland.Services;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace ClassIsland.Controls.Components;
 
@@ -26,8 +27,11 @@ public partial class ScheduleComponentSettingsControl
     private async void ButtonImportLegacySettings_OnClick(object sender, RoutedEventArgs e)
     {
         DialogService.TryGetIdentifier(Window.GetWindow(this) as MetroWindow, out var dialogIdentifier);
-        var r = await DialogService.ShowAsync(FindResource("MigrateConfirm"), dialogIdentifier) as bool? ?? false;
-        if (!r)
+        var r = await DialogService.ShowMessageAsync(dialogIdentifier, "导入旧版设置",
+            "此操作将从 1.4 及以前的课表设置导入课表组件设置，并覆盖当前课表组件的设置。",
+            MessageDialogStyle.AffirmativeAndNegative,
+            new MetroDialogSettings { AffirmativeButtonText = "继续", NegativeButtonText = "取消" });
+        if (r != MessageDialogResult.Affirmative)
         {
             return;
         }

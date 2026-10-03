@@ -9,6 +9,7 @@ using ClassIsland.Shared.Models.Profile;
 using ClassIsland.Services;
 using ClassIsland.Core.Services;
 using ClassIsland.ViewModels;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace ClassIsland.Views;
 
@@ -75,8 +76,11 @@ public partial class ClassChangingWindow : MyWindow
         var key = l[0].Key;
         if (!ViewModel.WriteToSourceClassPlan && !ClassPlan.IsOverlay && ProfileService.Profile.OverlayClassPlanId != null)
         {
-            var r = (bool?)await DialogService.ShowAsync(FindResource("OverwriteConfirm"), ViewModel.DialogIdentifier.ToString());
-            if (r != true)
+            var r = await DialogService.ShowMessageAsync(ViewModel.DialogIdentifier.ToString(),
+                "覆盖当前的临时层", "当前已经存在一个临时层课表，如果继续换课，那么该临时层将被覆盖。是否继续？",
+                MessageDialogStyle.AffirmativeAndNegative,
+                new MetroDialogSettings { AffirmativeButtonText = "继续", NegativeButtonText = "取消" });
+            if (r != MessageDialogResult.Affirmative)
             {
                 return;
             }
