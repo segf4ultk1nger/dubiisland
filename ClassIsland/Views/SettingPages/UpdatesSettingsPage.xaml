@@ -601,7 +601,7 @@
                         <!-- 更新模式 -->
                         <Border Style="{StaticResource UpdateEnabledStyle}">
                             <StackPanel Margin="12">
-                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Upload}" Text="更新模式" Margin="0 0 0 8" />
+                                <TextBlock Text="更新模式" Style="{StaticResource SettingsSectionHeaderStyle}" />
                                 <Slider Margin="12" Minimum="0" Maximum="3"
                                         Value="{Binding SettingsService.Settings.UpdateMode}"
                                         TickFrequency="1"

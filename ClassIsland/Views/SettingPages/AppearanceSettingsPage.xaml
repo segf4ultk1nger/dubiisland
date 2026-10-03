@@ -25,7 +25,7 @@
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="基本" Margin="0 0 0 8" />
+            <TextBlock Text="基本" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 界面缩放 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ZoomInOutline}" Header="界面缩放"
                                                            Description="主界面的缩放大小。">
@@ -97,7 +97,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.PaletteOutline}" Text="主题" Margin="0 0 0 8" />
+            <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ThemeLightDark}" Header="应用主题"
                                                            Description="控制应用的明暗主题。">
@@ -171,7 +171,7 @@
                     </Style>
                 </StackPanel.Style>
                 <Separator Margin="0 16 0 8" />
-                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Wallpaper}" Text="壁纸主题色" Margin="0 0 0 8" />
+                <TextBlock Text="壁纸主题色" Style="{StaticResource SettingsSectionHeaderStyle}" />
                 <!-- 壁纸主题色 -->
                 <Border>
                     <Grid>
@@ -318,7 +318,7 @@
                     </Style>
                 </StackPanel.Style>
                 <Separator Margin="0 16 0 8" />
-                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.PanoramaVariantOutline}" Text="屏幕主题色" Margin="0 0 0 8" />
+                <TextBlock Text="屏幕主题色" Style="{StaticResource SettingsSectionHeaderStyle}" />
                 <Border>
                     <Grid>
                         <ProgressBar Visibility="{Binding WallpaperPickingService.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" IsIndeterminate="True" VerticalAlignment="Top"/>
@@ -382,7 +382,7 @@
                 </controls1:SettingsCard>
             </StackPanel>
             <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FormatFont}" Text="字体" Margin="0 0 0 8" />
+            <TextBlock Text="字体" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 自定义字体 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatFont}" Header="自定义字体"
                                                            Description="自定义主界面显示课表的字体。">

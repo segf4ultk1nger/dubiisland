@@ -39,7 +39,7 @@
                     </DockPanel>
                 </Grid>
             </Border>
-            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.FileDocumentOutline}" Text="档案" Margin="0 0 0 8" />
+            <TextBlock Text="档案" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 禁止编辑档案 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.FileDocumentEditOutline}"
                              Header="禁止编辑档案"
@@ -66,7 +66,7 @@
                              Margin="0 0 0 6" />
 
             <Separator Margin="0 16 0 8" />
-            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.CogOutline}" Text="应用设置" Margin="0 0 0 8" />
+            <TextBlock Text="应用设置" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
             <!-- 禁止编辑应用设置 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
@@ -88,7 +88,7 @@
                              Margin="0 0 0 6" />
 
             <Separator Margin="0 16 0 8" />
-            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.EllipsisHorizontalCircleOutline}" Text="杂项" Margin="0 0 0 8" />
+            <TextBlock Text="杂项" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
             <!-- 允许退出集控 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.WorkOutline}"

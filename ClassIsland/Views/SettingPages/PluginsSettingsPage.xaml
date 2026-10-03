@@ -328,7 +328,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <Separator Margin="0 16 0 8"/>
-                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.SourceRepositoryMultiple}" Text="自定义插件源" Margin="0 0 0 8"/>
+                <TextBlock Text="自定义插件源" Style="{StaticResource SettingsSectionHeaderStyle}" />
                 <WrapPanel Margin="0 0 0 0">
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" Click="ButtonAddPluginSource_OnClick">
                         <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Add}" Text="添加"/>

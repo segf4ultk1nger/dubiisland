@@ -386,7 +386,7 @@
                                         </controls2:SettingsCard>
 
                                         <Separator Margin="0 16 0 8" />
-                                        <controls2:IconText Kind="{x:Static controls2:IconGlyphs.FormatFont}" Text="字体" Margin="0 0 0 8" />
+                                        <TextBlock Text="字体" Style="{StaticResource SettingsSectionHeaderStyle}" />
                                         <!-- 字体大小 -->
                                         <Border Margin="0 0 0 6">
                                             <Expander Background="Transparent"
@@ -462,7 +462,7 @@
                                         </controls2:SettingsCard>
 
                                         <Separator Margin="0 16 0 8" />
-                                        <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Grid}" Text="布局" Margin="0 0 0 8" />
+                                        <TextBlock Text="布局" Style="{StaticResource SettingsSectionHeaderStyle}" />
                                         <!-- 对齐方式 -->
                                         <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.AlignHorizontalCenter}"
                                                                Header="对齐方式"

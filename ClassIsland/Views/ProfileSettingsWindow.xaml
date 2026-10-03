@@ -88,7 +88,7 @@
                          mah:TextBoxHelper.Watermark="名称"/>
                 <!-- 附加属性 -->
                 <Separator Margin="0 16 0 8"/>
-                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="更多选项" Margin="0 0 0 8"/>
+                <TextBlock Text="更多选项" Style="{StaticResource SettingsSectionHeaderStyle}" />
                 <ItemsControl ItemsSource="{x:Static services:IAttachedSettingsHostService.TimeLayoutSettingsAttachedSettingsControls}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -281,7 +281,7 @@
                 </StackPanel>
                 <!-- 附加属性 -->
                 <Separator Margin="0 16 0 8"/>
-                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="更多选项" Margin="0 0 0 8"/>
+                <TextBlock Text="更多选项" Style="{StaticResource SettingsSectionHeaderStyle}" />
                 <ItemsControl ItemsSource="{x:Static services:IAttachedSettingsHostService.ClassPlanSettingsAttachedSettingsControls}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -332,7 +332,7 @@
                             </Style>
                         </StackPanel.Style>
                         <Separator Margin="0 16 0 4"/>
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LayersOutline}" Text="临时层" Margin="0 0 0 8"/>
+                        <TextBlock Text="临时层" Style="{StaticResource SettingsSectionHeaderStyle}" />
                         <TextBlock Text="临时层课表将优先于临时课表应用。临时层课表将在该课表过期后自动清除。"
                                    TextWrapping="Wrap"
                                    Margin="0 0 0 4"/>
@@ -349,7 +349,7 @@
                     </StackPanel>
 
                     <Separator Margin="0 16 0 4"/>
-                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileChartOutline}" Text="临时课表" Margin="0 0 0 8"/>
+                    <TextBlock Text="临时课表" Style="{StaticResource SettingsSectionHeaderStyle}" />
                     <TextBlock Text="若当天授课计划有变，可临时选择某一课表作为当天的课表。该设置仅在当天有效。" TextWrapping="Wrap"/>
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" 
                             HorizontalAlignment="Left"
@@ -405,7 +405,7 @@
                 </ListBox>
                 <StackPanel Grid.Row="2">
                     <Separator Margin="0 16 0 4" />
-                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CalendarOutline}" Text="多周轮换偏移" Margin="0 0 0 8" />
+                    <TextBlock Text="多周轮换偏移" Style="{StaticResource SettingsSectionHeaderStyle}" />
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             HorizontalAlignment="Left"
                             Click="ButtonOpenWeekOffsetSettings_OnClick">
@@ -1768,7 +1768,7 @@
                                                         </Style.Triggers>
                                                     </Style>
                                                 </StackPanel.Style>
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="更多选项" Margin="0 0 0 8" />
+                                                <TextBlock Text="更多选项" Style="{StaticResource SettingsSectionHeaderStyle}" />
                                                 <ItemsControl
                                                     ItemsSource="{x:Static services:IAttachedSettingsHostService.TimePointSettingsAttachedSettingsControls}">
                                                     <ItemsControl.ItemTemplate>
@@ -1795,7 +1795,7 @@
                                                         </Style.Triggers>
                                                     </Style>
                                                 </StackPanel.Style>
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Airplane}" Text="行动" Margin="0 0 0 8" />
+                                                <TextBlock Text="行动" Style="{StaticResource SettingsSectionHeaderStyle}" />
                                                 <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
                                                         Click="ButtonDebugTriggerAction_OnClick"
                                                         IsEnabled="{Binding ProfileService.IsCurrentProfileTrusted, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
@@ -2020,7 +2020,7 @@
                                                       Content="该科目是户外课程"/>
                                             <!-- 附加属性 -->
                                             <Separator Margin="0 20 0 8"/>
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="更多选项" Margin="0 0 0 8"/>
+                                            <TextBlock Text="更多选项" Style="{StaticResource SettingsSectionHeaderStyle}" />
                                             <ItemsControl ItemsSource="{x:Static services:IAttachedSettingsHostService.SubjectSettingsAttachedSettingsControls}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>

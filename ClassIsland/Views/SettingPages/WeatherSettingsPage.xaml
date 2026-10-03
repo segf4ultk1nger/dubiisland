@@ -92,7 +92,7 @@
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WeatherSunny}" Text="天气预览" Margin="0 0 0 8" />
+            <TextBlock Text="天气预览" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <StackPanel Orientation="Horizontal">
                 <controls2:WeatherPackIconControl Width="32" Height="32"
                                                   Code="{Binding SettingsService.Settings.LastWeatherInfo.Current.Weather}"
@@ -137,7 +137,7 @@
             </ItemsControl>
 
             <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="设置" Margin="0 0 0 8" />
+            <TextBlock Text="设置" Style="{StaticResource SettingsSectionHeaderStyle}" />
             
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
