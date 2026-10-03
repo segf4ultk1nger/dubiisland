@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
@@ -12,7 +12,6 @@ using ClassIsland.Services;
 using ClassIsland.Services.AppUpdating;
 using ClassIsland.Shared.Enums;
 using ClassIsland.ViewModels.SettingsPages;
-using Sentry;
 using Path = System.IO.Path;
 
 using ClassIsland.Core.Controls;
@@ -160,7 +159,6 @@ public partial class UpdatesSettingsPage : SettingsPageBase
             return;
         }
 
-        SentrySdk.Metrics.Increment("views.update.changelog.open");
         ViewModel.ChangeLogs = MarkdownConvertHelper.ConvertMarkdown(await new StreamReader(stream).ReadToEndAsync());
         OpenDrawer("ChangeLogsDrawer");
     }

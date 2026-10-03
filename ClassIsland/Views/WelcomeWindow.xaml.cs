@@ -44,14 +44,6 @@ public partial class WelcomeWindow : MyWindow
             .Stream);
         ViewModel.License = reader.ReadToEnd();
         ViewModel.Settings = SettingsService.Settings;
-        SettingsService.Settings.PropertyChanged += (sender, args) =>
-        {
-            if (args.PropertyName == nameof(SettingsService.Settings.IsSentryEnabled))
-            {
-                ViewModel.RequiresRestarting = true;
-                ViewModel.StatusMessage = "应用将在向导完成后自动重启，以应用部分更改。";
-            }
-        };
     }
 
     protected override async void OnContentRendered(EventArgs e)

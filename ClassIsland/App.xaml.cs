@@ -47,7 +47,6 @@ using JetBrains.Profiler.Api;
 #endif
 using ClassIsland.Core;
 using ClassIsland.Core.Models.Ruleset;
-using Sentry;
 using ClassIsland.Core.Controls.Ruleset;
 using ClassIsland.Models.Rules;
 using ClassIsland.Models.Actions;
@@ -125,8 +124,6 @@ public partial class App : AppBase, IAppHost
 #endif
 
     public static T GetService<T>() => IAppHost.GetService<T>();
-
-    public bool IsSentryEnabled { get; set; } = false;
 
     private bool _isStartedCompleted = false;
 
@@ -279,19 +276,10 @@ public partial class App : AppBase, IAppHost
         //Settings.DiagnosticCrashCount++;
         //Settings.DiagnosticLastCrashTime = DateTime.Now;
 
-        if (!critical)  // 全局未捕获的异常应该由 SentrySdk 自行捕获。
-        {
-            SentrySdk.CaptureException(e, scope =>
-            {
-                scope.Level = SentryLevel.Fatal;
-            });
-        }
-
         var plugins = DiagnosticService.GetPluginsByStacktrace(e);
         var disabled = DiagnosticService.DisableCorruptPlugins(plugins);
         if (!safe)
         {
-            var traceId = SentrySdk.GetTraceHeader()?.TraceId;
             var crashInfo = e.ToString();
             if (plugins.Count > 0)
             {
@@ -302,16 +290,6 @@ public partial class App : AppBase, IAppHost
                                          : "")
                     + "\n================================\n";
                 crashInfo = pluginsWarning + crashInfo;
-            }
-            if (traceId != null)
-            {
-                var traceInfo = $"""
-                                 在向开发者提交问题时请保留以下信息：
-                                 TraceID: {traceId}
-                                 ================================
-                                 
-                                 """;
-                crashInfo = traceInfo + crashInfo;
             }
             CrashWindow = new CrashWindow()
             {
@@ -350,12 +328,6 @@ public partial class App : AppBase, IAppHost
 
     private async void App_OnStartup(object sender, StartupEventArgs e)
     {
-        var transaction = SentrySdk.StartTransaction(
-            "startup",
-            "startup"
-        );
-        SentrySdk.ConfigureScope(s => s.Transaction = transaction);
-        var spanPreInit = transaction.StartChild("startup-init");
         AppBase.CurrentLifetime = ApplicationLifetime.Initializing;
         MyWindow.ShowOssWatermark = ApplicationCommand.ShowOssWatermark;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -385,8 +357,6 @@ public partial class App : AppBase, IAppHost
         {
             if (!ApplicationCommand.WaitMutex)
             {
-                spanPreInit.Finish();
-                transaction.Finish();
                 ProcessInstanceExisted();
                 Environment.Exit(0);
             }
@@ -460,15 +430,12 @@ public partial class App : AppBase, IAppHost
             
             var recoveryWindow = new RecoveryWindow();
             recoveryWindow.Show();
-            transaction.Finish();
             return;
         }
 
         
         await FrameworkCompat.WriteAllTextAsync(startupCountFilePath, startupCount.ToString());
         AppDomain.CurrentDomain.ProcessExit += CurrentDomainOnProcessExit;
-
-        var spanProcessUpdate = spanPreInit.StartChild("startup-process-update");
 
         if (ApplicationCommand.UpdateReplaceTarget != null)
         {
@@ -487,12 +454,10 @@ public partial class App : AppBase, IAppHost
             //MessageBox.Show($"Update DELETE {ApplicationCommand.UpdateDeleteTarget}");
             UpdateService.RemoveUpdateTemporary(ApplicationCommand.UpdateDeleteTarget);
         }
-        spanProcessUpdate.Finish();
 
         FileFolderService.CreateFolders();
         PluginService.ProcessPluginsInstall();
         bool isSystemSpeechSystemExist = false;
-        var spanHostBuilding = spanPreInit.StartChild("startup-host-building");
 
         IAppHost.Host = Microsoft.Extensions.Hosting.Host.
             CreateDefaultBuilder().
@@ -564,7 +529,6 @@ public partial class App : AppBase, IAppHost
                 services.AddSettingsPage<UpdatesSettingsPage>();
                 services.AddSettingsPage<AutomationSettingsPage>();
                 services.AddSettingsPage<StorageSettingsPage>();
-                services.AddSettingsPage<PrivacySettingsPage>();
                 services.AddSettingsPage<PluginsSettingsPage>();
                 services.AddSettingsPage<ThemesSettingsPage>();
                 services.AddSettingsPage<TestSettingsPage>();
@@ -605,11 +569,6 @@ public partial class App : AppBase, IAppHost
                     {
                         console.FormatterName = "classisland";
                     });
-                    builder.AddSentry(o =>
-                    {
-                        o.InitializeSdk = false;
-                        o.MinimumBreadcrumbLevel = LogLevel.Information;
-                    });
                     var debug = false;
 #if DEBUG
                     debug = true;
@@ -619,7 +578,6 @@ public partial class App : AppBase, IAppHost
                         builder.SetMinimumLevel(LogLevel.Trace);
                     }
                 });
-                services.AddSingleton<ILoggerProvider, SentryLoggerProvider>();
                 services.AddSingleton<ILoggerProvider, AppLoggerProvider>();
                 services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
                 // AttachedSettings
@@ -720,15 +678,9 @@ public partial class App : AppBase, IAppHost
 #if DEBUG
         MemoryProfiler.GetSnapshot("Host built");
 #endif
-        spanHostBuilding.Finish();
-        spanPreInit.Finish();
-        var spanLaunching = transaction.StartChild("startup-launching");
         CommandManager.RegisterClassCommandBinding(typeof(Window), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
         CommandManager.RegisterClassCommandBinding(typeof(Page), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
-        var spanSetupMgmt = spanLaunching.StartChild("startup-setup-mgmt");
         await GetService<IManagementService>().SetupManagement();
-        spanSetupMgmt.Finish();
-        var spanLoadingSettings = spanLaunching.StartChild("startup-loading-settings");
         await GetService<SettingsService>().LoadSettingsAsync();
         Settings = GetService<SettingsService>().Settings;
         Settings.IsSystemSpeechSystemExist = isSystemSpeechSystemExist;
@@ -740,7 +692,6 @@ public partial class App : AppBase, IAppHost
             Settings.DiagnosticMemoryKillCount++;
             Settings.DiagnosticLastMemoryKillTime = DateTime.Now;
         }
-        spanLoadingSettings.Finish();
         //OverrideFocusVisualStyle();
         var threadedUiDispatcherAwaiter =
             AsyncBox.RelatedAsyncDispatchers.GetOrAdd(Dispatcher, dispatcher => UIDispatcher.RunNewAsync("AsyncBox"));
@@ -757,41 +708,31 @@ public partial class App : AppBase, IAppHost
         IThemeService.IsWaitForTransientDisabled = Settings.IsWaitForTransientDisabled;
         if (Settings.IsSplashEnabled && !ApplicationCommand.Quiet)
         {
-            var spanShowSplash = spanLaunching.StartChild("startup-show-splash");
-
             ThemeService.FreezeApplicationResources();
             ThreadedUiDispatcher.Invoke(() =>
             {
                 GetService<SplashWindowBase>().Show();
             });
-            spanShowSplash.Finish();
         }
         GetService<ISplashService>().CurrentProgress = 30;
         GetService<ISplashService>().SetDetailedStatus("正在启动挂起检查服务");
 
-        var spanStartHangService = spanLaunching.StartChild("startup-start-hang-service");
         GetService<IHangService>();
-        spanStartHangService.Finish();
 
         GetService<ISplashService>().SetDetailedStatus("正在创建任务栏图标");
-        var spanCreateTaskbarIcon = spanLaunching.StartChild("startup-create-taskbar-icon");
         try
         {
             GetService<ITaskBarIconService>().MainTaskBarIcon.ForceCreate(false);
-            spanCreateTaskbarIcon.Finish();
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "创建任务栏图标失败。");
-            spanCreateTaskbarIcon.Finish(ex);
         }
 
         if (!ApplicationCommand.Quiet)  // 在静默启动时不进行更新相关操作
         {
             GetService<ISplashService>().SetDetailedStatus("正在进行更新服务启动操作");
-            var spanCheckUpdate = spanLaunching.StartChild("startup-process-update");
             var r = await GetService<UpdateService>().AppStartup();
-            spanCheckUpdate.Finish();
             if (r)
             {
                 GetService<ISplashService>().EndSplash();
@@ -809,7 +750,6 @@ public partial class App : AppBase, IAppHost
         _ = IAppHost.Host.StartAsync();
         IAppHost.GetService<IPluginMarketService>().LoadPluginSource();
 
-        var spanLoadMainWindow = spanLaunching.StartChild("span-loading-mainWindow");
         Logger.LogInformation("正在初始化MainWindow。");
         GetService<ISplashService>().SetDetailedStatus("正在启动主界面所需的服务");
         GetService<ISplashService>().CurrentProgress = 55;
@@ -824,20 +764,8 @@ public partial class App : AppBase, IAppHost
             GetService<ISplashService>().SetDetailedStatus("正在进行启动后操作");
             // 由于在应用启动时调用 WMI 会导致无法使用触摸，故在应用启动完成后再获取设备统计信息。
             // https://github.com/dotnet/wpf/issues/9752
-            if (IsSentryEnabled)
-            {
-                DiagnosticService.GetDeviceInfo(out var name, out var vendor);
-                SentrySdk.ConfigureScope(s =>
-                {
-                    s.SetTag("deviceDesktop.name", name);
-                    s.SetTag("deviceDesktop.vendor", vendor);
-                });
-            }
             AppStarted?.Invoke(this, EventArgs.Empty);
             StartUriPipeServer();
-            spanLoadMainWindow.Finish();
-            transaction.Finish();
-            SentrySdk.ConfigureScope(s => s.Transaction = null);
             GetService<IAutomationService>();
             GetService<IRulesetService>().NotifyStatusChanged();
             File.Delete(startupCountFilePath);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -16,7 +16,6 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
-using Sentry;
 
 namespace ClassIsland.Services;
 
@@ -187,24 +186,18 @@ public class ComponentsService : ObservableRecipient, IComponentsService
 
     public ComponentBase? GetComponent(ComponentSettings settings, bool isSettings)
     {
-        var transaction = SentrySdk.StartTransaction("Get Component Instance", "component.getInstance");
         var sb = Stopwatch.StartNew();
-        transaction.SetTag("component", settings.AssociatedComponentInfo.Name);
-        transaction.SetTag("component.isSettings", isSettings.ToString());
-        transaction.SetTag("component.Id", settings.AssociatedComponentInfo.Guid.ToString());
         try
         {
             var type = isSettings ? settings.AssociatedComponentInfo.SettingsType : settings.AssociatedComponentInfo.ComponentType;
             if (type == null)
             {
-                transaction.Finish(SpanStatus.NotFound);
                 return null;
             }
 
             var c = IAppHost.Host?.Services.GetService(type);
             if (c is not ComponentBase component)
             {
-                transaction.Finish(SpanStatus.NotFound);
                 return null;
             }
 
@@ -228,7 +221,6 @@ public class ComponentsService : ObservableRecipient, IComponentsService
 
                 component.SettingsInternal = componentSettings;
             }
-            transaction.Finish(SpanStatus.Ok);
             sb.Stop();
             if (sb.Elapsed >= TimeSpan.FromMilliseconds(500))
             {
@@ -238,7 +230,6 @@ public class ComponentsService : ObservableRecipient, IComponentsService
         }
         catch (Exception ex)
         {
-            transaction.Finish(ex, SpanStatus.InternalError);
             throw;
         }
     }

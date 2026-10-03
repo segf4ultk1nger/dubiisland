@@ -73,8 +73,6 @@
         <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.6" />
         <PackageReference Include="Pastel" Version="4.2.0" />
         <PackageReference Include="RawInput.Sharp" Version="0.1.3" />
-        <PackageReference Include="Sentry" Version="4.9.0" />
-        <PackageReference Include="Sentry.Extensions.Logging" Version="4.9.0" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
         <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
         <PackageReference Include="System.Management" Version="8.0.0" />
@@ -97,7 +95,6 @@
         <Folder Include="Assets\Localization\SettingsPage\Update\" />
         <Folder Include="Assets\Localization\SettingsPage\Automation\" />
         <Folder Include="Assets\Localization\SettingsPage\Storage\" />
-        <Folder Include="Assets\Localization\SettingsPage\Privacy\" />
         <Folder Include="Assets\Localization\SettingsPage\About\" />
         <Folder Include="Models\Logging\" />
         <Folder Include="Models\Native\" />

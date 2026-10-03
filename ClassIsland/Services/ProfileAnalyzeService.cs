@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,6 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
-using Sentry;
 
 namespace ClassIsland.Services;
 
@@ -26,7 +25,6 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
     public void Analyze()
     {
         Nodes.Clear();
-        using var timer = SentrySdk.Metrics.StartTimer("profileAnalyze.analyzeAll");
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         var profile = ProfileService.Profile;

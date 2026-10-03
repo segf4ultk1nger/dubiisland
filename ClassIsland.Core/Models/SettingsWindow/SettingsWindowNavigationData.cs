@@ -7,14 +7,12 @@ namespace ClassIsland.Core.Models.SettingsWindow;
 /// </summary>
 public class SettingsWindowNavigationData
 {
-    internal SettingsWindowNavigationData(bool isNavigateFromSettingsWindow, bool isNavigateFromUri, Uri? navigateUri, bool keepHistory, object? transaction, object? span)
+    internal SettingsWindowNavigationData(bool isNavigateFromSettingsWindow, bool isNavigateFromUri, Uri? navigateUri, bool keepHistory)
     {
         IsNavigateFromSettingsWindow = isNavigateFromSettingsWindow;
         IsNavigateFromUri = isNavigateFromUri;
         NavigateUri = navigateUri;
         KeepHistory = keepHistory;
-        Transaction = transaction;
-        Span = span;
     }
 
     /// <summary>
@@ -42,7 +40,4 @@ public class SettingsWindowNavigationData
     /// 导航时是否需要保留历史记录
     /// </summary>
     public bool KeepHistory { get; }
-
-    public object? Transaction { get; }
-    public object? Span { get; }
 }

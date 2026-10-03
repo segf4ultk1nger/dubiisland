@@ -16,7 +16,6 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
-using Sentry;
 
 namespace ClassIsland.Services;
 
@@ -96,7 +95,6 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
         Exception = null;
         PluginSourceDownloadProgress = 0.0;
         Logger.LogInformation("正在刷新插件源……");
-        var transaction = SentrySdk.StartTransaction("Update Plugin Index", "pluginIndex.update");
         try
         {
             if (SettingsService.Settings.OfficialIndexMirrors.Count <= 0)
@@ -142,11 +140,9 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
                 i++;
             }
             LoadPluginSource();
-            transaction.Finish(SpanStatus.Ok);
         }
         catch (Exception ex)
         {
-            transaction.Finish(ex, SpanStatus.InternalError);
             Logger.LogError(ex, "无法加载插件源。");
             Exception = ex;
         }
@@ -181,26 +177,20 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
     public async void RequestDownloadPlugin(string id)
     {
         var item = ResolveMarketPlugin(id);
-        var transaction = SentrySdk.StartTransaction("Download Plugin", "plugin.download");
-        transaction.SetTag("plugin.id", id);
 
         if (item == null)
         {
             Logger.LogWarning("找不到符合id的插件：{}", id);
-            transaction.Finish(SpanStatus.NotFound);
             return;
         }
-        transaction.SetTag("plugin", item.Manifest.Name);
 
         if (DownloadTasks.ContainsKey(id))
         {
             Logger.LogWarning("{}已正在下载。", id);
-            transaction.Finish(SpanStatus.AlreadyExists);
             return;
         }
 
         Logger.LogInformation("开始下载插件：{}", id);
-        var spanDownload = transaction.StartChild("download");
         var url = item.DownloadUrl;
         var md5 = item.DownloadMd5;
         var task = new DownloadProgress()
@@ -209,10 +199,8 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
         };
         DownloadTasks[id] = task;
         var archive = Path.GetTempFileName() + ".tmp";
-        transaction.SetTag("url", url);
         if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
         {
-            transaction.SetTag("url.host", uri.Host);
         }
 
         var stopwatch = new Stopwatch();
@@ -237,23 +225,16 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
             }
             catch (Exception ex)
             {
-                spanDownload.Finish(ex, SpanStatus.InternalError);
                 throw new Exception($"无法下载插件 {id}：{ex.Message}", ex);
             }
 
             stopwatch.Stop();
-            transaction.SetExtra("download.size", totalFileSize);
             var speed = stopwatch.Elapsed.TotalSeconds == 0
                 ? 0.0
                 : totalFileSize / stopwatch.Elapsed.TotalSeconds;
-            transaction.SetExtra("download.bytesPerSecond", speed);
-            spanDownload.Finish(SpanStatus.Ok);
 
-            var spanValidateChecksum = transaction.StartChild("validate");
             ChecksumHelper.VerifyChecksum(archive, md5);
-            spanValidateChecksum.Finish(SpanStatus.Ok);
 
-            var spanMoveToCache = transaction.StartChild("moveToCache");
             var destination = Path.Combine(Services.PluginService.PluginsPkgRootPath, id + ".cipx");
             if (File.Exists(destination))
             {
@@ -261,7 +242,6 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
             }
 
             File.Move(archive, destination);
-            spanMoveToCache.Finish(SpanStatus.Ok);
             item.RestartRequired = true;
             if (MergedPlugins.TryGetValue(id, out var plugin))
             {
@@ -269,13 +249,10 @@ private ObservableDictionary<string, PluginInfo> _mergedPlugins = new();
             }
             RestartRequested?.Invoke(this, EventArgs.Empty);
             Logger.LogInformation("插件 {} 下载完成。", id);
-            transaction.Finish(SpanStatus.Ok);
         }
         catch (Exception e)
         {
             task.Exception = e;
-            transaction.GetLastActiveSpan()?.Finish(e, SpanStatus.InternalError);
-            transaction.Finish(e, SpanStatus.InternalError);
             Logger.LogError(e, "无法从 {} 下载插件 {}", url, id);
         }
         task.IsDownloading = false;

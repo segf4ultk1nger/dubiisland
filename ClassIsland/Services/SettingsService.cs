@@ -196,7 +196,6 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
 
         if (Settings.LastAppVersion < Version.Parse("1.4.3.0"))
         {
-            Settings.IsSentryEnabled = Settings.IsReportingEnabled;
             requiresRestarting = true;
             Logger.LogInformation("成功迁移了 1.4.3.0 以前的设置。");
         }

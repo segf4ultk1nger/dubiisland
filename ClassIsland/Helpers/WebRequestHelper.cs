@@ -7,14 +7,13 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 
 using Microsoft.Extensions.Logging;
-using Sentry;
 
 namespace ClassIsland.Helpers;
 
 public class WebRequestHelper
 {
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-    private static HttpClient HttpClient { get; } = new(new SentryHttpMessageHandler());
+    private static HttpClient HttpClient { get; } = new();
 
     private static readonly int MaxRetries = 7;
 

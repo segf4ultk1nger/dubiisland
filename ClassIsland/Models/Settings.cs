@@ -61,7 +61,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private string _selectedProfile = "Default.json";
     private bool _isMainWindowVisible = true;
     private bool _isWelcomeWindowShowed = false;
-    private bool _isReportingEnabled = true;
     private Dictionary<string, string> _releaseChannels = new()
     {
     };
@@ -502,40 +501,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
             catch (Exception ex)
             {
                 App.GetService<ILogger<Settings>>().LogError(ex, "无法创建开机自启动快捷方式。");
-            }
-        }
-    }
-
-    public bool IsReportingEnabled
-    {
-        get => _isReportingEnabled;
-        set
-        {
-            if (value == _isReportingEnabled) return;
-            _isReportingEnabled = value;
-            OnPropertyChanged();
-        }
-    }
-
-    [JsonIgnore]
-    public bool IsSentryEnabled
-    {
-        get => Environment.GetEnvironmentVariable("ClassIsland_IsSentryEnabled") is "1" or null;
-        set
-        {
-            try
-            {
-                var envVar = value ? "1" : "0";
-                Environment.SetEnvironmentVariable("ClassIsland_IsSentryEnabled", envVar);
-                // 因为 Environment.SetEnvironmentVariable 有时会执行很长时间，所以这里要直接修改注册表。
-                using var reg = Registry.CurrentUser.OpenSubKey(
-                    @"Environment", true);
-                reg?.SetValue("ClassIsland_IsSentryEnabled", envVar, RegistryValueKind.String);
-                OnPropertyChanged();
-            }
-            catch (Exception ex)
-            {
-                IAppHost.GetService<ILogger<Settings>>().LogError(ex, "无法设置 Sentry 启用状态。");
             }
         }
     }

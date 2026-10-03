@@ -36,7 +36,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 using NAudio.Wave;
-using Sentry;
 using Application = System.Windows.Application;
 using Window = System.Windows.Window;
 using NAudio.Wave.SampleProviders;
@@ -738,7 +737,6 @@ public partial class MainWindow : Window
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-        var span = SentrySdk.GetSpan()?.StartChild("startup-initialize-mainWindow");
         if (DesignerProperties.GetIsInDesignMode(this))
             return;
         ViewModel.Profile.PropertyChanged += (sender, args) => SaveProfile();
@@ -751,7 +749,6 @@ public partial class MainWindow : Window
         UserPrefrenceUpdateStopwatch.Start();
         SystemEvents.UserPreferenceChanged += OnSystemEventsOnUserPreferenceChanged;
         AppBase.Current.AppStopping += (sender, args) => SystemEvents.UserPreferenceChanged -= OnSystemEventsOnUserPreferenceChanged;
-        span?.Finish();
     }
 
     private void OnSystemEventsOnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs args)

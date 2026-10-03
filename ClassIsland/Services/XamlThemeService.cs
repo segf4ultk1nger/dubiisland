@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -18,7 +18,6 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
-using Sentry;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -224,26 +223,20 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
                 .FirstOrDefault(x => x.Manifest.Id == id))
             .OfType<ThemeIndexItem>()
             .FirstOrDefault();
-        var transaction = SentrySdk.StartTransaction("Download Theme", "theme.download");
-        transaction.SetTag("theme.id", id);
 
         if (item == null)
         {
             Logger.LogWarning("找不到符合id的主题：{}", id);
-            transaction.Finish(SpanStatus.NotFound);
             return;
         }
-        transaction.SetTag("theme", item.Manifest.Name);
 
         if (DownloadTasks.ContainsKey(id))
         {
             Logger.LogWarning("{}已正在下载。", id);
-            transaction.Finish(SpanStatus.AlreadyExists);
             return;
         }
 
         Logger.LogInformation("开始下载主题：{}", id);
-        var spanDownload = transaction.StartChild("download");
         var url = item.DownloadUrl;
         var md5 = item.DownloadMd5;
         var task = new DownloadProgress()
@@ -252,10 +245,8 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
         };
         DownloadTasks[id] = task;
         var archive = Path.GetTempFileName() + ".tmp";
-        transaction.SetTag("url", url);
         if (Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var uri))
         {
-            transaction.SetTag("url.host", uri.Host);
         }
 
         var stopwatch = new Stopwatch();
@@ -281,30 +272,22 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
             }
             catch (Exception ex)
             {
-                spanDownload.Finish(ex, SpanStatus.InternalError);
                 throw new Exception($"无法下载主题 {id}：{ex.Message}", ex);
             }
 
             stopwatch.Stop();
-            transaction.SetExtra("download.size", totalFileSize);
             var speed = stopwatch.Elapsed.TotalSeconds == 0
                 ? 0.0
                 : totalFileSize / stopwatch.Elapsed.TotalSeconds;
-            transaction.SetExtra("download.bytesPerSecond", speed);
-            spanDownload.Finish(SpanStatus.Ok);
 
-            var spanValidateChecksum = transaction.StartChild("validate");
             ChecksumHelper.VerifyChecksum(archive, md5);
-            spanValidateChecksum.Finish(SpanStatus.Ok);
 
-            var spanMoveToCache = transaction.StartChild("moveToCache");
             if (File.Exists(destFileName))
             {
                 File.Delete(destFileName);
             }
 
             File.Move(archive, destFileName);
-            spanMoveToCache.Finish(SpanStatus.Ok);
             if (!Themes.Any(x => x.Manifest.Id == id && x.IsEnabled))
             {
                 InstallTheme(destFileName);
@@ -320,13 +303,10 @@ public class XamlThemeService : ObservableRecipient, IXamlThemeService
                 RestartRequested?.Invoke(this, EventArgs.Empty);
             }
             Logger.LogInformation("主题 {} 下载完成。", id);
-            transaction.Finish(SpanStatus.Ok);
         }
         catch (Exception e)
         {
             task.Exception = e;
-            transaction.GetLastActiveSpan()?.Finish(e, SpanStatus.InternalError);
-            transaction.Finish(e, SpanStatus.InternalError);
             Logger.LogError(e, "无法从 {} 下载主题 {}", url, id);
         }
         task.IsDownloading = false;

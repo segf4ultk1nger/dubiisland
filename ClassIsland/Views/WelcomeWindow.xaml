@@ -204,11 +204,6 @@
                                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                                         </controls1:SettingsCard.Switcher>
                                     </controls1:SettingsCard>
-                                    <controls1:SettingsCard Grid.Row="1" Margin="0 6 0 0"
-                                                           IconGlyph="{x:Static controls1:IconGlyphs.ReportLine}"
-                                                           Header="启用匿名使用情况分析"
-                                                           IsOn="{Binding ViewModel.Settings.IsSentryEnabled, Mode=TwoWay}"
-                                                           Description="收集并上传使用情况与错误信息以改进应用，不含个人信息。" />
                                 </StackPanel>
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
