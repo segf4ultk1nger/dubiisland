@@ -51,7 +51,7 @@
                                         Margin="0 0 6 0"
                                         Color="{Binding SettingsService.Settings.BackgroundColor, Mode=TwoWay}"
                                         Visibility="{Binding SettingsService.Settings.IsCustomBackgroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <ToggleButton VerticalAlignment="Center" IsChecked="{Binding SettingsService.Settings.IsCustomBackgroundColorEnabled}"/>
+                        <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsCustomBackgroundColorEnabled}"/>
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
@@ -508,7 +508,7 @@
                                         Margin="0 0 6 0"
                                         Color="{Binding SettingsService.Settings.CustomForegroundColor, Mode=TwoWay}"
                                         Visibility="{Binding SettingsService.Settings.IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <ToggleButton VerticalAlignment="Center" IsChecked="{Binding SettingsService.Settings.IsCustomForegroundColorEnabled}"/>
+                        <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsCustomForegroundColorEnabled}"/>
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>

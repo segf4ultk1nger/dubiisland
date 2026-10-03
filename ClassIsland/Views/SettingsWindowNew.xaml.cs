@@ -194,41 +194,6 @@ public partial class SettingsWindowNew : MyWindow
         //await CoreNavigate(ViewModel.SelectedPageInfo);
     }
 
-    private async Task BeginStoryboardAsync(string key)
-    {
-        BeginStoryboard(key, out var complete);
-        if (!complete.IsCancellationRequested)
-        {
-            try
-            {
-                await Task.Run(() => complete.WaitHandle.WaitOne(), complete);
-            }
-            catch (TaskCanceledException)
-            {
-                // ignored
-            }
-        }
-        if (!IThemeService.IsWaitForTransientDisabled)
-        {
-            await Dispatcher.Yield();
-        }
-    }
-
-    private void BeginStoryboard(string key, out CancellationToken cancellationToken)
-    {
-        var complete = new CancellationTokenSource();
-        cancellationToken = complete.Token;
-        if (!IsInitialized)
-            return;
-        if (FindResource(key) is not Storyboard sb)
-            return;
-        sb.Completed += (sender, args) =>
-        {
-            complete.Cancel();
-        };
-        sb.Begin();
-    }
-
     private async void NavigationServiceOnNavigating(object sender, NavigatingCancelEventArgs e)
     {
         ViewModel.IsNavigating = true;
@@ -286,12 +251,6 @@ public partial class SettingsWindowNew : MyWindow
                 }
 
                 ViewModel.IsNavigating = false;
-                var child = LoadingAsyncBox.LoadingView as LoadingMask;
-                child?.FinishFakeLoading();
-                if (!IThemeService.IsTransientDisabled)
-                {
-                    await BeginStoryboardAsync("NavigationEntering");
-                }
                 span?.Finish(SpanStatus.Ok);
                 transaction?.Finish(SpanStatus.Ok);
             }
@@ -351,16 +310,9 @@ public partial class SettingsWindowNew : MyWindow
 
             var uriQuery = HttpUtility.ParseQueryString(uri?.Query ?? "");
             var keepHistory = uriQuery[KeepHistoryParameterName] == "true";
-            var child = LoadingAsyncBox.LoadingView as LoadingMask;
-            child?.StartFakeLoading();
             if (SettingsService.Settings.ShowEchoCaveWhenSettingsPageLoading)
             {
                 await UpdateEchoCaveAsync();
-            }
-
-            if (!IThemeService.IsTransientDisabled)
-            {
-                await BeginStoryboardAsync("NavigationLeaving");
             }
 
             HangService.AssumeHang();

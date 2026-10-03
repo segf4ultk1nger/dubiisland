@@ -46,7 +46,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LightningBoltOutline}" Text="行为" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <TextBlock Text="行为" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 开机自启 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutomaticStart}" Header="开机自启"
                                                            Description="系统启动时自动运行本应用。"
@@ -208,7 +208,7 @@
 
                         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                                     Margin="0 4 0 0" Orientation="Horizontal">
-                            <ToggleButton IsChecked="{Binding SettingsService.Settings.ShowDetailedStatusOnSplash}" Margin="0 0 6 0"/>
+                            <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.ShowDetailedStatusOnSplash}" OnContent="开" OffContent="关" MinWidth="0" Margin="0 0 6 0"/>
                             <TextBlock Text="在启动屏幕显示详细的状态信息" VerticalAlignment="Center"/>
                         </StackPanel>
 
@@ -235,8 +235,7 @@
                 </Expander>
             </Border>
 
-            <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClockOutline}" Text="时钟" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <TextBlock Text="时钟" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 使用精确时间 -->
             <Border Margin="0 0 0 6">
                 <Expander Background="Transparent"
@@ -317,7 +316,7 @@
                                                                        Description="每天自动按设定的增量值调整时间偏移。">
                             <controls1:SettingsControl.Switcher>
                                 <DockPanel Width="150">
-                                    <ToggleButton DockPanel.Dock="Right" Margin="8 0 0 0" IsChecked="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"/>
+                                    <mah:ToggleSwitch DockPanel.Dock="Right" Margin="8 0 0 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"/>
                                     <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                      IsEnabled="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"
                                                                      Text="{Binding SettingsService.Settings.TimeAutoAdjustSeconds, Converter={StaticResource IntToStringConverter}}"/>
@@ -334,9 +333,7 @@
                     </StackPanel>
                 </Expander>
             </Border>
-            <Separator Margin="0 16 0 8" 
-                       Visibility="{Binding SettingsService.Settings.ShowComponentsMigrateTip, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WindowRestore}" Text="显示" Style="{StaticResource SettingsSectionHeaderStyle}" 
+            <TextBlock Text="显示" Style="{StaticResource SettingsSectionHeaderStyle}" 
                                 Visibility="{Binding SettingsService.Settings.ShowComponentsMigrateTip, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             <!-- 简略信息 -->
             <Border Padding="14" 
@@ -370,8 +367,7 @@
                             Click="ButtonCloseMigrationTip_OnClick"/>
                 </Grid>
             </Border>
-            <Separator Margin="0 16 0 8" />
-            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogOutline}" Text="高级" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <TextBlock Text="高级" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 自动禁用异常插件 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PuzzleRemoveOutline}"
                                     Header="自动禁用异常插件"
@@ -397,7 +393,7 @@
                                     Margin="0 0 0 6">
                 <controls1:SettingsCard.Switcher>
                     <DockPanel>
-                        <ToggleButton DockPanel.Dock="Right" Margin="8 0 0 0" IsChecked="{Binding SettingsService.Settings.IsCriticalSafeMode}"/>
+                        <mah:ToggleSwitch DockPanel.Dock="Right" Margin="8 0 0 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsCriticalSafeMode}"/>
                         <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   Width="120"
                                   Visibility="{Binding SettingsService.Settings.IsCriticalSafeMode, Converter={StaticResource BooleanToVisibilityConverter}}"

@@ -380,7 +380,7 @@
                                                             Visibility="{Binding HideOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <controls2:IconText Kind="{x:Static controls2:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                                                     </Button>
-                                                    <ToggleButton VerticalAlignment="Center" IsChecked="{Binding HideOnRule}"/>
+                                                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding HideOnRule}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
                                         </controls2:SettingsCard>
@@ -456,7 +456,7 @@
                                                                     Margin="0 0 6 0"
                                                                     Color="{Binding ForegroundColor, Mode=TwoWay}"
                                                                     Visibility="{Binding IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                                    <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsCustomForegroundColorEnabled}"/>
+                                                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsCustomForegroundColorEnabled}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
                                         </controls2:SettingsCard>
@@ -507,7 +507,7 @@
                                                              Margin="0 0 6 0"
                                                              Width="100"
                                                              Text="{Binding FixedWidth, Converter={StaticResource IntToStringConverter}}"/>
-                                                    <ToggleButton VerticalAlignment="Center" IsChecked="{Binding IsFixedWidthEnabled}"/>
+                                                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsFixedWidthEnabled}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
                                         </controls2:SettingsCard>
@@ -537,14 +537,14 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <!-- 最小宽度 -->
-                                                    <ToggleButton Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" IsChecked="{Binding IsMinWidthEnabled}"/>
+                                                    <mah:ToggleSwitch Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsMinWidthEnabled}"/>
                                                     <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"
                                                                Text="最小宽度"/>
                                                     <TextBox Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
                                                              IsEnabled="{Binding IsMinWidthEnabled}"
                                                              Text="{Binding MinWidth, Converter={StaticResource IntToStringConverter}}"/>
                                                     <!-- 最大宽度 -->
-                                                    <ToggleButton Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" IsChecked="{Binding IsMaxWidthEnabled}"/>
+                                                    <mah:ToggleSwitch Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsMaxWidthEnabled}"/>
                                                     <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
                                                                Text="最大宽度"/>
                                                     <TextBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"

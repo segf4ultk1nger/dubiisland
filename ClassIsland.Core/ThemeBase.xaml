@@ -90,12 +90,11 @@
         </Style.Resources>
     </Style>
 
-    <!-- 设置页面分组标题（Windows 10 设置风格） -->
-    <Style TargetType="controls:IconText" x:Key="SettingsSectionHeaderStyle">
+    <!-- 设置页面分组标题（Windows 10 设置风格，左对齐到设置项标题） -->
+    <Style TargetType="TextBlock" x:Key="SettingsSectionHeaderStyle">
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="IconSize" Value="18" />
-        <Setter Property="Margin" Value="0 8 0 10" />
+        <Setter Property="Margin" Value="12 8 0 10" />
     </Style>
 
     <converters:StringToFontFamilyConverter x:Key="StringToFontFamilyConverter" />

@@ -1,7 +1,7 @@
 ﻿<ci:ComponentBase x:Class="ClassIsland.Controls.Components.RollingComponentSettingsControl"
                   x:TypeArguments="componentSettings:RollingComponentSettings"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:local="clr-namespace:ClassIsland.Controls.Components"
@@ -115,7 +115,7 @@
                                 Visibility="{Binding Settings.StopOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
                         </Button>
-                        <ToggleButton VerticalAlignment="Center" IsChecked="{Binding Settings.StopOnRule}"/>
+                        <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.StopOnRule}"/>
                     </StackPanel>
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>

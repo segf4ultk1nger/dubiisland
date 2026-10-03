@@ -103,47 +103,6 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Storyboard x:Key="NavigationLeaving">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NavigationFrame" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1.00">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <QuarticEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.0500000" Value="0">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <QuarticEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="NavigationEntering">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NavigationFrame" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="200">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <SineEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <SineEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="NavigationFrame" Storyboard.TargetProperty="(UIElement.Opacity)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <SineEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="00:00:00.1000000" Value="1">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <SineEase EasingMode="EaseOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-
         <converters1:RemixIconKindConverter x:Key="RemixIconKindConverter"/>
 
         <!-- 导航项：设置页面 -->
@@ -331,7 +290,38 @@
                 <Frame Content="{Binding ViewModel.FrameContent}"
                        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                        NavigationUIVisibility="Hidden"
-                       x:Name="NavigationFrame" RenderTransformOrigin="0.5,0.5">
+                       ClipToBounds="True"
+                       x:Name="NavigationFrame">
+                    <Frame.ContentTemplate>
+                        <DataTemplate>
+                            <mah:TransitioningContentControl Content="{Binding}"
+                                                              RestartTransitionOnContentChange="True"
+                                                              Transition="Custom">
+                                <mah:TransitioningContentControl.CustomVisualStates>
+                                    <VisualState x:Name="CustomTransition">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CurrentContentPresentationSite"
+                                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0" />
+                                                <SplineDoubleKeyFrame KeyTime="00:00:00.150" Value="1" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CurrentContentPresentationSite"
+                                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                                                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="200" />
+                                                <SplineDoubleKeyFrame KeySpline="0.1, 0.9, 0.2, 1"
+                                                                      KeyTime="00:00:00.300"
+                                                                      Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PreviousContentPresentationSite"
+                                                                           Storyboard.TargetProperty="(UIElement.Opacity)">
+                                                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </mah:TransitioningContentControl.CustomVisualStates>
+                            </mah:TransitioningContentControl>
+                        </DataTemplate>
+                    </Frame.ContentTemplate>
                     <Frame.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform />
@@ -347,7 +337,6 @@
                         </Page>
                     </d:Frame.Content>
                 </Frame>
-                <windows:AsyncBox LoadingViewType="controls2:LoadingMask" x:Name="LoadingAsyncBox"/>
             </Grid>
         </mah:HamburgerMenu>
         <mah:FlyoutsControl>

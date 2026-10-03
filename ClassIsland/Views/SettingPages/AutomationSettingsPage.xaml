@@ -99,7 +99,7 @@
                                             Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
                                             CommandParameter="https://docs.classisland.tech/app/automation"
                                             Style="{StaticResource MahApps.Styles.Button.Flat}"/>
-                                    <ToggleButton IsChecked="{Binding SettingsService.Settings.IsAutomationEnabled, Mode=TwoWay}"/>
+                                    <mah:ToggleSwitch OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsAutomationEnabled, Mode=TwoWay}"/>
                                 </StackPanel>
                             </ci:SettingsCard.Switcher>
                         </ci:SettingsCard>
@@ -180,7 +180,7 @@
                                             <StackPanel Orientation="Horizontal"
                                                         HorizontalAlignment="Right"
                                                         DockPanel.Dock="Right">
-                                                <ToggleButton ToolTip="启用" IsChecked="{Binding ActionSet.IsEnabled}"/>
+                                                <mah:ToggleSwitch ToolTip="启用" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding ActionSet.IsEnabled}"/>
                                                 <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.ContentCopy}}"
                                                         ToolTip="复制"
                                                         Style="{StaticResource MahApps.Styles.Button.Flat}"
@@ -339,7 +339,7 @@
                                         <GroupBox.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <ToggleButton IsChecked="{Binding IsConditionEnabled, Mode=TwoWay}" Margin="0 0 4 0"/>
+                                                    <mah:ToggleSwitch OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsConditionEnabled, Mode=TwoWay}" Margin="0 0 4 0"/>
                                                     <ci:IconText Text="并且满足以下规则时"
                                                                  Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" />
                                                 </StackPanel>

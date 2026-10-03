@@ -1,6 +1,6 @@
 ﻿<ci:SettingsPageBase x:Class="ClassIsland.Views.SettingPages.ThemesSettingsPage"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
@@ -324,7 +324,7 @@
                                             Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Restart}}"
                                             Visibility="{Binding Value.RestartRequired, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     </Button>
-                                    <ToggleButton IsChecked="{Binding Value.IsEnabled}" VerticalAlignment="Center" Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="4 0 0 0"/>
+                                    <mah:ToggleSwitch OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Value.IsEnabled}" VerticalAlignment="Center" Visibility="{Binding Value.IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="4 0 0 0"/>
                                     
                                 </StackPanel>
                             </Grid>

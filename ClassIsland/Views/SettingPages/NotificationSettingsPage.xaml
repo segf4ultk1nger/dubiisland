@@ -568,7 +568,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <ToggleButton Grid.Column="0" Margin="0 0 6 0" VerticalAlignment="Center" IsChecked="{Binding ProviderSettings.IsSettingsEnabled}"/>
+                                <mah:ToggleSwitch Grid.Column="0" Margin="0 0 6 0" VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding ProviderSettings.IsSettingsEnabled}"/>
                                 <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
                                         Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                         Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.CogOutline}}"
