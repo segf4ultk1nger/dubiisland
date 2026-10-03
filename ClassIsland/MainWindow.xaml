@@ -85,7 +85,7 @@
             </Style.Triggers>
         </Style>
         <converters1:BooleanToVisibilityReConverter x:Key="BooleanToVisibilityReConverter"/>
-        <ContextMenu FontFamily="{StaticResource HarmonyOsSans}" x:Key="AppContextMenu"
+        <ContextMenu FontFamily="{StaticResource HarmonyOsSans}" x:Key="AppContextMenu" x:Shared="False"
                      Style="{StaticResource MahApps.Styles.ContextMenu}"
                      StaysOpen="True"
                      IsEnabled="{Binding ViewModel.IsBusy, Converter={StaticResource InvertBooleanConverter}}">

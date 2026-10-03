@@ -481,10 +481,8 @@ public partial class MainWindow : Window
         UpdateTheme();
         IAppHost.GetService<IXamlThemeService>().LoadAllThemes();
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在初始化托盘菜单");
-        var menu = (System.Windows.Controls.ContextMenu)FindResource("AppContextMenu");
-        menu.DataContext = this;
-        TaskBarIconService.MainTaskBarIcon.DataContext = this;
-        TaskBarIconService.MainTaskBarIcon.ContextMenu = menu;
+        SetupTrayMenu();
+        ThemeService.ThemeUpdated += (_, _) => Dispatcher.BeginInvoke(new Action(SetupTrayMenu));
         TaskBarIconService.MainTaskBarIcon.LeftClickCommand = TrayIconLeftClickedCommand;
         TaskBarIconService.MainTaskBarIcon.TrayLeftMouseUp += MainTaskBarIconOnTrayLeftMouseUp;
         ViewModel.OverlayRemainTimePercents = 0.5;
@@ -746,6 +744,15 @@ public partial class MainWindow : Window
         }
         SetWindowPos(hWnd, NativeWindowHelper.HWND_BOTTOM, 0, 0, 0, 0,
             SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+    }
+
+    private void SetupTrayMenu()
+    {
+        // 托盘菜单位于独立的视觉树，收不到应用级主题资源变更通知；主题切换时重建一份以套用新配色。
+        var menu = (System.Windows.Controls.ContextMenu)FindResource("AppContextMenu");
+        menu.DataContext = this;
+        TaskBarIconService.MainTaskBarIcon.DataContext = this;
+        TaskBarIconService.MainTaskBarIcon.ContextMenu = menu;
     }
 
     private async void UpdateTheme()
