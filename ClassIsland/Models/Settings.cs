@@ -204,7 +204,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _showCurrentLessonOnlyOnClass = false;
     private bool _isSwapMode = true;
     private Dictionary<string, Dictionary<string, dynamic?>> _settingsOverlay = [];
-    private bool _showEchoCaveWhenSettingsPageLoading = false;
     private int _settingsPagesCachePolicy = 0;
     private string _notificationSpeechCustomSmgTokenSource = "";
 
@@ -2364,17 +2363,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isSwapMode) return;
             _isSwapMode = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool ShowEchoCaveWhenSettingsPageLoading
-    {
-        get => _showEchoCaveWhenSettingsPageLoading;
-        set
-        {
-            if (value == _showEchoCaveWhenSettingsPageLoading) return;
-            _showEchoCaveWhenSettingsPageLoading = value;
             OnPropertyChanged();
         }
     }

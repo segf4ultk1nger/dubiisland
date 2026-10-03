@@ -199,38 +199,6 @@ public partial class SettingsWindowNew : MyWindow
         ViewModel.IsNavigating = true;
     }
 
-    private async Task UpdateEchoCaveAsync()
-    {
-        if (ViewModel.EchoCaveTextsAll.Count <= 0)
-        {
-            var stream = Application.GetResourceStream(new Uri("/Assets/Tellings.txt", UriKind.Relative))?.Stream;
-            if (stream == null)
-            {
-                return;
-            }
-
-            var sayings = await new StreamReader(stream).ReadToEndAsync();
-            ViewModel.EchoCaveTextsAll = [..sayings.Split("\r\n")];
-        }
-        if (ViewModel.EchoCaveTexts.Count <= 0)
-        {
-            var collection = ViewModel.EchoCaveTextsAll.ToList();
-            var countRaw = collection.Count;
-            for (var i = 0; i < countRaw; i++)
-            {
-                var randomIndex = SharedRandom.Next(0, collection.Count - 1);
-                ViewModel.EchoCaveTexts.Add(collection[randomIndex]);
-                collection.RemoveAt(randomIndex);
-            }
-        }
-        //Console.WriteLine(ViewModel.SayingsCollection.Count);
-        if (ViewModel.EchoCaveTexts.Count > 0)
-        {
-            ViewModel.CurrentEchoCaveText = ViewModel.EchoCaveTexts[0];
-            ViewModel.EchoCaveTexts.RemoveAt(0);
-        }
-    }
-
     private async void NavigationServiceOnLoadCompleted(object sender, NavigationEventArgs e)
     {
         if (e.ExtraData is SettingsWindowNavigationData { IsNavigateFromSettingsWindow: true } data)
@@ -310,10 +278,6 @@ public partial class SettingsWindowNew : MyWindow
 
             var uriQuery = HttpUtility.ParseQueryString(uri?.Query ?? "");
             var keepHistory = uriQuery[KeepHistoryParameterName] == "true";
-            if (SettingsService.Settings.ShowEchoCaveWhenSettingsPageLoading)
-            {
-                await UpdateEchoCaveAsync();
-            }
 
             HangService.AssumeHang();
             // 从ioc容器获取页面

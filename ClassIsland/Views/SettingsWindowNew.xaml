@@ -65,17 +65,6 @@
                            Margin="0 0 0 4" />
                 <TextBlock Text="正在开发/测试的不稳定功能，可能会出现Bug等问题，请谨慎使用。" TextWrapping="Wrap"
                            Margin="0 0 0 16" />
-                <CheckBox IsChecked="{Binding SettingsService.Settings.ShowEchoCaveWhenSettingsPageLoading}"
-                          Margin="0 0 0 6"
-                          IsEnabled="{Binding ManagementService.Policy.DisableEasterEggs, Converter={StaticResource BooleanToBooleanReConverter}}">
-                    <TextBlock TextWrapping="Wrap">
-                        在加载设置页面时显示回声洞
-                        <Run TextDecorations="{x:Static TextDecorations.Strikethrough}">
-                            （其实一般你还没看完就加载好了）
-                        </Run>
-                    </TextBlock>
-                </CheckBox>
-
                 <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                           mah:TextBoxHelper.Watermark="设置页面缓存策略"
                           Margin="0 0 0 2"
@@ -278,30 +267,6 @@
             </mah:HamburgerMenu.Style>
             <!-- 页面内容 -->
             <Grid>
-                <Grid
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Margin="32 8 8 16"
-                    Opacity="0.75">
-                    <Grid.Visibility>
-                        <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
-                            <Binding Path="SettingsService.Settings.ShowEchoCaveWhenSettingsPageLoading"/>
-                            <Binding Path="ManagementService.Policy.DisableEasterEggs" Converter="{StaticResource BooleanToBooleanReConverter}"/>
-                        </MultiBinding>
-                    </Grid.Visibility>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <controls:IconText Kind="{x:Static controls:IconGlyphs.BulbOnOutline}" VerticalAlignment="Center"
-                                             Grid.Column="0"/>
-                    <TextBlock Text="{Binding ViewModel.CurrentEchoCaveText}"
-                               Grid.Column="1"
-                               TextWrapping="Wrap"
-                               FontWeight="Regular"
-                               VerticalAlignment="Center"
-                               Margin="4 0 0 0"/>
-                </Grid>
                 <Frame Content="{Binding ViewModel.FrameContent}"
                        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                        NavigationUIVisibility="Hidden"
