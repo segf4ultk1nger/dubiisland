@@ -15,6 +15,7 @@
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:converters1="clr-namespace:ClassIsland.Converters"
         xmlns:attributes="clr-namespace:ClassIsland.Core.Attributes;assembly=ClassIsland.Core"
+        xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
         xmlns:commands="http://classisland.tech/schemas/xaml/core"
         d:DataContext="{d:DesignInstance local:SettingsWindowNew}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -143,6 +144,8 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
+        <converters1:RemixIconKindConverter x:Key="RemixIconKindConverter"/>
+
         <!-- 导航项：设置页面 -->
         <DataTemplate DataType="{x:Type attributes:SettingsPageInfo}">
             <Grid Height="48">
@@ -150,19 +153,11 @@
                     <ColumnDefinition Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type mah:HamburgerMenu}}, Path=CompactPaneLength, Mode=OneWay}"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <controls:IconText IconSize="18" Grid.Column="0"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <controls:IconText.Style>
-                        <Style TargetType="controls:IconText">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}}" Value="True">
-                                    <Setter Property="Kind" Value="{Binding SelectedPackIcon}"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                            <Setter Property="Kind" Value="{Binding UnSelectedPackIcon}"/>
-                        </Style>
-                    </controls:IconText.Style>
-                </controls:IconText>
+                <remix:PackIconRemixIcon Grid.Column="0"
+                                         Width="18" Height="18"
+                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Kind="{Binding Id, Converter={StaticResource RemixIconKindConverter}}"
+                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=ContentPresenter}, Path=(TextElement.Foreground)}"/>
                 <TextBlock Grid.Column="1" Text="{Binding Name}"
                            VerticalAlignment="Center" Margin="4 0 12 0"
                            TextTrimming="CharacterEllipsis"/>
@@ -296,6 +291,7 @@
                            IsPaneOpen="{Binding ViewModel.IsNavigationDrawerOpened, Mode=TwoWay}"
                            OpenPaneLength="250"
                            CompactPaneLength="48"
+                           PaneMargin="0 0 0 -20"
                            DisplayMode="CompactInline">
             <mah:HamburgerMenu.Style>
                 <Style TargetType="mah:HamburgerMenu" BasedOn="{StaticResource MahApps.Styles.HamburgerMenu}">

@@ -45,6 +45,36 @@ public class MyWindow : MetroWindow
             // ignored
         }
         Loaded += OnLoaded;
+        Initialized += OnInitialized;
+    }
+
+    private const string VisualStudioControlsUriString =
+        "pack://application:,,,/MahApps.Metro;component/Styles/VS/Controls.xaml";
+    private const string VisualStudioColorsUriString =
+        "pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml";
+
+    /// <summary>
+    /// 除课表窗口（MainWindow，普通 Window）外的窗口统一套用 MahApps 的 Visual Studio 样式。
+    /// 必须等主题色应用之后再合并，否则 VS/Colors 里的 StaticResource 找不到主题颜色。
+    /// </summary>
+    private void OnInitialized(object? sender, System.EventArgs e)
+    {
+        try
+        {
+            Resources.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri(VisualStudioControlsUriString)
+            });
+            Resources.MergedDictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri(VisualStudioColorsUriString)
+            });
+            SetResourceReference(StyleProperty, "MahApps.Styles.MetroWindow.VisualStudio");
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
