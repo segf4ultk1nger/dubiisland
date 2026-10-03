@@ -115,6 +115,9 @@ public class MyWindow : MetroWindow
         GlowDepth = 0;
         BorderBrush = Brushes.Transparent;
         NonActiveBorderBrush = Brushes.Transparent;
+
+        // MahApps 默认把窗口标题转成大写，改回正常大小写。
+        TitleCharacterCasing = System.Windows.Controls.CharacterCasing.Normal;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
