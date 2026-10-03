@@ -175,66 +175,81 @@
                            Margin="8 0 0 0"
                            VerticalAlignment="Center"
                            ToolTip="应用版本" />
-                <Grid Margin="8 0 0 0">
-                    <ToggleButton x:Name="PopupToggle1" Style="{StaticResource MahApps.Styles.Button.Chromeless}" ToolTip="更多选项…" IsChecked="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}" Padding="4">
-                        …
-                    </ToggleButton>
-                    <Popup Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" StaysOpen="False" IsOpen="{Binding IsChecked, ElementName=PopupToggle1, Mode=TwoWay}">
-                        <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" Padding="4">
-                            <StackPanel>
-                                <StackPanel>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.Code}}" Header="实验性功能…"
-                                              Click="MenuItemExperimentalSettings_OnClick" />
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WindowMaximize}}"
-                                              Header="调试窗口规则…"
-                                              Click="MenuItemDebugWindowRule_OnClick"/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.SwapHorizontal}}"
-                                              Header="创建快捷换课图标"
-                                              Click="MenuItemAddClassSwapShortcut_OnClick"/>
-                                    <Separator/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WorkOutline}}" Header="集控选项…"
-                                              Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
-                                              CommandParameter="classisland://app/settings/management?ci_keepHistory=true">
-                                    </MenuItem>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseAddOutline}}" Header="加入管理…"
-                                              Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
-                                              Command="{x:Static dialogs:DialogService.OpenDialogCommand}">
-                                        <MenuItem.CommandParameter>
-                                            <controls2:JoinManagementDialog/>
-                                        </MenuItem.CommandParameter>
-                                    </MenuItem>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.BriefcaseOffOutline}}" Header="退出管理…"
-                                              Click="MenuItemExitManagement_OnClick" 
-                                              Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    </MenuItem>
-                                    <Separator/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FileDocumentOutline}}"
-                                              Header="日志…"
-                                              Click="MenuItemAppLogs_OnClick"/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.DatabaseExportOutline}}"
-                                              Header="导出诊断数据"
-                                              Click="MenuItemExportDiagnosticInfo_OnClick"/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.WrenchCheckOutline}}"
-                                              Header="重启到恢复模式"
-                                              Click="MenuItemRestartToRecovery_OnClick"/>
-                                    <Separator/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderTextOutline}}"
-                                              Header="打开日志目录…"
-                                              Click="MenuItemOpenLogFolder_OnClick"/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderFileOutline}}"
-                                              Header="打开数据目录…"
-                                              Click="MenuItemOpenDataFolder_OnClick"/>
-                                    <MenuItem Icon="{controls:GlyphIcon {x:Static controls:IconGlyphs.FolderDownloadOutline}}"
-                                              Header="打开应用目录…"
-                                              Click="MenuItemOpenAppFolder_OnClick"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </Popup>
-                </Grid>
+                <mah:DropDownButton Margin="8 0 0 0"
+                                    ToolTip="更多选项…"
+                                    ArrowVisibility="Collapsed"
+                                    MenuStyle="{StaticResource MahApps.Styles.ContextMenu}"
+                                    IsExpanded="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}">
+                    <mah:DropDownButton.Icon>
+                        <remix:PackIconRemixIcon Kind="MoreFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                    </mah:DropDownButton.Icon>
+                    <mah:DropDownButton.ItemsSource>
+                        <x:Array Type="{x:Type FrameworkElement}">
+                    <MenuItem Header="实验性功能…" Click="MenuItemExperimentalSettings_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="FlaskFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="调试窗口规则…" Click="MenuItemDebugWindowRule_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="StethoscopeFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="创建快捷换课图标" Click="MenuItemAddClassSwapShortcut_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="Apps2AddFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="集控选项…"
+                              Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
+                              CommandParameter="classisland://app/settings/management?ci_keepHistory=true">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="SuitcaseFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="加入管理…"
+                              Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource InverseBoolToVisConverter}}"
+                              Command="{x:Static dialogs:DialogService.OpenDialogCommand}">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="SuitcaseFill" Width="16" Height="16"/></MenuItem.Icon>
+                        <MenuItem.CommandParameter>
+                            <controls2:JoinManagementDialog/>
+                        </MenuItem.CommandParameter>
+                    </MenuItem>
+                    <MenuItem Header="退出管理…"
+                              Click="MenuItemExitManagement_OnClick"
+                              Visibility="{Binding ManagementService.IsManagementEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="SuitcaseFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="日志…" Click="MenuItemAppLogs_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="FileList3Fill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="导出诊断数据" Click="MenuItemExportDiagnosticInfo_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="ExportFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="重启到恢复模式" Click="MenuItemRestartToRecovery_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="RestartFill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="打开日志目录…" Click="MenuItemOpenLogFolder_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="Folder6Fill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="打开数据目录…" Click="MenuItemOpenDataFolder_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="Folder6Fill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="打开应用目录…" Click="MenuItemOpenAppFolder_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="Folder6Fill" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
+                        </x:Array>
+                    </mah:DropDownButton.ItemsSource>
+                </mah:DropDownButton>
             </StackPanel>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout Position="Right"
+                        Width="420"
+                        IsModal="True"
+                        TitleVisibility="Collapsed"
+                        IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}">
+                <ContentControl Content="{Binding ViewModel.DrawerContent}"/>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
     <Grid x:Name="RootGrid">
         <Grid.LayoutTransform>
             <TransformGroup>
@@ -339,15 +354,6 @@
                 </Frame>
             </Grid>
         </mah:HamburgerMenu>
-        <mah:FlyoutsControl>
-            <mah:Flyout Position="Right"
-                        Width="420"
-                        IsModal="True"
-                        TitleVisibility="Collapsed"
-                        IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}">
-                <ContentControl Content="{Binding ViewModel.DrawerContent}"/>
-            </mah:Flyout>
-        </mah:FlyoutsControl>
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="16" TextWrapping="Wrap" FontWeight="Medium" Text="{Binding ViewModel.StatusMessage}"/>
     </Grid>
 </controls:MyWindow>

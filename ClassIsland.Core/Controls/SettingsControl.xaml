@@ -51,6 +51,7 @@
             <ContentPresenter
                 Visibility="{Binding HasSwitcher, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
                 Margin="0 8 0 0"
+                MinHeight="32"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
                 <ContentPresenter.Style>

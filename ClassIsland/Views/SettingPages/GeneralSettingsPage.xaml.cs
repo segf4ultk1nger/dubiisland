@@ -103,4 +103,12 @@ public partial class GeneralSettingsPage : SettingsPageBase
         window.Owner = Window.GetWindow(this);
         window.ShowDialog();
     }
+
+    private void ButtonOpenHideWindow_OnClick(object sender, RoutedEventArgs e) => OpenDrawer("HideWindowDrawer");
+
+    private void ButtonOpenSplash_OnClick(object sender, RoutedEventArgs e) => OpenDrawer("SplashDrawer");
+
+    private void ButtonOpenExactTime_OnClick(object sender, RoutedEventArgs e) => OpenDrawer("ExactTimeDrawer");
+
+    private void ButtonOpenTimeOffset_OnClick(object sender, RoutedEventArgs e) => OpenDrawer("TimeOffsetDrawer");
 }

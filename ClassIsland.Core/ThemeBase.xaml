@@ -92,7 +92,7 @@
 
     <!-- 设置页面分组标题（Windows 10 设置风格，左对齐到设置项标题） -->
     <Style TargetType="TextBlock" x:Key="SettingsSectionHeaderStyle">
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontSize" Value="32" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="12 8 0 10" />
     </Style>

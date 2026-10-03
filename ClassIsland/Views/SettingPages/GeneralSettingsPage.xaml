@@ -8,6 +8,7 @@
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
       xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
       xmlns:controls2="clr-namespace:ClassIsland.Controls"
+      xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
       xmlns:interfaces="clr-namespace:ClassIsland.Shared.Interfaces;assembly=ClassIsland.Shared"
       xmlns:views="clr-namespace:ClassIsland.Views"
       xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
@@ -32,6 +33,154 @@
 
         <ci:RulesetControl x:Key="RulesetControl"
                            Ruleset="{Binding SettingsService.Settings.HiedRules, Mode=TwoWay}"/>
+
+        <!-- 隐藏窗口：抽屉 -->
+        <StackPanel x:Key="HideWindowDrawer" Width="360">
+            <StackPanel.Resources>
+                <Style TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+                    <Setter Property="Margin" Value="0 4" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="隐藏窗口" FontSize="20" Margin="0 0 0 4" />
+            <TextBlock Text="在以下情况隐藏主界面，避免遮挡屏幕。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+            <TabControl HorizontalContentAlignment="Left" SelectedIndex="{Binding SettingsService.Settings.HideMode}">
+                <TabItem Header="基础模式">
+                    <StackPanel Margin="0 8 0 0">
+                        <CheckBox Content="上课时" IsChecked="{Binding SettingsService.Settings.HideOnClass}"/>
+                        <CheckBox Content="前台是最大化窗口时" IsChecked="{Binding SettingsService.Settings.HideOnMaxWindow}" />
+                        <CheckBox Content="前台是全屏窗口时" IsChecked="{Binding SettingsService.Settings.HideOnFullscreen}" />
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="高级模式">
+                    <StackPanel Margin="0 8 0 0">
+                        <TextBlock Text="使用规则集自定义隐藏条件。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 8" />
+                        <Button HorizontalAlignment="Left" Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                Command="{x:Static ci:SettingsPageBase.OpenDrawerCommand}"
+                                CommandParameter="{StaticResource RulesetControl}">
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…"/>
+                        </Button>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+
+        <!-- 启动加载界面：抽屉 -->
+        <StackPanel x:Key="SplashDrawer" Width="360">
+            <TextBlock Text="启动加载界面" FontSize="20" Margin="0 0 0 4" />
+            <TextBlock Text="自定义启动时显示的加载界面。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+            <Grid>
+                <Grid.IsEnabled>
+                    <MultiBinding Converter="{StaticResource BooleanAndExpressionMultiConverter}">
+                        <Binding Path="SettingsService.Settings.IsSplashEnabled"/>
+                        <Binding Path="ManagementService.Policy.DisableSplashCustomize" Converter="{StaticResource InvertBooleanConverter}"/>
+                    </MultiBinding>
+                </Grid.IsEnabled>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="自定义启动图标（留空将加载默认图标）"
+                                                   VerticalAlignment="Center" />
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal"
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBox MinWidth="120" MaxWidth="200"
+                                                     Text="{Binding SettingsService.Settings.SplashCustomLogoSource}"
+                                                     VerticalAlignment="Center" Margin="0 0 2 0" />
+                    <controls2:FileBrowserButton
+                                                CurrentPath="{Binding SettingsService.Settings.SplashCustomLogoSource, Mode=TwoWay}"
+                                                VerticalAlignment="Center" />
+                </StackPanel>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="自定义启动文字（留空将加载默认文字）"
+                                                   VerticalAlignment="Center" Margin="0 4 0 0" />
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal"
+                                                   Margin="0 4 0 0" HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center">
+                    <TextBox MinWidth="160" MaxWidth="200"
+                                                     Text="{Binding SettingsService.Settings.SplashCustomText}"
+                                                     VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                            Margin="0 4 0 0" Orientation="Horizontal">
+                    <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.ShowDetailedStatusOnSplash}" OnContent="开" OffContent="关" MinWidth="0" Margin="0 0 6 0"/>
+                    <TextBlock Text="在启动屏幕显示详细的状态信息" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Background="#22FF0000" Margin="0 6 0 0" Visibility="{Binding ManagementService.Policy.DisableSplashCustomize, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid TextElement.FontSize="13">
+                        <DockPanel Margin="8 4 4 4">
+                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Forbid}"
+                                                     Margin="0 0 4 0"
+                                                     VerticalAlignment="Center"/>
+                            <TextBlock Text="自定义启动界面功能已被您所在的组织禁用。"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </DockPanel>
+                    </Grid>
+                </Border>
+
+                <Button Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0"
+                        Margin="0 6 0 0" Style="{StaticResource MahApps.Styles.Button.Flat}"
+                        HorizontalAlignment="Left" Click="ButtonRefreshSplashPreview_OnClick">
+                    <ci:IconText Kind="{x:Static controls1:IconGlyphs.EyeOutline}" Text="预览"/>
+                </Button>
+            </Grid>
+        </StackPanel>
+
+        <!-- 使用精确时间：抽屉 -->
+        <StackPanel x:Key="ExactTimeDrawer" Width="360">
+            <TextBlock Text="精确时间服务器" FontSize="20" Margin="0 0 0 4" />
+            <TextBlock Text="使用从指定服务器同步的时间，而非系统时间。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+            <ComboBox VerticalAlignment="Center"
+                      Style="{StaticResource MahApps.Styles.ComboBox}"
+                      mah:TextBoxHelper.Watermark="时间服务器"
+                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                      Text="{Binding SettingsService.Settings.ExactTimeServer}"
+                      MinHeight="32"
+                      FontSize="14"
+                      HorizontalContentAlignment="Left"
+                      IsEditable="True">
+                <ComboBoxItem Content="ntp.aliyun.com"/>
+                <ComboBoxItem Content="1ntp.aliyun.com"/>
+                <ComboBoxItem Content="cn.ntp.org.cn"/>
+                <ComboBoxItem Content="pool.ntp.org"/>
+                <ComboBoxItem Content="time.windows.com"/>
+            </ComboBox>
+            <TextBlock Margin="0 6 0 0" Text="{Binding ExactTimeService.SyncStatusMessage}"
+                       TextWrapping="Wrap" />
+            <Button Margin="0 6 0 0" HorizontalAlignment="Left"
+                    Click="ButtonSyncTimeNow_OnClick"
+                    Style="{StaticResource MahApps.Styles.Button.Flat}">
+                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="立即同步"/>
+            </Button>
+        </StackPanel>
+
+        <!-- 时间偏移：抽屉 -->
+        <StackPanel x:Key="TimeOffsetDrawer" Width="360">
+            <TextBlock Text="时间偏移" FontSize="20" Margin="0 0 0 4" />
+            <TextBlock Text="课程时间相对实际时间的偏移；增大以抵消铃声提前，减小以抵消滞后。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+            <controls1:SettingsControl Header="自动时间偏移"
+                                       Description="每天自动按设定的增量值调整时间偏移。">
+                <controls1:SettingsControl.Switcher>
+                    <StackPanel>
+                        <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}" OnContent="开" OffContent="关" MinWidth="0" HorizontalAlignment="Left"/>
+                        <mah:NumericUpDown Margin="0 8 0 0" MinWidth="120" HorizontalAlignment="Left"
+                                           FontSize="14"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           IsEnabled="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"
+                                           Value="{Binding SettingsService.Settings.TimeAutoAdjustSeconds}"/>
+                    </StackPanel>
+                </controls1:SettingsControl.Switcher>
+            </controls1:SettingsControl>
+        </StackPanel>
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
@@ -61,18 +210,25 @@
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <DatePicker SelectedDate="{Binding SettingsService.Settings.SingleWeekStartTime}"
-                                    Width="120"
+                                    MinWidth="180"
+                                    MinHeight="32"
+                                    FontSize="14"
+                                    VerticalAlignment="Center"
                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.CalendarMultiple}}"
                                 Click="ButtonWeekOffsetSettingsOpen_OnClick"
-                                ToolTip="调整偏移…"/>
-                        <Popup Grid.Row="2"
-                                                AllowsTransparency="True"
-                                                StaysOpen="False"
-                                                Placement="Mouse"
-                                                IsOpen="{Binding ViewModel.IsWeekOffsetSettingsOpen}"
-                                                PopupAnimation="Fade">
+                                Margin="8 0 0 0"
+                                ToolTip="更改多周轮换">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="CalendarScheduleFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="更改多周轮换" Margin="6 0 0 0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Popup AllowsTransparency="True"
+                               StaysOpen="False"
+                               Placement="Mouse"
+                               IsOpen="{Binding ViewModel.IsWeekOffsetSettingsOpen}"
+                               PopupAnimation="Fade">
                             <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                     Margin="8"
                                     Button.Click="ButtonWeekOffsetSettingsButtons_OnClick">
@@ -89,250 +245,105 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 隐藏窗口 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent" IsExpanded="True">
-                    <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.HideOutline}"
-                                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                          Header="隐藏窗口" HasSwitcher="False"
-                                                                          Description="在以下情况隐藏主界面，避免遮挡屏幕。"
-                                                                          Margin="-12 0" />
-                    </Expander.Header>
-                    <TabControl Margin="36 0 64 12" HorizontalContentAlignment="Left"
-                                SelectedIndex="{Binding SettingsService.Settings.HideMode}">
-                        <TabItem Header="基础模式">
-                            <StackPanel Margin="6 6 0 0">
-                                <StackPanel.Resources>
-                                    <Style TargetType="CheckBox"
-                                           BasedOn="{StaticResource MahApps.Styles.CheckBox}">
-                                        <Setter Property="Margin" Value="0 2" />
-                                    </Style>
-                                </StackPanel.Resources>
-                                <CheckBox Content="上课时"
-                                          IsChecked="{Binding SettingsService.Settings.HideOnClass}"/>
-                                <CheckBox Content="前台是最大化窗口时"
-                                          IsChecked="{Binding SettingsService.Settings.HideOnMaxWindow}" />
-                                <CheckBox Content="前台是全屏窗口时"
-                                          IsChecked="{Binding SettingsService.Settings.HideOnFullscreen}" />
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="高级模式">
-                            <StackPanel>
-                                <Button HorizontalAlignment="Left" Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                        Command="{x:Static ci:SettingsPageBase.OpenDrawerCommand}"
-                                        CommandParameter="{StaticResource RulesetControl}">
-                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…"/>
-                                </Button>
-                            </StackPanel>
-                        </TabItem>
-                    </TabControl>
-                </Expander>
-            </Border>
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.HideOutline}" Header="隐藏窗口"
+                                    Description="在以下情况隐藏主界面，避免遮挡屏幕。">
+                <controls1:SettingsCard.Switcher>
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                            HorizontalAlignment="Left"
+                            Click="ButtonOpenHideWindow_OnClick">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="EyeOffFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="隐藏条件…" Margin="6 0 0 0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <!-- 点击托盘图标行为 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CursorDefaultClickOutline}"
                                                            Header="点击托盘图标行为"
-                                                           Description="左键单击托盘图标的操作；右键始终打开主菜单。"
-                                                           IsOn="{Binding SettingsService.Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}">
+                                                           Description="左键单击托盘图标的操作；右键始终打开主菜单。">
                 <controls1:SettingsCard.Switcher>
-                    <Grid>
-                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                  SelectedIndex="{Binding SettingsService.Settings.TaskBarIconClickBehavior}"
-                                  HorizontalContentAlignment="Left">
-                            <ComboBoxItem HorizontalContentAlignment="Left">
-                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Menu}" Text="打开主菜单" />
-                            </ComboBoxItem>
-                            <ComboBoxItem HorizontalContentAlignment="Left">
-                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileDocumentEdit}" Text="打开档案编辑窗口" />
-                            </ComboBoxItem>
-                            <ComboBoxItem HorizontalContentAlignment="Left">
-                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Visibility}" Text="显示/隐藏主界面" />
-                            </ComboBoxItem>
-                            <ComboBoxItem HorizontalContentAlignment="Left">
-                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.SwapHorizontal}" Text="打开换课窗口" />
-                            </ComboBoxItem>
-                        </ComboBox>
-                    </Grid>
+                    <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              MinWidth="160"
+                              MinHeight="32"
+                              FontSize="14"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding SettingsService.Settings.TaskBarIconClickBehavior}"
+                              HorizontalContentAlignment="Left">
+                        <ComboBoxItem HorizontalContentAlignment="Left">打开主菜单</ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">打开档案编辑窗口</ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">显示/隐藏主界面</ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">打开换课窗口</ComboBoxItem>
+                    </ComboBox>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 显示启动加载界面 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent" IsExpanded="False"
-                                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.RocketLaunchOutline}"
-                                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                          Header="显示启动加载界面"
-                                                                          Description="启动时显示加载界面。"
-                                                                          IsOn="{Binding SettingsService.Settings.IsSplashEnabled, Mode=TwoWay}"
-                                                                          Margin="-12 0" />
-                    </Expander.Header>
-                    <Grid Margin="36 0 48 12">
-                        <Grid.IsEnabled>
-                            <MultiBinding Converter="{StaticResource BooleanAndExpressionMultiConverter}">
-                                <Binding Path="SettingsService.Settings.IsSplashEnabled"/>
-                                <Binding Path="ManagementService.Policy.DisableSplashCustomize" Converter="{StaticResource InvertBooleanConverter}"/>
-                            </MultiBinding>
-                        </Grid.IsEnabled>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="自定义启动图标（留空将加载默认图标）"
-                                                           VerticalAlignment="Center" />
-                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal"
-                                                            HorizontalAlignment="Right" VerticalAlignment="Center">
-                            <TextBox MinWidth="150" MaxWidth="250"
-                                                             Text="{Binding SettingsService.Settings.SplashCustomLogoSource}"
-                                                             VerticalAlignment="Center" Margin="0 0 2 0" />
-                            <controls2:FileBrowserButton
-                                                        CurrentPath="{Binding SettingsService.Settings.SplashCustomLogoSource, Mode=TwoWay}"
-                                                        VerticalAlignment="Center" />
-                        </StackPanel>
-
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="自定义启动文字（留空将加载默认文字）"
-                                                           VerticalAlignment="Center" Margin="0 4 0 0" />
-                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal"
-                                                            Margin="0 4 0 0" HorizontalAlignment="Right"
-                                                            VerticalAlignment="Center">
-                            <TextBox MinWidth="200" MaxWidth="300"
-                                                             Text="{Binding SettingsService.Settings.SplashCustomText}"
-                                                             VerticalAlignment="Center" />
-                        </StackPanel>
-
-                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                    Margin="0 4 0 0" Orientation="Horizontal">
-                            <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.ShowDetailedStatusOnSplash}" OnContent="开" OffContent="关" MinWidth="0" Margin="0 0 6 0"/>
-                            <TextBlock Text="在启动屏幕显示详细的状态信息" VerticalAlignment="Center"/>
-                        </StackPanel>
-
-                        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Background="#22FF0000" Margin="0 6 0 0" Visibility="{Binding ManagementService.Policy.DisableSplashCustomize, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Grid TextElement.FontSize="13">
-                                <DockPanel Margin="8 4 4 4">
-                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Forbid}"
-                                                             Margin="0 0 4 0"
-                                                             VerticalAlignment="Center"/>
-                                    <TextBlock Text="自定义启动界面功能已被您所在的组织禁用。"
-                                               TextWrapping="Wrap"
-                                               VerticalAlignment="Center"/>
-                                </DockPanel>
-                            </Grid>
-                        </Border>
-
-                        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0">
-                            <Button Margin="0 6 0 0" Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                    HorizontalAlignment="Left" Click="ButtonRefreshSplashPreview_OnClick">
-                                <ci:IconText Kind="{x:Static controls1:IconGlyphs.EyeOutline}" Text="预览"/>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
-                </Expander>
-            </Border>
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.RocketLaunchOutline}" Header="显示启动加载界面"
+                                    Description="启动时显示加载界面。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsSplashEnabled, Mode=TwoWay}" OnContent="开" OffContent="关" MinWidth="0"/>
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                Margin="8 0 0 0"
+                                Click="ButtonOpenSplash_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="SoundModuleFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="自定义…" Margin="6 0 0 0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
 
             <TextBlock Text="时钟" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 使用精确时间 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent"
-                                                  IsExpanded="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=OneWay}"
-                                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.TimerSyncOutline}"
-                                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                          Header="使用精确时间"
-                                                                          Description="使用从指定服务器同步的时间，而非系统时间。"
-                                                                          IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}"
-                                                                          Margin="-12 0" />
-                    </Expander.Header>
-                    <Grid Margin="36 0 48 12"
-                                                  IsEnabled="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=OneWay}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <ComboBox VerticalAlignment="Stretch"
-                                                          Style="{StaticResource MahApps.Styles.ComboBox}"
-                                                          mah:TextBoxHelper.Watermark="时间服务器"
-                                                          Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                          Text="{Binding SettingsService.Settings.ExactTimeServer}"
-                                                          HorizontalContentAlignment="Left"
-                                                          IsEditable="True"
-                                                          Margin="0 0 0 6"
-                                                          Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
-                            <ComboBoxItem Content="ntp.aliyun.com"/>
-                            <ComboBoxItem Content="1ntp.aliyun.com"/>
-                            <ComboBoxItem Content="cn.ntp.org.cn"/>
-                            <ComboBoxItem Content="pool.ntp.org"/>
-                            <ComboBoxItem Content="time.windows.com"/>
-                        </ComboBox>
-
-                        <TextBlock Margin="0 6 0 0" Text="{Binding ExactTimeService.SyncStatusMessage}"
-                                                           TextWrapping="Wrap" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"/>
-                        <Button Margin="0 6 0 0" 
-                                                        Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"
-                                                        HorizontalAlignment="Left"
-                                                        Click="ButtonSyncTimeNow_OnClick"
-                                                        Style="{StaticResource MahApps.Styles.Button.Flat}">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="立即同步"/>
-                        </Button>
-                    </Grid>
-                </Expander>
-            </Border>
-            <!-- 时间偏移 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent"
-                                                  IsExpanded="True"
-                                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockArrow}"
-                                                   Header="时间偏移"
-                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                   Description="课程时间相对实际时间的偏移；增大以抵消铃声提前，减小以抵消滞后。"
-                                                   IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}"
-                                                   Margin="-12 0">
-                            <controls1:SettingsControl.Switcher>
-                                <TextBox Grid.Column="1" Grid.Row="1"
-                                         VerticalAlignment="Center"
-                                         MinWidth="147"
-                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                         Text="{Binding SettingsService.Settings.TimeOffsetSeconds, Converter={StaticResource IntToStringConverter}}"/>
-                            </controls1:SettingsControl.Switcher>
-                        </controls1:SettingsControl>
-                    </Expander.Header>
-                    <StackPanel Margin="36 0 48 12">
-                        <!-- 自动时间偏移 -->
-                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAutoOutline}" Header="自动时间偏移"
-                                                                       Description="每天自动按设定的增量值调整时间偏移。">
-                            <controls1:SettingsControl.Switcher>
-                                <DockPanel Width="150">
-                                    <mah:ToggleSwitch DockPanel.Dock="Right" Margin="8 0 0 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"/>
-                                    <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                     IsEnabled="{Binding SettingsService.Settings.IsTimeAutoAdjustEnabled}"
-                                                                     Text="{Binding SettingsService.Settings.TimeAutoAdjustSeconds, Converter={StaticResource IntToStringConverter}}"/>
-                                </DockPanel>
-                            </controls1:SettingsControl.Switcher>
-                        </controls1:SettingsControl>
-
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.TimerSyncOutline}" Header="使用精确时间"
+                                    Description="使用从指定服务器同步的时间，而非系统时间。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}" OnContent="开" OffContent="关" MinWidth="0"/>
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                HorizontalAlignment="Left"
-                                Margin="0 6 0 0"
-                                Click="ButtonAdjustTime_OnClick">
-                            <ci:IconText Kind="{x:Static controls1:IconGlyphs.ClockCheckOutline}" Text="对齐铃声…"/>
+                                Margin="8 0 0 0"
+                                Click="ButtonOpenExactTime_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="TimeZoneFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="配置 NTP 服务器" Margin="6 0 0 0" VerticalAlignment="Center"/>
+                            </StackPanel>
                         </Button>
                     </StackPanel>
-                </Expander>
-            </Border>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
+            <!-- 时间偏移 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockArrow}" Header="时间偏移"
+                                    Description="课程时间相对实际时间的偏移；增大以抵消铃声提前，减小以抵消滞后。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.TimeOffsetSeconds}"
+                                           MinWidth="120"
+                                           MinHeight="32"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                Margin="8 0 0 0"
+                                Click="ButtonOpenTimeOffset_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="MoreFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="更多…" Margin="6 0 0 0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                Margin="8 0 0 0"
+                                Click="ButtonAdjustTime_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="TimerFlashFill" Width="16" Height="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="对齐铃声" Margin="6 0 0 0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
+
             <TextBlock Text="显示" Style="{StaticResource SettingsSectionHeaderStyle}" 
                                 Visibility="{Binding SettingsService.Settings.ShowComponentsMigrateTip, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             <!-- 简略信息 -->
@@ -372,30 +383,30 @@
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PuzzleRemoveOutline}"
                                     Header="自动禁用异常插件"
                                     Description="自动禁用导致应用崩溃的插件。"
-                                    IsOn="{Binding SettingsService.Settings.AutoDisableCorruptPlugins, Mode=TwoWay}"
-                                    Margin="0 0 0 6" />
+                                    IsOn="{Binding SettingsService.Settings.AutoDisableCorruptPlugins, Mode=TwoWay}" />
             <!-- 禁用过渡动画 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AnimationPlayOutline}"
                                    Header="禁用过渡动画"
                                    Description="禁用部分控件的过渡动画，提升性能和操作效率。"
-                                   IsOn="{Binding SettingsService.Settings.IsTransientDisabled, Mode=TwoWay}"
-                                   Margin="0 0 0 6" />
+                                   IsOn="{Binding SettingsService.Settings.IsTransientDisabled, Mode=TwoWay}" />
             <!-- 禁用动画等待 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.TimerAlertOutline}"
                                     Header="禁用动画等待"
                                     Description="阻塞 UI 线程时不等动画播完，提升加载速度。"
-                                    IsOn="{Binding SettingsService.Settings.IsWaitForTransientDisabled, Mode=TwoWay}"
-                                    Margin="0 0 0 6" />
+                                    IsOn="{Binding SettingsService.Settings.IsWaitForTransientDisabled, Mode=TwoWay}" />
             <!-- 教学安全模式 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CarBrakeAlert}"
                                     Header="教学安全模式"
-                                    Description="崩溃时按右侧方式处理，保证教学不受影响；不可忽略的异常将直接退出应用。"
-                                    Margin="0 0 0 6">
+                                    Description="崩溃时按下面的方式处理，不可捕获错误直接完蛋。">
                 <controls1:SettingsCard.Switcher>
-                    <DockPanel>
-                        <mah:ToggleSwitch DockPanel.Dock="Right" Margin="8 0 0 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsCriticalSafeMode}"/>
-                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                  Width="120"
+                    <StackPanel>
+                        <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsCriticalSafeMode}" OnContent="开" OffContent="关" MinWidth="0" HorizontalAlignment="Left"/>
+                        <ComboBox Margin="0 8 0 0"
+                                  MinWidth="160"
+                                  MinHeight="32"
+                                  FontSize="14"
+                                  HorizontalAlignment="Left"
+                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                   Visibility="{Binding SettingsService.Settings.IsCriticalSafeMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                                   SelectedIndex="{Binding SettingsService.Settings.CriticalSafeModeMethod}">
                             <ComboBoxItem>退出应用</ComboBoxItem>
@@ -403,7 +414,7 @@
                             <ComboBoxItem>显示通知</ComboBoxItem>
                             <ComboBoxItem>忽略（不推荐）</ComboBoxItem>
                         </ComboBox>
-                    </DockPanel>
+                    </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
         </StackPanel>

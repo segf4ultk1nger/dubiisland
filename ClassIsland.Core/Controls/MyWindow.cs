@@ -71,6 +71,29 @@ public class MyWindow : MetroWindow
             // ignored
         }
 
+        // VS/Colors 未合并，VS 的菜单系列样式引用了只存在于 VS/Colors 的画刷（如 MenuItem.BackgroundHighlighted、
+        // MenuSeparator.Border），会渲染成透明/未定义。菜单改用跟随主题的基础样式。
+        var app = Application.Current;
+        if (app?.TryFindResource("MahApps.Styles.MenuItem") is Style menuItemStyle)
+        {
+            Resources[typeof(MenuItem)] = new Style(typeof(MenuItem), menuItemStyle);
+        }
+
+        if (app?.TryFindResource("MahApps.Styles.Menu") is Style menuStyle)
+        {
+            Resources[typeof(Menu)] = new Style(typeof(Menu), menuStyle);
+        }
+
+        if (app?.TryFindResource("MahApps.Styles.ContextMenu") is Style contextMenuStyle)
+        {
+            Resources[typeof(ContextMenu)] = new Style(typeof(ContextMenu), contextMenuStyle);
+        }
+
+        if (app?.TryFindResource(MenuItem.SeparatorStyleKey) is Style separatorStyle)
+        {
+            Resources[MenuItem.SeparatorStyleKey] = new Style(typeof(Separator), separatorStyle);
+        }
+
         try
         {
             SetResourceReference(StyleProperty, "MahApps.Styles.MetroWindow.VisualStudio");
