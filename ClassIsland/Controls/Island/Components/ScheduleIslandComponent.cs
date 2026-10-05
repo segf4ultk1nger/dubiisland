@@ -46,6 +46,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     private Color _lastAccent;
 
     private string? _placeholderText;
+    private bool _collapsed;
 
     private bool _showTomorrowBadge;
     private FormattedText? _badgeText;
@@ -59,8 +60,14 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     protected override Size MeasureContent(Size availableSize, IslandContext context)
     {
         Build(context);
+        if (_collapsed)
+            return new Size(0, 0);
         if (_placeholderText != null)
-            return new Size(200, StripHeight);
+        {
+            var text = MakeText(_placeholderText, BodyFontSize, FontWeights.Normal, _foreground, context);
+            return new Size(text.Width + 24, StripHeight);
+        }
+
         var width = _segments.Sum(s => s.Width);
         if (_showTomorrowBadge)
             width += _badgeWidth + BadgeGap;
@@ -72,16 +79,42 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         EnsureBrushes(context);
         _segments.Clear();
         _placeholderText = null;
+        _collapsed = false;
         _showTomorrowBadge = false;
 
         var lessons = context.LessonsService;
         var now = context.ExactTimeService.GetCurrentLocalDateTime();
         var mode = _settings.TomorrowScheduleShowMode;
-        var isAfterSchool = lessons.CurrentState == TimeState.AfterSchool || lessons.CurrentClassPlan == null;
+        var currentPlan = lessons.CurrentClassPlan;
+        var isAfterSchool = lessons.CurrentState == TimeState.AfterSchool || currentPlan == null;
         var tomorrowClassPlan = lessons.GetClassPlanByDate(now + TimeSpan.FromDays(1));
+        var hideFinishedClass = _settings.HideFinishedClass;
+        var badgeVisible = tomorrowClassPlan != null && mode != 0 && !(!isAfterSchool && mode == 1);
 
-        SetTomorrowBadge(context,
-            tomorrowClassPlan != null && mode != 0 && !(!isAfterSchool && mode == 1));
+        var placeholderVisible = _settings.ShowPlaceholderOnEmptyClassPlan &&
+            ((tomorrowClassPlan == null && mode == 2) ||
+             (mode == 1 && currentPlan == null && !badgeVisible) ||
+             (currentPlan == null && mode == 0) ||
+             (isAfterSchool && hideFinishedClass && mode == 0) ||
+             (isAfterSchool && hideFinishedClass && mode == 1 && tomorrowClassPlan == null));
+
+        if (placeholderVisible)
+        {
+            _placeholderText = hideFinishedClass && mode == 0 ||
+                               (hideFinishedClass && mode == 1 && tomorrowClassPlan == null)
+                ? _settings.PlaceholderTextAllClassEnded
+                : _settings.PlaceholderTextNoClass;
+            return;
+        }
+
+        if (isAfterSchool && hideFinishedClass &&
+            (mode == 0 || (mode == 1 && tomorrowClassPlan == null)))
+        {
+            _collapsed = true;
+            return;
+        }
+
+        SetTomorrowBadge(context, badgeVisible);
 
         ClassPlan? plan;
         int index;
@@ -112,10 +145,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         }
 
         if (plan == null)
-        {
-            _placeholderText = _settings.PlaceholderTextNoClass;
             return;
-        }
 
         var layouts = plan.TimeLayout.Layouts;
         var valid = plan.ValidTimeLayoutItems;
@@ -183,7 +213,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     {
         if (_placeholderText != null)
         {
-            var text = MakeText(_placeholderText, EmphasizedFontSize, FontWeights.Normal, _foreground, context);
+            var text = MakeText(_placeholderText, BodyFontSize, FontWeights.Normal, _foreground, context);
             drawingContext.DrawText(text, new Point(slot.X + 12, slot.Y + (slot.Height - text.Height) / 2));
             return;
         }
