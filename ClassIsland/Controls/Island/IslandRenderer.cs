@@ -155,7 +155,7 @@ public sealed class IslandRenderer
             if (lineRect.Width > 0 && lineRect.Height > 0)
             {
                 drawingContext.DrawRoundedRectangle(_backgroundBrush, null, lineRect,
-                    settings.RadiusX, settings.RadiusY);
+                    settings.RadiusX, settings.RadiusX);
             }
 
             var x = 0.0;
@@ -197,7 +197,7 @@ public sealed class IslandRenderer
             var accent = new SolidColorBrush(_context.AccentColor);
             drawingContext.DrawRoundedRectangle(accent, null,
                 new Rect(0, MaskOffsetY, bounds.Width, _contentHeight),
-                settings.RadiusX, settings.RadiusY);
+                settings.RadiusX, settings.RadiusX);
             var centerY = _contentHeight / 2 + MaskOffsetY;
             const double gap = 8;
             var text = string.IsNullOrEmpty(MaskText)
