@@ -46,6 +46,10 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private int _windowDockingOffsetY = 0;
     private int _windowDockingMonitorIndex = 0;
     private int _windowLayer = 1;
+    private int _windowTopmostRecheckMode = 0;
+    private int _windowTopmostRecheckIntervalMs = 500;
+    private bool _isScreenRecordingModeEnabled = false;
+    private bool _isWindowCaptureBlockingEnabled = false;
     private bool _isMouseClickingEnabled = false;
     private bool _hideOnFullscreen = false;
     private bool _isClassOffNotificationEnabled = true;
@@ -1756,6 +1760,67 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _windowLayer) return;
             _windowLayer = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 窗口层级检查模式。
+    /// </summary>
+    /// <value>
+    /// 0 - 窗口层级变化时（默认）<br/>
+    /// 1 - 前台窗口变化时<br/>
+    /// 2 - 每 1s<br/>
+    /// 3 - 每 500ms<br/>
+    /// 4 - 每 200ms<br/>
+    /// 5 - 每 100ms<br/>
+    /// 6 - 每 50ms<br/>
+    /// 7 - 每 1ms<br/>
+    /// 8 - 自定义定时
+    /// </value>
+    public int WindowTopmostRecheckMode
+    {
+        get => _windowTopmostRecheckMode;
+        set
+        {
+            if (value == _windowTopmostRecheckMode) return;
+            _windowTopmostRecheckMode = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 自定义窗口层级检查间隔（毫秒），仅在 <see cref="WindowTopmostRecheckMode"/> 为 8 时生效。
+    /// </summary>
+    public int WindowTopmostRecheckIntervalMs
+    {
+        get => _windowTopmostRecheckIntervalMs;
+        set
+        {
+            if (value == _windowTopmostRecheckIntervalMs) return;
+            _windowTopmostRecheckIntervalMs = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsScreenRecordingModeEnabled
+    {
+        get => _isScreenRecordingModeEnabled;
+        set
+        {
+            if (value == _isScreenRecordingModeEnabled) return;
+            _isScreenRecordingModeEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsWindowCaptureBlockingEnabled
+    {
+        get => _isWindowCaptureBlockingEnabled;
+        set
+        {
+            if (value == _isWindowCaptureBlockingEnabled) return;
+            _isWindowCaptureBlockingEnabled = value;
             OnPropertyChanged();
         }
     }

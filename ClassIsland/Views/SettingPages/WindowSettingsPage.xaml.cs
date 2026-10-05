@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums.SettingsWindow;
+using ClassIsland.Models;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
 
@@ -26,7 +28,11 @@ public partial class WindowSettingsPage : SettingsPageBase
         InitializeComponent();
         DataContext = this;
         SettingsService = settingsService;
-        ViewModel.Screens = new ObservableCollection<Screen>(Screen.AllScreens);
+        RefreshScreens();
+        if (!ViewModel.IsWindowCaptureBlockingSupported && SettingsService.Settings.IsWindowCaptureBlockingEnabled)
+        {
+            SettingsService.Settings.IsWindowCaptureBlockingEnabled = false;
+        }
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
     }
 
@@ -40,7 +46,12 @@ public partial class WindowSettingsPage : SettingsPageBase
 
     private void ButtonRefreshMonitors_OnClick(object sender, RoutedEventArgs e)
     {
-        ViewModel.Screens = new ObservableCollection<Screen>(Screen.AllScreens);
+        RefreshScreens();
+    }
+
+    private void RefreshScreens()
+    {
+        ViewModel.Screens = new ObservableCollection<MonitorInfo>(Screen.AllScreens.Select(s => new MonitorInfo(s)));
     }
 
     private void ButtonRestart_OnClick(object sender, RoutedEventArgs e)

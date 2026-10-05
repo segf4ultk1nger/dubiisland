@@ -56,14 +56,14 @@
                                     <StackPanel Orientation="Horizontal">
                                         <remix:PackIconRemixIcon Kind="MacFill" Width="16" Height="16" VerticalAlignment="Center" />
                                         <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
-                                            <Run Text="{Binding DeviceName, Mode=OneWay}" />
+                                            <Run Text="{Binding FriendlyName, Mode=OneWay}" />
                                             <Run Text="(">
                                             </Run>
-                                            <Run Text="{Binding Bounds.Width, Mode=OneWay}">
+                                            <Run Text="{Binding Width, Mode=OneWay}">
                                             </Run>
                                             <Run Text="x">
                                             </Run>
-                                            <Run Text="{Binding Bounds.Height, Mode=OneWay}">
+                                            <Run Text="{Binding Height, Mode=OneWay}">
                                             </Run>
                                             <Run Text=")" />
                                         </TextBlock>
@@ -177,6 +177,55 @@
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
 
+            <!-- 窗口层级设置频率 -->
+            <ci:SettingsCard Header="窗口层级设置频率"
+                             Description="应用在什么时候重新设置窗口置顶/置底状态。较高的频率可能会导致卡顿。"
+                             Margin="0 0 0 6">
+                <ci:SettingsCard.Switcher>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              HorizontalContentAlignment="Left"
+                              MinWidth="260" MinHeight="32" FontSize="14"
+                              SelectedIndex="{Binding SettingsService.Settings.WindowTopmostRecheckMode, Mode=TwoWay}">
+                        <ComboBoxItem>窗口层级变化时（默认）</ComboBoxItem>
+                        <ComboBoxItem>前台窗口变化时</ComboBoxItem>
+                        <ComboBoxItem>每 1s</ComboBoxItem>
+                        <ComboBoxItem>每 500ms</ComboBoxItem>
+                        <ComboBoxItem>每 200ms</ComboBoxItem>
+                        <ComboBoxItem>每 100ms</ComboBoxItem>
+                        <ComboBoxItem>每 50ms</ComboBoxItem>
+                        <ComboBoxItem>每 1ms</ComboBoxItem>
+                        <ComboBoxItem>自定义定时…</ComboBoxItem>
+                    </ComboBox>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+
+            <!-- 自定义检查间隔 -->
+            <StackPanel Margin="0 0 0 6">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SettingsService.Settings.WindowTopmostRecheckMode}" Value="8">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <ci:SettingsCard Header="自定义检查间隔"
+                                 Description="每隔指定的毫秒数重新设置窗口层级。">
+                    <ci:SettingsCard.Switcher>
+                        <StackPanel Orientation="Horizontal">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.WindowTopmostRecheckIntervalMs}"
+                                               Minimum="1"
+                                               MinWidth="120" MinHeight="32" FontSize="14"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                            <TextBlock Text="ms" Margin="8 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ci:SettingsCard.Switcher>
+                </ci:SettingsCard>
+            </StackPanel>
+
             <!-- 指针移入淡化 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveDown}"
                              Header="指针移入淡化"
@@ -261,6 +310,21 @@
                                    Description="开启后会直接使用整个屏幕区域参与布局。不会为任务栏预留空间。"
                                    IsOn="{Binding SettingsService.Settings.IsIgnoreWorkAreaEnabled, Mode=TwoWay}"
                                    Margin="0 0 0 6" />
+
+            <!-- 录制模式 -->
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CameraTimer}"
+                             Header="录制模式"
+                             Description="启用后 LegacyIsland 将会允许其他软件被单独选取录制，将会导致主窗口显示在任务栏中。"
+                             IsOn="{Binding SettingsService.Settings.IsScreenRecordingModeEnabled, Mode=TwoWay}"
+                             Margin="0 0 0 6" />
+
+            <!-- 阻止截图 -->
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Monitor}"
+                             Header="阻止截图"
+                             IsEnabled="{Binding ViewModel.IsWindowCaptureBlockingSupported}"
+                             Description="开启后，其他应用无法截取到 LegacyIsland 主窗口，需 Windows 10 2004+"
+                             IsOn="{Binding SettingsService.Settings.IsWindowCaptureBlockingEnabled, Mode=TwoWay}"
+                             Margin="0 0 0 6" />
 
         </StackPanel>
     </ScrollViewer>

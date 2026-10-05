@@ -117,6 +117,8 @@ public partial class MainWindow : Window
 
     private DispatcherTimer TouchInFadingTimer { get; set; } = new();
 
+    private DispatcherTimer TopmostRecheckTimer { get; } = new();
+
     private Stopwatch RawInputUpdateStopWatch { get; } = new();
 
     public ClassChangingWindow? ClassChangingWindow { get; set; }
@@ -195,6 +197,7 @@ public partial class MainWindow : Window
         LessonsService.PostMainTimerTicked += LessonsServiceOnPostMainTimerTicked;
         ViewModel = new MainViewModel();
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        TopmostRecheckTimer.Tick += TopmostRecheckTimerOnTick;
         InitializeComponent();
         RulesetService.StatusUpdated += RulesetServiceOnStatusUpdated;
         TouchInFadingTimer.Tick += TouchInFadingTimerOnTick;
@@ -218,6 +221,35 @@ public partial class MainWindow : Window
     {
         ViewModel.IsMouseIn = false;
         TouchInFadingTimer.Stop();
+    }
+
+    private void TopmostRecheckTimerOnTick(object? sender, EventArgs e)
+    {
+        ReCheckTopmostState();
+        SetBottom();
+    }
+
+    private void UpdateTopmostRecheckTimer()
+    {
+        TopmostRecheckTimer.Stop();
+        var interval = ViewModel.Settings.WindowTopmostRecheckMode switch
+        {
+            2 => 1000d,
+            3 => 500d,
+            4 => 200d,
+            5 => 100d,
+            6 => 50d,
+            7 => 1d,
+            8 => Math.Max(1d, ViewModel.Settings.WindowTopmostRecheckIntervalMs),
+            _ => 0d
+        };
+        if (interval <= 0)
+        {
+            return;
+        }
+
+        TopmostRecheckTimer.Interval = TimeSpan.FromMilliseconds(interval);
+        TopmostRecheckTimer.Start();
     }
 
     private void RulesetServiceOnStatusUpdated(object? sender, EventArgs e)
@@ -536,12 +568,11 @@ public partial class MainWindow : Window
 
     private void WindowRuleServiceOnForegroundWindowChanged(HWINEVENTHOOK hwineventhook, uint @event, HWND hwnd, int idobject, int idchild, uint ideventthread, uint dwmseventtime)
     {
-        //if (@event is not (EVENT_SYSTEM_FOREGROUND))
-        //{
-        //    return;
-        //}
-
-        //ReCheckTopmostState();
+        if (ViewModel.Settings.WindowTopmostRecheckMode == 1)
+        {
+            ReCheckTopmostState();
+            SetBottom();
+        }
     }
 
     private void ReCheckTopmostState()
@@ -587,7 +618,7 @@ public partial class MainWindow : Window
             RawInputEvent?.Invoke(this, new RawInputEventArgs(data));
         }
 
-        if (msg == 0x0047) // WM_WINDOWPOSCHANGED
+        if (msg == 0x0047 && ViewModel.Settings.WindowTopmostRecheckMode == 0) // WM_WINDOWPOSCHANGED
         {
             var pos = Marshal.PtrToStructure<WINDOWPOS>(lParam);
             Logger.LogTrace("WM_WINDOWPOSCHANGED {}", pos.flags);
@@ -757,18 +788,32 @@ public partial class MainWindow : Window
     private async void UpdateTheme()
     {
         UpdateWindowPos();
+        UpdateTopmostRecheckTimer();
         var hWnd = (HWND)new WindowInteropHelper(this).Handle;
         var style = GetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
-        style |= NativeWindowHelper.WS_EX_TOOLWINDOW;
-        if (!ViewModel.Settings.IsMouseClickingEnabled)
+        if (ViewModel.Settings.IsScreenRecordingModeEnabled)
         {
-            var r = SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style | NativeWindowHelper.WS_EX_TRANSPARENT);
+            style &= ~NativeWindowHelper.WS_EX_TOOLWINDOW;
         }
         else
         {
-            style &= ~NativeWindowHelper.WS_EX_TRANSPARENT;
-            var r = SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style);
+            style |= NativeWindowHelper.WS_EX_TOOLWINDOW;
         }
+
+        if (ViewModel.Settings.IsMouseClickingEnabled)
+        {
+            style &= ~NativeWindowHelper.WS_EX_TRANSPARENT;
+        }
+        else
+        {
+            style |= NativeWindowHelper.WS_EX_TRANSPARENT;
+        }
+
+        SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, style);
+
+        SetWindowDisplayAffinity(hWnd, ViewModel.Settings.IsWindowCaptureBlockingEnabled
+            ? WINDOW_DISPLAY_AFFINITY.WDA_EXCLUDEFROMCAPTURE
+            : WINDOW_DISPLAY_AFFINITY.WDA_NONE);
 
         UpdateWindowLayer();
 
