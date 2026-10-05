@@ -3,7 +3,6 @@ using System.Windows;
 using ClassIsland.Core.Controls.NotificationTemplates;
 using ClassIsland.Core.Models.Notification.Templates;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Google.Protobuf.WellKnownTypes;
 
 using ClassIsland.Core.Controls;
 namespace ClassIsland.Core.Models.Notification;
