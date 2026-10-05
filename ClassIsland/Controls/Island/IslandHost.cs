@@ -61,7 +61,18 @@ public sealed class IslandHost : IDisposable
     private AnimSpec? _animSpec;
     private TimeSpan? _animStart;
     private bool _renderingHooked;
+    private bool _showAnimActive;
+    private TimeSpan? _showAnimStart;
     private static readonly Dictionary<string, AnimSpec> AnimSpecs = BuildAnimSpecs();
+
+    private const double ShowScaleMin = 0.89;
+    private const double ShowAnimatedDuration = 0.47;
+    private const double ShowFadePortion = 0.78;
+    private const double ElasticConst = 2 * Math.PI / 0.3;
+    private const double ElasticConst2 = 0.3 / 4;
+    private static readonly double ExpoOffset = Math.Pow(2, -10);
+    private static readonly double ElasticOffsetHalf =
+        Math.Pow(2, -10) * Math.Sin((0.5 - ElasticConst2) * ElasticConst);
 
     public Settings Settings => _settingsService.Settings;
 
@@ -178,6 +189,8 @@ public sealed class IslandHost : IDisposable
         };
         var source = new HwndSource(parameters);
         source.RootVisual = _surface;
+        _surface.RenderTransformOrigin = new Point(0.5, 0.5);
+        _surface.RenderTransform = new ScaleTransform(1, 1);
         source.AddHook(WndProc);
         _source = source;
         _hwnd = source.Handle;
@@ -371,6 +384,26 @@ public sealed class IslandHost : IDisposable
             }
         }
 
+        if (_showAnimActive)
+        {
+            _showAnimStart ??= args.RenderingTime;
+            var t = (args.RenderingTime - _showAnimStart.Value).TotalSeconds;
+            var p = t / ShowAnimatedDuration;
+            if (p >= 1)
+            {
+                ApplyShowVisual(1, 1);
+                _showAnimActive = false;
+                _showAnimStart = null;
+            }
+            else
+            {
+                ApplyShowVisual(
+                    ShowScaleMin + (1 - ShowScaleMin) * OutElasticHalf(p),
+                    OutExpo(Math.Min(1, p / ShowFadePortion)));
+                active = true;
+            }
+        }
+
         if (_renderer.TickFades(args.RenderingTime.TotalSeconds))
             active = true;
 
@@ -394,6 +427,30 @@ public sealed class IslandHost : IDisposable
             return;
         CompositionTarget.Rendering -= OnRendering;
         _renderingHooked = false;
+    }
+
+    private void ApplyShowVisual(double scale, double opacity)
+    {
+        if (_surface.RenderTransform is ScaleTransform st)
+        {
+            st.ScaleX = scale;
+            st.ScaleY = scale;
+        }
+
+        _surface.Opacity = opacity;
+    }
+
+    private static double OutElasticHalf(double t)
+    {
+        t = Math.Max(0, Math.Min(1, t));
+        return Math.Pow(2, -10 * t) * Math.Sin((0.5 * t - ElasticConst2) * ElasticConst) + 1 -
+               ElasticOffsetHalf * t;
+    }
+
+    private static double OutExpo(double t)
+    {
+        t = Math.Max(0, Math.Min(1, t));
+        return -Math.Pow(2, -10 * t) + 1 + ExpoOffset * t;
     }
 
     private static double Eval((double T, double V, IEasingFunction? E)[] keys, double t)
@@ -665,9 +722,24 @@ public sealed class IslandHost : IDisposable
             UpdateWindowPos();
             ApplyWindowStyles();
             ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
+            if (Settings.IsIslandShowAnimationEnabled)
+            {
+                ApplyShowVisual(ShowScaleMin, 0);
+                _showAnimActive = true;
+                _showAnimStart = null;
+                EnsureRenderingHook();
+            }
+            else
+            {
+                ApplyShowVisual(1, 1);
+                _showAnimActive = false;
+                _showAnimStart = null;
+            }
         }
         else
         {
+            _showAnimActive = false;
+            _showAnimStart = null;
             ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
         }
     }

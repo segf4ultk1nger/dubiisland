@@ -189,6 +189,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private double _touchInFadingDurationMs = 0;
     private bool _isCompatibleWindowTransparentEnabled = false;
     private bool _useSelfDrawnIsland = false;
+    private bool _isIslandShowAnimationEnabled = true;
     private double _mainWindowSecondaryFontSize = 14;
     private double _mainWindowBodyFontSize = 16;
     private double _mainWindowEmphasizedFontSize = 18;
@@ -1900,6 +1901,18 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _useSelfDrawnIsland) return;
             _useSelfDrawnIsland = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>主界面出现时是否播放缩放 + 淡入动画。</summary>
+    public bool IsIslandShowAnimationEnabled
+    {
+        get => _isIslandShowAnimationEnabled;
+        set
+        {
+            if (value == _isIslandShowAnimationEnabled) return;
+            _isIslandShowAnimationEnabled = value;
             OnPropertyChanged();
         }
     }
