@@ -149,6 +149,8 @@ public sealed class IslandRenderer
         }
 
         _contentHeight = desired.Height;
+        if (_lines.Count > 0)
+            desired.Width += _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
         return desired;
     }
 
@@ -190,7 +192,7 @@ public sealed class IslandRenderer
             if (faded)
                 drawingContext.PushOpacity(opacity);
 
-            var x = 0.0;
+            var x = settings.MainWindowLeftMargin;
             for (var i = 0; i < line.Components.Length; i++)
             {
                 var slot = new Rect(x, y, line.Sizes[i].Width, line.Height);

@@ -218,6 +218,8 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private string _selectedUpdateChannelV2 = "stable";
     private GptSoVitsSpeechSettings _gptSoVitsSpeechSettings = new();
     private double _mainWindowLineVerticalMargin = 5;
+    private double _mainWindowLeftMargin = 0;
+    private double _mainWindowRightMargin = 0;
     private ObservableCollection<string> _trustedProfileIds = [];
     private bool _isNonExactCountdownEnabled = false;
     private bool _showDetailedStatusOnSplash = false;
@@ -1146,6 +1148,28 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value.Equals(_mainWindowLineVerticalMargin)) return;
             _mainWindowLineVerticalMargin = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double MainWindowLeftMargin
+    {
+        get => _mainWindowLeftMargin;
+        set
+        {
+            if (value.Equals(_mainWindowLeftMargin)) return;
+            _mainWindowLeftMargin = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double MainWindowRightMargin
+    {
+        get => _mainWindowRightMargin;
+        set
+        {
+            if (value.Equals(_mainWindowRightMargin)) return;
+            _mainWindowRightMargin = value;
             OnPropertyChanged();
         }
     }

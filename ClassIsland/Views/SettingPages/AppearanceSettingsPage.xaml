@@ -358,6 +358,26 @@
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 界面边距 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ArrowLeftRight}" Header="界面边距"
+                                    Description="主界面内容与左右边缘的边距。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:MetroHeader Header="左边距" Margin="0 0 12 0">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.MainWindowLeftMargin}"
+                                               Minimum="0" Maximum="300"
+                                               MinWidth="120" MinHeight="32" FontSize="14"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        </mah:MetroHeader>
+                        <mah:MetroHeader Header="右边距">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.MainWindowRightMargin}"
+                                               Minimum="0" Maximum="300"
+                                               MinWidth="120" MinHeight="32" FontSize="14"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        </mah:MetroHeader>
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <!-- 动画 -->
             <TextBlock Text="动画" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 显示动画 -->
