@@ -127,6 +127,8 @@ public partial class App : AppBase, IAppHost
 
     private bool _isStartedCompleted = false;
 
+    private bool _startupCompleted;
+
     internal static bool IsCrashed { get; set; } = false;
 
     internal static bool _isCriticalSafeModeEnabled = false;
@@ -746,33 +748,7 @@ public partial class App : AppBase, IAppHost
 #endif
         var mw = GetService<MainWindow>();
         MainWindow = mw;
-        mw.StartupCompleted += (o, args) =>
-        {
-            GetService<ISplashService>().CurrentProgress = 98;
-            GetService<ISplashService>().SetDetailedStatus("正在进行启动后操作");
-            // 由于在应用启动时调用 WMI 会导致无法使用触摸，故在应用启动完成后再获取设备统计信息。
-            // https://github.com/dotnet/wpf/issues/9752
-            AppStarted?.Invoke(this, EventArgs.Empty);
-            StartUriPipeServer();
-            GetService<IAutomationService>();
-            GetService<IRulesetService>().NotifyStatusChanged();
-            File.Delete(startupCountFilePath);
-            if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)
-            {
-                GetService<ITaskBarIconService>().ShowNotification("配置文件损坏", "LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。点击此消息以查看详细信息和从过往备份中恢复配置文件。", clickedCallback:() => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/config-errors")));
-            }
-            if (Settings.CorruptPluginsDisabledLastSession)
-            {
-                Settings.CorruptPluginsDisabledLastSession = false;
-                GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "LegacyIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/classisland.plugins")));
-            }
-            if (Settings.IsSplashEnabled)
-            {
-                App.GetService<ISplashService>().EndSplash();
-            }
-            _isStartedCompleted = true;
-            AppBase.CurrentLifetime = ApplicationLifetime.Running;
-        };
+        mw.StartupCompleted += (_, _) => CompleteStartup();
 #if DEBUG
         MemoryProfiler.GetSnapshot("Pre MainWindow show");
 #endif
@@ -812,6 +788,57 @@ public partial class App : AppBase, IAppHost
         {
             GetService<SettingsService>().Settings.LastUpdateStatus = UpdateStatus.UpToDate;
             GetService<ITaskBarIconService>().ShowNotification("更新完成。", $"应用已更新到版本{AppVersion}。点击此处以查看更新日志。", clickedCallback:() => uriNavigationService.NavigateWrapped(new Uri("classisland://app/settings/update")));
+        }
+    }
+
+    /// <summary>
+    /// 完成应用启动流程。可重复调用，但只会实际执行一次。
+    /// </summary>
+    internal void CompleteStartup()
+    {
+        if (_startupCompleted)
+        {
+            return;
+        }
+
+        _startupCompleted = true;
+
+        DiagnosticService.EndStartup();
+        GetService<ISplashService>().CurrentProgress = 98;
+        GetService<ISplashService>().SetDetailedStatus("正在进行启动后操作");
+        // 由于在应用启动时调用 WMI 会导致无法使用触摸，故在应用启动完成后再获取设备统计信息。
+        // https://github.com/dotnet/wpf/issues/9752
+        AppStarted?.Invoke(this, EventArgs.Empty);
+        StartUriPipeServer();
+        GetService<IAutomationService>();
+        GetService<IRulesetService>().NotifyStatusChanged();
+        File.Delete(Path.Combine(AppRootFolderPath, ".startup-count"));
+        if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)
+        {
+            GetService<ITaskBarIconService>().ShowNotification("配置文件损坏", "LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。点击此消息以查看详细信息和从过往备份中恢复配置文件。", clickedCallback:() => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/config-errors")));
+        }
+        if (Settings.CorruptPluginsDisabledLastSession)
+        {
+            Settings.CorruptPluginsDisabledLastSession = false;
+            GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "LegacyIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/classisland.plugins")));
+        }
+        if (Settings.IsSplashEnabled)
+        {
+            App.GetService<ISplashService>().EndSplash();
+        }
+        _isStartedCompleted = true;
+        AppBase.CurrentLifetime = ApplicationLifetime.Running;
+
+        if (!string.IsNullOrWhiteSpace(ApplicationCommand.Uri))
+        {
+            try
+            {
+                GetService<IUriNavigationService>().NavigateWrapped(new Uri(ApplicationCommand.Uri));
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 

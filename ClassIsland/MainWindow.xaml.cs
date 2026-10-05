@@ -514,7 +514,6 @@ public partial class MainWindow : Window
         TaskBarIconService.MainTaskBarIcon.TrayLeftMouseUp += MainTaskBarIconOnTrayLeftMouseUp;
         ViewModel.OverlayRemainTimePercents = 0.5;
         WindowRuleService.ForegroundWindowChanged += WindowRuleServiceOnForegroundWindowChanged;
-        DiagnosticService.EndStartup();
 
         if (!ViewModel.Settings.IsNotificationEffectRenderingScaleAutoSet)
         {
@@ -544,18 +543,6 @@ public partial class MainWindow : Window
 
         StartupCompleted?.Invoke(this, EventArgs.Empty);
 
-        if (!string.IsNullOrWhiteSpace(App.ApplicationCommand.Uri))
-        {
-            try
-            {
-                UriNavigationService.NavigateWrapped(new Uri(App.ApplicationCommand.Uri));
-            }
-            catch (Exception ex)
-            {
-                // ignored
-            }
-        }
-        
         base.OnContentRendered(e);
 #if DEBUG
         MemoryProfiler.GetSnapshot("MainWindow OnContentRendered");
