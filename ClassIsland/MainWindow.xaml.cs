@@ -99,11 +99,6 @@ public partial class MainWindow : Window
 
     private bool IsRunningCompatibleMode { get; set; } = false;
 
-    private Stopwatch UserPrefrenceUpdateStopwatch
-    {
-        get;
-    } = new();
-
     private IExactTimeService ExactTimeService { get; }
 
     public ISpeechService SpeechService { get; }
@@ -757,20 +752,7 @@ public partial class MainWindow : Window
         LoadProfile();
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在加载界面主题（1）");
         UpdateTheme();
-        UserPrefrenceUpdateStopwatch.Start();
-        SystemEvents.UserPreferenceChanged += OnSystemEventsOnUserPreferenceChanged;
-        AppBase.Current.AppStopping += (sender, args) => SystemEvents.UserPreferenceChanged -= OnSystemEventsOnUserPreferenceChanged;
-    }
-
-    private void OnSystemEventsOnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs args)
-    {
-        if (UserPrefrenceUpdateStopwatch.ElapsedMilliseconds < 1000)
-        {
-            return;
-        }
-        //Debug.WriteLine("Updated theme.");
-        UserPrefrenceUpdateStopwatch.Restart();
-        UpdateTheme();
+        ThemeService.ThemeUpdated += (_, _) => UpdateTheme();
     }
 
     private void SetBottom()
@@ -799,7 +781,7 @@ public partial class MainWindow : Window
         TaskBarIconService.MainTaskBarIcon.ContextMenu = menu;
     }
 
-    private async void UpdateTheme()
+    private void UpdateTheme()
     {
         UpdateWindowPos();
         UpdateTopmostRecheckTimer();
@@ -831,36 +813,6 @@ public partial class MainWindow : Window
 
         UpdateWindowLayer();
 
-        var primary = Colors.DodgerBlue;
-        var secondary = Colors.DodgerBlue;
-        switch (ViewModel.Settings.ColorSource)
-        {
-            case 0: //custom
-                primary = ViewModel.Settings.PrimaryColor;
-                secondary = ViewModel.Settings.SecondaryColor;
-                break;
-            case 1: // 壁纸主题色
-            case 3: // 屏幕主题色
-                primary = secondary = ViewModel.Settings.SelectedPlatte;
-                break;
-            case 2:
-                try
-                {
-                    DwmGetColorizationColor(out var color, out _);
-                    var c = NativeWindowHelper.GetColor((int)color);
-                    primary = secondary = c;
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "获取系统主题色失败。");
-                }
-                break;
-            case 4: // 品牌色
-                primary = secondary = Color.FromRgb(0xFD, 0x80, 0x07);
-                break;
-        }
-        ThemeService.SetTheme(ViewModel.Settings.Theme, primary, secondary);
-
         ResourceLoaderBorder.Resources[nameof(SettingsService.Settings.MainWindowSecondaryFontSize)] =
             SettingsService.Settings.MainWindowSecondaryFontSize;
         ResourceLoaderBorder.Resources[nameof(SettingsService.Settings.MainWindowBodyFontSize)] =
@@ -886,8 +838,6 @@ public partial class MainWindow : Window
             ResourceLoaderBorder.SetValue(ForegroundProperty, DependencyProperty.UnsetValue);
             ResourceLoaderBorder.SetValue(TextElement.ForegroundProperty, DependencyProperty.UnsetValue);
         }
-
-        App._isCriticalSafeModeEnabled = ViewModel.Settings.IsCriticalSafeMode;
     }
 
     private void UpdateWindowLayer()

@@ -468,6 +468,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<WallpaperPickingService>();
                 services.AddSingleton<INotificationHostService, NotificationHostService>();
                 services.AddSingleton<IThemeService, ThemeService>();
+                services.AddSingleton<ThemeApplyService>();
                 services.AddSingleton<MiniInfoProviderHostService>();
                 services.AddSingleton<IWeatherService, WeatherService>();
                 services.AddSingleton<FileFolderService>();
@@ -736,6 +737,7 @@ public partial class App : AppBase, IAppHost
         _ = IAppHost.Host.StartAsync();
         IAppHost.GetService<IPluginMarketService>().LoadPluginSource();
 
+        GetService<ThemeApplyService>();
         Logger.LogInformation("正在初始化MainWindow。");
         GetService<ISplashService>().SetDetailedStatus("正在启动主界面所需的服务");
         GetService<ISplashService>().CurrentProgress = 55;
