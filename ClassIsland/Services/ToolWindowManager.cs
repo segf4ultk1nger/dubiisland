@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 using ClassIsland.Views;
+using ClassIsland.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ClassIsland.Services;
@@ -53,7 +54,7 @@ public sealed class ToolWindowManager : IDisposable
     {
         var window = ActivatorUtilities.CreateInstance<T>(_services);
         if (window is ProfileSettingsWindow profile)
-            profile.MainViewModel = App.GetService<MainWindow>().ViewModel;
+            profile.MainViewModel = App.GetService<MainViewModel>();
         return window;
     }
 

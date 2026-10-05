@@ -169,7 +169,8 @@ public partial class MainWindow : Window
         IUriNavigationService uriNavigationService,
         IRulesetService rulesetService,
         IWindowRuleService windowRuleService,
-        IManagementService managementService)
+        IManagementService managementService,
+        MainViewModel viewModel)
     {
         Logger = logger;
         SpeechService = speechService;
@@ -195,7 +196,7 @@ public partial class MainWindow : Window
         DataContext = this;
         LessonsService.PreMainTimerTicked += LessonsServiceOnPreMainTimerTicked;
         LessonsService.PostMainTimerTicked += LessonsServiceOnPostMainTimerTicked;
-        ViewModel = new MainViewModel();
+        ViewModel = viewModel;
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         TopmostRecheckTimer.Tick += TopmostRecheckTimerOnTick;
         InitializeComponent();
@@ -703,6 +704,7 @@ public partial class MainWindow : Window
     {
         var r = SettingsService.Settings;
         ViewModel.Settings = r;
+        ViewModel.Settings.PropertyChanged -= SettingsOnPropertyChanged;
         ViewModel.Settings.PropertyChanged += SettingsOnPropertyChanged;
     }
 
@@ -749,7 +751,6 @@ public partial class MainWindow : Window
         if (DesignerProperties.GetIsInDesignMode(this))
             return;
         ViewModel.Profile.PropertyChanged += (sender, args) => SaveProfile();
-        ViewModel.Settings.PropertyChanged += SettingsOnPropertyChanged;
         LoadSettings();
         UpdateIslandRenderMode();
         //ViewModel.CurrentProfilePath = ViewModel.Settings.SelectedProfile;

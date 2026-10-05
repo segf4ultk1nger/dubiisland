@@ -28,6 +28,7 @@ using ClassIsland.Shared;
 using ClassIsland.Shared.Abstraction.Services;
 using ClassIsland.Models;
 using ClassIsland.Services;
+using ClassIsland.ViewModels;
 using ClassIsland.Services.AppUpdating;
 using ClassIsland.Services.Logging;
 using ClassIsland.Services.Management;
@@ -500,6 +501,11 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<IAnnouncementService, AnnouncementService>();
                 services.AddSingleton<ILocationService, LocationService>();
                 // Views
+                services.AddSingleton<MainViewModel>(s => new MainViewModel
+                {
+                    Settings = s.GetRequiredService<SettingsService>().Settings,
+                    Profile = s.GetRequiredService<IProfileService>().Profile
+                });
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<IslandHost>();
                 services.AddTransient<SplashWindowBase, SplashWindow>();
