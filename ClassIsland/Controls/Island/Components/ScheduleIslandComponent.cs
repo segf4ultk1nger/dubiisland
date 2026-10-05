@@ -185,7 +185,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
                 Kind = kind.Value,
                 Text = kind == SegmentKind.Expanded
                     ? isBreak ? item.BreakNameText : subject?.Name ?? ""
-                    : isBreak ? "休" : subject?.Initial ?? "?",
+                    : subject?.Initial ?? "",
                 Changed = info?.IsChangedClass ?? false,
                 Item = item,
                 Settings = kind == SegmentKind.Expanded
