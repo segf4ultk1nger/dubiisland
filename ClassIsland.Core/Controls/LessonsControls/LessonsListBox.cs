@@ -16,7 +16,6 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Abstraction.Models;
 using ClassIsland.Shared.Models.Profile;
-using unvell.ReoGrid.IO;
 
 namespace ClassIsland.Core.Controls.LessonsControls;
 

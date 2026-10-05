@@ -103,7 +103,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private double _debugAnimationScale = 1.0;
     private double _debugTimeSpeed = 1.0;
     private double _debugTimeOffsetSeconds = 0.0;
-    private bool _expIsExcelImportEnabled = false;
     private int _timeLayoutEditorIndex = 1;
     private bool _isSplashEnabled = true;
     private string _splashCustomText = "";
@@ -1902,18 +1901,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     #endregion
 
     #region Exp
-
-    [Obsolete]
-    public bool ExpIsExcelImportEnabled
-    {
-        get => _expIsExcelImportEnabled;
-        set
-        {
-            if (value == _expIsExcelImportEnabled) return;
-            _expIsExcelImportEnabled = value;
-            OnPropertyChanged();
-        }
-    }
 
     public bool ExpAllowEditingActivatedTimeLayout
     {

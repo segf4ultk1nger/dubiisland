@@ -25,7 +25,6 @@ public class ProfileSettingsViewModel : ObservableRecipient
     private double _timeLineScale = 3.0;
     private Subject? _selectedSubject;
     private bool _isPanningModeEnabled = false;
-    private bool _isDragEntering = false;
     private string _tempOverlayClassPlanTimeLayoutId = "";
     private ClassInfo?  _selectedClassInfo;
     private int _selectedClassIndex = -1;
@@ -215,17 +214,6 @@ public class ProfileSettingsViewModel : ObservableRecipient
         {
             if (value == _isPanningModeEnabled) return;
             _isPanningModeEnabled = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsDragEntering
-    {
-        get => _isDragEntering;
-        set
-        {
-            if (value == _isDragEntering) return;
-            _isDragEntering = value;
             OnPropertyChanged();
         }
     }

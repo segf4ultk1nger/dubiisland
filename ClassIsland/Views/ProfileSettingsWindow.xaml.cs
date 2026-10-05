@@ -869,48 +869,7 @@ public partial class ProfileSettingsWindow : MyWindow
         }
 
         ViewModel.IsProfileImportMenuOpened = true;
-        //var eiw = App.GetService<ExcelImportWindow>();
-        //eiw.Show();
     }   
-
-    private void ProfileSettingsWindow_OnDrop(object sender, DragEventArgs e)
-    {
-        ViewModel.IsDragEntering = false;
-        if (e.Data.GetData(DataFormats.FileDrop) is not Array data)
-            return;
-        var filename = data.GetValue(0)?.ToString();
-        if (filename == null)
-            return;
-        Debug.WriteLine(filename);
-        if (ManagementService.Policy.DisableProfileClassPlanEditing ||
-            ManagementService.Policy.DisableProfileTimeLayoutEditing || ManagementService.Policy.DisableProfileEditing)
-        {
-            ViewModel.StatusMessage = $"此功能已被您的组织禁用。";
-            return;
-        }
-        if (Path.GetExtension(filename) != ".xlsx")
-        {
-            ViewModel.StatusMessage = $"不支持的文件：{filename}";
-            return;
-        }
-        var eiw = App.GetService<ExcelImportWindow>();
-        eiw.ExcelSourcePath = filename;
-        eiw.Show();
-    }
-
-    private void ProfileSettingsWindow_OnDragEnter(object sender, DragEventArgs e)
-    {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop))
-        {
-            ViewModel.IsDragEntering = true;
-            e.Effects = DragDropEffects.Link;
-        }
-        else
-        {
-            ViewModel.IsDragEntering = false;
-            e.Effects = DragDropEffects.None;
-        }
-    }
 
     private void ListViewTimeLayouts_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -935,11 +894,6 @@ public partial class ProfileSettingsWindow : MyWindow
             ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key,
             ViewModel.SelectedTimePoint,
             ViewModel.SelectedTimePoint.DefaultClassId);
-    }
-
-    private void ProfileSettingsWindow_OnDragLeave(object sender, DragEventArgs e)
-    {
-        ViewModel.IsDragEntering = false;
     }
 
     private void ButtonSave_OnClick(object sender, RoutedEventArgs e)
@@ -1098,13 +1052,6 @@ public partial class ProfileSettingsWindow : MyWindow
             return;
         }
         ProfileService.TrustCurrentProfile();
-    }
-
-    private void MenuItemImportFromExcel_OnClick(object sender, RoutedEventArgs e)
-    {
-        ViewModel.IsProfileImportMenuOpened = false;
-        var eiw = App.GetService<ExcelImportWindow>();
-        eiw.Show();
     }
 
     private async void MenuItemImportFromCses_OnClick(object sender, RoutedEventArgs e)
@@ -1422,13 +1369,6 @@ public partial class ProfileSettingsWindow : MyWindow
         {
             RefreshWeekScheduleRows();
         }
-    }
-
-    private void MenuItemExportExcel_OnClick(object sender, RoutedEventArgs e)
-    {
-        var win = IAppHost.GetService<ExcelExportWindow>();
-        win.Owner = this;
-        win.ShowDialog();
     }
 
     private void ScheduleAdjustmentTabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

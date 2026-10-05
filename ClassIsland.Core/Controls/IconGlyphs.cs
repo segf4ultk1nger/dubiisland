@@ -156,7 +156,6 @@ public static class IconGlyphs
     public const string FileDocumentMultipleOutline = "\uE8C8"; // Material FileDocumentMultipleOutline, U+E8C8
     public const string FileDocumentOutline = "\uE8A5"; // Material FileDocumentOutline, U+E8A5
     public const string FileDocumentPlusOutline = "\uE710"; // Material FileDocumentPlusOutline, U+E710
-    public const string FileExcelOutline = "\uE8A5"; // Material FileExcelOutline, U+E8A5
     public const string FileExportOutline = "\uE898"; // Material FileExportOutline, U+E898
     public const string FileImport = "\uE8B5"; // Material FileImport, U+E8B5
     public const string FileMusicOutline = "\uE8D6"; // Material FileMusicOutline, U+E8D6
@@ -233,7 +232,6 @@ public static class IconGlyphs
     public const string MarketplaceOutline = "\uE719"; // Material MarketplaceOutline, U+E719
     public const string Menu = "\uE700"; // Material Menu, U+E700
     public const string MessageAlertOutline = "\uE7BA"; // Material MessageAlertOutline, U+E7BA
-    public const string MicrosoftExcel = "\uE8A5"; // Material MicrosoftExcel, U+E8A5
     public const string MicrosoftWindows = "\uE782"; // Material MicrosoftWindows, U+E782
     public const string Monitor = "\uE7F4"; // Material Monitor, U+E7F4
     public const string MonitorDownload = "\uE896"; // Material MonitorDownload, U+E896

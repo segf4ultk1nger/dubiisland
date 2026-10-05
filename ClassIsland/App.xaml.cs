@@ -38,8 +38,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using OfficeOpenXml;
-
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using UpdateStatus = ClassIsland.Shared.Enums.UpdateStatus;
 #if DEBUG
@@ -330,7 +328,6 @@ public partial class App : AppBase, IAppHost
     {
         AppBase.CurrentLifetime = ApplicationLifetime.Initializing;
         MyWindow.ShowOssWatermark = ApplicationCommand.ShowOssWatermark;
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         //DependencyPropertyHelper.ForceOverwriteDependencyPropertyDefaultValue(FrameworkElement.FocusVisualStyleProperty,
         //    Resources[SystemParameters.FocusVisualStyleKey]);
         Environment.CurrentDirectory = System.Windows.Forms.Application.StartupPath;
@@ -518,7 +515,6 @@ public partial class App : AppBase, IAppHost
                 services.AddTransient<WindowRuleDebugWindow>();
                 services.AddTransient<ConfigErrorsWindow>();
                 services.AddTransient<TimeAdjustmentWindow>();
-                services.AddTransient<ExcelExportWindow>();
                 // 设置页面
                 services.AddSettingsPage<GeneralSettingsPage>();
                 services.AddSettingsPage<ComponentsSettingsPage>();
@@ -556,7 +552,6 @@ public partial class App : AppBase, IAppHost
                 services.AddNotificationProvider<ManagementNotificationProvider>();
                 services.AddNotificationProvider<ActionNotificationProvider>();
                 // Transients
-                services.AddTransient<ExcelImportWindow>();
                 services.AddTransient<WallpaperPreviewWindow>();
                 // Logging
                 services.AddLogging(builder =>
@@ -800,7 +795,6 @@ public partial class App : AppBase, IAppHost
         uriNavigationService.HandleAppNavigation("settings", args => GetService<SettingsWindowNew>().OpenUri(args.Uri));
         uriNavigationService.HandleAppNavigation("profile", args => GetService<MainWindow>().OpenProfileSettingsWindow());
         uriNavigationService.HandleAppNavigation("helps", args => uriNavigationService.Navigate(new Uri("https://docs.classisland.tech/app/")));
-        uriNavigationService.HandleAppNavigation("profile/import-excel", args => GetService<ExcelImportWindow>().Show());
         uriNavigationService.HandleAppNavigation("config-errors", args => GetService<ConfigErrorsWindow>().ShowDialog());
 
         try

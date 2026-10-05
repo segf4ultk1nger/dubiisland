@@ -439,39 +439,5 @@
     </Style>
     <Style TargetType="controls1:WizardOptionsListBox" BasedOn="{StaticResource WizardOptionsListBoxBaseStyle}"/>
 
-    <converters1:RangePositionToStringConverter x:Key="RangePositionToStringConverter" />
-    <Style TargetType="{x:Type controls:ExcelSelectionTextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsCurrentSelecting, RelativeSource={RelativeSource Self}}" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-            </DataTrigger>
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding IsCurrentSelecting, RelativeSource={RelativeSource Self}}" Value="False"/>
-                    <Condition Binding="{Binding IsSelecting, RelativeSource={RelativeSource Self}}" Value="True"/>
-                </MultiDataTrigger.Conditions>
-                <Setter Property="IsEnabled" Value="False"/>
-            </MultiDataTrigger>
-        </Style.Triggers>
-        <Setter Property="behaviors:StyleBehaviors.Behaviors">
-            <Setter.Value>
-                <behaviors:StyleBehaviorCollection>
-                    <behaviors:ExcelSelectingTextBoxBehavior>
-                        <behaviors:ExcelSelectingTextBoxBehavior.AdornerTemplate>
-                            <ControlTemplate>
-                                <controls:ExcelSelectionTextBoxStrongHighlight VerticalAlignment="Stretch"
-                                                                               HorizontalAlignment="Stretch"/>
-                            </ControlTemplate>
-                        </behaviors:ExcelSelectingTextBoxBehavior.AdornerTemplate>
-                    </behaviors:ExcelSelectingTextBoxBehavior>
-                </behaviors:StyleBehaviorCollection>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="IsReadOnly" Value="True"/>
-        <Setter Property="Text" Value="{Binding Value, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource RangePositionToStringConverter}}"/>
-    </Style>
-
     <Style TargetType="controls1:AutoScrollListView" BasedOn="{StaticResource MahApps.Styles.ListView}"/>
 </ResourceDictionary>
