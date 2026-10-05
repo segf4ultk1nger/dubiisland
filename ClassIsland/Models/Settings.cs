@@ -220,6 +220,8 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private double _mainWindowLineVerticalMargin = 5;
     private double _mainWindowLeftMargin = 0;
     private double _mainWindowRightMargin = 0;
+    private bool _isSquircleEnabled = false;
+    private double _squircleSmoothing = 0.6;
     private ObservableCollection<string> _trustedProfileIds = [];
     private bool _isNonExactCountdownEnabled = false;
     private bool _showDetailedStatusOnSplash = false;
@@ -1170,6 +1172,28 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value.Equals(_mainWindowRightMargin)) return;
             _mainWindowRightMargin = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsSquircleEnabled
+    {
+        get => _isSquircleEnabled;
+        set
+        {
+            if (value == _isSquircleEnabled) return;
+            _isSquircleEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double SquircleSmoothing
+    {
+        get => _squircleSmoothing;
+        set
+        {
+            if (value.Equals(_squircleSmoothing)) return;
+            _squircleSmoothing = value;
             OnPropertyChanged();
         }
     }

@@ -341,6 +341,21 @@
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 超椭圆圆角 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BorderRoundCorners}" Header="超椭圆圆角"
+                                    Description="使用 Figma 里面类似的平滑圆角，设为 0.6 最果味。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsSquircleEnabled, Mode=TwoWay}"
+                                          OnContent="开" OffContent="关" MinWidth="0" VerticalAlignment="Center" />
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.SquircleSmoothing}"
+                                           Minimum="0" Maximum="1" Interval="0.05" StringFormat="0.00"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                           VerticalAlignment="Center" ToolTip="平滑度：0 为普通圆角，越大越接近超椭圆"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <!-- 行间隔 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Margin}" Header="行间隔"
                                     Description="主界面行间间隔。">

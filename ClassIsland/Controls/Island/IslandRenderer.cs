@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Squircle;
 
 namespace ClassIsland.Controls.Island;
 
@@ -170,8 +171,7 @@ public sealed class IslandRenderer
             var lineRect = new Rect(0, backgroundY, bounds.Width, line.Height);
             if (lineRect.Width > 0 && lineRect.Height > 0)
             {
-                drawingContext.DrawRoundedRectangle(_backgroundBrush, null, lineRect,
-                    settings.RadiusX, settings.RadiusX);
+                drawingContext.DrawGeometry(_backgroundBrush, null, CreateCornerGeometry(lineRect));
             }
 
             if (faded)
@@ -227,15 +227,13 @@ public sealed class IslandRenderer
         // 4) 遮罩（底色层 + 内容层）。底色层始终不透明，只做位移/分区展开；内容层单独淡入。
         if (IsMaskVisible)
         {
-            drawingContext.PushClip(new RectangleGeometry(new Rect(0, 0, bounds.Width, _contentHeight),
-                settings.RadiusX, settings.RadiusX));
+            drawingContext.PushClip(CreateCornerGeometry(new Rect(0, 0, bounds.Width, _contentHeight)));
             var accent = new SolidColorBrush(_context.AccentColor);
             if (UseSlantedMask)
                 DrawSlantedMask(drawingContext, bounds, accent);
             else
-                drawingContext.DrawRoundedRectangle(accent, null,
-                    new Rect(0, MaskOffsetY, bounds.Width, _contentHeight),
-                    settings.RadiusX, settings.RadiusX);
+                drawingContext.DrawGeometry(accent, null,
+                    CreateCornerGeometry(new Rect(0, MaskOffsetY, bounds.Width, _contentHeight)));
             DrawMaskContent(drawingContext, bounds);
             drawingContext.Pop();
         }
@@ -289,6 +287,15 @@ public sealed class IslandRenderer
             drawingContext.Pop();
         if (opaque)
             drawingContext.Pop();
+    }
+
+    /// <summary>按当前圆角设置生成矩形几何：启用超椭圆时用 Figma 风格 squircle，否则普通圆角矩形。</summary>
+    private Geometry CreateCornerGeometry(Rect rect)
+    {
+        var settings = _context.Settings;
+        return settings.IsSquircleEnabled
+            ? SmoothGeometry.Create(rect, new SmoothCornerRadius(settings.RadiusX, settings.SquircleSmoothing))
+            : new RectangleGeometry(rect, settings.RadiusX, settings.RadiusX);
     }
 
     /// <summary>绘制 ClassIsland 2 Fluent 的平行四边形遮罩（5 个分区，按进度展开/收合）。</summary>
