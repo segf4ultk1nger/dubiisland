@@ -22,11 +22,61 @@ internal static class Program
 {
     internal const string UiAccessChildMarker = "-uiaccess-child";
 
+    internal const string UiAccessHelperResourceName = "ClassIsland.UiAccess.IccEvolved.UiAccess.Helper.exe";
+    internal const string UiAccessDllResourceName = "ClassIsland.UiAccess.IccEvolved.UiAccess.dll";
+
     [STAThread]
     private static void Main(string[] args)
     {
         ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+        // 自解压 UIAccess 组件到应用目录，供超级置顶使用（失败则忽略，按“无 Helper”正常启动）。
+        ExtractUiAccessPayload();
         MainAsync(args).GetAwaiter().GetResult();
+    }
+
+    /// <summary>把内嵌的 Helper 及依赖 DLL 解压到应用目录（exe 同目录）。</summary>
+    private static void ExtractUiAccessPayload()
+    {
+        var dir = AppDomain.CurrentDomain.BaseDirectory;
+        ExtractEmbeddedResource(UiAccessDllResourceName, Path.Combine(dir, "IccEvolved.UiAccess.dll"));
+        ExtractEmbeddedResource(UiAccessHelperResourceName, Path.Combine(dir, "IccEvolved.UiAccess.Helper.exe"));
+    }
+
+    private static void ExtractEmbeddedResource(string resourceName, string targetPath)
+    {
+        var tempPath = targetPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            using var stream = typeof(Program).Assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                return;
+            }
+
+            using (var file = File.Create(tempPath))
+            {
+                stream.CopyTo(file);
+            }
+
+            if (File.Exists(targetPath))
+            {
+                File.Delete(targetPath);
+            }
+
+            File.Move(tempPath, targetPath);
+        }
+        catch
+        {
+            // 应用目录不可写或文件被占用：忽略，超级置顶将不可用。
+            try
+            {
+                if (File.Exists(tempPath)) File.Delete(tempPath);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
     }
 
     private static async Task MainAsync(string[] args)
@@ -50,7 +100,7 @@ internal static class Program
 
         // 以 UIAccess 身份重启自身（超级置顶）：成功后由带 marker 的子进程接管，本进程退出。
         // --no-uiaccess 可禁用（调试用）。
-        if (!isUiAccessChild && !args.Contains("--no-uiaccess") && ReadUiAccessEnabled())
+        if (!isUiAccessChild && !args.Contains("--no-uiaccess") && IsUiAccessHelperAvailable() && ReadUiAccessEnabled())
         {
             var uiAccessOptions = new UiAccessOptions
             {
@@ -190,6 +240,24 @@ internal static class Program
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 检查 UIAccess 组件（Helper 及其依赖的同目录 DLL）是否随包就绪。
+    /// 缺失时跳过超级置顶，正常启动。
+    /// </summary>
+    internal static bool IsUiAccessHelperAvailable()
+    {
+        try
+        {
+            var dir = AppDomain.CurrentDomain.BaseDirectory;
+            return File.Exists(Path.Combine(dir, "IccEvolved.UiAccess.Helper.exe"))
+                   && File.Exists(Path.Combine(dir, "IccEvolved.UiAccess.dll"));
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static bool ReadUiAccessEnabled()

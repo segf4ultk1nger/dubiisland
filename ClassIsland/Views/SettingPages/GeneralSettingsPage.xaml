@@ -214,6 +214,7 @@
             <!-- 超级置顶（UIAccess） -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PinOutline}" Header="使用超级置顶"
                                     Description="让课表窗口可以置于开始菜单/任务管理器等窗口之上，重启生效"
+                                    IsEnabled="{Binding IsUiAccessAvailable}"
                                     IsOn="{Binding SettingsService.Settings.IsUiAccessEnabled, Mode=TwoWay}" />
             <!-- 学期开始时间 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CalendarOutline}" Header="学期开始时间"

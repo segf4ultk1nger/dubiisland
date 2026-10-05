@@ -172,6 +172,21 @@
 		</Page>
 	</ItemGroup>
 
+    <PropertyGroup>
+        <UiAccessHelperConfig Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug_MSIX'">Debug</UiAccessHelperConfig>
+        <UiAccessHelperConfig Condition="'$(UiAccessHelperConfig)' == ''">Release</UiAccessHelperConfig>
+    </PropertyGroup>
+
+    <!-- 自解压 UIAccess 组件：把 Helper 及其依赖的 IccEvolved.UiAccess.dll 内嵌进主程序，启动时解压到应用目录。 -->
+    <ItemGroup>
+        <EmbeddedResource Include="..\Libraries\UiAccess\IccEvolved.UiAccess.Helper\bin\$(UiAccessHelperConfig)\net472\IccEvolved.UiAccess.Helper.exe">
+            <LogicalName>ClassIsland.UiAccess.IccEvolved.UiAccess.Helper.exe</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\Libraries\UiAccess\IccEvolved.UiAccess\bin\$(UiAccessHelperConfig)\net472\IccEvolved.UiAccess.dll">
+            <LogicalName>ClassIsland.UiAccess.IccEvolved.UiAccess.dll</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
     <Target Name="PrintConstants" AfterTargets="Build">
 		<Message Text="Constants: $(DefineConstants)" Importance="high" />
 		<Message Text="IsMsix: $(IsMsix)" Importance="high" />

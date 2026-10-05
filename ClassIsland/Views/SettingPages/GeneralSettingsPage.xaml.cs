@@ -34,6 +34,9 @@ public partial class GeneralSettingsPage : SettingsPageBase
 
     public GeneralSettingsViewModel ViewModel { get; } = new();
 
+    /// <summary>UIAccess 组件是否就绪；缺失时「使用超级置顶」不可用。</summary>
+    public bool IsUiAccessAvailable { get; } = Program.IsUiAccessHelperAvailable();
+
     public GeneralSettingsPage(SettingsService settingsService, IManagementService managementService, IExactTimeService exactTimeService, MiniInfoProviderHostService miniInfoProviderHostService, ISplashService splashService, IAnnouncementService announcementService)
     {
         InitializeComponent();
