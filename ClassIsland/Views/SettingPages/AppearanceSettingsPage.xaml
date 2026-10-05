@@ -376,6 +376,31 @@
                                       IsOn="{Binding SettingsService.Settings.IsIslandHideAnimationEnabled, Mode=TwoWay}" />
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 遮罩动画样式 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AnimationPlayOutline}" Header="遮罩动画样式"
+                                    Description="自绘岛提醒遮罩出现/消失时的动画效果。">
+                <controls1:SettingsCard.Switcher>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              MinWidth="180" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                              HorizontalContentAlignment="Left"
+                              SelectedValuePath="Tag"
+                              SelectedValue="{Binding SettingsService.Settings.IslandMaskAnimationStyle}">
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>0</sys:Int32></ComboBoxItem.Tag>
+                            <TextBlock Text="ClassIsland 1" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>1</sys:Int32></ComboBoxItem.Tag>
+                            <TextBlock Text="ClassIsland 2 默认" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>2</sys:Int32></ComboBoxItem.Tag>
+                            <TextBlock Text="ClassIsland 2 Fluent" />
+                        </ComboBoxItem>
+                    </ComboBox>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ThemeLightDark}" Header="应用主题"

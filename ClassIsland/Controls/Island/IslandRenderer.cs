@@ -39,11 +39,27 @@ public sealed class IslandRenderer
     /// <summary>提醒 overlay 文本。</summary>
     public string OverlayText { get; set; } = "";
 
-    /// <summary>遮罩竖向偏移（滑入滑出动画用）。</summary>
+    /// <summary>是否使用 ClassIsland 2 Fluent 的平行四边形遮罩。</summary>
+    public bool UseSlantedMask { get; set; }
+
+    /// <summary>遮罩竖向偏移（矩形遮罩滑入滑出用）。</summary>
     public double MaskOffsetY { get; set; }
 
-    /// <summary>遮罩内容不透明度。</summary>
-    public double MaskOpacity { get; set; } = 1;
+    /// <summary>遮罩文字/图标不透明度（矩形底色条不受其影响，底色条只做位移）。</summary>
+    public double MaskContentOpacity { get; set; } = 1;
+
+    /// <summary>遮罩文字/图标缩放（Fluent 遮罩用）。</summary>
+    public double MaskContentScale { get; set; } = 1;
+
+    /// <summary>Fluent 平行四边形遮罩的 5 个分区展开进度（0=收合，1=展开）。</summary>
+    public double[] MaskRegionProgress { get; } = [0, 0, 0, 0, 0];
+
+    /// <summary>重置平行四边形遮罩分区进度。</summary>
+    public void ResetMaskRegions(double value)
+    {
+        for (var i = 0; i < MaskRegionProgress.Length; i++)
+            MaskRegionProgress[i] = value;
+    }
 
     /// <summary>overlay 内容不透明度。</summary>
     public double OverlayOpacity { get; set; } = 1;
@@ -140,6 +156,29 @@ public sealed class IslandRenderer
     {
         var settings = _context.Settings;
 
+        // 1) 底色条：独立于内容淡出。提醒 overlay 阶段 ContentOpacity 归 0 时底色条仍需保留。
+        var backgroundY = 0.0;
+        foreach (var line in _lines)
+        {
+            var opacity = GetLineOpacity(line.LineNumber);
+            var faded = opacity < 0.999;
+            if (faded)
+                drawingContext.PushOpacity(opacity);
+
+            var lineRect = new Rect(0, backgroundY, bounds.Width, line.Height);
+            if (lineRect.Width > 0 && lineRect.Height > 0)
+            {
+                drawingContext.DrawRoundedRectangle(_backgroundBrush, null, lineRect,
+                    settings.RadiusX, settings.RadiusX);
+            }
+
+            if (faded)
+                drawingContext.Pop();
+
+            backgroundY += line.Height;
+        }
+
+        // 2) 内容组件：受 ContentOpacity 控制（提醒时会被压低到 0）。
         var contentOpaque = ContentOpacity < 1;
         if (contentOpaque)
             drawingContext.PushOpacity(ContentOpacity);
@@ -150,13 +189,6 @@ public sealed class IslandRenderer
             var faded = opacity < 0.999;
             if (faded)
                 drawingContext.PushOpacity(opacity);
-
-            var lineRect = new Rect(0, y, bounds.Width, line.Height);
-            if (lineRect.Width > 0 && lineRect.Height > 0)
-            {
-                drawingContext.DrawRoundedRectangle(_backgroundBrush, null, lineRect,
-                    settings.RadiusX, settings.RadiusX);
-            }
 
             var x = 0.0;
             for (var i = 0; i < line.Components.Length; i++)
@@ -175,6 +207,7 @@ public sealed class IslandRenderer
         if (contentOpaque)
             drawingContext.Pop();
 
+        // 3) overlay 正文。
         if (IsOverlayVisible && !string.IsNullOrEmpty(OverlayText))
         {
             var overlayOpaque = OverlayOpacity < 1;
@@ -189,48 +222,115 @@ public sealed class IslandRenderer
                 drawingContext.Pop();
         }
 
+        // 4) 遮罩（底色层 + 内容层）。底色层始终不透明，只做位移/分区展开；内容层单独淡入。
         if (IsMaskVisible)
         {
-            var maskOpaque = MaskOpacity < 1;
-            if (maskOpaque)
-                drawingContext.PushOpacity(MaskOpacity);
+            drawingContext.PushClip(new RectangleGeometry(new Rect(0, 0, bounds.Width, _contentHeight),
+                settings.RadiusX, settings.RadiusX));
             var accent = new SolidColorBrush(_context.AccentColor);
-            drawingContext.DrawRoundedRectangle(accent, null,
-                new Rect(0, MaskOffsetY, bounds.Width, _contentHeight),
-                settings.RadiusX, settings.RadiusX);
-            var centerY = _contentHeight / 2 + MaskOffsetY;
-            const double gap = 8;
-            var text = string.IsNullOrEmpty(MaskText)
-                ? null
-                : MakeText(MaskText, _context.EmphasizedFontSize, Brushes.White, FontWeights.Bold);
-            var leftIcon = string.IsNullOrEmpty(MaskLeftIcon)
-                ? null
-                : MakeIcon(MaskLeftIcon, _context.EmphasizedFontSize + 2, Brushes.White);
-            var rightIcon = string.IsNullOrEmpty(MaskRightIcon)
-                ? null
-                : MakeIcon(MaskRightIcon, _context.EmphasizedFontSize + 2, Brushes.White);
+            if (UseSlantedMask)
+                DrawSlantedMask(drawingContext, bounds, accent);
+            else
+                drawingContext.DrawRoundedRectangle(accent, null,
+                    new Rect(0, MaskOffsetY, bounds.Width, _contentHeight),
+                    settings.RadiusX, settings.RadiusX);
+            DrawMaskContent(drawingContext, bounds);
+            drawingContext.Pop();
+        }
+    }
 
-            var total = (leftIcon?.Width ?? 0) + (leftIcon != null ? gap : 0)
-                        + (text?.Width ?? 0)
-                        + (rightIcon != null ? gap : 0) + (rightIcon?.Width ?? 0);
-            var x = Math.Max(0, (bounds.Width - total) / 2);
-            if (leftIcon != null)
+    /// <summary>绘制遮罩文字/图标（独立于遮罩底色，支持不透明度与缩放）。</summary>
+    private void DrawMaskContent(DrawingContext drawingContext, Rect bounds)
+    {
+        var opaque = MaskContentOpacity < 1;
+        if (opaque)
+            drawingContext.PushOpacity(MaskContentOpacity);
+        var scaled = Math.Abs(MaskContentScale - 1.0) > 0.0001;
+        if (scaled)
+        {
+            drawingContext.PushTransform(new ScaleTransform(MaskContentScale, MaskContentScale,
+                bounds.Width / 2, _contentHeight / 2));
+        }
+
+        var centerY = _contentHeight / 2 + (UseSlantedMask ? 0 : MaskOffsetY);
+        const double gap = 8;
+        var text = string.IsNullOrEmpty(MaskText)
+            ? null
+            : MakeText(MaskText, _context.EmphasizedFontSize, Brushes.White, FontWeights.Bold);
+        var leftIcon = string.IsNullOrEmpty(MaskLeftIcon)
+            ? null
+            : MakeIcon(MaskLeftIcon, _context.EmphasizedFontSize + 2, Brushes.White);
+        var rightIcon = string.IsNullOrEmpty(MaskRightIcon)
+            ? null
+            : MakeIcon(MaskRightIcon, _context.EmphasizedFontSize + 2, Brushes.White);
+
+        var total = (leftIcon?.Width ?? 0) + (leftIcon != null ? gap : 0)
+                    + (text?.Width ?? 0)
+                    + (rightIcon != null ? gap : 0) + (rightIcon?.Width ?? 0);
+        var x = Math.Max(0, (bounds.Width - total) / 2);
+        if (leftIcon != null)
+        {
+            drawingContext.DrawText(leftIcon, new Point(x, centerY - leftIcon.Height / 2));
+            x += leftIcon.Width + gap;
+        }
+
+        if (text != null)
+        {
+            drawingContext.DrawText(text, new Point(x, centerY - text.Height / 2));
+            x += text.Width + gap;
+        }
+
+        if (rightIcon != null)
+            drawingContext.DrawText(rightIcon, new Point(x, centerY - rightIcon.Height / 2));
+
+        if (scaled)
+            drawingContext.Pop();
+        if (opaque)
+            drawingContext.Pop();
+    }
+
+    /// <summary>绘制 ClassIsland 2 Fluent 的平行四边形遮罩（5 个分区，按进度展开/收合）。</summary>
+    private void DrawSlantedMask(DrawingContext drawingContext, Rect bounds, Brush brush)
+    {
+        var h = _contentHeight;
+        if (h <= 0)
+            return;
+
+        var offset = Math.Tan(Math.PI / 6.0) * h;
+        var totalWidth = bounds.Width + offset;
+        var weight = new[] { 0.0, 0.1, 0.2, 0.4, 0.2, 0.1 };
+        var startX = new double[6];
+        var accumulated = 0.0;
+        for (var i = 0; i < 6; i++)
+        {
+            accumulated += totalWidth * weight[i];
+            startX[i] = accumulated;
+        }
+
+        for (var i = 0; i < 5; i++)
+        {
+            var progress = Math.Min(1.0, Math.Max(0.0, MaskRegionProgress[i]));
+            var center = (startX[i] + startX[i + 1]) / 2.0;
+            var currentWidth = (totalWidth * weight[i + 1] + 0.5) * progress;
+            if (currentWidth < 0.0001)
+                continue;
+
+            var p1 = new Point(center - currentWidth / 2, 0);
+            var p2 = new Point(center + currentWidth / 2, 0);
+            var p3 = new Point(center + currentWidth / 2 - offset, h);
+            var p4 = new Point(center - currentWidth / 2 - offset, h);
+
+            var geometry = new StreamGeometry();
+            using (var g = geometry.Open())
             {
-                drawingContext.DrawText(leftIcon, new Point(x, centerY - leftIcon.Height / 2));
-                x += leftIcon.Width + gap;
+                g.BeginFigure(p1, true, true);
+                g.LineTo(p2, true, false);
+                g.LineTo(p3, true, false);
+                g.LineTo(p4, true, false);
             }
 
-            if (text != null)
-            {
-                drawingContext.DrawText(text, new Point(x, centerY - text.Height / 2));
-                x += text.Width + gap;
-            }
-
-            if (rightIcon != null)
-                drawingContext.DrawText(rightIcon, new Point(x, centerY - rightIcon.Height / 2));
-
-            if (maskOpaque)
-                drawingContext.Pop();
+            geometry.Freeze();
+            drawingContext.DrawGeometry(brush, null, geometry);
         }
     }
 

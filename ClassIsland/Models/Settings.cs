@@ -191,6 +191,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _useSelfDrawnIsland = false;
     private bool _isIslandShowAnimationEnabled = true;
     private bool _isIslandHideAnimationEnabled = true;
+    private int _islandMaskAnimationStyle = 0;
     private bool _isMemoryTrimEnabled = false;
     private int _toolWindowDestructionPolicy = 0;
     private int _toolWindowDestructionCustomSeconds = 300;
@@ -1929,6 +1930,21 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isIslandHideAnimationEnabled) return;
             _isIslandHideAnimationEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    ///     自绘岛提醒遮罩的动画样式：0=ClassIsland 1（矩形滑入），
+    ///     1=ClassIsland 2 默认（矩形滑入，缓动不同），2=ClassIsland 2 Fluent（平行四边形展开/收合）。
+    /// </summary>
+    public int IslandMaskAnimationStyle
+    {
+        get => _islandMaskAnimationStyle;
+        set
+        {
+            if (value == _islandMaskAnimationStyle) return;
+            _islandMaskAnimationStyle = value;
             OnPropertyChanged();
         }
     }

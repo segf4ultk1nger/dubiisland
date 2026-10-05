@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using ClassIsland.Controls.Island.Components;
+using ClassIsland.Controls.NotificationEffects;
 using ClassIsland.Controls.NotificationProviders;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Helpers.Native;
@@ -21,6 +22,7 @@ using ClassIsland.Models.EventArgs;
 using ClassIsland.Services;
 using ClassIsland.Shared.Enums;
 using ClassIsland.ViewModels;
+using ClassIsland.Views;
 using Linearstar.Windows.RawInput;
 using MahApps.Metro.IconPacks;
 using Windows.Win32.UI.Accessibility;
@@ -32,7 +34,7 @@ namespace ClassIsland.Controls.Island;
 /// 岛的纯自绘宿主。基于裸 <see cref="HwndSource"/>，无 XAML、无 <see cref="Window"/> 壳，
 /// 内容为单个 <see cref="DrawingVisual"/>。
 /// </summary>
-public sealed class IslandHost : IDisposable
+public sealed class IslandHost : IDisposable, INotificationVisualHost
 {
     private const int WS_POPUP = unchecked((int)0x80000000);
     private const int WS_EX_NOACTIVATE = 0x08000000;
@@ -46,6 +48,7 @@ public sealed class IslandHost : IDisposable
     private readonly IRulesetService _rulesetService;
     private readonly MainViewModel _viewModel;
     private readonly NotificationDisplayService _notificationDisplayService;
+    private readonly TopmostEffectWindow _topmostEffectWindow;
     private readonly IslandContext _context;
     private readonly IslandRenderer _renderer;
     private readonly IslandSurface _surface;
@@ -57,6 +60,8 @@ public sealed class IslandHost : IDisposable
     private double _dpiY = 1.0;
     private int _windowLeftPx;
     private int _windowTopPx;
+    private int _contentWidthPx;
+    private int _contentHeightPx;
     private bool _isVisible;
     private bool _forceLayered;
 
@@ -71,7 +76,7 @@ public sealed class IslandHost : IDisposable
     private TimeSpan? _hideAnimStart;
     private double _hideFromScale = 1;
     private double _hideFromOpacity = 1;
-    private static readonly Dictionary<string, AnimSpec> AnimSpecs = BuildAnimSpecs();
+    private static readonly Dictionary<int, Dictionary<string, AnimSpec>> AnimSpecsByStyle = BuildAllAnimSpecs();
 
     private const double ShowScaleMin = 0.89;
     private const double ShowAnimatedDuration = 0.47;
@@ -119,7 +124,8 @@ public sealed class IslandHost : IDisposable
         IWindowRuleService windowRuleService,
         IRulesetService rulesetService,
         MainViewModel viewModel,
-        NotificationDisplayService notificationDisplayService)
+        NotificationDisplayService notificationDisplayService,
+        TopmostEffectWindow topmostEffectWindow)
     {
         _settingsService = settingsService;
         _themeService = themeService;
@@ -130,6 +136,7 @@ public sealed class IslandHost : IDisposable
         _rulesetService = rulesetService;
         _viewModel = viewModel;
         _notificationDisplayService = notificationDisplayService;
+        _topmostEffectWindow = topmostEffectWindow;
 
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
             rulesetService, weatherService)
@@ -159,6 +166,9 @@ public sealed class IslandHost : IDisposable
     {
         if (_source != null)
             return;
+        // 自绘模式下没有 MainWindow 来登记视觉壳层，由岛自己接收提醒特效回调。
+        if (Settings.UseSelfDrawnIsland)
+            _notificationDisplayService.VisualHost = this;
         CreateSource();
         RefreshTheme();
         UpdateWindowPos();
@@ -341,13 +351,24 @@ public sealed class IslandHost : IDisposable
     private void UpdateNotification()
     {
         var viewModel = _viewModel;
+        _renderer.UseSlantedMask = Settings.IslandMaskAnimationStyle == 2;
         var mask = viewModel.CurrentMaskContent;
         if (mask != null && !_renderer.IsMaskVisible)
         {
-            // 新遮罩出现：复位到滑入起点，等 OverlayMaskIn 驱动。
-            _renderer.MaskOffsetY = -60;
-            _renderer.MaskOpacity = 0;
+            // 新遮罩出现：复位到动画起点，等 OverlayMaskIn 驱动。
+            _renderer.MaskContentOpacity = 0;
             _renderer.ContentOpacity = 1;
+            if (_renderer.UseSlantedMask)
+            {
+                _renderer.MaskOffsetY = 0;
+                _renderer.MaskContentScale = 1.1;
+                _renderer.ResetMaskRegions(0);
+            }
+            else
+            {
+                _renderer.MaskOffsetY = -60;
+                _renderer.MaskContentScale = 1;
+            }
         }
 
         _renderer.IsMaskVisible = mask != null;
@@ -360,7 +381,9 @@ public sealed class IslandHost : IDisposable
         {
             // 提醒结束：复位并停止逐帧动画。
             _renderer.MaskOffsetY = 0;
-            _renderer.MaskOpacity = 1;
+            _renderer.MaskContentOpacity = 1;
+            _renderer.MaskContentScale = 1;
+            _renderer.ResetMaskRegions(0);
             _renderer.OverlayOpacity = 1;
             _renderer.ContentOpacity = 1;
             _animSpec = null;
@@ -373,9 +396,47 @@ public sealed class IslandHost : IDisposable
     private void OnMainWindowAnimation(object? sender, MainWindowAnimationEventArgs e)
         => StartNotificationAnimation(e.StoryboardName);
 
+    #region INotificationVisualHost
+
+    public void OnNotificationTopmostChanged() => UpdateLayer();
+
+    public void OnNotificationEffectRequested()
+    {
+        if (!_isVisible || Settings.IsCompatibleWindowTransparentEnabled)
+            return;
+        var screen = GetDockingScreen(Settings.WindowDockingMonitorIndex);
+        if (screen == null)
+            return;
+        // 水波纹中心取岛内容中心，转成相对顶层特效窗口（=工作区原点）的 DIP，复用 MainWindow 的实现。
+        var workArea = screen.WorkingArea;
+        var centerX = (_windowLeftPx + _contentWidthPx / 2.0 - workArea.Left) / _dpiX;
+        var centerY = (_windowTopPx + _contentHeightPx / 2.0 - workArea.Top) / _dpiY;
+        _topmostEffectWindow.Dispatcher.Invoke(() =>
+        {
+            _topmostEffectWindow.UpdateWindowPos(screen, 1 / _dpiX);
+            _topmostEffectWindow.PlayEffect(new RippleEffect
+            {
+                CenterX = centerX,
+                CenterY = centerY
+            });
+        });
+    }
+
+    // ponytail: 自绘岛暂无 overlay 倒计时条，进度回调留空。
+    public void OnNotificationProgressStarted(TimeSpan duration)
+    {
+    }
+
+    public void OnNotificationProgressStopped()
+    {
+    }
+
+    #endregion
+
     private void StartNotificationAnimation(string name)
     {
-        if (!AnimSpecs.TryGetValue(name, out var spec))
+        if (!AnimSpecsByStyle.TryGetValue(Settings.IslandMaskAnimationStyle, out var specs) ||
+            !specs.TryGetValue(name, out var spec))
             return;
         _animSpec = spec;
         _animStart = null;
@@ -398,12 +459,19 @@ public sealed class IslandHost : IDisposable
             var t = (args.RenderingTime - _animStart.Value).TotalSeconds;
             if (spec.MaskY is not null)
                 _renderer.MaskOffsetY = Eval(spec.MaskY, t);
-            if (spec.MaskOpacity is not null)
-                _renderer.MaskOpacity = Eval(spec.MaskOpacity, t);
+            if (spec.MaskContentOpacity is not null)
+                _renderer.MaskContentOpacity = Eval(spec.MaskContentOpacity, t);
+            if (spec.MaskContentScale is not null)
+                _renderer.MaskContentScale = Eval(spec.MaskContentScale, t);
             if (spec.OverlayOpacity is not null)
                 _renderer.OverlayOpacity = Eval(spec.OverlayOpacity, t);
             if (spec.ContentOpacity is not null)
                 _renderer.ContentOpacity = Eval(spec.ContentOpacity, t);
+            if (spec.MaskRegions is not null)
+            {
+                for (var i = 0; i < 5; i++)
+                    _renderer.MaskRegionProgress[i] = Eval(spec.MaskRegions[i], t);
+            }
             if (t >= spec.Duration)
             {
                 _animSpec = null;
@@ -538,7 +606,15 @@ public sealed class IslandHost : IDisposable
         return keys[^1].V;
     }
 
-    private static Dictionary<string, AnimSpec> BuildAnimSpecs()
+    private static Dictionary<int, Dictionary<string, AnimSpec>> BuildAllAnimSpecs() => new()
+    {
+        [0] = BuildClassicIsland1Specs(),
+        [1] = BuildClassicIsland2Specs(),
+        [2] = BuildFluentIsland2Specs()
+    };
+
+    /// <summary>ClassIsland 1：矩形遮罩块滑入/滑出，文字延迟淡入（QuinticEaseOut / CircleEaseIn）。</summary>
+    private static Dictionary<string, AnimSpec> BuildClassicIsland1Specs()
     {
         var quintOut = new QuinticEase { EasingMode = EasingMode.EaseOut };
         var powerIn = new PowerEase { EasingMode = EasingMode.EaseIn };
@@ -550,14 +626,15 @@ public sealed class IslandHost : IDisposable
             {
                 Duration = 0.3,
                 MaskY = [(0, -60, null), (0.2, 0, quintOut)],
-                MaskOpacity = [(0, 0, null), (0.2, 0, null), (0.3, 1, powerIn)],
+                MaskContentOpacity = [(0, 0, null), (0.2, 0, null), (0.3, 1, powerIn)],
                 OverlayOpacity = [(0.2, 0, null), (0.3, 1, quintOut)]
             },
             ["OverlayMaskOut"] = new()
             {
                 Duration = 0.3,
                 MaskY = [(0, 0, null), (0.1, 0, null), (0.3, 60, circleIn)],
-                MaskOpacity = [(0, 1, null), (0.1, 0, null)],
+                MaskContentOpacity = [(0, 1, null), (0.1, 0, null)],
+                OverlayOpacity = [(0, 1, null)],
                 ContentOpacity = [(0, 0, null)]
             },
             ["OverlayOut"] = new()
@@ -570,20 +647,127 @@ public sealed class IslandHost : IDisposable
             {
                 Duration = 0.3,
                 MaskY = [(0, 0, null), (0.1, 0, null), (0.3, 60, circleIn)],
-                MaskOpacity = [(0, 1, null), (0.1, 0, null)],
+                MaskContentOpacity = [(0, 1, null), (0.1, 0, null)],
                 OverlayOpacity = [(0, 1, null), (0.1, 0, cubicOut)],
                 ContentOpacity = [(0, 0, null), (0.3, 1, null)]
             }
         };
     }
 
+    /// <summary>ClassIsland 2 默认（ClassicTheme）：矩形遮罩块滑入/滑出，缓动方向与 CI1 相反。</summary>
+    private static Dictionary<string, AnimSpec> BuildClassicIsland2Specs()
+    {
+        var quadIn = new QuadraticEase { EasingMode = EasingMode.EaseIn };
+        var quadOut = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+        var sineIn = new SineEase { EasingMode = EasingMode.EaseIn };
+        var circleIn = new CircleEase { EasingMode = EasingMode.EaseIn };
+        var cubicOut = new CubicEase { EasingMode = EasingMode.EaseOut };
+        return new Dictionary<string, AnimSpec>
+        {
+            ["OverlayMaskIn"] = new()
+            {
+                Duration = 0.3,
+                MaskY = [(0, -50, null), (0.2, 0, quadIn)],
+                MaskContentOpacity = [(0, 0, null), (0.2, 0, null), (0.3, 1, null)],
+                OverlayOpacity = [(0.2, 0, null), (0.3, 1, quadOut)],
+                ContentOpacity = [(0, 1, null), (0.2, 0, sineIn)]
+            },
+            ["OverlayMaskOut"] = new()
+            {
+                Duration = 0.3,
+                MaskY = [(0, 0, null), (0.1, 0, null), (0.3, 50, quadOut)],
+                MaskContentOpacity = [(0, 1, null), (0.1, 0, null)],
+                OverlayOpacity = [(0, 1, null)],
+                ContentOpacity = [(0, 0, null)]
+            },
+            ["OverlayOut"] = new()
+            {
+                Duration = 0.3,
+                OverlayOpacity = [(0, 1, null), (0.1, 1, null), (0.3, 0, circleIn)],
+                ContentOpacity = [(0, 0, null), (0.3, 1, null)]
+            },
+            ["OverlayMaskOutDirect"] = new()
+            {
+                Duration = 0.3,
+                MaskY = [(0, 0, null), (0.1, 0, null), (0.3, 50, quadOut)],
+                MaskContentOpacity = [(0, 1, null), (0.1, 0, null)],
+                OverlayOpacity = [(0, 1, null), (0.1, 0, cubicOut)],
+                ContentOpacity = [(0, 0, null), (0.3, 1, null)]
+            }
+        };
+    }
+
+    /// <summary>ClassIsland 2 Fluent：5 个平行四边形遮罩，外→内展开 / 内→外收合，文字延迟淡入 + 缩放。</summary>
+    private static Dictionary<string, AnimSpec> BuildFluentIsland2Specs()
+    {
+        var quintOut = new QuinticEase { EasingMode = EasingMode.EaseOut };
+        var circleIn = new CircleEase { EasingMode = EasingMode.EaseIn };
+        var cubicOut = new CubicEase { EasingMode = EasingMode.EaseOut };
+        var openRegions = BuildSlantedRegions(open: true);
+        var closeRegions = BuildSlantedRegions(open: false);
+        return new Dictionary<string, AnimSpec>
+        {
+            ["OverlayMaskIn"] = new()
+            {
+                Duration = 1.01,
+                MaskRegions = openRegions,
+                MaskContentOpacity = [(0.26, 0, null), (0.51, 1, quintOut)],
+                MaskContentScale = [(0.26, 1.1, null), (1.01, 1.0, quintOut)],
+                OverlayOpacity = [(0, 0, null)],
+                ContentOpacity = [(0, 0, null)]
+            },
+            ["OverlayMaskOut"] = new()
+            {
+                Duration = 0.48,
+                MaskRegions = closeRegions,
+                MaskContentOpacity = [(0, 1, null), (0.2, 0, null)],
+                MaskContentScale = [(0, 1.0, null), (0.2, 1.1, null)],
+                OverlayOpacity = [(0, 1, null)],
+                ContentOpacity = [(0, 0, null)]
+            },
+            ["OverlayOut"] = new()
+            {
+                Duration = 0.3,
+                OverlayOpacity = [(0, 1, null), (0.1, 1, null), (0.3, 0, circleIn)],
+                ContentOpacity = [(0, 0, null), (0.3, 1, null)]
+            },
+            ["OverlayMaskOutDirect"] = new()
+            {
+                Duration = 0.48,
+                MaskRegions = closeRegions,
+                MaskContentOpacity = [(0, 1, null), (0.2, 0, null)],
+                MaskContentScale = [(0, 1.0, null), (0.2, 1.1, null)],
+                OverlayOpacity = [(0, 1, null)],
+                ContentOpacity = [(0, 0, null), (0.48, 1, null)]
+            }
+        };
+    }
+
+    /// <summary>构建 Fluent 平行四边形遮罩 5 个分区的关键帧（外→内 or 内→外，带 stagger）。</summary>
+    private static (double T, double V, IEasingFunction? E)[][] BuildSlantedRegions(bool open)
+    {
+        const double duration = 0.36;
+        IEasingFunction easing = open
+            ? new QuarticEase { EasingMode = EasingMode.EaseOut }
+            : new QuadraticEase { EasingMode = EasingMode.EaseIn };
+        double[] delays = open ? [0, 0.09, 0.12, 0.09, 0] : [0.12, 0.09, 0, 0.09, 0.12];
+        var from = open ? 0.0 : 1.0;
+        var to = open ? 1.0 : 0.0;
+        var regions = new (double, double, IEasingFunction?)[5][];
+        for (var i = 0; i < 5; i++)
+            regions[i] = [(delays[i], from, null), (delays[i] + duration, to, easing)];
+        return regions;
+    }
+
     private sealed class AnimSpec
     {
         public double Duration;
         public (double T, double V, IEasingFunction? E)[]? MaskY;
-        public (double T, double V, IEasingFunction? E)[]? MaskOpacity;
+        public (double T, double V, IEasingFunction? E)[]? MaskContentOpacity;
+        public (double T, double V, IEasingFunction? E)[]? MaskContentScale;
         public (double T, double V, IEasingFunction? E)[]? OverlayOpacity;
         public (double T, double V, IEasingFunction? E)[]? ContentOpacity;
+        public (double T, double V, IEasingFunction? E)[][]? MaskRegions;
     }
 
     private void UpdateMaskVisual(NotificationContent? content)
@@ -639,6 +823,8 @@ public sealed class IslandHost : IDisposable
         UpdateWindowPos();
         ApplyWindowStyles();
         UpdateVisibility();
+        if (e.PropertyName == nameof(Settings.IslandMaskAnimationStyle))
+            UpdateNotification();
         if (_renderer.UpdateFadeTargets())
             EnsureRenderingHook();
     }
@@ -743,6 +929,9 @@ public sealed class IslandHost : IDisposable
         var contentHeightPx = (int)Math.Ceiling(contentHeight * _dpiY);
         if (widthPx <= 0 || heightPx <= 0)
             return;
+
+        _contentWidthPx = contentWidthPx;
+        _contentHeightPx = contentHeightPx;
 
         var offsetAreaTop = Settings.IsIgnoreWorkAreaEnabled ? screen.Bounds.Top : screen.WorkingArea.Top;
         var offsetAreaBottom = Settings.IsIgnoreWorkAreaEnabled ? screen.Bounds.Bottom : screen.WorkingArea.Bottom;
