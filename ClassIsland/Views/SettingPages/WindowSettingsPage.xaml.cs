@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums.SettingsWindow;
@@ -29,13 +27,6 @@ public partial class WindowSettingsPage : SettingsPageBase
         DataContext = this;
         SettingsService = settingsService;
         ViewModel.Screens = new ObservableCollection<Screen>(Screen.AllScreens);
-        var taskbarTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(1)
-        };
-        taskbarTimer.Tick += TaskbarTimer_Tick;
-        taskbarTimer.Start();
-        TaskbarTimer_Tick();
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
     }
 
@@ -50,13 +41,6 @@ public partial class WindowSettingsPage : SettingsPageBase
     private void ButtonRefreshMonitors_OnClick(object sender, RoutedEventArgs e)
     {
         ViewModel.Screens = new ObservableCollection<Screen>(Screen.AllScreens);
-    }
-
-    private void TaskbarTimer_Tick(object? _ = null, EventArgs? e = null)
-    {
-        var t = DateTime.Now.ToShortTimeString();
-        if (DateTime.Now.Second % 2 == 0) t = t.Replace(":", " ");
-        TaskbarTime.Text = t;
     }
 
     private void ButtonRestart_OnClick(object sender, RoutedEventArgs e)

@@ -7,6 +7,7 @@
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
       xmlns:ci="http://classisland.tech/schemas/xaml/core"
+      xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
       xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
       xmlns:validations="clr-namespace:ClassIsland.Validations"
       xmlns:system="clr-namespace:System;assembly=System.Runtime"
@@ -25,220 +26,227 @@
     <controls:SettingsPageBase.Resources>
         <converters:IntToRadioButtonSelectionConverter x:Key="IntToRadioButtonSelectionConverter" />
     </controls:SettingsPageBase.Resources>
+
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-            <!-- 窗口停靠位置 -->
-            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Monitor}" Text="窗口停靠位置" />
-            <Grid Margin="0 12 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <!-- 位置 -->
+            <TextBlock Text="窗口" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
-                <StackPanel Grid.Column="0" Margin="0 0 8 0">
-                    <Border BorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}" BorderThickness="8" CornerRadius="4" VerticalAlignment="Center" Height="220">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Margin="8">
-                                <RadioButton VerticalAlignment="Top" HorizontalAlignment="Left"
-                                             IsChecked="{Binding SettingsService.Settings.WindowDockingLocation, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=0}" />
-                                <RadioButton VerticalAlignment="Top"
-                                             HorizontalAlignment="Center"
-                                             IsChecked="{Binding SettingsService.Settings.WindowDockingLocation, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=1}" />
-                                <RadioButton VerticalAlignment="Top"
-                                             HorizontalAlignment="Right"
-                                             IsChecked="{Binding SettingsService.Settings.WindowDockingLocation, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=2}" />
-
-                                <RadioButton VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Left"
-                                             IsChecked="{Binding SettingsService.Settings.WindowDockingLocation, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=3}" />
-                                <RadioButton VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Center"
-                                             IsChecked="{Binding SettingsService.Settings.WindowDockingLocation, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=4}" />
-                                <RadioButton VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             IsChecked="{Binding SettingsService.Settings.WindowDockingLocation, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=5}" />
-                            </Grid>
-                            <Border Grid.Row="1" Height="16" Background="#99000000" BorderThickness="0">
-                                <Grid>
-                                    <ciCore:IconText IconSize="10" Kind="{x:Static ciCore:IconGlyphs.MicrosoftWindows}" VerticalAlignment="Center"
-                                                             HorizontalAlignment="Left" Margin="3" />
-                                    <TextBlock x:Name="TaskbarTime"
-                                               FontSize="8" FontWeight="Light"
-                                               HorizontalAlignment="Right" VerticalAlignment="Center"
-                                               Margin="3"/>
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </Border>
-                </StackPanel>
-
-                <StackPanel Grid.Column="1" HorizontalAlignment="Stretch"
-                            Margin="8 0 0 0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <!-- 向右偏移 -->
-                        <ci:NumbericTextBox Grid.Column="0"
-                                                   Style="{StaticResource MahApps.Styles.TextBox}"
-                                                   Padding="6" Margin="0 0 4 0"
-                                                   mah:TextBoxHelper.Watermark="向右偏移"
-                                                   Text="{Binding SettingsService.Settings.WindowDockingOffsetX, Converter={StaticResource IntToStringConverter}}" />
-                        <!-- 向下偏移 -->
-                        <ci:NumbericTextBox Grid.Column="1"
-                                                   Style="{StaticResource MahApps.Styles.TextBox}"
-                                                   Padding="6" Margin="4 0 0 0"
-                                                   mah:TextBoxHelper.Watermark="向下偏移"
-                                                   Text="{Binding SettingsService.Settings.WindowDockingOffsetY, Converter={StaticResource IntToStringConverter}}" />
-                    </Grid>
-                    <!-- 显示器 -->
-                    <ComboBox Margin="0 12 0 0"
-                              Style="{StaticResource MahApps.Styles.ComboBox}"
-                              mah:TextBoxHelper.Watermark="显示器"
-                              ItemsSource="{Binding ViewModel.Screens, Mode=OneWay}">
-                        <ComboBox.SelectedIndex>
-                            <Binding Path="SettingsService.Settings.WindowDockingMonitorIndex">
-                                <Binding.ValidationRules>
-                                    <validations:NotNegativeIndexValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </ComboBox.SelectedIndex>
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.Monitor}"
-                                                             VerticalAlignment="Center" />
-                                    <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
-                                        <Run Text="{Binding DeviceName, Mode=OneWay}" />
-                                        <Run Text="(">
-                                        </Run>
-                                        <Run Text="{Binding Bounds.Width, Mode=OneWay}">
-                                        </Run>
-                                        <Run Text="x">
-                                        </Run>
-                                        <Run Text="{Binding Bounds.Height, Mode=OneWay}">
-                                        </Run>
-                                        <Run Text=")" />
-                                    </TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
-
-                    <Button Margin="0 8 0 0" Style="{StaticResource MahApps.Styles.Button.Flat}"
-                            HorizontalAlignment="Left" Click="ButtonRefreshMonitors_OnClick">
-                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Refresh}" Text="刷新显示器列表" />
-                    </Button>
-
-                    <TextBlock Margin="0 16 0 0" TextWrapping="Wrap"
-                               Text="应用会以左图的位置显示在指定的显示器上。如果指定的显示器不存在，那么应用会显示在主显示器上。" />
-                    <!--<TextBlock Text="{Binding SettingsService.Settings.WindowDockingLocation, Mode=OneWay}"/>-->
-                </StackPanel>
-            </Grid>
-            <Separator Margin="0 16" />
-
-            <!-- 窗口层级 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.LayersOutline}" Header="窗口层级"
-                                    Description="窗口层级；置底显示在所有窗口后方，置顶在前方。">
+            <!-- 显示器 -->
+            <ci:SettingsCard Header="显示器"
+                             Description="指定应用显示的显示器，如不存在则回退至主显示器。"
+                             Margin="0 0 0 6">
                 <ci:SettingsCard.Switcher>
-                    <ComboBox SelectedIndex="{Binding SettingsService.Settings.WindowLayer, Mode=TwoWay}"
-                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                  HorizontalContentAlignment="Left"
+                                  MinWidth="260" MinHeight="32" FontSize="14"
+                                  VerticalAlignment="Center"
+                                  ItemsSource="{Binding ViewModel.Screens, Mode=OneWay}">
+                            <ComboBox.SelectedIndex>
+                                <Binding Path="SettingsService.Settings.WindowDockingMonitorIndex">
+                                    <Binding.ValidationRules>
+                                        <validations:NotNegativeIndexValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </ComboBox.SelectedIndex>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <remix:PackIconRemixIcon Kind="MacFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                        <TextBlock VerticalAlignment="Center" Margin="6 0 0 0">
+                                            <Run Text="{Binding DeviceName, Mode=OneWay}" />
+                                            <Run Text="(">
+                                            </Run>
+                                            <Run Text="{Binding Bounds.Width, Mode=OneWay}">
+                                            </Run>
+                                            <Run Text="x">
+                                            </Run>
+                                            <Run Text="{Binding Bounds.Height, Mode=OneWay}">
+                                            </Run>
+                                            <Run Text=")" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                MinWidth="32" MinHeight="32" Padding="6"
+                                Margin="8 0 0 0"
+                                VerticalAlignment="Center"
+                                ToolTip="刷新显示器列表"
+                                Click="ButtonRefreshMonitors_OnClick">
+                            <remix:PackIconRemixIcon Kind="RefreshLine" Width="16" Height="16" />
+                        </Button>
+                    </StackPanel>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+
+            <!-- 位置 -->
+            <ci:SettingsCard Header="位置"
+                             Description="主界面停靠到屏幕的位置。"
+                             Margin="0 0 0 6">
+                <ci:SettingsCard.Switcher>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              HorizontalContentAlignment="Left"
+                              MinWidth="260" MinHeight="32" FontSize="14"
+                              VerticalAlignment="Center"
+                              SelectedIndex="{Binding SettingsService.Settings.WindowDockingLocation, Mode=TwoWay}">
                         <ComboBoxItem>
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.LayersMinus}" Text="置底" />
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ArrowLeftUpBoxFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="左上" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </ComboBoxItem>
                         <ComboBoxItem>
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.LayersPlus}" Text="置顶" />
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ArrowUpBoxFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="上" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ArrowRightUpBoxFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="右上" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ArrowLeftDownBoxFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="左下" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ArrowDownBoxFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="下" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ArrowRightDownBoxFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="右下" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </ComboBoxItem>
                     </ComboBox>
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
 
-            <!-- 指针移入淡化 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent"
-                          IsExpanded="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=OneWay}"
-                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveDown}"
-                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                  Header="指针移入淡化"
-                                                  Description="鼠标移入或触屏点击主界面时淡化主界面。"
-                                                  IsOn="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=TwoWay}"
-                                                  Margin="-12 0" />
-                    </Expander.Header>
-                    <StackPanel Margin="36 0 48 12"
-                                IsEnabled="{Binding SettingsService.Settings.IsMouseInFadingEnabled}">
-                        <StackPanel>
-                            <Border Background="#22FF0000" Visibility="{Binding SettingsService.Settings.IsErrorLoadingRawInput, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0 0 0 4">
-                                <Grid TextElement.FontSize="13">
-                                    <DockPanel Margin="8 4 4 4">
-                                        <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.ErrorOutline}"
-                                                                 Margin="0 0 4 0"
-                                                                 VerticalAlignment="Center"/>
-                                        <TextBlock Text="初始化 RawInput 失败，将使用兼容模式判断光标位置。详细请查看日志。"
-                                                   TextWrapping="Wrap"
-                                                   VerticalAlignment="Center"/>
-                                    </DockPanel>
-                                </Grid>
-                            </Border>
-                            <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0 0 0 4">
-                                <Grid TextElement.FontSize="13">
-                                    <DockPanel Margin="8 4 4 4">
-                                        <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.InfoCircleOutline}"
-                                                                 Margin="0 0 4 0"
-                                                                 VerticalAlignment="Center"/>
-                                        <TextBlock Text="使用原始输入判断鼠标位置时，如果前台窗口的进程以管理员身份运行，可能会出现无法判定鼠标位置的情况。以管理员身份运行 LegacyIsland 可以解决此问题。"
-                                                   TextWrapping="Wrap"
-                                                   VerticalAlignment="Center"/>
-                                    </DockPanel>
-                                </Grid>
-                            </Border>
-                            <!-- 使用原始输入 -->
-                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.Input}"
-                                                    IsCompact="True"
-                                                   Header="使用原始输入"
-                                                   Description="用 RawInput 接收鼠标/触屏事件，可区分二者；不兼容时禁用。"
-                                                   IsOn="{Binding SettingsService.Settings.UseRawInput, Mode=TwoWay}"
-                                                   Margin="0 0 0 6" />
-                            <!-- 触屏点击后自动恢复 -->
-                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}"
-                                                       IsCompact="True"
-                                                       Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                       Header="触屏点击后自动恢复时间"
-                                                       Description="触屏点击主界面后自动恢复显示；0为禁用。"
-                                                       Margin="0 0 0 6">
-                                <ci:SettingsControl.Switcher>
-                                    <ComboBox
-                                             Width="100"
-                                             IsEditable="True"
-                                             Text="{Binding SettingsService.Settings.TouchInFadingDurationMs, Converter={StaticResource IntToStringConverter}}"
-                                             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                                        <system:String>0</system:String>
-                                        <system:String>1500</system:String>
-                                        <system:String>3000</system:String>
-                                        <system:String>4500</system:String>
-                                        <system:String>6000</system:String>
-                                    </ComboBox>
-                                </ci:SettingsControl.Switcher>
-                            </ci:SettingsControl>
-
-                            <!-- 反转指针移入淡化 -->
-                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveUp}"
-                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                Header="反转指针移入淡化"
-                                                Description="默认淡化主界面，仅鼠标移入时显示；不影响隐藏。"
-                                                IsOn="{Binding SettingsService.Settings.IsMouseInFadingReversed, Mode=TwoWay}"
-                                                Margin="0 6 0 0" />
-
-                        </StackPanel>
+            <!-- 偏移 -->
+            <ci:SettingsCard Header="偏移"
+                             Description="在停靠位置基础上的偏移量。"
+                             Margin="0 0 0 6">
+                <ci:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:MetroHeader Header="向右偏移" Margin="0 0 12 0">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.WindowDockingOffsetX}"
+                                               MinWidth="120" MinHeight="32" FontSize="14"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        </mah:MetroHeader>
+                        <mah:MetroHeader Header="向下偏移">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.WindowDockingOffsetY}"
+                                               MinWidth="120" MinHeight="32" FontSize="14"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        </mah:MetroHeader>
                     </StackPanel>
-                </Expander>
-            </Border>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+
+            <!-- 行为 -->
+            <TextBlock Text="行为" Style="{StaticResource SettingsSectionHeaderStyle}" />
+
+            <!-- 窗口层级 -->
+            <ci:SettingsCard Header="窗口层级"
+                                    Description="置底会显示在所有窗口后面，置顶显示在最前面。">
+                <ci:SettingsCard.Switcher>
+                    <StackPanel>
+                        <RadioButton GroupName="WindowLayer"
+                                     Style="{StaticResource MahApps.Styles.RadioButton.Win10}"
+                                     FontSize="14"
+                                     Content="置底"
+                                     IsChecked="{Binding SettingsService.Settings.WindowLayer, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=0}" />
+                        <RadioButton GroupName="WindowLayer"
+                                     Style="{StaticResource MahApps.Styles.RadioButton.Win10}"
+                                     FontSize="14"
+                                     Margin="0 8 0 0"
+                                     Content="置顶"
+                                     IsChecked="{Binding SettingsService.Settings.WindowLayer, Converter={StaticResource IntToRadioButtonSelectionConverter}, ConverterParameter=1}" />
+                    </StackPanel>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+
+            <!-- 指针移入淡化 -->
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveDown}"
+                             Header="指针移入淡化"
+                             Description="鼠标移入或触屏点击主界面时淡化主界面。"
+                             IsOn="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=TwoWay}"
+                             Margin="0 0 0 6" />
+
+            <!-- 指针移入淡化：子选项（开启时显示） -->
+            <StackPanel Margin="0 0 0 6"
+                        Visibility="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Border Background="#22FF0000" Visibility="{Binding SettingsService.Settings.IsErrorLoadingRawInput, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0 0 0 4">
+                    <Grid TextElement.FontSize="13">
+                        <DockPanel Margin="8 4 4 4">
+                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.ErrorOutline}"
+                                                     Margin="0 0 4 0"
+                                                     VerticalAlignment="Center"/>
+                            <TextBlock Text="初始化 RawInput 失败，将使用兼容模式判断光标位置。详细请查看日志。"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </DockPanel>
+                    </Grid>
+                </Border>
+                <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0 0 0 4">
+                    <Grid TextElement.FontSize="13">
+                        <DockPanel Margin="8 4 4 4">
+                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.InfoCircleOutline}"
+                                                     Margin="0 0 4 0"
+                                                     VerticalAlignment="Center"/>
+                            <TextBlock Text="使用原始输入判断鼠标位置时，如果前台窗口的进程以管理员身份运行，可能会出现无法判定鼠标位置的情况。以管理员身份运行 LegacyIsland 可以解决此问题。"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </DockPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 使用原始输入 -->
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Input}"
+                                 Header="使用原始输入"
+                                 Description="解决触摸屏定位偏移的问题，不支持时禁用。"
+                                 IsOn="{Binding SettingsService.Settings.UseRawInput, Mode=TwoWay}"
+                                 Margin="0 0 0 6" />
+
+                <!-- 触屏点击后自动恢复 -->
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}"
+                                 Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                 Header="触屏点击后自动恢复时间"
+                                 Description="触屏点击主界面后自动恢复显示；0为禁用。"
+                                 Margin="0 0 0 6">
+                    <ci:SettingsCard.Switcher>
+                        <ComboBox
+                                 Width="100"
+                                 IsEditable="True"
+                                 MinHeight="32" FontSize="14"
+                                 Text="{Binding SettingsService.Settings.TouchInFadingDurationMs, Converter={StaticResource IntToStringConverter}}"
+                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                            <system:String>0</system:String>
+                            <system:String>1500</system:String>
+                            <system:String>3000</system:String>
+                            <system:String>4500</system:String>
+                            <system:String>6000</system:String>
+                        </ComboBox>
+                    </ci:SettingsCard.Switcher>
+                </ci:SettingsCard>
+
+                <!-- 反转指针移入淡化 -->
+                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveUp}"
+                                 Header="反转指针移入淡化"
+                                 Description="默认淡化主界面，仅鼠标移入时显示；不影响隐藏。"
+                                 IsOn="{Binding SettingsService.Settings.IsMouseInFadingReversed, Mode=TwoWay}" />
+            </StackPanel>
 
             <!-- 兼容透明模式 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
@@ -249,15 +257,10 @@
             
             <!-- 使用原始屏幕尺寸 -->
             <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.DockWindow}"
-                                   Header="使用原始屏幕尺寸"
-                                   Description="主界面调整位置时忽略系统工作区（任务栏等）。"
+                                   Header="使用屏幕尺寸而非工作区尺寸"
+                                   Description="开启后会直接使用整个屏幕区域参与布局。不会为任务栏预留空间。"
                                    IsOn="{Binding SettingsService.Settings.IsIgnoreWorkAreaEnabled, Mode=TwoWay}"
                                    Margin="0 0 0 6" />
-
-            <!-- 指针穿透 --><!--
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveUp}" Header="启用鼠标点击"
-                                   Description="启用时鼠标可以与主界面窗口上的元素交互。若禁用，那么鼠标在点击应用主界面窗口时，会穿透到窗口后方。"
-                                   IsOn="{Binding SettingsService.Settings.IsMouseClickingEnabled, Mode=TwoWay}" />-->
 
         </StackPanel>
     </ScrollViewer>
