@@ -521,7 +521,6 @@ public partial class App : AppBase, IAppHost
                 services.AddSettingsPage<NotificationSettingsPage>();
                 services.AddSettingsPage<WindowSettingsPage>();
                 services.AddSettingsPage<WeatherSettingsPage>();
-                services.AddSettingsPage<UpdatesSettingsPage>();
                 services.AddSettingsPage<AutomationSettingsPage>();
                 services.AddSettingsPage<StorageSettingsPage>();
                 services.AddSettingsPage<PluginsSettingsPage>();
@@ -722,16 +721,6 @@ public partial class App : AppBase, IAppHost
             Logger.LogError(ex, "创建任务栏图标失败。");
         }
 
-        if (!ApplicationCommand.Quiet)  // 在静默启动时不进行更新相关操作
-        {
-            GetService<ISplashService>().SetDetailedStatus("正在进行更新服务启动操作");
-            var r = await GetService<UpdateService>().AppStartup();
-            if (r)
-            {
-                GetService<ISplashService>().EndSplash();
-                return;
-            }
-        }
         GetService<ISplashService>().CurrentProgress = 45;
 
         GetService<ISplashService>().SetDetailedStatus("正在加载档案");

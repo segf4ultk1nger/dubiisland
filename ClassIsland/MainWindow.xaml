@@ -98,20 +98,6 @@
                     <Image Source="/Assets/AppLogo.png" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="更新可用…" Click="MenuItemUpdates_OnClick">
-                <MenuItem.Icon>
-                    <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.UploadOutline}"/>
-                </MenuItem.Icon>
-                <MenuItem.Style>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ViewModel.Settings.LastUpdateStatus}" Value="UpToDate">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </MenuItem.Style>
-            </MenuItem>
             <MenuItem Header="帮助…" Click="MenuItemHelps_OnClick">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="QuestionFill" Width="16" Height="16"/>

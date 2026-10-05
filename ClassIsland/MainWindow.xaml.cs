@@ -1017,11 +1017,6 @@ public partial class MainWindow : Window
         UriNavigationService.Navigate(new Uri("https://docs.classisland.tech/app/"));
     }
 
-    private void MenuItemUpdates_OnClick(object sender, RoutedEventArgs e)
-    {
-        App.GetService<SettingsWindowNew>().Open("update");
-    }
-
     private void GridRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         Width = e.NewSize.Width * ViewModel.Settings.Scale;
