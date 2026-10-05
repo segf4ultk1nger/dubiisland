@@ -67,6 +67,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
     private AnimSpec? _animSpec;
     private TimeSpan? _animStart;
+    private bool _maskClosing;
     private bool _renderingHooked;
     private bool _showAnimActive;
     private TimeSpan? _showAnimStart;
@@ -353,9 +354,10 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         var viewModel = _viewModel;
         _renderer.UseSlantedMask = Settings.IslandMaskAnimationStyle == 2;
         var mask = viewModel.CurrentMaskContent;
-        if (mask != null && !_renderer.IsMaskVisible)
+        if (mask != null && (!_renderer.IsMaskVisible || _maskClosing))
         {
             // 新遮罩出现：复位到动画起点，等 OverlayMaskIn 驱动。
+            _maskClosing = false;
             _renderer.MaskContentOpacity = 0;
             _renderer.ContentOpacity = 1;
             if (_renderer.UseSlantedMask)
@@ -371,26 +373,50 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
             }
         }
 
-        _renderer.IsMaskVisible = mask != null;
-        UpdateMaskVisual(mask);
+        if (mask == null)
+        {
+            // 遮罩内容已清空：不要立即隐藏，等收合动画播完再收起（见 OnRendering）。
+            if (_renderer.IsMaskVisible)
+                _maskClosing = true;
+        }
+        else
+        {
+            _renderer.IsMaskVisible = true;
+        }
+
+        // 收合动画期间保留遮罩文本（内容已清空），由 MaskContentOpacity 淡出，播完再清。
+        if (mask != null || !_maskClosing)
+            UpdateMaskVisual(mask);
         var overlay = viewModel.CurrentOverlayContent;
         _renderer.IsOverlayVisible = overlay != null;
         _renderer.OverlayText = ExtractOverlayText(overlay);
 
-        if (mask == null && overlay == null)
+        if (mask == null && overlay == null && !_maskClosing)
         {
-            // 提醒结束：复位并停止逐帧动画。
-            _renderer.MaskOffsetY = 0;
-            _renderer.MaskContentOpacity = 1;
-            _renderer.MaskContentScale = 1;
-            _renderer.ResetMaskRegions(0);
-            _renderer.OverlayOpacity = 1;
-            _renderer.ContentOpacity = 1;
-            _animSpec = null;
-            _animStart = null;
+            FinalizeNotificationVisual();
+        }
+        else if (_maskClosing && _animSpec is null)
+        {
+            // 没有正在跑的收合动画（例如已被覆盖或本就没有），直接收起。
+            FinalizeNotificationVisual();
         }
 
         _renderer.Invalidate();
+    }
+
+    /// <summary>提醒结束：复位遮罩 / overlay 视觉态并停止逐帧动画。</summary>
+    private void FinalizeNotificationVisual()
+    {
+        _renderer.MaskOffsetY = 0;
+        _renderer.MaskContentOpacity = 1;
+        _renderer.MaskContentScale = 1;
+        _renderer.ResetMaskRegions(0);
+        _renderer.OverlayOpacity = 1;
+        _renderer.ContentOpacity = 1;
+        _renderer.IsMaskVisible = false;
+        _maskClosing = false;
+        _animSpec = null;
+        _animStart = null;
     }
 
     private void OnMainWindowAnimation(object? sender, MainWindowAnimationEventArgs e)
@@ -438,6 +464,26 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         if (!AnimSpecsByStyle.TryGetValue(Settings.IslandMaskAnimationStyle, out var specs) ||
             !specs.TryGetValue(name, out var spec))
             return;
+
+        // OverlayOut 会和遮罩收合（OverlayMaskOut / OverlayMaskOutDirect）在同一帧触发，
+        // 单 _animSpec 会被覆盖导致收合动画丢失；把仍在跑的遮罩字段并入新 spec。
+        var ongoing = _animSpec;
+        var ongoingHasMask = ongoing is not null && (ongoing.MaskRegions is not null || ongoing.MaskY is not null);
+        var incomingHasMask = spec.MaskRegions is not null || spec.MaskY is not null;
+        if (ongoingHasMask && !incomingHasMask)
+        {
+            spec = new AnimSpec
+            {
+                Duration = Math.Max(spec.Duration, ongoing!.Duration),
+                MaskY = ongoing.MaskY,
+                MaskContentOpacity = ongoing.MaskContentOpacity,
+                MaskContentScale = ongoing.MaskContentScale,
+                MaskRegions = ongoing.MaskRegions,
+                OverlayOpacity = spec.OverlayOpacity,
+                ContentOpacity = spec.ContentOpacity
+            };
+        }
+
         _animSpec = spec;
         _animStart = null;
         EnsureRenderingHook();
@@ -482,6 +528,9 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
                 active = true;
             }
         }
+
+        if (_maskClosing && _animSpec is null)
+            FinalizeNotificationVisual();
 
         if (_showAnimActive)
         {
