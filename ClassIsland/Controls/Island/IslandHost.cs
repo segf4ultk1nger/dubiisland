@@ -74,6 +74,23 @@ public sealed class IslandHost : IDisposable
     private static readonly double ElasticOffsetHalf =
         Math.Pow(2, -10) * Math.Sin((0.5 - ElasticConst2) * ElasticConst);
 
+    /// <summary>出现动画期间 scale 的峰值（用于窗口过冲预留，避免弹性回弹峰值被窗口裁切）。</summary>
+    private static readonly double ShowMaxScale = ComputeShowMaxScale();
+
+    private static double ComputeShowMaxScale()
+    {
+        var max = 1.0;
+        for (var i = 0; i <= 1000; i++)
+        {
+            var p = i / 1000.0;
+            var s = ShowScaleMin + (1 - ShowScaleMin) * OutElasticHalf(p);
+            if (s > max)
+                max = s;
+        }
+
+        return max + 0.005;
+    }
+
     public Settings Settings => _settingsService.Settings;
 
     public IslandContext Context => _context;
@@ -394,6 +411,9 @@ public sealed class IslandHost : IDisposable
                 ApplyShowVisual(1, 1);
                 _showAnimActive = false;
                 _showAnimStart = null;
+                // 回弹结束：收回过冲预留，窗口回到内容尺寸
+                _surface.WindowOvershootScale = 1.0;
+                UpdateWindowPos();
             }
             else
             {
@@ -631,7 +651,11 @@ public sealed class IslandHost : IDisposable
         return index >= 0 && index < screens.Length ? screens[index] : System.Windows.Forms.Screen.PrimaryScreen;
     }
 
-    /// <summary>按内容重新计算窗口大小与停靠位置（等价 MainWindow.UpdateWindowPos，窗口宽度取内容宽度）。</summary>
+    /// <summary>
+    ///     按内容重新计算窗口大小与停靠位置（等价 MainWindow.UpdateWindowPos，窗口宽度取内容宽度）。
+    ///     出现动画过冲期间窗口按 <see cref="IslandSurface.WindowOvershootScale"/> 对称放大、内容居中，
+    ///     因此按内容尺寸定位，再整体外扩半份预留。
+    /// </summary>
     private void UpdateWindowPos()
     {
         if (_source == null)
@@ -641,10 +665,16 @@ public sealed class IslandHost : IDisposable
         if (screen == null)
             return;
 
+        var overshoot = _surface.WindowOvershootScale <= 0 ? 1.0 : _surface.WindowOvershootScale;
         var available = new Size(screen.WorkingArea.Width / _dpiX, double.PositiveInfinity);
-        var desired = _surface.MeasureContent(available);
-        var widthPx = (int)Math.Ceiling(desired.Width * _dpiX);
-        var heightPx = (int)Math.Ceiling(desired.Height * _dpiY);
+        var reserved = _surface.MeasureContent(available);
+        var contentWidth = reserved.Width / overshoot;
+        var contentHeight = reserved.Height / overshoot;
+
+        var widthPx = (int)Math.Ceiling(reserved.Width * _dpiX);
+        var heightPx = (int)Math.Ceiling(reserved.Height * _dpiY);
+        var contentWidthPx = (int)Math.Ceiling(contentWidth * _dpiX);
+        var contentHeightPx = (int)Math.Ceiling(contentHeight * _dpiY);
         if (widthPx <= 0 || heightPx <= 0)
             return;
 
@@ -656,31 +686,34 @@ public sealed class IslandHost : IDisposable
         switch (Settings.WindowDockingLocation)
         {
             case 1: // 中上
-                left = centerX - (double)widthPx / 2;
+                left = centerX - (double)contentWidthPx / 2;
                 break;
             case 2: // 右上
-                left = screen.WorkingArea.Right - widthPx;
+                left = screen.WorkingArea.Right - contentWidthPx;
                 break;
             case 3: // 左下
-                top = offsetAreaBottom - heightPx;
+                top = offsetAreaBottom - contentHeightPx;
                 break;
             case 4: // 中下
-                left = centerX - (double)widthPx / 2;
-                top = offsetAreaBottom - heightPx;
+                left = centerX - (double)contentWidthPx / 2;
+                top = offsetAreaBottom - contentHeightPx;
                 break;
             case 5: // 右下
-                left = screen.WorkingArea.Right - widthPx;
-                top = offsetAreaBottom - heightPx;
+                left = screen.WorkingArea.Right - contentWidthPx;
+                top = offsetAreaBottom - contentHeightPx;
                 break;
         }
 
         left += Settings.WindowDockingOffsetX;
         top += Settings.WindowDockingOffsetY;
 
-        _windowLeftPx = (int)left;
-        _windowTopPx = (int)top;
-        SetWindowPos((HWND)_hwnd, HWND.Null, _windowLeftPx, _windowTopPx, widthPx, heightPx,
-            SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+        // 内容锚点（供命中测试用）保持为内容左上角；窗口左上角再减去半份外扩预留（内容居中）。
+        var padX = (widthPx - contentWidthPx) / 2.0;
+        var padY = (heightPx - contentHeightPx) / 2.0;
+        _windowLeftPx = (int)Math.Round(left);
+        _windowTopPx = (int)Math.Round(top);
+        SetWindowPos((HWND)_hwnd, HWND.Null, (int)Math.Round(left - padX), (int)Math.Round(top - padY),
+            widthPx, heightPx, SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
     }
 
     /// <summary>按隐藏规则（可见性、上课/全屏/最大化/规则集）决定是否显示窗口。</summary>
@@ -719,10 +752,13 @@ public sealed class IslandHost : IDisposable
         _isVisible = visible;
         if (visible)
         {
+            var animate = Settings.IsIslandShowAnimationEnabled;
+            // 动画期间窗口按峰值 scale 对称放大，内容居中 → 弹性回弹不被裁切。
+            _surface.WindowOvershootScale = animate ? ShowMaxScale : 1.0;
             UpdateWindowPos();
             ApplyWindowStyles();
             ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
-            if (Settings.IsIslandShowAnimationEnabled)
+            if (animate)
             {
                 ApplyShowVisual(ShowScaleMin, 0);
                 _showAnimActive = true;
@@ -740,6 +776,7 @@ public sealed class IslandHost : IDisposable
         {
             _showAnimActive = false;
             _showAnimStart = null;
+            _surface.WindowOvershootScale = 1.0;
             ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
         }
     }

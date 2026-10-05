@@ -6,11 +6,15 @@ namespace ClassIsland.Controls.Island;
 
 /// <summary>
 /// 纯自绘表面：拥有单个 <see cref="DrawingVisual"/>，布局与绘制全部交给 <see cref="IslandRenderer"/>。
+/// 支持窗口相对内容的预留放大（<see cref="WindowOvershootScale"/>）：出现动画弹性过冲时窗口临时放大，
+/// 内容居中绘制，避免被窗口边缘裁切。
 /// </summary>
 public sealed class IslandSurface : FrameworkElement
 {
     private readonly DrawingVisual _visual = new();
     private readonly IslandRenderer _renderer;
+
+    private double _contentAvailableWidth = double.PositiveInfinity;
 
     public IslandSurface(IslandRenderer renderer)
     {
@@ -22,37 +26,51 @@ public sealed class IslandSurface : FrameworkElement
 
     public IslandRenderer Renderer => _renderer;
 
+    /// <summary>窗口相对内容的预留倍数（出现动画弹性过冲预留），默认 1。</summary>
+    public double WindowOvershootScale { get; set; } = 1.0;
+
     protected override int VisualChildrenCount => 1;
 
     protected override Visual GetVisualChild(int index) => _visual;
 
-    /// <summary>测量内容所需尺寸（已含窗口缩放），供 HwndSource 决定窗口大小。</summary>
+    /// <summary>测量内容所需尺寸（已含窗口缩放与过冲预留），供 HwndSource 决定窗口大小。</summary>
     public Size MeasureContent(Size availableSize)
     {
         var scale = _renderer.Scale;
-        var natural = _renderer.Measure(new Size(availableSize.Width / scale, double.PositiveInfinity));
-        return new Size(natural.Width * scale, natural.Height * scale);
+        _contentAvailableWidth = availableSize.Width / scale;
+        var natural = _renderer.Measure(new Size(_contentAvailableWidth, double.PositiveInfinity));
+        var overshoot = WindowOvershootScale <= 0 ? 1.0 : WindowOvershootScale;
+        return new Size(natural.Width * scale * overshoot, natural.Height * scale * overshoot);
     }
 
     protected override Size MeasureOverride(Size availableSize) => MeasureContent(availableSize);
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        Redraw(finalSize);
+        Redraw();
         return finalSize;
     }
 
-    /// <summary>按当前尺寸重绘。</summary>
-    public void Redraw() => Redraw(RenderSize);
-
-    private void Redraw(Size size)
+    /// <summary>按当前尺寸重绘（内容在预留窗口内居中）。</summary>
+    public void Redraw()
     {
+        var size = RenderSize;
         if (size.Width <= 0 || size.Height <= 0)
             return;
 
         var scale = _renderer.Scale;
-        var natural = _renderer.Measure(new Size(size.Width / scale, double.PositiveInfinity));
-        _visual.Transform = new ScaleTransform(scale, scale);
+        var natural = _renderer.Measure(new Size(_contentAvailableWidth, double.PositiveInfinity));
+
+        var contentWidth = natural.Width * scale;
+        var contentHeight = natural.Height * scale;
+        var x = Math.Max(0, (size.Width - contentWidth) / 2);
+        var y = Math.Max(0, (size.Height - contentHeight) / 2);
+
+        var transform = new TransformGroup();
+        transform.Children.Add(new ScaleTransform(scale, scale));
+        transform.Children.Add(new TranslateTransform(x, y));
+        _visual.Transform = transform;
+
         using var drawingContext = _visual.RenderOpen();
         _renderer.Render(drawingContext, new Rect(natural));
     }
