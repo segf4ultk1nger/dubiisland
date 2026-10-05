@@ -210,37 +210,9 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
         return c.Count > 0 ? c[0] : "未知";
     }
 
-    public async Task<List<City>> GetCitiesByName(string name)
+    public Task<List<City>> GetCitiesByName(string name)
     {
-        var uri = new Uri("https://weatherapi.market.xiaomi.com/wtr-v3/location/city/hots?locale=zh_cn");
-        var logText = "获取热门城市信息";
-
-        if (name != string.Empty)
-        {
-            uri = new Uri(
-                $"https://weatherapi.market.xiaomi.com/wtr-v3/location/city/search?name={Uri.EscapeDataString(name)}&locale=zh_cn");
-            logText = logText.Replace("热门", "");
-        }
-
-        try
-        {
-            Logger.LogInformation("{}： {}", logText, uri);
-
-            var cityInfoList = await WebRequestHelper.GetJson<List<CityInfo>>(uri);
-            
-            var cities = cityInfoList?.Select(cityInfo => new City
-            {
-                Name = $"{cityInfo.Name} ({cityInfo.Affiliation})",
-                CityId = cityInfo.LocationKey
-            }).ToList() ?? new List<City>();
-
-            return cities;
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "{}失败。", logText);
-            return [];
-        }
+        return Task.FromResult(CitySearchIndex.Search(name));
     }
 
     public DataTemplate? SelectedWeatherIconTemplate

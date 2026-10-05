@@ -17,6 +17,10 @@ public class WeatherInfo
 
     [JsonPropertyName("minutely")] public Minutely Minutely { get; set; } = new();
 
+    [JsonPropertyName("indices")] public WeatherIndices Indices { get; set; } = new();
+
+    [JsonPropertyName("yesterday")] public YesterdayWeather Yesterday { get; set; } = new();
+
     [JsonIgnore] public DateTime UpdateTime => DateTimeOffset.FromUnixTimeMilliseconds(UpdateTimeUnix).LocalDateTime;
 
     [JsonPropertyName("aqi")] public AqiInfo Aqi { get; set; } = new();

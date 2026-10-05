@@ -1,12 +1,16 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Core.Models.Weather;
+using ClassIsland.Core.Services;
+using ClassIsland.Models;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
 using Microsoft.Extensions.Logging;
@@ -42,8 +46,17 @@ public partial class WeatherSettingsPage : SettingsPageBase
         LocationService = locationService;
         Logger = logger;
         SettingsService = settingsService;
+        SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
         // [搜索城市或地区] 初始化防抖定时器
         Loaded += WeatherSettingsPage_Loaded;
+    }
+
+    private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Settings.LastWeatherInfo))
+        {
+            ViewModel.BuildFrom(SettingsService.Settings.LastWeatherInfo, WeatherService);
+        }
     }
 
     private async void ButtonRefreshWeather_OnClick(object sender, RoutedEventArgs e)
@@ -67,7 +80,8 @@ public partial class WeatherSettingsPage : SettingsPageBase
         SearchDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
         SearchDebounceTimer.Tick += SearchDebounceTimer_Tick;
         SearchDebounceTimer.Stop();
-        
+
+        ViewModel.BuildFrom(SettingsService.Settings.LastWeatherInfo, WeatherService);
         ViewModel.CitySearchResults = await WeatherService.GetCitiesByName(string.Empty);
     }
 
@@ -120,21 +134,126 @@ public partial class WeatherSettingsPage : SettingsPageBase
 
     private async void ButtonGetCurrentPos_OnClick(object sender, RoutedEventArgs e)
     {
+        if (ViewModel.IsLocating)
+        {
+            return;
+        }
+
+        ViewModel.IsLocating = true;
         try
         {
             var pos = await LocationService.GetLocationAsync();
-            SettingsService.Settings.WeatherLongitude = Math.Round(pos.Longitude, 4); 
+            SettingsService.Settings.WeatherLongitude = Math.Round(pos.Longitude, 4);
             SettingsService.Settings.WeatherLatitude = Math.Round(pos.Latitude, 4);
             await WeatherService.QueryWeatherAsync();
         }
         catch (Exception exception)
         {
             Logger.LogError(exception, "无法获取当前位置");
+            ViewModel.IsLocating = false;
+            await DialogService.ShowMessageAsync(SettingsPageBase.DialogHostIdentifier, "获取当前位置失败",
+                "无法获取当前位置。请确认系统的定位服务已开启，并已允许 LegacyIsland 访问位置。");
+        }
+        finally
+        {
+            ViewModel.IsLocating = false;
         }
     }
 
-    private void ButtonShowPos_OnClick(object sender, RoutedEventArgs e)
+    private double _fakeScrollDragStartOffset;
+    private Point _fakeScrollDragStartPoint;
+
+    private void RootScroll_OnScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        ViewModel.HideLocationPos = false;
+        UpdateFakeScrollBar();
+    }
+
+    private void RootScroll_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateFakeScrollBar();
+    }
+
+    private void FakeScrollBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateFakeScrollBar();
+    }
+
+    /// <summary>
+    /// 根据滚动进度更新假滚动条滑块的位置与大小；无需滚动时隐藏。
+    /// </summary>
+    private void UpdateFakeScrollBar()
+    {
+        if (FakeScrollBar == null || FakeScrollThumb == null || RootScroll == null)
+        {
+            return;
+        }
+
+        var trackHeight = FakeScrollBar.ActualHeight;
+        if (trackHeight <= 0)
+        {
+            return;
+        }
+
+        // 自定义模板下若 ExtentHeight 未上报，则回退用内容实际高度。
+        var extent = RootScroll.ExtentHeight;
+        if (extent <= 0 && RootScroll.Content is FrameworkElement content)
+        {
+            extent = content.ActualHeight;
+        }
+
+        var viewport = RootScroll.ViewportHeight > 0 ? RootScroll.ViewportHeight : RootScroll.ActualHeight;
+        var scrollable = extent - viewport;
+        if (scrollable <= 0.5)
+        {
+            // 内容不足一屏，无需滚动。
+            FakeScrollBar.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        FakeScrollBar.Visibility = Visibility.Visible;
+        var thumbHeight = Math.Max(28, trackHeight * viewport / extent);
+        var maxTop = trackHeight - thumbHeight;
+        var top = maxTop * (RootScroll.VerticalOffset / scrollable);
+        FakeScrollThumb.Height = thumbHeight;
+        FakeScrollThumb.Margin = new Thickness(0, top, 2, 0);
+    }
+
+    private void FakeScrollThumb_OnMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _fakeScrollDragStartPoint = e.GetPosition(FakeScrollBar);
+        _fakeScrollDragStartOffset = RootScroll.VerticalOffset;
+        FakeScrollThumb.CaptureMouse();
+        e.Handled = true;
+    }
+
+    private void FakeScrollThumb_OnMouseMove(object sender, MouseEventArgs e)
+    {
+        if (!FakeScrollThumb.IsMouseCaptured)
+        {
+            return;
+        }
+
+        var trackHeight = FakeScrollBar.ActualHeight;
+        var maxTop = trackHeight - FakeScrollThumb.ActualHeight;
+        var maxOffset = RootScroll.ExtentHeight - RootScroll.ViewportHeight;
+        if (maxTop <= 0 || maxOffset <= 0)
+        {
+            return;
+        }
+
+        var delta = e.GetPosition(FakeScrollBar).Y - _fakeScrollDragStartPoint.Y;
+        RootScroll.ScrollToVerticalOffset(_fakeScrollDragStartOffset + delta / maxTop * maxOffset);
+        e.Handled = true;
+    }
+
+    private void FakeScrollThumb_OnMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        FakeScrollThumb.ReleaseMouseCapture();
+        e.Handled = true;
+    }
+
+    private void ForecastHost_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ViewModel.ApplyWidth(e.NewSize.Width);
     }
 }

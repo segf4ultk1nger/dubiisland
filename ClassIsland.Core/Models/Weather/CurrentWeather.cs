@@ -13,6 +13,8 @@ public class CurrentWeather
 
     [JsonPropertyName("visibility")] public ValueUnitPair Visibility { get; set; } = new();
 
+    [JsonPropertyName("uvIndex")] public string UvIndex { get; set; } = "";
+
     [JsonPropertyName("weather")] public string Weather { get; set; } = "99";
 
     [JsonPropertyName("pubTime")] public DateTime PublishTime { get; set; } = DateTime.Now;
