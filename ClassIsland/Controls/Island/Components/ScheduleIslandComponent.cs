@@ -4,9 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Models.AttachedSettings;
 using ClassIsland.Core.Models.Components;
 using ClassIsland.Models.ComponentSettings;
 using ClassIsland.Shared;
+using ClassIsland.Shared.Abstraction.Models;
 using ClassIsland.Shared.Models.Profile;
 
 namespace ClassIsland.Controls.Island.Components;
@@ -22,6 +25,8 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     private const double ItemGap = 6;
     private const double PillPadding = 8;
     private const double SeparatorSpan = 10;
+
+    private static readonly Guid LessonControlAttachedSettingsId = new("58e5b69a-764a-472b-bcf7-003b6a8c7fdf");
 
     private readonly LessonControlSettings _settings;
     private readonly List<Segment> _segments = new();
@@ -98,10 +103,11 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var index = context.LessonsService.CurrentSelectedIndex;
         var selected = index >= 0 && index < layouts.Count ? layouts[index] : null;
         var onClassItems = layouts.Where(t => t.TimeType == 0).ToList();
+        var showCurrentLessonOnlyOnClass = ResolveShowCurrentLessonOnlyOnClass();
 
         foreach (var item in layouts)
         {
-            var kind = Decide(item, selected, valid, now);
+            var kind = Decide(item, selected, valid, now, showCurrentLessonOnlyOnClass);
             if (kind == null)
                 continue;
 
@@ -125,19 +131,41 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
                     ? isBreak ? item.BreakNameText : subject?.Name ?? ""
                     : isBreak ? "休" : subject?.Initial ?? "?",
                 Changed = info?.IsChangedClass ?? false,
-                Item = item
+                Item = item,
+                Settings = kind == SegmentKind.Expanded
+                    ? ResolveAttachedSettings(subject ?? Subject.Breaking, item, plan)
+                    : _settings
             };
             segment.Width = MeasureSegment(segment, context);
             _segments.Add(segment);
         }
     }
 
+    private ILessonControlSettings ResolveAttachedSettings(Subject subject, TimeLayoutItem item, ClassPlan? classPlan)
+        => (ILessonControlSettings?)IAttachedSettingsHostService
+               .GetAttachedSettingsByPriority<LessonControlAttachedSettings>(
+                   LessonControlAttachedSettingsId, subject, item, classPlan, classPlan?.TimeLayout) ??
+           _settings;
+
+    private bool ResolveShowCurrentLessonOnlyOnClass()
+    {
+        var lessons = Context.LessonsService;
+        return ((ILessonControlSettings?)IAttachedSettingsHostService
+                    .GetAttachedSettingsByPriority<LessonControlAttachedSettings>(
+                        LessonControlAttachedSettingsId,
+                        lessons.CurrentSubject,
+                        lessons.CurrentTimeLayoutItem,
+                        lessons.CurrentClassPlan,
+                        lessons.CurrentClassPlan?.TimeLayout) ??
+                _settings).ShowCurrentLessonOnlyOnClass;
+    }
+
     private SegmentKind? Decide(TimeLayoutItem item, TimeLayoutItem? selected,
-        ICollection<TimeLayoutItem> valid, DateTime now)
+        ICollection<TimeLayoutItem> valid, DateTime now, bool showCurrentLessonOnlyOnClass)
     {
         if (item.TimeType == 3)
             return null;
-        if (item != selected && selected?.TimeType == 0 && _settings.ShowCurrentLessonOnlyOnClass)
+        if (item != selected && selected?.TimeType == 0 && showCurrentLessonOnlyOnClass)
             return null;
         if (!valid.Contains(item))
             return null;
@@ -169,7 +197,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var name = MakeText(segment.Text, EmphasizedFontSize, FontWeights.Bold, _foreground, context);
         var width = pad * 2 + name.Width;
 
-        var extra = GetExtraText(segment.Item!, context, out var pill, out _);
+        var extra = GetExtraText(segment.Item!, segment.Settings, context, out var pill, out _);
         if (extra != null)
         {
             var font = MakeText(extra, pill ? BodyFontSize : SecondaryFontSize,
@@ -218,7 +246,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var nameY = rect.Y + (rect.Height - name.Height) / 2;
         drawingContext.DrawText(name, new Point(contentX, nameY));
 
-        var extra = GetExtraText(segment.Item!, context, out var pill, out _);
+        var extra = GetExtraText(segment.Item!, segment.Settings, context, out var pill, out _);
         if (extra != null)
         {
             var extraX = contentX + name.Width + ItemGap;
@@ -255,25 +283,25 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         drawingContext.DrawText(font, new Point(pill.X + PillPadding, pill.Y + (height - font.Height) / 2));
     }
 
-    private string? GetExtraText(TimeLayoutItem item, IslandContext context, out bool pill, out long leftSeconds)
+    private string? GetExtraText(TimeLayoutItem item, ILessonControlSettings settings, IslandContext context, out bool pill, out long leftSeconds)
     {
         pill = false;
         var total = (long)item.Last.TotalSeconds;
         var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartSecond.TimeOfDay).TotalSeconds;
         leftSeconds = total - elapsed;
 
-        if (leftSeconds <= _settings.CountdownSeconds && _settings.IsCountdownEnabled)
+        if (leftSeconds <= settings.CountdownSeconds && settings.IsCountdownEnabled)
         {
             pill = true;
-            return _settings.IsNonExactCountdownEnabled
-                ? $"< {FormatSeconds(_settings.CountdownSeconds, false, true)}"
+            return settings.IsNonExactCountdownEnabled
+                ? $"< {FormatSeconds(settings.CountdownSeconds, false, true)}"
                 : $"-{FormatSeconds(leftSeconds, true, false)}";
         }
 
-        if (!_settings.ShowExtraInfoOnTimePoint)
+        if (!settings.ShowExtraInfoOnTimePoint)
             return null;
 
-        return _settings.ExtraInfoType switch
+        return settings.ExtraInfoType switch
         {
             0 => $"{item.StartSecond:HH:mm}-{item.EndSecond:HH:mm}",
             1 => FormatMulti(elapsed, total, false),
@@ -370,5 +398,6 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         public string Text = "";
         public bool Changed;
         public TimeLayoutItem? Item;
+        public ILessonControlSettings Settings = null!;
     }
 }
