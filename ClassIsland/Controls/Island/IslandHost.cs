@@ -208,6 +208,9 @@ public sealed class IslandHost : IDisposable
         source.RootVisual = _surface;
         _surface.RenderTransformOrigin = new Point(0.5, 0.5);
         _surface.RenderTransform = new ScaleTransform(1, 1);
+        // 窗口始终按弹性过冲峰值预留（内容居中，四周留一条透明边）。这样出现动画全程窗口尺寸完全不变，
+        // 不会因改窗口尺寸而闪烁；峰值 scale 也不被裁。
+        _surface.WindowOvershootScale = ShowMaxScale;
         source.AddHook(WndProc);
         _source = source;
         _hwnd = source.Handle;
@@ -411,9 +414,6 @@ public sealed class IslandHost : IDisposable
                 ApplyShowVisual(1, 1);
                 _showAnimActive = false;
                 _showAnimStart = null;
-                // 回弹结束：收回过冲预留，窗口回到内容尺寸
-                _surface.WindowOvershootScale = 1.0;
-                UpdateWindowPos();
             }
             else
             {
@@ -653,8 +653,8 @@ public sealed class IslandHost : IDisposable
 
     /// <summary>
     ///     按内容重新计算窗口大小与停靠位置（等价 MainWindow.UpdateWindowPos，窗口宽度取内容宽度）。
-    ///     出现动画过冲期间窗口按 <see cref="IslandSurface.WindowOvershootScale"/> 对称放大、内容居中，
-    ///     因此按内容尺寸定位，再整体外扩半份预留。
+    ///     窗口恒定按 <see cref="IslandSurface.WindowOvershootScale"/> 预留放大、内容居中，
+    ///     因此按内容尺寸定位，再整体外扩半份预留；预留恒定，窗口尺寸不随动画变化。
     /// </summary>
     private void UpdateWindowPos()
     {
@@ -752,13 +752,10 @@ public sealed class IslandHost : IDisposable
         _isVisible = visible;
         if (visible)
         {
-            var animate = Settings.IsIslandShowAnimationEnabled;
-            // 动画期间窗口按峰值 scale 对称放大，内容居中 → 弹性回弹不被裁切。
-            _surface.WindowOvershootScale = animate ? ShowMaxScale : 1.0;
             UpdateWindowPos();
             ApplyWindowStyles();
             ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
-            if (animate)
+            if (Settings.IsIslandShowAnimationEnabled)
             {
                 ApplyShowVisual(ShowScaleMin, 0);
                 _showAnimActive = true;
@@ -776,7 +773,6 @@ public sealed class IslandHost : IDisposable
         {
             _showAnimActive = false;
             _showAnimStart = null;
-            _surface.WindowOvershootScale = 1.0;
             ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
         }
     }

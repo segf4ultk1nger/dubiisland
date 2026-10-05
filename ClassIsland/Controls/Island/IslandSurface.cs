@@ -6,8 +6,8 @@ namespace ClassIsland.Controls.Island;
 
 /// <summary>
 /// 纯自绘表面：拥有单个 <see cref="DrawingVisual"/>，布局与绘制全部交给 <see cref="IslandRenderer"/>。
-/// 支持窗口相对内容的预留放大（<see cref="WindowOvershootScale"/>）：出现动画弹性过冲时窗口临时放大，
-/// 内容居中绘制，避免被窗口边缘裁切。
+/// 窗口相对内容固定预留 <see cref="WindowOvershootScale"/> 倍（出现动画弹性过冲峰值），内容在窗口内居中绘制，
+/// 避免被窗口边缘裁切。预留恒定，窗口尺寸不随动画变化。
 /// </summary>
 public sealed class IslandSurface : FrameworkElement
 {
@@ -26,7 +26,7 @@ public sealed class IslandSurface : FrameworkElement
 
     public IslandRenderer Renderer => _renderer;
 
-    /// <summary>窗口相对内容的预留倍数（出现动画弹性过冲预留），默认 1。</summary>
+    /// <summary>窗口相对内容的固定预留倍数（出现动画弹性过冲峰值），默认 1。窗口尺寸恒定，不随动画变化。</summary>
     public double WindowOvershootScale { get; set; } = 1.0;
 
     protected override int VisualChildrenCount => 1;
