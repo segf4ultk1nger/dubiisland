@@ -48,6 +48,16 @@ public class MyWindow : MetroWindow
         }
         Loaded += OnLoaded;
         Initialized += OnInitialized;
+        Closed += OnClosed;
+    }
+
+    private void OnClosed(object? sender, System.EventArgs e)
+    {
+        // 退订单例服务的事件，否则窗口即使关闭也会被 ThemeService 强引用而无法回收。
+        if (ThemeService != null)
+        {
+            ThemeService.ThemeUpdated -= ThemeServiceOnThemeUpdated;
+        }
     }
 
     private const string VisualStudioControlsUriString =

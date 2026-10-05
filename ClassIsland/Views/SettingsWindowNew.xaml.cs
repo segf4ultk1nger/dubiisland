@@ -95,6 +95,7 @@ public partial class SettingsWindowNew : MyWindow
         HangService = hangService;
         SettingsService = settingsService;
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
+        Closed += SettingsWindowNew_OnClosed;
         InitializeComponent();
         NavigationService = NavigationFrame.NavigationService;
         NavigationService.LoadCompleted += NavigationServiceOnLoadCompleted;
@@ -393,6 +394,12 @@ public partial class SettingsWindowNew : MyWindow
             _cachedPages.Clear();
         }
         GC.Collect();
+    }
+
+    private void SettingsWindowNew_OnClosed(object? sender, EventArgs e)
+    {
+        // 窗口被空闲销毁 → 退订单例设置事件，避免窗口对象无法回收。
+        SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
     }
 
     private void CommandBindingOpenDrawer_OnExecuted(object sender, ExecutedRoutedEventArgs e)

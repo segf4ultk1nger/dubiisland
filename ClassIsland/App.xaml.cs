@@ -505,12 +505,10 @@ public partial class App : AppBase, IAppHost
                 services.AddTransient<SplashWindowBase, SplashWindow>();
                 services.AddTransient<FeatureDebugWindow>();
                 services.AddSingleton<TopmostEffectWindow>(BuildTopmostEffectWindow);
-                services.AddSingleton<AppLogsWindow>();
-                services.AddSingleton<SettingsWindowNew>();
-                services.AddSingleton<ProfileSettingsWindow>((s) => new ProfileSettingsWindow()
-                {
-                    MainViewModel = s.GetService<MainWindow>()?.ViewModel ?? new()
-                });
+                services.AddSingleton<ToolWindowManager>();
+                services.AddTransient<AppLogsWindow>(s => s.GetRequiredService<ToolWindowManager>().Get<AppLogsWindow>());
+                services.AddTransient<SettingsWindowNew>(s => s.GetRequiredService<ToolWindowManager>().Get<SettingsWindowNew>());
+                services.AddTransient<ProfileSettingsWindow>(s => s.GetRequiredService<ToolWindowManager>().Get<ProfileSettingsWindow>());
                 services.AddTransient<ClassPlanDetailsWindow>();
                 services.AddTransient<WindowRuleDebugWindow>();
                 services.AddTransient<ConfigErrorsWindow>();

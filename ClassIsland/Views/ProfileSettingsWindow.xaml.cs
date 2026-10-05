@@ -78,6 +78,7 @@ public partial class ProfileSettingsWindow : MyWindow
         DataContext = this;
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         ViewModel.PropertyChanging += ViewModelOnPropertyChanging;
+        Closed += ProfileSettingsWindow_OnClosed;
     }
 
     private void ViewModelOnPropertyChanging(object? sender, PropertyChangingEventArgs e)
@@ -634,6 +635,12 @@ public partial class ProfileSettingsWindow : MyWindow
             Hide();
             IsOpened = false;
         }
+    }
+
+    private void ProfileSettingsWindow_OnClosed(object? sender, EventArgs e)
+    {
+        // 窗口被空闲销毁 → 退订单例设置事件，避免窗口对象无法回收。
+        MainViewModel.Settings.PropertyChanged -= SettingsOnPropertyChanged;
     }
 
     private void ButtonTemporaryClassPlan_OnClick(object sender, RoutedEventArgs e)

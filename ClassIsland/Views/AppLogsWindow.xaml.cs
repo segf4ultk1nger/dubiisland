@@ -31,6 +31,7 @@ public partial class AppLogsWindow : MyWindow
         InitializeComponent();
         DataContext = this;
         AppLogService.Logs.CollectionChanged += LogsOnCollectionChanged;
+        Closed += AppLogsWindow_OnClosed;
     }
 
     public void Open()
@@ -60,6 +61,12 @@ public partial class AppLogsWindow : MyWindow
         e.Cancel = true;
         Hide();
         _isOpened = false;
+    }
+
+    private void AppLogsWindow_OnClosed(object? sender, EventArgs e)
+    {
+        // 窗口被空闲销毁 → 退订单例日志事件，避免窗口对象无法回收。
+        AppLogService.Logs.CollectionChanged -= LogsOnCollectionChanged;
     }
 
     private void MainListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

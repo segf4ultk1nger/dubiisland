@@ -191,6 +191,8 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _useSelfDrawnIsland = false;
     private bool _isIslandShowAnimationEnabled = true;
     private bool _isIslandHideAnimationEnabled = true;
+    private int _toolWindowDestructionPolicy = 0;
+    private int _toolWindowDestructionCustomSeconds = 300;
     private double _mainWindowSecondaryFontSize = 14;
     private double _mainWindowBodyFontSize = 16;
     private double _mainWindowEmphasizedFontSize = 18;
@@ -1929,6 +1931,39 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
             OnPropertyChanged();
         }
     }
+
+    /// <summary>
+    ///     工具窗口（设置、档案编辑、应用日志，不含主窗口）销毁积极性：
+    ///     0=永不销毁，1=闲置1h，2=闲置30min，3=闲置15min，4=闲置10min，5=闲置5min，6=闲置3min，
+    ///     7=闲置1min，8=闲置30s，9=立刻，10=自定义定时（<see cref="ToolWindowDestructionCustomSeconds"/>）。
+    /// </summary>
+    public int ToolWindowDestructionPolicy
+    {
+        get => _toolWindowDestructionPolicy;
+        set
+        {
+            if (value == _toolWindowDestructionPolicy) return;
+            _toolWindowDestructionPolicy = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsToolWindowDestructionCustom));
+        }
+    }
+
+    /// <summary>「自定义定时后销毁」策略下，工具窗口闲置多少秒后销毁。</summary>
+    public int ToolWindowDestructionCustomSeconds
+    {
+        get => _toolWindowDestructionCustomSeconds;
+        set
+        {
+            if (value == _toolWindowDestructionCustomSeconds) return;
+            _toolWindowDestructionCustomSeconds = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>当前工具窗口销毁策略是否为「自定义定时」。</summary>
+    [JsonIgnore]
+    public bool IsToolWindowDestructionCustom => ToolWindowDestructionPolicy == 10;
 
     [JsonIgnore]
     public bool IsErrorLoadingRawInput
