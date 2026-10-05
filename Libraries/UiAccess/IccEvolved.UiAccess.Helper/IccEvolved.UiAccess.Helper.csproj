@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <OutputType>WinExe</OutputType>
+        <RootNamespace>IccEvolved.UiAccess.Helper</RootNamespace>
+        <AssemblyName>IccEvolved.UiAccess.Helper</AssemblyName>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\IccEvolved.UiAccess\IccEvolved.UiAccess.csproj"/>
+    </ItemGroup>
+
+</Project>

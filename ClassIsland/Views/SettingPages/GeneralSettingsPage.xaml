@@ -198,12 +198,23 @@
             <TextBlock Text="行为" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 开机自启 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutomaticStart}" Header="开机自启"
-                                                           Description="系统启动时自动运行本应用。"
-                                                           IsOn="{Binding SettingsService.Settings.IsAutoStartEnabled, Mode=TwoWay}" />
+                                    Description="系统启动时自动运行本应用。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsAutoStartEnabled, Mode=TwoWay}"
+                                          OnContent="开" OffContent="关" MinWidth="0" VerticalAlignment="Center" />
+                        <controls2:PrivilegedAutoStartButton Margin="8 0 0 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <!-- 注册 Url 协议 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Code}" Header="注册 Url 协议"
                                     Description="允许第三方应用或网页通过 classisland:// 调用本应用功能。"
                                     IsOn="{Binding SettingsService.Settings.IsUrlProtocolRegistered, Mode=TwoWay}" />
+            <!-- 超级置顶（UIAccess） -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PinOutline}" Header="使用超级置顶"
+                                    Description="让课表窗口可以置于开始菜单/任务管理器等窗口之上，重启生效"
+                                    IsOn="{Binding SettingsService.Settings.IsUiAccessEnabled, Mode=TwoWay}" />
             <!-- 学期开始时间 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CalendarOutline}" Header="学期开始时间"
                                     Description="作为学期的第一天，用于多周轮换课表计算，应设为一周的第一天。">

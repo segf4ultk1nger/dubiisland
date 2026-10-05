@@ -41,6 +41,8 @@ using ClassIsland.Core.Enums;
 using ClassIsland.Core.Models.SettingsWindow;
 using Application = System.Windows.Application;
 using ClassIsland.Helpers;
+using ClassIsland.Shared.Helpers;
+using IccEvolved.UiAccess;
 using System.Transactions;
 
 namespace ClassIsland.Views;
@@ -616,6 +618,38 @@ public partial class SettingsWindowNew : MyWindow
             return;
         }
         AppBase.Current.Restart(["-m", "-r"]);
+    }
+
+    private async void MenuItemRestartAsAdmin_OnClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsPopupOpen = false;
+        if (!await ManagementService.AuthorizeByLevel(ManagementService.CredentialConfig.ExitApplicationAuthorizeLevel))
+        {
+            return;
+        }
+        if (UiAccessLauncher.IsElevated())
+        {
+            CommonDialog.ShowInfo("当前已经以管理员身份运行。");
+            return;
+        }
+
+        var exe = FrameworkCompat.ProcessPath.Replace(".dll", ".exe");
+        var startInfo = new ProcessStartInfo(exe)
+        {
+            UseShellExecute = true,
+            Verb = "runas",
+            Arguments = "-m"
+        };
+        try
+        {
+            Process.Start(startInfo);
+        }
+        catch (Win32Exception)
+        {
+            return;
+        }
+
+        AppBase.Current.Stop();
     }
 
     private void ButtonDoNotClickVeryDangerous_OnClick(object sender, RoutedEventArgs e)

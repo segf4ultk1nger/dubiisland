@@ -197,6 +197,9 @@
                     <MenuItem Header="重启到恢复模式" Click="MenuItemRestartToRecovery_OnClick">
                         <MenuItem.Icon><remix:PackIconRemixIcon Kind="RestartFill" Width="16" Height="16"/></MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="以管理员身份重启" Click="MenuItemRestartAsAdmin_OnClick">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="AdminLine" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
                     <MenuItem Header="打开日志目录…" Click="MenuItemOpenLogFolder_OnClick">
                         <MenuItem.Icon><remix:PackIconRemixIcon Kind="Folder6Fill" Width="16" Height="16"/></MenuItem.Icon>

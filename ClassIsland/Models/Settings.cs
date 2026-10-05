@@ -52,6 +52,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _isWindowCaptureBlockingEnabled = false;
     private bool _isMouseClickingEnabled = false;
     private bool _hideOnFullscreen = false;
+    private bool _isUiAccessEnabled = false;
     private bool _isClassOffNotificationEnabled = true;
     private ObservableCollection<string> _excludedFullscreenWindow = new()
     {
@@ -471,6 +472,17 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         }
     }
 
+    public bool IsUiAccessEnabled
+    {
+        get => _isUiAccessEnabled;
+        set
+        {
+            if (value == _isUiAccessEnabled) return;
+            _isUiAccessEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
     [JsonIgnore]
     public bool IsAutoStartEnabled
     {
@@ -489,6 +501,10 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
                         WorkingDirectory = Environment.CurrentDirectory
                     };
                     shortcut.Save(path);
+                    if (ScheduledTaskHelper.IsRegistered())
+                    {
+                        ScheduledTaskHelper.Unregister();
+                    }
                 }
                 else
                 {
