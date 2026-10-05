@@ -336,7 +336,6 @@ public partial class App : AppBase, IAppHost
         System.Windows.Forms.Application.EnableVisualStyles();
         DiagnosticService.BeginStartup();
         ConsoleService.InitializeConsole();
-        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         //if (IsAssetsTrimmed())
         //{
         //    Resources["HarmonyOsSans"] = FindResource("BackendFontFamily");

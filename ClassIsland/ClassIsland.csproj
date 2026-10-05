@@ -20,6 +20,8 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<TargetFramework>net472</TargetFramework>
 		<LangVersion>preview</LangVersion>
+		<!-- 只保留中性资源，过滤掉各 NuGet 包的语言卫星程序集（System.CommandLine 等，省约 0.15MB）。 -->
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
     <ItemGroup>
         <!-- SDK props glob App.xaml before EnableDefaultApplicationDefinition is visible. Keep exactly one item so InitializeComponent is generated. -->
