@@ -63,11 +63,18 @@ public sealed class IslandHost : IDisposable
     private bool _renderingHooked;
     private bool _showAnimActive;
     private TimeSpan? _showAnimStart;
+    private double _showFromScale = 1;
+    private double _showFromOpacity = 1;
+    private bool _hideAnimActive;
+    private TimeSpan? _hideAnimStart;
+    private double _hideFromScale = 1;
+    private double _hideFromOpacity = 1;
     private static readonly Dictionary<string, AnimSpec> AnimSpecs = BuildAnimSpecs();
 
     private const double ShowScaleMin = 0.89;
     private const double ShowAnimatedDuration = 0.47;
     private const double ShowFadePortion = 0.78;
+    private const double HideAnimatedDuration = 0.13;
     private const double ElasticConst = 2 * Math.PI / 0.3;
     private const double ElasticConst2 = 0.3 / 4;
     private static readonly double ExpoOffset = Math.Pow(2, -10);
@@ -418,8 +425,29 @@ public sealed class IslandHost : IDisposable
             else
             {
                 ApplyShowVisual(
-                    ShowScaleMin + (1 - ShowScaleMin) * OutElasticHalf(p),
-                    OutExpo(Math.Min(1, p / ShowFadePortion)));
+                    _showFromScale + (1 - _showFromScale) * OutElasticHalf(p),
+                    _showFromOpacity + (1 - _showFromOpacity) * OutExpo(Math.Min(1, p / ShowFadePortion)));
+                active = true;
+            }
+        }
+
+        if (_hideAnimActive)
+        {
+            _hideAnimStart ??= args.RenderingTime;
+            var t = (args.RenderingTime - _hideAnimStart.Value).TotalSeconds;
+            var p = t / HideAnimatedDuration;
+            if (p >= 1)
+            {
+                ApplyShowVisual(ShowScaleMin, 0);
+                _hideAnimActive = false;
+                _hideAnimStart = null;
+                ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
+            }
+            else
+            {
+                ApplyShowVisual(
+                    _hideFromScale + (ShowScaleMin - _hideFromScale) * OutExpo(p),
+                    _hideFromOpacity * (1 - CubicOut(p)));
                 active = true;
             }
         }
@@ -471,6 +499,20 @@ public sealed class IslandHost : IDisposable
     {
         t = Math.Max(0, Math.Min(1, t));
         return -Math.Pow(2, -10 * t) + 1 + ExpoOffset * t;
+    }
+
+    private static double CubicOut(double t)
+    {
+        t = Math.Max(0, Math.Min(1, t));
+        var u = 1 - t;
+        return 1 - u * u * u;
+    }
+
+    /// <summary>当前动画视觉态（scale/opacity），用于打断时从当前位置续接。</summary>
+    private (double Scale, double Opacity) GetVisual()
+    {
+        var scale = _surface.RenderTransform is ScaleTransform st ? st.ScaleX : 1.0;
+        return (scale, _surface.Opacity);
     }
 
     private static double Eval((double T, double V, IEasingFunction? E)[] keys, double t)
@@ -652,9 +694,24 @@ public sealed class IslandHost : IDisposable
     }
 
     /// <summary>
+    ///     按停靠位置返回内容对齐（同时作为出现动画缩放锚点）：0=左/上，0.5=中，1=右/下。
+    ///     贴边时岛从贴边一侧向屏幕内生长，弹性过冲不越出屏幕。
+    /// </summary>
+    private (double H, double V) GetDockingAlign() => Settings.WindowDockingLocation switch
+    {
+        1 => (0.5, 0.0), // 中上
+        2 => (1.0, 0.0), // 右上
+        3 => (0.0, 1.0), // 左下
+        4 => (0.5, 1.0), // 中下
+        5 => (1.0, 1.0), // 右下
+        _ => (0.0, 0.0)  // 左上
+    };
+
+    /// <summary>
     ///     按内容重新计算窗口大小与停靠位置（等价 MainWindow.UpdateWindowPos，窗口宽度取内容宽度）。
-    ///     窗口恒定按 <see cref="IslandSurface.WindowOvershootScale"/> 预留放大、内容居中，
-    ///     因此按内容尺寸定位，再整体外扩半份预留；预留恒定，窗口尺寸不随动画变化。
+    ///     窗口恒定按 <see cref="IslandSurface.WindowOvershootScale"/> 预留放大；预留全部放在朝向屏幕内的一侧
+    ///     （对齐锚点 = 停靠边），内容按锚点贴向停靠边。这样出现动画从贴边侧向屏幕内生长，
+    ///     弹性过冲峰值始终完整落在屏幕内，且窗口尺寸不随动画变化。
     /// </summary>
     private void UpdateWindowPos()
     {
@@ -664,6 +721,11 @@ public sealed class IslandHost : IDisposable
         var screen = GetDockingScreen(Settings.WindowDockingMonitorIndex);
         if (screen == null)
             return;
+
+        var (hAlign, vAlign) = GetDockingAlign();
+        _surface.HorizontalAlign = hAlign;
+        _surface.VerticalAlign = vAlign;
+        _surface.RenderTransformOrigin = new Point(hAlign, vAlign);
 
         var overshoot = _surface.WindowOvershootScale <= 0 ? 1.0 : _surface.WindowOvershootScale;
         var available = new Size(screen.WorkingArea.Width / _dpiX, double.PositiveInfinity);
@@ -707,13 +769,15 @@ public sealed class IslandHost : IDisposable
         left += Settings.WindowDockingOffsetX;
         top += Settings.WindowDockingOffsetY;
 
-        // 内容锚点（供命中测试用）保持为内容左上角；窗口左上角再减去半份外扩预留（内容居中）。
-        var padX = (widthPx - contentWidthPx) / 2.0;
-        var padY = (heightPx - contentHeightPx) / 2.0;
+        // 内容锚点（供命中测试用）保持为内容左上角；窗口左上角再按对齐把预留推到屏幕内一侧。
+        var padX = (widthPx - contentWidthPx) * hAlign;
+        var padY = (heightPx - contentHeightPx) * vAlign;
         _windowLeftPx = (int)Math.Round(left);
         _windowTopPx = (int)Math.Round(top);
         SetWindowPos((HWND)_hwnd, HWND.Null, (int)Math.Round(left - padX), (int)Math.Round(top - padY),
             widthPx, heightPx, SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+
+        _surface.Redraw(); // 对齐/尺寸变化后立即按新锚点重绘
     }
 
     /// <summary>按隐藏规则（可见性、上课/全屏/最大化/规则集）决定是否显示窗口。</summary>
@@ -754,26 +818,59 @@ public sealed class IslandHost : IDisposable
         {
             UpdateWindowPos();
             ApplyWindowStyles();
-            ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
             if (Settings.IsIslandShowAnimationEnabled)
             {
-                ApplyShowVisual(ShowScaleMin, 0);
+                if (_hideAnimActive)
+                {
+                    // 隐藏动画中被打断 → 从当前视觉续接
+                    (_showFromScale, _showFromOpacity) = GetVisual();
+                }
+                else
+                {
+                    // 新鲜出现：先落到起点，避免全尺寸闪一帧
+                    _showFromScale = ShowScaleMin;
+                    _showFromOpacity = 0;
+                    ApplyShowVisual(_showFromScale, _showFromOpacity);
+                }
+
+                _hideAnimActive = false;
+                _hideAnimStart = null;
                 _showAnimActive = true;
                 _showAnimStart = null;
+            }
+            else
+            {
+                _showAnimActive = false;
+                _showAnimStart = null;
+                _hideAnimActive = false;
+                _hideAnimStart = null;
+                ApplyShowVisual(1, 1);
+            }
+
+            ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
+            if (_showAnimActive)
+                EnsureRenderingHook();
+        }
+        else
+        {
+            if (Settings.IsIslandHideAnimationEnabled)
+            {
+                // 出现动画中被打断 → 从当前视觉续接；否则从静止态收起
+                (_hideFromScale, _hideFromOpacity) = _showAnimActive ? GetVisual() : (1.0, 1.0);
+                _showAnimActive = false;
+                _showAnimStart = null;
+                _hideAnimActive = true;
+                _hideAnimStart = null;
                 EnsureRenderingHook();
             }
             else
             {
-                ApplyShowVisual(1, 1);
                 _showAnimActive = false;
                 _showAnimStart = null;
+                _hideAnimActive = false;
+                _hideAnimStart = null;
+                ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
             }
-        }
-        else
-        {
-            _showAnimActive = false;
-            _showAnimStart = null;
-            ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
         }
     }
 

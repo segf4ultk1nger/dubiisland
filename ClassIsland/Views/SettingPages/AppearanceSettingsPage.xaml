@@ -368,6 +368,14 @@
                                       IsOn="{Binding SettingsService.Settings.IsIslandShowAnimationEnabled, Mode=TwoWay}" />
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 隐藏动画 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.EyeOffOutline}" Header="隐藏动画"
+                                    Description="主界面隐藏时播放缩放 + 淡出动画。">
+                <controls1:SettingsCard.Switcher>
+                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0"
+                                      IsOn="{Binding SettingsService.Settings.IsIslandHideAnimationEnabled, Mode=TwoWay}" />
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ThemeLightDark}" Header="应用主题"

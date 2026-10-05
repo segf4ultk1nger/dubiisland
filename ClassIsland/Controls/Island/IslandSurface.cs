@@ -29,6 +29,15 @@ public sealed class IslandSurface : FrameworkElement
     /// <summary>窗口相对内容的固定预留倍数（出现动画弹性过冲峰值），默认 1。窗口尺寸恒定，不随动画变化。</summary>
     public double WindowOvershootScale { get; set; } = 1.0;
 
+    /// <summary>
+    ///     内容在预留窗口内的水平对齐（0=左 0.5=中 1=右），同时作为出现动画的缩放锚点。
+    ///     与停靠位置一致 → 贴边时岛从贴边一侧向屏幕内生长，过冲不越出屏幕。
+    /// </summary>
+    public double HorizontalAlign { get; set; } = 0.5;
+
+    /// <summary>内容在预留窗口内的垂直对齐（0=上 1=下），同时作为出现动画的缩放锚点。</summary>
+    public double VerticalAlign { get; set; } = 0.5;
+
     protected override int VisualChildrenCount => 1;
 
     protected override Visual GetVisualChild(int index) => _visual;
@@ -51,7 +60,7 @@ public sealed class IslandSurface : FrameworkElement
         return finalSize;
     }
 
-    /// <summary>按当前尺寸重绘（内容在预留窗口内居中）。</summary>
+    /// <summary>按当前尺寸重绘（内容按对齐锚点贴向停靠边，预留余量落在朝向屏幕内的一侧）。</summary>
     public void Redraw()
     {
         var size = RenderSize;
@@ -63,8 +72,8 @@ public sealed class IslandSurface : FrameworkElement
 
         var contentWidth = natural.Width * scale;
         var contentHeight = natural.Height * scale;
-        var x = Math.Max(0, (size.Width - contentWidth) / 2);
-        var y = Math.Max(0, (size.Height - contentHeight) / 2);
+        var x = (size.Width - contentWidth) * HorizontalAlign;
+        var y = (size.Height - contentHeight) * VerticalAlign;
 
         var transform = new TransformGroup();
         transform.Children.Add(new ScaleTransform(scale, scale));
