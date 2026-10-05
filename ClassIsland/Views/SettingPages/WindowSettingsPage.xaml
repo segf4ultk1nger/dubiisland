@@ -9,7 +9,6 @@
       xmlns:ci="http://classisland.tech/schemas/xaml/core"
       xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
       xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
-      xmlns:validations="clr-namespace:ClassIsland.Validations"
       xmlns:system="clr-namespace:System;assembly=System.Runtime"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -43,14 +42,8 @@
                                   HorizontalContentAlignment="Left"
                                   MinWidth="260" MinHeight="32" FontSize="14"
                                   VerticalAlignment="Center"
+                                  SelectedIndex="{Binding SettingsService.Settings.WindowDockingMonitorIndex, Mode=TwoWay}"
                                   ItemsSource="{Binding ViewModel.Screens, Mode=OneWay}">
-                            <ComboBox.SelectedIndex>
-                                <Binding Path="SettingsService.Settings.WindowDockingMonitorIndex">
-                                    <Binding.ValidationRules>
-                                        <validations:NotNegativeIndexValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </ComboBox.SelectedIndex>
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
