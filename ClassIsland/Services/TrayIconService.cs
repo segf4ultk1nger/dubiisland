@@ -6,6 +6,7 @@ using System.Windows.Media;
 using ClassIsland.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.Management;
+using ClassIsland.Helpers;
 using ClassIsland.ViewModels;
 using ClassIsland.Views;
 
@@ -66,9 +67,9 @@ public class TrayIconService
                 if (TaskBarIconService.MainTaskBarIcon.ContextMenu != null)
                 {
                     GetCursorPos(out var ptr);
-                    var dpi = VisualTreeHelper.GetDpi(TaskBarIconService.MainTaskBarIcon.ContextMenu);
+                    DpiHelper.GetCurrentDpi(out var dpiX, out var dpiY);
                     TaskBarIconService.MainTaskBarIcon.ShowContextMenu(new System.Drawing.Point(
-                        (int)(ptr.X / dpi.DpiScaleX), (int)(ptr.Y / dpi.DpiScaleY)));
+                        (int)(ptr.X / dpiX), (int)(ptr.Y / dpiY)));
                 }
                 break;
             case 1:

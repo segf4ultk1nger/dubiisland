@@ -79,10 +79,10 @@ public partial class WindowRuleDebugWindow
     private void UpdateWindowState(HWND hWnd)
     {
         GetWindowRect(hWnd, out var rect);
-        var mw = App.GetService<MainWindow>();
-        var screen = mw.ViewModel.Settings.WindowDockingMonitorIndex < Screen.AllScreens.Length &&
-                     mw.ViewModel.Settings.WindowDockingMonitorIndex >= 0 ?
-            Screen.AllScreens[mw.ViewModel.Settings.WindowDockingMonitorIndex] : Screen.PrimaryScreen;
+        var vm = App.GetService<MainViewModel>();
+        var screen = vm.Settings.WindowDockingMonitorIndex < Screen.AllScreens.Length &&
+                     vm.Settings.WindowDockingMonitorIndex >= 0 ?
+            Screen.AllScreens[vm.Settings.WindowDockingMonitorIndex] : Screen.PrimaryScreen;
         if (screen == null)
         {
             return;

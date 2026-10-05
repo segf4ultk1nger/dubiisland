@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using ClassIsland.Core.Models.Weather;
+using ClassIsland.Helpers;
 
 namespace ClassIsland.Controls.NotificationProviders;
 
@@ -71,7 +72,7 @@ public partial class WeatherNotificationProviderControl : UserControl, INotifyPr
 
     private void WeatherNotificationProviderControl_OnLoaded(object sender, RoutedEventArgs e)
     {
-        App.GetService<MainWindow>().GetCurrentDpi(out var dpi, out _);
+        DpiHelper.GetCurrentDpi(out var dpi, out _, this);
         var da = new DoubleAnimation()
         {
             From = -Description.ActualWidth,

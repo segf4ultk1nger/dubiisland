@@ -58,6 +58,7 @@ GetCurrentThreadId
 SwitchDesktop
 CloseDesktop
 SetWindowDisplayAffinity
+GetDpiForSystem
 
 EVENT_SYSTEM_FOREGROUND
 WINEVENT_OUTOFCONTEXT

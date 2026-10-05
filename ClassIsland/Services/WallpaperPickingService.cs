@@ -257,11 +257,7 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
                 }
 
                 double dpiX = 1, dpiY = 1;
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var mw = (MainWindow)Application.Current.MainWindow!;
-                    mw.GetCurrentDpi(out dpiX, out dpiY);
-                });
+                DpiHelper.GetCurrentDpi(out dpiX, out dpiY);
                 WallpaperImage = BitmapConveters.ConvertToBitmapImage(bitmap, bitmap.Width);
 
                 if (SettingsService.Settings.UseExperimentColorPickingMethod)

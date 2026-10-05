@@ -90,7 +90,7 @@ public partial class TopmostEffectWindow : Window
     {
         //if (!IsShowed)
         //    return;
-        var fullscreen = App.GetService<MainWindow>().ViewModel.IsForegroundFullscreen;
+        var fullscreen = App.GetService<MainViewModel>().IsForegroundFullscreen;
         var bounds = fullscreen ? screen.Bounds : screen.WorkingArea;
         Width = bounds.Width * scale;
         Height = bounds.Height * scale;
