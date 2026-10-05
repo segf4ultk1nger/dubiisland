@@ -22,7 +22,8 @@
     <ScrollViewer>
         <StackPanel HorizontalAlignment="Stretch">
             <Image Source="/Assets/legacyisland-illustration.png"
-                   Stretch="Uniform"
+                   Stretch="UniformToFill"
+                   ClipToBounds="True"
                    HorizontalAlignment="Stretch"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
             <StackPanel Margin="24 20 24 24"
