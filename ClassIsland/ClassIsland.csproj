@@ -70,6 +70,9 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NAudio" Version="2.2.1" />
+        <PackageReference Include="NAudio.Asio" Version="2.2.1" PrivateAssets="all" ExcludeAssets="all" />
+        <PackageReference Include="NAudio.Midi" Version="2.2.1" PrivateAssets="all" ExcludeAssets="all" />
+        <PackageReference Include="NAudio.WinForms" Version="2.2.1" PrivateAssets="all" ExcludeAssets="all" />
         <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.6" />
         <PackageReference Include="Pastel" Version="4.2.0" />
         <PackageReference Include="RawInput.Sharp" Version="0.1.3" />
