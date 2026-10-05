@@ -9,7 +9,7 @@ namespace ClassIsland.Services.ActionHandlers;
 
 public class AppSettingsActionHandler : IHostedService
 {
-    public AppSettingsActionHandler(SettingsService SettingsService, IActionService ActionService)
+    public AppSettingsActionHandler(SettingsService settingsService, IActionService ActionService)
     {
         var Reg = ActionService.RegisterActionHandler;
         var RegRevert = ActionService.RegisterRevertHandler;
@@ -43,14 +43,14 @@ public class AppSettingsActionHandler : IHostedService
         void Add(string g, string binding, dynamic value)
         {
             App.Current.Dispatcher.Invoke(
-                new Action(() => SettingsService.AddSettingsOverlay(g, binding, value)),
+                new Action(() => settingsService.AddSettingsOverlay(g, binding, value)),
                 DispatcherPriority.Render);
         }
 
         void Remove(string g, string binding)
         {
             App.Current.Dispatcher.Invoke(
-                new Action(() => SettingsService.RemoveSettingsOverlay(g, binding)),
+                new Action(() => settingsService.RemoveSettingsOverlay(g, binding)),
                 DispatcherPriority.Render);
         }
     }

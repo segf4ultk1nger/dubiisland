@@ -66,7 +66,7 @@
                                                     ClipToBounds="True"
                                                     Margin="0 0 8 0 "
                                                     FallbackGlyph="{x:Static ciCore:IconGlyphs.Plugin}"
-                                                    IconKind="{x:Static ciCore:IconGlyphs.Image}"
+                                                    IconKind="Image"
                                                     ImageSource="{Binding RealIconPath, FallbackValue={x:Null}}"/>
                     <StackPanel Grid.Column="1" >
                         <TextBlock Text="{Binding Manifest.Name}"
@@ -603,7 +603,7 @@
                                                             ClipToBounds="True"
                                                             Margin="0 0 6 0 "
                                                             FallbackGlyph="{x:Static ciCore:IconGlyphs.Plugin}"
-                                                            IconKind="{x:Static ciCore:IconGlyphs.Image}"
+                                                            IconKind="Image"
                                                             ImageSource="{Binding Value.RealIconPath, FallbackValue={x:Null}}"/>
                                     <!-- 标题 -->
                                     <TextBlock Grid.Column="1" Grid.Row="0"
