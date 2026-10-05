@@ -157,6 +157,11 @@
                     <MenuItem Header="调试窗口规则…" Click="MenuItemDebugWindowRule_OnClick">
                         <MenuItem.Icon><remix:PackIconRemixIcon Kind="StethoscopeFill" Width="16" Height="16"/></MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="显示调试菜单"
+                              IsCheckable="True"
+                              IsChecked="{Binding SettingsService.Settings.IsDebugOptionsEnabled, Mode=TwoWay}">
+                        <MenuItem.Icon><remix:PackIconRemixIcon Kind="BugLine" Width="16" Height="16"/></MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="创建快捷换课图标" Click="MenuItemAddClassSwapShortcut_OnClick">
                         <MenuItem.Icon><remix:PackIconRemixIcon Kind="Apps2AddFill" Width="16" Height="16"/></MenuItem.Icon>
                     </MenuItem>
