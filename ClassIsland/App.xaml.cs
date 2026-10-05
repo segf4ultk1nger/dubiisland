@@ -548,7 +548,6 @@ public partial class App : AppBase, IAppHost
                 services.AddNotificationProvider<ClassNotificationProvider, ClassNotificationProviderSettingsControl>();
                 services.AddNotificationProvider<AfterSchoolNotificationProvider, AfterSchoolNotificationProviderSettingsControl>();
                 services.AddNotificationProvider<WeatherNotificationProvider, WeatherNotificationProviderSettingsControl>();
-                services.AddNotificationProvider<ManagementNotificationProvider>();
                 services.AddNotificationProvider<ActionNotificationProvider>();
                 // Transients
                 services.AddTransient<WallpaperPreviewWindow>();

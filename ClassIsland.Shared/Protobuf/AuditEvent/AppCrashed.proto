@@ -1,7 +1,0 @@
-syntax = "proto3";
-package ClassIsland.Shared.Protobuf.AuditEvent;
-option csharp_namespace = "ClassIsland.Shared.Protobuf.AuditEvent";
-
-message AppCrashed {
-  string Stacktrace = 1;
-}

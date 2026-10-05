@@ -52,6 +52,4 @@ public class ServerlessConnection : IManagementServerConnection
         Logger.LogInformation("保存json请求：{} {}", decorateUrl, path);
         return await WebRequestHelper.SaveJson<T>(decorateUrl, path);
     }
-
-    public event EventHandler<ClientCommandEventArgs>? CommandReceived;
 }

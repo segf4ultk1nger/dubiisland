@@ -11,7 +11,6 @@ using ClassIsland.Core.Enums;
 using ClassIsland.Shared.Abstraction.Services;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Management;
-using ClassIsland.Shared.Protobuf.Enum;
 using ClassIsland.Helpers;
 using ClassIsland.Models.Authorize;
 
@@ -108,27 +107,10 @@ public class ManagementService : IManagementService
                 default:
                     throw new ArgumentOutOfRangeException("", "无效的集控服务器类型。");
             }
-            Connection.CommandReceived += ConnectionOnCommandReceived;
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "连接集控服务器失败。");
-        }
-    }
-
-    private void ConnectionOnCommandReceived(object? sender, ClientCommandEventArgs e)
-    {
-        switch (e.Type)
-        {
-            case CommandTypes.RestartApp:
-            {
-                AppBase.Current.Restart(true);
-                break;
-            }
-            case CommandTypes.DataUpdated:
-                Logger.LogInformation("Received DataUpdated command.");
-                _ = ReloadManagementAsync();
-            break;
         }
     }
 

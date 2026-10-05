@@ -29,9 +29,4 @@ public interface IManagementServerConnection
     /// <param name="path">要写入的文件路径</param>
     /// <returns>获取到的信息</returns>
     public Task<T> SaveJsonAsync<T>(string url, string path);
-
-    /// <summary>
-    /// 接收到服务器命令事件
-    /// </summary>
-    public event EventHandler<ClientCommandEventArgs>? CommandReceived;
 }
