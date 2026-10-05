@@ -84,7 +84,7 @@ function Get-SevenZip {
     throw "7-Zip not found; it is needed to encrypt the test package."
 }
 
-if (Test-Path $Dist) { Remove-Item $Dist -Recurse -Force }
+if (Test-Path $Dist) { Get-ChildItem -LiteralPath $Dist -Force | Remove-Item -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $Dist | Out-Null
 
 Write-Host "=== Build (Release, $Arch, Costura) ==="
