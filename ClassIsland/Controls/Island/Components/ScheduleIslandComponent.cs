@@ -23,6 +23,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
 {
     private const double StripHeight = 40;
     private const double SpacerBase = 16;
+    private const double MiniSpacerBase = 10;
     private const double ItemGap = 6;
     private const double PillPadding = 8;
     private const double SeparatorSpan = 10;
@@ -38,8 +39,9 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
 
     private Brush _foreground = Brushes.White;
     private Brush _accent = Brushes.DodgerBlue;
+    private Brush _accentFill = Brushes.DodgerBlue;
     private Brush _progressTrack = Brushes.White;
-    private readonly Brush _changed = Frozen(Color.FromRgb(0xFF, 0xD5, 0x4F));
+    private static readonly Brush ChangedGlow = CreateChangedGlow();
     private Pen _separatorPen = new(Brushes.White, 2);
     private Pen _accentPen = new(Brushes.DodgerBlue, 1);
     private Color _lastForeground;
@@ -302,8 +304,9 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var pad = SpacerBase * _settings.ScheduleSpacing;
         if (segment.Kind == SegmentKind.Minimized)
         {
+            var miniPad = MiniSpacerBase * _settings.ScheduleSpacing;
             var initial = MakeText(segment.Text, EmphasizedFontSize, FontWeights.Bold, _foreground, context);
-            return pad * 2 + initial.Width;
+            return miniPad * 2 + initial.Width;
         }
 
         var name = MakeText(segment.Text, EmphasizedFontSize, FontWeights.Bold, _foreground, context);
@@ -330,17 +333,14 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
 
     private void DrawMinimized(DrawingContext drawingContext, Rect rect, Segment segment, IslandContext context)
     {
-        var pad = SpacerBase * _settings.ScheduleSpacing;
+        var pad = MiniSpacerBase * _settings.ScheduleSpacing;
         var text = MakeText(segment.Text, EmphasizedFontSize, FontWeights.Bold, _foreground, context);
-        var x = rect.X + pad;
+        var origin = new Point(rect.X + pad, rect.Y + (rect.Height - text.Height) / 2);
 
         if (segment.Changed && _settings.HighlightChangedClass)
-        {
-            drawingContext.DrawRoundedRectangle(_changed, null,
-                new Rect(x - 3, rect.Y + 5, text.Width + 6, rect.Height - 10), 4, 4);
-        }
+            DrawChangedGlow(drawingContext, text, origin, 3);
 
-        drawingContext.DrawText(text, new Point(x, rect.Y + (rect.Height - text.Height) / 2));
+        drawingContext.DrawText(text, origin);
     }
 
     private void DrawExpanded(DrawingContext drawingContext, Rect rect, Segment segment, IslandContext context)
@@ -349,14 +349,11 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var contentX = rect.X + pad;
 
         var name = MakeText(segment.Text, EmphasizedFontSize, FontWeights.Bold, _foreground, context);
+        var nameOrigin = new Point(contentX, rect.Y + (rect.Height - name.Height) / 2);
         if (segment.Changed && _settings.HighlightChangedClass)
-        {
-            drawingContext.DrawRoundedRectangle(_changed, null,
-                new Rect(contentX - 3, rect.Y + 5, name.Width + 6, rect.Height - 10), 4, 4);
-        }
+            DrawChangedGlow(drawingContext, name, nameOrigin, 2);
 
-        var nameY = rect.Y + (rect.Height - name.Height) / 2;
-        drawingContext.DrawText(name, new Point(contentX, nameY));
+        drawingContext.DrawText(name, nameOrigin);
 
         var extra = GetExtraText(segment.Item!, segment.Settings, context, out var pill, out _);
         if (extra != null)
@@ -379,9 +376,10 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         {
             var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartSecond.TimeOfDay).TotalSeconds;
             var fraction = Math.Max(0, Math.Min(1, (double)elapsed / total));
-            var track = new Rect(rect.X, rect.Y + rect.Height - 3, rect.Width, 3);
-            drawingContext.DrawRectangle(_progressTrack, null, track);
-            drawingContext.DrawRectangle(_accent, null, new Rect(track.X, track.Y, track.Width * fraction, track.Height));
+            var track = new Rect(rect.X, rect.Y + rect.Height - 4, rect.Width, 4);
+            drawingContext.DrawRoundedRectangle(_progressTrack, null, track, 2, 2);
+            drawingContext.DrawRoundedRectangle(_accent, null,
+                new Rect(track.X, track.Y, track.Width * fraction, track.Height), 2, 2);
         }
     }
 
@@ -389,8 +387,9 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     {
         var font = MakeText(text, BodyFontSize, FontWeights.Normal, _foreground, context);
         var width = font.Width + PillPadding * 2;
-        var height = Math.Min(rect.Height - 8, font.Height + 4);
+        var height = Math.Min(rect.Height - 8, font.Height);
         var pill = new Rect(x, rect.Y + rect.Height - height - 2, width, height);
+        drawingContext.DrawRoundedRectangle(_accentFill, null, pill, height / 2, height / 2);
         drawingContext.DrawRoundedRectangle(null, _accentPen, pill, height / 2, height / 2);
         drawingContext.DrawText(font, new Point(pill.X + PillPadding, pill.Y + (height - font.Height) / 2));
     }
@@ -449,9 +448,36 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         {
             _lastAccent = context.AccentColor;
             _accent = Frozen(context.AccentColor);
+            var fill = new SolidColorBrush(context.AccentColor) { Opacity = 0.3 };
+            fill.Freeze();
+            _accentFill = fill;
             _accentPen = new Pen(_accent, 1);
             _accentPen.Freeze();
         }
+    }
+
+    private static Brush CreateChangedGlow()
+    {
+        var brush = new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0x00)) { Opacity = 0.6 };
+        brush.Freeze();
+        return brush;
+    }
+
+    private void DrawChangedGlow(DrawingContext drawingContext, FormattedText text, Point origin, double radius)
+    {
+        var original = _foreground;
+        text.SetForegroundBrush(ChangedGlow);
+        for (var dx = -radius; dx <= radius; dx += radius)
+        {
+            for (var dy = -radius; dy <= radius; dy += radius)
+            {
+                if (dx == 0 && dy == 0)
+                    continue;
+                drawingContext.DrawText(text, new Point(origin.X + dx, origin.Y + dy));
+            }
+        }
+
+        text.SetForegroundBrush(original);
     }
 
     private static ClassInfo? GetClassInfo(ClassPlan plan, List<TimeLayoutItem> onClassItems, TimeLayoutItem item)
