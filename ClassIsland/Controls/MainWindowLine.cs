@@ -125,6 +125,8 @@ public class MainWindowLine : Control
 
     public MainWindow MainWindow { get; } = IAppHost.GetService<MainWindow>();
 
+    private NotificationDisplayService NotificationDisplayService { get; } = IAppHost.GetService<NotificationDisplayService>();
+
     public SettingsService SettingsService { get; } = IAppHost.GetService<SettingsService>();
 
     private DispatcherTimer TouchInFadingTimer { get; set; } = new();
@@ -154,7 +156,7 @@ public class MainWindowLine : Control
     {
         MainWindow.MousePosChanged += MainWindowOnMousePosChanged;
         MainWindow.RawInputEvent += MainWindowOnRawInputEvent;
-        MainWindow.MainWindowAnimationEvent += MainWindowOnMainWindowAnimationEvent;
+        NotificationDisplayService.AnimationEvent += MainWindowOnMainWindowAnimationEvent;
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
         UpdateFadeStatus();
 
@@ -166,7 +168,7 @@ public class MainWindowLine : Control
     {
         MainWindow.MousePosChanged -= MainWindowOnMousePosChanged;
         MainWindow.RawInputEvent -= MainWindowOnRawInputEvent;
-        MainWindow.MainWindowAnimationEvent -= MainWindowOnMainWindowAnimationEvent;
+        NotificationDisplayService.AnimationEvent -= MainWindowOnMainWindowAnimationEvent;
         SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
     }
 

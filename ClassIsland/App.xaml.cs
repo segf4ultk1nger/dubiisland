@@ -470,6 +470,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<TrayIconService>();
                 services.AddSingleton<WallpaperPickingService>();
                 services.AddSingleton<INotificationHostService, NotificationHostService>();
+                services.AddSingleton<NotificationDisplayService>();
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ThemeApplyService>();
                 services.AddSingleton<MiniInfoProviderHostService>();
@@ -812,6 +813,7 @@ public partial class App : AppBase, IAppHost
         AppStarted?.Invoke(this, EventArgs.Empty);
         StartUriPipeServer();
         GetService<IAutomationService>();
+        GetService<NotificationDisplayService>();
         GetService<TrayIconService>().Initialize();
         GetService<IUriNavigationService>().HandleAppNavigation("class-swap", args => GetService<TrayIconService>().OpenClassSwapWindow());
         GetService<IRulesetService>().NotifyStatusChanged();

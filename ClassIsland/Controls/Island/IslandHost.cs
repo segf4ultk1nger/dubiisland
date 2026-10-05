@@ -20,6 +20,7 @@ using ClassIsland.Models.ComponentSettings;
 using ClassIsland.Models.EventArgs;
 using ClassIsland.Services;
 using ClassIsland.Shared.Enums;
+using ClassIsland.ViewModels;
 using Linearstar.Windows.RawInput;
 using MahApps.Metro.IconPacks;
 using Windows.Win32.UI.Accessibility;
@@ -43,7 +44,8 @@ public sealed class IslandHost : IDisposable
     private readonly IWeatherService _weatherService;
     private readonly IWindowRuleService _windowRuleService;
     private readonly IRulesetService _rulesetService;
-    private readonly ClassIsland.MainWindow _mainWindow;
+    private readonly MainViewModel _viewModel;
+    private readonly NotificationDisplayService _notificationDisplayService;
     private readonly IslandContext _context;
     private readonly IslandRenderer _renderer;
     private readonly IslandSurface _surface;
@@ -116,7 +118,8 @@ public sealed class IslandHost : IDisposable
         IWeatherService weatherService,
         IWindowRuleService windowRuleService,
         IRulesetService rulesetService,
-        ClassIsland.MainWindow mainWindow)
+        MainViewModel viewModel,
+        NotificationDisplayService notificationDisplayService)
     {
         _settingsService = settingsService;
         _themeService = themeService;
@@ -125,7 +128,8 @@ public sealed class IslandHost : IDisposable
         _weatherService = weatherService;
         _windowRuleService = windowRuleService;
         _rulesetService = rulesetService;
-        _mainWindow = mainWindow;
+        _viewModel = viewModel;
+        _notificationDisplayService = notificationDisplayService;
 
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
             rulesetService, weatherService)
@@ -142,8 +146,8 @@ public sealed class IslandHost : IDisposable
         _topmostRecheckTimer.Tick += OnTopmostRecheckTick;
         _windowRuleService.ForegroundWindowChanged += OnForegroundWindowChanged;
         _rulesetService.StatusUpdated += OnRulesetStatusUpdated;
-        _mainWindow.ViewModel.PropertyChanged += OnNotificationChanged;
-        _mainWindow.MainWindowAnimationEvent += OnMainWindowAnimation;
+        _viewModel.PropertyChanged += OnNotificationChanged;
+        _notificationDisplayService.AnimationEvent += OnMainWindowAnimation;
         lessonsService.PostMainTimerTicked += OnLessonsTicked;
         lessonsService.CurrentTimeStateChanged += OnLessonsTicked;
         settingsService.Settings.PropertyChanged += OnSettingsChanged;
@@ -188,8 +192,8 @@ public sealed class IslandHost : IDisposable
         _lessonsService.CurrentTimeStateChanged -= OnLessonsTicked;
         _windowRuleService.ForegroundWindowChanged -= OnForegroundWindowChanged;
         _rulesetService.StatusUpdated -= OnRulesetStatusUpdated;
-        _mainWindow.ViewModel.PropertyChanged -= OnNotificationChanged;
-        _mainWindow.MainWindowAnimationEvent -= OnMainWindowAnimation;
+        _viewModel.PropertyChanged -= OnNotificationChanged;
+        _notificationDisplayService.AnimationEvent -= OnMainWindowAnimation;
         StopRenderingHook();
         _topmostRecheckTimer.Stop();
         _renderer.Invalidated -= OnRendererInvalidated;
@@ -336,7 +340,7 @@ public sealed class IslandHost : IDisposable
     /// <summary>从 MainWindow 的提醒状态提取自绘所需的遮罩 / overlay 文本。</summary>
     private void UpdateNotification()
     {
-        var viewModel = _mainWindow.ViewModel;
+        var viewModel = _viewModel;
         var mask = viewModel.CurrentMaskContent;
         if (mask != null && !_renderer.IsMaskVisible)
         {
