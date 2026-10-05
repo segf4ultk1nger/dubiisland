@@ -8,6 +8,8 @@
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
       xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
       xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
+      xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
+      xmlns:sys="clr-namespace:System;assembly=System.Runtime"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="外观"
@@ -22,22 +24,135 @@
 
     <controls:SettingsPageBase.Resources>
         <converters:ColorToColorPickerBrushConverter x:Key="ColorToColorPickerBrushConverter" />
+        <converters:ColorToLuminanceForegroundConverter x:Key="ColorToLuminanceForegroundConverter" />
+        <!-- 主题色色板（壁纸 / 屏幕主题色共用） -->
+        <StackPanel x:Key="ThemeColorPalette" x:Shared="False" Orientation="Horizontal" Margin="0 4 0 0">
+            <ListBox HorizontalAlignment="Left"
+                     Background="Transparent" BorderThickness="0" Padding="0"
+                     ItemsSource="{Binding SettingsService.Settings.WallpaperColorPlatte, Mode=OneWay}"
+                     SelectedIndex="{Binding SettingsService.Settings.SelectedPlatteIndex}"
+                     PreviewMouseWheel="UIElement_OnPreviewMouseWheel"
+                     ItemContainerStyleSelector="{x:Null}"
+                     Style="{StaticResource MahApps.Styles.ListBox}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="1" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{Binding Converter={StaticResource ColorToColorPickerBrushConverter}}"
+                                Width="32" Height="32">
+                            <remix:PackIconRemixIcon Kind="CheckFill" Width="16" Height="16"
+                                                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                     Foreground="{Binding Converter={StaticResource ColorToLuminanceForegroundConverter}}"
+                                                     Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <WrapPanel VerticalAlignment="Center" Margin="8 0 0 0">
+                <Button MinHeight="32" Margin="2 0" Click="ButtonUpdateWallpaper_OnClick">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding WallpaperPickingService.IsWorking}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding WallpaperPickingService.IsWorking}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <remix:PackIconRemixIcon Kind="RefreshLine" Width="16" Height="16" VerticalAlignment="Center" />
+                            <TextBlock Text="刷新" Margin="6 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding WallpaperPickingService.IsWorking}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5">
+                                <remix:PackIconRemixIcon.RenderTransform>
+                                    <RotateTransform />
+                                </remix:PackIconRemixIcon.RenderTransform>
+                                <remix:PackIconRemixIcon.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                                 From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </remix:PackIconRemixIcon.Triggers>
+                            </remix:PackIconRemixIcon>
+                            <TextBlock Text="加载中..." Margin="6 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="2 0"
+                        Click="ButtonPreviewWallpaper_OnClick">
+                    <StackPanel Orientation="Horizontal">
+                        <remix:PackIconRemixIcon Kind="EyeFill" Width="16" Height="16" VerticalAlignment="Center" />
+                        <TextBlock Text="预览提取结果" Margin="6 0 0 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </WrapPanel>
+        </StackPanel>
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-            <TextBlock Text="基本" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <TextBlock Text="主界面" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 界面缩放 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ZoomInOutline}" Header="界面缩放"
-                                                           Description="主界面的缩放大小。">
+                                    Description="主界面的缩放大小。">
                 <controls1:SettingsCard.Switcher>
-                    <Slider Width="180" Minimum="0.75" Maximum="2.5"
-                                                    VerticalAlignment="Center"
-                                                    Value="{Binding SettingsService.Settings.Scale}"
-                                                    AutoToolTipPlacement="BottomRight"
-                                                    TickFrequency="0.05"
-                                                    TickPlacement="None"
-                                                    IsSnapToTickEnabled="True"
-                                                    AutoToolTipPrecision="2" />
+                    <StackPanel Orientation="Horizontal">
+                        <Slider Width="220" Minimum="0.2" Maximum="5" VerticalAlignment="Center"
+                                Value="{Binding SettingsService.Settings.Scale}"
+                                AutoToolTipPlacement="BottomRight" TickFrequency="0.05" TickPlacement="None"
+                                IsSnapToTickEnabled="True" AutoToolTipPrecision="2" />
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.Scale}"
+                                           Minimum="0.2" Maximum="5" Interval="0.05" StringFormat="0.00"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!--背景颜色-->
@@ -47,37 +162,47 @@
                                     Margin="0 0 0 6">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
-                        <controls1:ColorPicker VerticalAlignment="Center"
-                                        Margin="0 0 6 0"
-                                        Color="{Binding SettingsService.Settings.BackgroundColor, Mode=TwoWay}"
-                                        Visibility="{Binding SettingsService.Settings.IsCustomBackgroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                         VerticalAlignment="Center"
+                                         Margin="0 0 6 0"
+                                         SelectedColor="{Binding SettingsService.Settings.BackgroundColor, Mode=TwoWay}"
+                                         Visibility="{Binding SettingsService.Settings.IsCustomBackgroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsCustomBackgroundColorEnabled}"/>
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 背景不透明度 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.SquareTransparent}" Header="背景不透明度"
-                                                           Description="主界面背景的不透明度。">
+                                    Description="主界面背景的不透明度。">
                 <controls1:SettingsCard.Switcher>
-                    <Slider Width="180" Minimum="0" Maximum="1"
-                                                    Value="{Binding SettingsService.Settings.Opacity}"
-                                                    AutoToolTipPlacement="BottomRight"
-                                                    TickFrequency="0.05"
-                                                    IsSnapToTickEnabled="True"
-                                                    AutoToolTipPrecision="2" />
+                    <StackPanel Orientation="Horizontal">
+                        <Slider Width="220" Minimum="0" Maximum="1" VerticalAlignment="Center"
+                                Value="{Binding SettingsService.Settings.Opacity}"
+                                AutoToolTipPlacement="BottomRight" TickFrequency="0.05"
+                                IsSnapToTickEnabled="True" AutoToolTipPrecision="2" />
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.Opacity}"
+                                           Minimum="0" Maximum="1" Interval="0.05" StringFormat="0.00"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 圆角半径 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BorderRoundCorners}" Header="圆角半径"
                                     Description="主界面圆角半径，最大时左右边缘为半圆。">
                 <controls1:SettingsCard.Switcher>
-                    <Slider Grid.Column="1" Grid.Row="0" Width="180" Minimum="0" Maximum="20"
-                            Value="{Binding SettingsService.Settings.RadiusX}"
-                            AutoToolTipPlacement="BottomRight"
-                            TickFrequency="0.5"
-                            IsSnapToTickEnabled="True"
-                            VerticalAlignment="Center"
-                            AutoToolTipPrecision="1" />
+                    <StackPanel Orientation="Horizontal">
+                        <Slider Width="220" Minimum="0" Maximum="20" VerticalAlignment="Center"
+                                Value="{Binding SettingsService.Settings.RadiusX}"
+                                AutoToolTipPlacement="BottomRight" TickFrequency="0.5"
+                                IsSnapToTickEnabled="True" AutoToolTipPrecision="1" />
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.RadiusX}"
+                                           Minimum="0" Maximum="20" Interval="0.5" StringFormat="0.0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 行间隔 -->
@@ -85,49 +210,96 @@
                                     Description="主界面行间间隔。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
-                        <Slider Width="130" Minimum="0" Maximum="150"
+                        <Slider Width="220" Minimum="0" Maximum="150" VerticalAlignment="Center"
                                 Value="{Binding SettingsService.Settings.MainWindowLineVerticalMargin}"
-                                AutoToolTipPlacement="BottomRight"
-                                TickFrequency="5"
-                                IsSnapToTickEnabled="True"
-                                AutoToolTipPrecision="1" />
-                        <TextBox Text="{Binding SettingsService.Settings.MainWindowLineVerticalMargin, Converter={StaticResource IntToStringConverter}}"
-                                 Width="50"/>
+                                AutoToolTipPlacement="BottomRight" TickFrequency="5"
+                                IsSnapToTickEnabled="True" AutoToolTipPrecision="1" />
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.MainWindowLineVerticalMargin}"
+                                           Minimum="0" Maximum="150" Interval="1" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
-            <Separator Margin="0 16 0 8" />
             <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ThemeLightDark}" Header="应用主题"
                                                            Description="控制应用的明暗主题。">
                 <controls1:SettingsCard.Switcher>
-                    <Grid>
-                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                  SelectedIndex="{Binding SettingsService.Settings.Theme}"
-                                  HorizontalContentAlignment="Left">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ThemeLightDark}" Text="跟随系统" />
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WhiteBalanceSunny}" Text="明亮" />
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.WeatherNight}" Text="黑暗" />
-                        </ComboBox>
-                    </Grid>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              MinWidth="160" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                              SelectedIndex="{Binding SettingsService.Settings.Theme}"
+                              HorizontalContentAlignment="Left">
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="MacFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="跟随系统" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="SunFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="明亮" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="MoonFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="黑暗" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                    </ComboBox>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 主题色来源 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteSwatchOutline}" Header="主题色来源"
                                                            Description="控制应用选取主题色的途径。">
                 <controls1:SettingsCard.Switcher>
-                    <Grid>
-                        <ComboBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                  SelectionChanged="ButtonUpdateWallpaper_OnClick"
-                                  HorizontalContentAlignment="Left"
-                                  SelectedIndex="{Binding SettingsService.Settings.ColorSource}">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.UserOutline}" Text="自定义" />
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Wallpaper}" Text="系统壁纸" />
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.MicrosoftWindows}" Text="系统" />
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.PanoramaVariantOutline}" Text="屏幕主题色" />
-                        </ComboBox>
-                    </Grid>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              MinWidth="180" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                              SelectionChanged="ButtonUpdateWallpaper_OnClick"
+                              HorizontalContentAlignment="Left"
+                              SelectedValuePath="Tag"
+                              SelectedValue="{Binding SettingsService.Settings.ColorSource}">
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>2</sys:Int32></ComboBoxItem.Tag>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="MacFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="系统" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>1</sys:Int32></ComboBoxItem.Tag>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="ImageFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="系统壁纸" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>3</sys:Int32></ComboBoxItem.Tag>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="Screenshot2Fill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="屏幕主题色" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>4</sys:Int32></ComboBoxItem.Tag>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="PaletteFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="品牌色" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>0</sys:Int32></ComboBoxItem.Tag>
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="BrushFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="自定义" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                    </ComboBox>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <StackPanel>
@@ -145,16 +317,16 @@
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteOutline}" Header="第一主题色"
                                                                Description="应用主要显示的主题颜色。">
                     <controls1:SettingsCard.Switcher>
-                        <controls1:ColorPicker
-                                                    Color="{Binding SettingsService.Settings.PrimaryColor, Mode=TwoWay}" />
+                        <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                                    SelectedColor="{Binding SettingsService.Settings.PrimaryColor, Mode=TwoWay}" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 第二主题色 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteOutline}" Header="第二主题色"
                                                                Description="应用次要显示的主题颜色。">
                     <controls1:SettingsCard.Switcher>
-                        <controls1:ColorPicker
-                                                    Color="{Binding SettingsService.Settings.SecondaryColor, Mode=TwoWay}" />
+                        <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                                    SelectedColor="{Binding SettingsService.Settings.SecondaryColor, Mode=TwoWay}" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
             </StackPanel>
@@ -170,101 +342,43 @@
                         <Setter Property="Visibility" Value="Collapsed" />
                     </Style>
                 </StackPanel.Style>
-                <Separator Margin="0 16 0 8" />
-                <TextBlock Text="壁纸主题色" Style="{StaticResource SettingsSectionHeaderStyle}" />
-                <!-- 壁纸主题色 -->
-                <Border>
-                    <Grid>
-                        <StackPanel Margin="12">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.PaletteOutline}" Text="选择主题色" />
-                            <Grid VerticalAlignment="Bottom"
-                                                          IsEnabled="{Binding WallpaperPickingService.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToBooleanReConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <WrapPanel HorizontalAlignment="Right"
-                                                                   VerticalAlignment="Center"
-                                                                   Grid.Column="1">
-                                    <!-- 刷新 -->
-                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                                    Click="ButtonUpdateWallpaper_OnClick"
-                                                                    VerticalAlignment="Center"
-                                                                    Margin="2 0">
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新" />
-                                    </Button>
-                                    <!-- 预览提取结果 -->
-                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                                    Click="ButtonPreviewWallpaper_OnClick"
-                                                                    VerticalAlignment="Center"
-                                                                    Margin="2 0">
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.EyeOutline}" Text="预览提取结果" />
-                                    </Button>
-                                </WrapPanel>
-                                <!-- 颜色选择 -->
-                                <ListBox Grid.Column="0"
-                                         ItemsSource="{Binding SettingsService.Settings.WallpaperColorPlatte, Mode=OneWay}"
-                                         SelectedIndex="{Binding SettingsService.Settings.SelectedPlatteIndex}"
-                                         PreviewMouseWheel="UIElement_OnPreviewMouseWheel"
-                                         HorizontalAlignment="Left">
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel IsItemsHost="True" />
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Converter={StaticResource ColorToColorPickerBrushConverter}}" Width="32" Height="32">
-                                                <controls1:IconText IconSize="14" Kind="{x:Static controls1:IconGlyphs.Check}"
-                                                                            VerticalAlignment="Bottom"
-                                                                            HorizontalAlignment="Right"
-                                                                            Background="White"
-                                                                            Foreground="Black"
-                                                                            Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                            </Border>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </Grid>
-                        </StackPanel>
-                        <ProgressBar
-                                                    Visibility="{Binding WallpaperPickingService.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                    IsIndeterminate="True"
-                                                    VerticalAlignment="Top" />
-                    </Grid>
+                <!-- 选择主题色 -->
+                <Border Padding="12 10 16 10" Margin="0 0 0 6">
+                    <StackPanel>
+                        <TextBlock Text="选择主题色" FontSize="14" />
+                        <TextBlock Text="从当前壁纸提取的颜色中选择；「刷新」可重新取色。"
+                                   FontSize="14" Opacity="0.75" TextWrapping="Wrap" Margin="0 1 0 0" />
+                        <ContentControl Content="{StaticResource ThemeColorPalette}" Margin="0 8 0 0" />
+                    </StackPanel>
                 </Border>
                 <!-- 启用自动提取主题色 -->
-                <Border Margin="0 6 0 6">
-                    <Expander Background="Transparent"
-                                                      IsExpanded="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=OneWay}"
-                                                      TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                        <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.RefreshAuto}"
-                                                                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                              Header="启用自动提取主题色"
-                                                                              Description="每分钟刷新一次壁纸主题色，适用于动态壁纸。"
-                                                                              IsOn="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=TwoWay}"
-                                                                              Margin="-12 0" />
-                        </Expander.Header>
-                        <Grid Margin="36 0 48 12"
-                                                      IsEnabled="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=OneWay}">
-                            <!-- 自动提取主题色间隔 -->
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}"
-                                                                              Header="自动提取主题色间隔"
-                                                                              Description="自动提取壁纸主题色的间隔，不宜低于10秒。">
-                                <controls1:SettingsControl.Switcher>
-                                    <Grid>
-                                        <controls1:NumbericTextBox MaxValue="36000" MinValue="0"
-                                                                   Width="150"
-                                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                   Style="{StaticResource MahApps.Styles.TextBox}"
-                                                                   Text="{Binding SettingsService.Settings.WallpaperAutoUpdateIntervalSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
-                                    </Grid>
-                                </controls1:SettingsControl.Switcher>
-                            </controls1:SettingsControl>
-                        </Grid>
-                    </Expander>
-                </Border>
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.RefreshAuto}" Header="自动提取主题色"
+                                        Description="每分钟刷新一次壁纸主题色，适用于动态壁纸。"
+                                        IsOn="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=TwoWay}" />
+                <!-- 自动提取主题色间隔 -->
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔"
+                                        Description="自动提取壁纸主题色的间隔，不宜低于 10 秒。"
+                                        Margin="0 0 0 6">
+                    <controls1:SettingsCard.Style>
+                        <Style TargetType="controls1:SettingsCard">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls1:SettingsCard.Style>
+                    <controls1:SettingsCard.Switcher>
+                        <StackPanel Orientation="Horizontal">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.WallpaperAutoUpdateIntervalSeconds}"
+                                               Minimum="0" Maximum="36000" Interval="1" StringFormat="0"
+                                               MinWidth="120" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                            <TextBlock Text="秒" Margin="8 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </controls1:SettingsCard.Switcher>
+                </controls1:SettingsCard>
 
                 <!-- 兼容模式 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CogOutline}" Header="启用兼容模式"
@@ -277,31 +391,33 @@
                                         IsOn="{Binding SettingsService.Settings.UseExperimentColorPickingMethod, Mode=TwoWay}" />
                 <!-- 壁纸层窗口类名 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.WindowMaximize}" Header="壁纸层窗口类名"
-                                                               Visibility="{Binding SettingsService.Settings.IsFallbackModeEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisConverter}}"
-                                                               Description="壁纸窗口类名，默认Progman；动态壁纸需填对应软件的窗口类名。">
+                                        Visibility="{Binding SettingsService.Settings.IsFallbackModeEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisConverter}}"
+                                        Description="壁纸窗口类名，默认 Progman；动态壁纸需填对应软件的窗口类名。">
                     <controls1:SettingsCard.Switcher>
-                        <DockPanel Width="150">
-                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.WindowMaximize}}"
-                                                            ToolTip="浏览…"
-                                                            DockPanel.Dock="Right"
-                                                            Click="ButtonBrowseWindows_OnClick" />
-                            <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                             Text="{Binding SettingsService.Settings.WallpaperClassName}" />
-                        </DockPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
+                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                     MinWidth="180" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                     Text="{Binding SettingsService.Settings.WallpaperClassName}" />
+                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="8 0 0 0"
+                                    VerticalAlignment="Center" ToolTip="浏览…" Click="ButtonBrowseWindows_OnClick">
+                                <StackPanel Orientation="Horizontal">
+                                    <remix:PackIconRemixIcon Kind="FolderOpenLine" Width="16" Height="16" VerticalAlignment="Center" />
+                                    <TextBlock Text="浏览…" Margin="6 0 0 0" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 取色亮度波峰 -->
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰"
                                         Visibility="{Binding SettingsService.Settings.UseExperimentColorPickingMethod, Converter={StaticResource InverseBoolToVisConverter}}"
-                                        Description="取色时亮度越接近此值的颜色权重越高；默认值0.6。">
+                                        Description="取色时亮度越接近此值的颜色权重越高；默认值 0.6。">
                     <controls1:SettingsCard.Switcher>
-                        <Grid>
-                            <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="150"
-                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                       Style="{StaticResource MahApps.Styles.TextBox}"
-                                                       Text="{Binding SettingsService.Settings.TargetLightValue, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
-                        </Grid>
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.TargetLightValue}"
+                                           Minimum="0" Maximum="1" Interval="0.1" StringFormat="0.0"
+                                           MinWidth="120" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
             </StackPanel>
@@ -317,186 +433,141 @@
                         <Setter Property="Visibility" Value="Collapsed" />
                     </Style>
                 </StackPanel.Style>
-                <Separator Margin="0 16 0 8" />
-                <TextBlock Text="屏幕主题色" Style="{StaticResource SettingsSectionHeaderStyle}" />
-                <Border>
-                    <Grid>
-                        <ProgressBar Visibility="{Binding WallpaperPickingService.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" IsIndeterminate="True" VerticalAlignment="Top"/>
-                        <StackPanel Margin="12">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.PaletteOutline}" Text="选择主题色" />
-                            <Grid VerticalAlignment="Bottom" IsEnabled="{Binding WallpaperPickingService.IsWorking, Mode=OneWay, Converter={StaticResource BooleanToBooleanReConverter}}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <!-- 颜色选择 -->
-                                <ListBox Grid.Column="0" HorizontalAlignment="Left"
-                                         ItemsSource="{Binding SettingsService.Settings.WallpaperColorPlatte, Mode=OneWay}"
-                                         SelectedIndex="{Binding SettingsService.Settings.SelectedPlatteIndex}"
-                                         PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel IsItemsHost="True"/>
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Background="{Binding Converter={StaticResource ColorToColorPickerBrushConverter}}" Width="32" Height="32">
-                                                <controls1:IconText IconSize="14" Kind="{x:Static controls1:IconGlyphs.Check}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="White" Foreground="Black"
-                                                    Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                                <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1">
-                                    <!-- 刷新 -->
-                                    <Button Click="ButtonUpdateWallpaper_OnClick" Style="{StaticResource MahApps.Styles.Button.Flat}" VerticalAlignment="Center" Margin="2 0">
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
-                                    </Button>
-                                    <!-- 预览提取结果 -->
-                                    <Button Click="ButtonPreviewWallpaper_OnClick" Style="{StaticResource MahApps.Styles.Button.Flat}" VerticalAlignment="Center" Margin="2 0">
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.EyeOutline}" Text="预览提取结果"/>
-                                    </Button>
-                                </WrapPanel>
-                            </Grid>
-                        </StackPanel>
-                    </Grid>
+                <!-- 选择主题色 -->
+                <Border Padding="12 10 16 10" Margin="0 0 0 6">
+                    <StackPanel>
+                        <TextBlock Text="选择主题色" FontSize="14" />
+                        <TextBlock Text="从屏幕提取的颜色中选择；「刷新」可重新取色。"
+                                   FontSize="14" Opacity="0.75" TextWrapping="Wrap" Margin="0 1 0 0" />
+                        <ContentControl Content="{StaticResource ThemeColorPalette}" Margin="0 8 0 0" />
+                    </StackPanel>
                 </Border>
-                <!-- 自动提取主题色 -->
-                <controls1:SettingsCard Margin="0 6" IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔" Description="自动提取屏幕主题色的间隔，建议10秒左右。">
+                <!-- 自动提取主题色间隔 -->
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔"
+                                        Description="自动提取屏幕主题色的间隔，建议 10 秒左右。">
                     <controls1:SettingsCard.Switcher>
-                        <Grid>
-                            <controls1:NumbericTextBox MaxValue="300" MinValue="0" Width="100" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Style="{StaticResource MahApps.Styles.TextBox}"
-                                                       Text="{Binding SettingsService.Settings.WallpaperAutoUpdateIntervalSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}"/>
-                        </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.WallpaperAutoUpdateIntervalSeconds}"
+                                               Minimum="0" Maximum="300" Interval="1" StringFormat="0"
+                                               MinWidth="120" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                            <TextBlock Text="秒" Margin="8 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 取色亮度波峰 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰" Description="取色时亮度越接近此值的颜色权重越高；默认值0.6。">
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰"
+                                        Description="取色时亮度越接近此值的颜色权重越高；默认值 0.6。">
                     <controls1:SettingsCard.Switcher>
-                        <Grid>
-                            <controls1:NumbericTextBox MaxValue="1" MinValue="0" Width="100" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Style="{StaticResource MahApps.Styles.TextBox}"
-                                                       Text="{Binding SettingsService.Settings.TargetLightValue, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
-                        </Grid>
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.TargetLightValue}"
+                                           Minimum="0" Maximum="1" Interval="0.1" StringFormat="0.0"
+                                           MinWidth="120" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
             </StackPanel>
-            <Separator Margin="0 16 0 8" />
             <TextBlock Text="字体" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 自定义字体 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatFont}" Header="自定义字体"
-                                                           Description="自定义主界面显示课表的字体。">
+                                    Description="自定义主界面显示课表的字体。">
                 <controls1:SettingsCard.Switcher>
-                    <Grid>
-                        <ComboBox ItemsSource="{Binding ViewModel.FontFamilies}"
-                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                  SelectedItem="{Binding SettingsService.Settings.MainWindowFont, Converter={StaticResource StringToFontFamilyConverter}}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock FontFamily="{Binding}" FontWeight="Normal"
-                                               ToolTip="{Binding Source}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Source}"
-                                                                 Value="Microsoft YaHei UI">
-                                                        <Setter Property="Text"
-                                                                Value="（默认）Microsoft YaHei UI" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                                <Setter Property="Text" Value="{Binding Source}" />
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </Grid>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              ItemsSource="{Binding ViewModel.FontFamilies}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              HorizontalContentAlignment="Left" MinWidth="200" MinHeight="32" FontSize="14"
+                              VerticalAlignment="Center"
+                              SelectedItem="{Binding SettingsService.Settings.MainWindowFont, Converter={StaticResource StringToFontFamilyConverter}}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontFamily="{Binding}" FontWeight="Normal" ToolTip="{Binding Source}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Source}" Value="Microsoft YaHei UI">
+                                                    <Setter Property="Text" Value="（默认）Microsoft YaHei UI" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Text" Value="{Binding Source}" />
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 自定义字重 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatLineWeight}" Header="自定义字重"
-                                                           Description="主界面字体字重，需字体支持。">
+                                    Description="主界面字体字重，需字体支持。">
                 <controls1:SettingsCard.Switcher>
-                    <Grid>
-                        <ComboBox
-                            SelectedItem="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
-                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" FontWeight="{Binding}"
-                                               ToolTip="{Binding}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                            <x:Static Member="FontWeights.Thin" />
-                            <!--<x:Static Member="FontWeights.UltraLight"/>-->
-                            <x:Static Member="FontWeights.ExtraLight" />
-                            <x:Static Member="FontWeights.Light" />
-                            <x:Static Member="FontWeights.Normal" />
-                            <!--<x:Static Member="FontWeights.Regular"/>-->
-                            <x:Static Member="FontWeights.Medium" />
-                            <!--<x:Static Member="FontWeights.DemiBold"/>-->
-                            <x:Static Member="FontWeights.SemiBold" />
-                            <x:Static Member="FontWeights.Bold" />
-                            <x:Static Member="FontWeights.ExtraBold" />
-                            <!--<x:Static Member="FontWeights.UltraBold"/>-->
-                            <x:Static Member="FontWeights.Black" />
-                            <!--<x:Static Member="FontWeights.Heavy"/>-->
-                            <x:Static Member="FontWeights.ExtraBlack" />
-                            <!--<x:Static Member="FontWeights.UltraBlack"/>-->
-                        </ComboBox>
-                    </Grid>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              HorizontalContentAlignment="Left" MinWidth="160" MinHeight="32" FontSize="14"
+                              VerticalAlignment="Center"
+                              SelectedItem="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontWeight="{Binding}" ToolTip="{Binding}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <x:Static Member="FontWeights.Thin" />
+                        <!--<x:Static Member="FontWeights.UltraLight"/>-->
+                        <x:Static Member="FontWeights.ExtraLight" />
+                        <x:Static Member="FontWeights.Light" />
+                        <x:Static Member="FontWeights.Normal" />
+                        <!--<x:Static Member="FontWeights.Regular"/>-->
+                        <x:Static Member="FontWeights.Medium" />
+                        <!--<x:Static Member="FontWeights.DemiBold"/>-->
+                        <x:Static Member="FontWeights.SemiBold" />
+                        <x:Static Member="FontWeights.Bold" />
+                        <x:Static Member="FontWeights.ExtraBold" />
+                        <!--<x:Static Member="FontWeights.UltraBold"/>-->
+                        <x:Static Member="FontWeights.Black" />
+                        <!--<x:Static Member="FontWeights.Heavy"/>-->
+                        <x:Static Member="FontWeights.ExtraBlack" />
+                        <!--<x:Static Member="FontWeights.UltraBlack"/>-->
+                    </ComboBox>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 字体大小 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent"
-                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.FontSize}"
-                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                  Header="字体大小"
-                                                  Description="调整主界面上各类字体的大小。"
-                                                  HasSwitcher="False"
-                                                  Margin="-12 0" />
-                    </Expander.Header>
-                    <Grid Margin="36 0 48 12">
-                        <Grid.Resources>
-                            <Style TargetType="controls1:NumbericTextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                                <Setter Property="Width" Value="100"/>
-                                <Setter Property="MinValue" Value="1"/>
-                                <Setter Property="MaxValue" Value="40"/>
-                            </Style>
-                        </Grid.Resources>
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FontSize}" Header="字体大小"
+                                    Description="调整主界面上各类字体的大小。">
+                <controls1:SettingsCard.Switcher>
+                    <Grid MinWidth="520">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Grid.Row="0" Text="次级字体大小（时间点附加信息）" Margin="0 0 0 6" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="0" Grid.Row="1" Text="正文字体大小（主界面）" Margin="0 0 0 6" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="0" Grid.Row="2" Text="强调字体大小（课程表、时钟、提醒标题、天气预报）" Margin="0 0 0 6" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="0" Grid.Row="3" Text="大号字体大小（课程预报）" Margin="0 0 0 6" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="次级字体（时间点附加信息）" Margin="0 0 16 6" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="正文字体（主界面）" Margin="0 0 16 6" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="强调字体（课程表、时钟、提醒标题、天气）" Margin="0 0 16 6" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="0" Grid.Row="3" Text="大号字体（课程预报）" Margin="0 0 16 0" VerticalAlignment="Center" />
 
-                        <controls1:NumbericTextBox
-                            Grid.Column="1" Grid.Row="0"
-                            Text="{Binding SettingsService.Settings.MainWindowSecondaryFontSize, Converter={StaticResource IntToStringConverter}}"/>
-                        <controls1:NumbericTextBox
-                            Grid.Column="1" Grid.Row="1"
-                            Text="{Binding SettingsService.Settings.MainWindowBodyFontSize, Converter={StaticResource IntToStringConverter}}"/>
-                        <controls1:NumbericTextBox
-                            Grid.Column="1" Grid.Row="2"
-                            Text="{Binding SettingsService.Settings.MainWindowEmphasizedFontSize, Converter={StaticResource IntToStringConverter}}"/>
-                        <controls1:NumbericTextBox
-                            Grid.Column="1" Grid.Row="3"
-                            Text="{Binding SettingsService.Settings.MainWindowLargeFontSize, Converter={StaticResource IntToStringConverter}}"/>
+                        <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Margin="0 0 0 6" Minimum="1" Maximum="40" Interval="1" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           Value="{Binding SettingsService.Settings.MainWindowSecondaryFontSize}" />
+                        <mah:NumericUpDown Grid.Column="1" Grid.Row="1" Margin="0 0 0 6" Minimum="1" Maximum="40" Interval="1" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           Value="{Binding SettingsService.Settings.MainWindowBodyFontSize}" />
+                        <mah:NumericUpDown Grid.Column="1" Grid.Row="2" Margin="0 0 0 6" Minimum="1" Maximum="40" Interval="1" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           Value="{Binding SettingsService.Settings.MainWindowEmphasizedFontSize}" />
+                        <mah:NumericUpDown Grid.Column="1" Grid.Row="3" Minimum="1" Maximum="40" Interval="1" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           Value="{Binding SettingsService.Settings.MainWindowLargeFontSize}" />
                     </Grid>
-                </Expander>
-            </Border>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <!-- 字体颜色 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatColorFill}"
                                     Header="字体颜色"
@@ -504,30 +575,63 @@
                                     Margin="0 0 0 6">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
-                        <controls1:ColorPicker VerticalAlignment="Center"
-                                        Margin="0 0 6 0"
-                                        Color="{Binding SettingsService.Settings.CustomForegroundColor, Mode=TwoWay}"
-                                        Visibility="{Binding SettingsService.Settings.IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                         VerticalAlignment="Center"
+                                         Margin="0 0 6 0"
+                                         SelectedColor="{Binding SettingsService.Settings.CustomForegroundColor, Mode=TwoWay}"
+                                         Visibility="{Binding SettingsService.Settings.IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding SettingsService.Settings.IsCustomForegroundColorEnabled}"/>
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 字体预览 -->
-            <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
-                                             FontWeight="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
-                                             mah:TextBoxHelper.Watermark="字体预览"
-                                             FontSize="17"
-                                             Padding="8"
-                                             IsReadOnly="False"
-                                             AcceptsReturn="True"
-                                             FontFamily="{Binding SettingsService.Settings.MainWindowFont, Mode=OneWay}"
-                                             Margin="0 4 0 0"
-                                             TextAlignment="Center"
-                                             xml:space="preserve">悲剧并非终结，而是希望的起始。
-语文 数学 英语 历史 物理 政治 化学 生物 地理
-the quick brown fox jumps over a lazy dog
-THE QUICK BROWN FOX JUMPS OVER A LAZY DOG
-8:00-12:00 1234567890 +-*/</TextBox>
+            <Border Padding="12 10 16 10">
+                <StackPanel>
+                    <TextBlock Text="字体预览" FontSize="14" />
+
+                    <!-- 四种字号对照 -->
+                    <StackPanel Margin="0 8 0 0">
+                        <TextBlock Text="次级字体" FontSize="12" Opacity="0.6" />
+                        <TextBlock Text="语文 数学 英语 历史 物理 The quick brown fox 0123456789" TextWrapping="Wrap"
+                                   FontFamily="{Binding SettingsService.Settings.MainWindowFont, Mode=OneWay}"
+                                   FontWeight="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
+                                   FontSize="{Binding SettingsService.Settings.MainWindowSecondaryFontSize}" />
+                    </StackPanel>
+                    <StackPanel Margin="0 8 0 0">
+                        <TextBlock Text="正文字体" FontSize="12" Opacity="0.6" />
+                        <TextBlock Text="语文 数学 英语 历史 物理 The quick brown fox 0123456789" TextWrapping="Wrap"
+                                   FontFamily="{Binding SettingsService.Settings.MainWindowFont, Mode=OneWay}"
+                                   FontWeight="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
+                                   FontSize="{Binding SettingsService.Settings.MainWindowBodyFontSize}" />
+                    </StackPanel>
+                    <StackPanel Margin="0 8 0 0">
+                        <TextBlock Text="强调字体" FontSize="12" Opacity="0.6" />
+                        <TextBlock Text="语文 数学 英语 历史 物理 The quick brown fox 0123456789" TextWrapping="Wrap"
+                                   FontFamily="{Binding SettingsService.Settings.MainWindowFont, Mode=OneWay}"
+                                   FontWeight="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
+                                   FontSize="{Binding SettingsService.Settings.MainWindowEmphasizedFontSize}" />
+                    </StackPanel>
+                    <StackPanel Margin="0 8 0 0">
+                        <TextBlock Text="大号字体" FontSize="12" Opacity="0.6" />
+                        <TextBlock Text="语文 数学 英语 历史 物理 The quick brown fox 0123456789" TextWrapping="Wrap"
+                                   FontFamily="{Binding SettingsService.Settings.MainWindowFont, Mode=OneWay}"
+                                   FontWeight="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
+                                   FontSize="{Binding SettingsService.Settings.MainWindowLargeFontSize}" />
+                    </StackPanel>
+
+                    <!-- 字符集 / 私货样例（可编辑、可选中） -->
+                    <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
+                             Text="{Binding ViewModel.FontPreviewText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Hidden"
+                             Padding="8"
+                             Margin="0 10 0 0"
+                             FontFamily="{Binding SettingsService.Settings.MainWindowFont, Mode=OneWay}"
+                             FontWeight="{Binding SettingsService.Settings.MainWindowFontWeight2, Converter={StaticResource IntToFontWeightConverter}}"
+                             FontSize="{Binding SettingsService.Settings.MainWindowBodyFontSize}" />
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </controls:SettingsPageBase>

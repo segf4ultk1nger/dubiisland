@@ -12,6 +12,7 @@
                          xmlns:models="clr-namespace:ClassIsland.Models"
                          xmlns:components="clr-namespace:ClassIsland.Controls.Components"
                          xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
+                         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                          mc:Ignorable="d">
     <ScrollViewer>
         <Grid
@@ -36,8 +37,9 @@
                 <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaintBucket}" Header="字体颜色"
                                         Description="事件名称和倒计时的字体颜色。">
                     <controls1:SettingsCard.Switcher>
-                        <controls1:ColorPicker Color="{Binding Settings.FontColor,Mode=TwoWay}"
-                                               Margin="10,8,0,0" Width="auto" />
+                        <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                         SelectedColor="{Binding Settings.FontColor, Mode=TwoWay}"
+                                         Margin="10,8,0,0" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 

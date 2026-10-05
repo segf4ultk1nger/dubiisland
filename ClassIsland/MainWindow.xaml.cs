@@ -841,6 +841,9 @@ public partial class MainWindow : Window
                     Logger.LogError(ex, "获取系统主题色失败。");
                 }
                 break;
+            case 4: // 品牌色
+                primary = secondary = Color.FromRgb(0xFD, 0x80, 0x07);
+                break;
         }
         ThemeService.SetTheme(ViewModel.Settings.Theme, primary, secondary);
 

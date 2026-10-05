@@ -4,6 +4,7 @@
          xmlns:ci="http://classisland.tech/schemas/xaml/core"
          xmlns:behaviors="clr-namespace:ClassIsland.Behaviors"
          xmlns:converters="clr-namespace:ClassIsland.Converters"
+         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
          Startup="App_OnStartup"
          ShutdownMode="OnExplicitShutdown"
          DispatcherUnhandledException="App_OnDispatcherUnhandledException">
@@ -20,7 +21,7 @@
             <ci:SolidColorBrushOpacityConverter x:Key="SolidColorBrushOpacityConverter" />
             <Visibility x:Key="VisibilityCollapsedValue">Collapsed</Visibility>
 
-            <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider}">
+            <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider.Win10}">
                 <Setter Property="behaviors:StyleBehaviors.Behaviors">
                     <Setter.Value>
                         <behaviors:StyleBehaviorCollection>
@@ -28,6 +29,11 @@
                         </behaviors:StyleBehaviorCollection>
                     </Setter.Value>
                 </Setter>
+            </Style>
+            <Style x:Key="AppColorPickerStyle" TargetType="{x:Type mah:ColorPicker}" BasedOn="{StaticResource MahApps.Styles.ColorPicker}">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="ColorPalettesTabHeader" Value="调色板" />
+                <Setter Property="AdvancedTabHeader" Value="自定义颜色" />
             </Style>
             <converters:MainWindowIsMainLineConverter x:Key="MainWindowIsMainLineConverter" />
         </ResourceDictionary>

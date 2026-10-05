@@ -7,6 +7,7 @@
                         xmlns:local="clr-namespace:ClassIsland.Controls.Components"
                         xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
                         xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
+                        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                         mc:Ignorable="d" 
                         d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <ScrollViewer>
@@ -26,8 +27,9 @@
                              Header="字体颜色"
                              Description="选择要显示文本的颜色。">
                 <ci:SettingsCard.Switcher>
-                    <ci:ColorPicker Width="auto" Margin="10 8 0 0"
-                                    Color="{Binding Settings.FontColor, Mode=TwoWay}" />
+                    <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                     Margin="10 8 0 0"
+                                     SelectedColor="{Binding Settings.FontColor, Mode=TwoWay}" />
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
 

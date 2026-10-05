@@ -50,7 +50,7 @@
         </Setter>
     </Style>
     <Style TargetType="ProgressBar" BasedOn="{StaticResource MahApps.Styles.ProgressBar}"/>
-    <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
+    <Style TargetType="Slider" BasedOn="{StaticResource MahApps.Styles.Slider.Win10}"/>
     <!-- 去掉 MahApps 默认 Expander 展开时给 header 上的主题色底和边框 -->
     <Style TargetType="Expander" BasedOn="{StaticResource MahApps.Styles.Expander}">
         <Setter Property="Background" Value="Transparent"/>

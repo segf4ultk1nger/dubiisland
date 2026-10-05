@@ -452,10 +452,11 @@
                                                                 Margin="0 0 0 6">
                                             <controls2:SettingsCard.Switcher>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <ci:ColorPicker VerticalAlignment="Center"
-                                                                    Margin="0 0 6 0"
-                                                                    Color="{Binding ForegroundColor, Mode=TwoWay}"
-                                                                    Visibility="{Binding IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                    <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                                                     VerticalAlignment="Center"
+                                                                     Margin="0 0 6 0"
+                                                                     SelectedColor="{Binding ForegroundColor, Mode=TwoWay}"
+                                                                     Visibility="{Binding IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                                     <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsCustomForegroundColorEnabled}"/>
                                                 </StackPanel>
                                             </controls2:SettingsCard.Switcher>
