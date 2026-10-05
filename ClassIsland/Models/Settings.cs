@@ -1695,7 +1695,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _corruptPluginsDisabledLastSession = false;
     private ObservableDictionary<string, NotificationSettings> _notificationChannelsNotifySettings = new();
     private string _selectedSpeechProvider = "classisland.speech.edgeTts";
-    private bool _isThemeWarningVisible = true;
     private string _weatherIconId = "classisland.weatherIcons.materialDesign";
     private bool _isRollingComponentWarningVisible = true;
 
@@ -2123,17 +2122,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isRollingComponentWarningVisible) return;
             _isRollingComponentWarningVisible = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsThemeWarningVisible
-    {
-        get => _isThemeWarningVisible;
-        set
-        {
-            if (value == _isThemeWarningVisible) return;
-            _isThemeWarningVisible = value;
             OnPropertyChanged();
         }
     }

@@ -25,7 +25,6 @@ public class RemixIconKindConverter : IValueConverter
             "storage" => PackIconRemixIconKind.Database2Fill,
             "privacy" => PackIconRemixIconKind.ShieldCheckFill,
             "classisland.plugins" => PackIconRemixIconKind.Puzzle2Fill,
-            "classisland.themes" => PackIconRemixIconKind.TShirt2Fill,
             "about" => PackIconRemixIconKind.Information2Fill,
             _ => PackIconRemixIconKind.Settings4Fill
         };

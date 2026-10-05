@@ -498,7 +498,6 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<SignalTriggerHandlerService>();
                 services.AddSingleton<IAnnouncementService, AnnouncementService>();
                 services.AddSingleton<ILocationService, LocationService>();
-                services.AddSingleton<IXamlThemeService, XamlThemeService>();
                 // Views
                 services.AddSingleton<MainWindow>();
                 services.AddTransient<SplashWindowBase, SplashWindow>();
@@ -524,7 +523,6 @@ public partial class App : AppBase, IAppHost
                 services.AddSettingsPage<AutomationSettingsPage>();
                 services.AddSettingsPage<StorageSettingsPage>();
                 services.AddSettingsPage<PluginsSettingsPage>();
-                services.AddSettingsPage<ThemesSettingsPage>();
                 services.AddSettingsPage<TestSettingsPage>();
                 services.AddSettingsPage<DebugPage>();
                 services.AddSettingsPage<DebugBrushesSettingsPage>();
