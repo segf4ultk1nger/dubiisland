@@ -47,6 +47,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
 
     private string? _placeholderText;
     private bool _collapsed;
+    private bool _liveUpdating;
 
     private bool _showTomorrowBadge;
     private FormattedText? _badgeText;
@@ -124,24 +125,28 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
             plan = tomorrowClassPlan;
             index = -1;
             hideFinished = false;
+            _liveUpdating = false;
         }
         else if (tomorrowClassPlan == null || mode == 0)
         {
             plan = lessons.CurrentClassPlan;
             index = lessons.CurrentSelectedIndex;
             hideFinished = _settings.HideFinishedClass;
+            _liveUpdating = true;
         }
         else if (!isAfterSchool)
         {
             plan = lessons.CurrentClassPlan;
             index = lessons.CurrentSelectedIndex;
             hideFinished = _settings.HideFinishedClass;
+            _liveUpdating = true;
         }
         else
         {
             plan = tomorrowClassPlan;
             index = -1;
             hideFinished = false;
+            _liveUpdating = false;
         }
 
         if (plan == null)
@@ -397,7 +402,10 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartSecond.TimeOfDay).TotalSeconds;
         leftSeconds = total - elapsed;
 
-        if (leftSeconds <= settings.CountdownSeconds && settings.IsCountdownEnabled)
+        if (!settings.ShowExtraInfoOnTimePoint)
+            return null;
+
+        if (_liveUpdating && settings.IsCountdownEnabled && leftSeconds <= settings.CountdownSeconds)
         {
             pill = true;
             return settings.IsNonExactCountdownEnabled
@@ -405,10 +413,11 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
                 : $"-{FormatSeconds(leftSeconds, true, false)}";
         }
 
-        if (!settings.ShowExtraInfoOnTimePoint)
-            return null;
+        var type = _liveUpdating ? settings.ExtraInfoType : 0;
+        if (settings.ExtraInfoType == 4 && leftSeconds <= settings.ExtraInfo4ShowSecondsSeconds)
+            type = 5;
 
-        return settings.ExtraInfoType switch
+        return type switch
         {
             0 => $"{item.StartSecond:HH:mm}-{item.EndSecond:HH:mm}",
             1 => FormatMulti(elapsed, total, false),
