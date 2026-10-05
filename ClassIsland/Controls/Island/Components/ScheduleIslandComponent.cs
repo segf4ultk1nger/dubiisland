@@ -10,6 +10,7 @@ using ClassIsland.Core.Models.Components;
 using ClassIsland.Models.ComponentSettings;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Abstraction.Models;
+using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Profile;
 
 namespace ClassIsland.Controls.Island.Components;
@@ -25,6 +26,10 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     private const double ItemGap = 6;
     private const double PillPadding = 8;
     private const double SeparatorSpan = 10;
+    private const double BadgePaddingX = 8;
+    private const double BadgePaddingY = 2;
+    private const double BadgeGap = 2;
+    private const double BadgeCornerRadius = 16;
 
     private static readonly Guid LessonControlAttachedSettingsId = new("58e5b69a-764a-472b-bcf7-003b6a8c7fdf");
 
@@ -42,6 +47,12 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
 
     private string? _placeholderText;
 
+    private bool _showTomorrowBadge;
+    private FormattedText? _badgeText;
+    private double _badgeWidth;
+    private double _badgeHeight;
+    private Brush? _badgeForeground;
+
     public ScheduleIslandComponent(ComponentSettings component, LessonControlSettings settings) : base(component)
         => _settings = settings;
 
@@ -50,37 +61,10 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         Build(context);
         if (_placeholderText != null)
             return new Size(200, StripHeight);
-        return new Size(_segments.Sum(s => s.Width), StripHeight);
-    }
-
-    protected override void RenderContent(DrawingContext drawingContext, Rect slot, IslandContext context)
-    {
-        if (_placeholderText != null)
-        {
-            var text = MakeText(_placeholderText, EmphasizedFontSize, FontWeights.Normal, _foreground, context);
-            drawingContext.DrawText(text, new Point(slot.X + 12, slot.Y + (slot.Height - text.Height) / 2));
-            return;
-        }
-
-        var x = slot.X;
-        foreach (var segment in _segments)
-        {
-            var rect = new Rect(x, slot.Y, segment.Width, slot.Height);
-            switch (segment.Kind)
-            {
-                case SegmentKind.Separator:
-                    DrawSeparator(drawingContext, rect);
-                    break;
-                case SegmentKind.Minimized:
-                    DrawMinimized(drawingContext, rect, segment, context);
-                    break;
-                default:
-                    DrawExpanded(drawingContext, rect, segment, context);
-                    break;
-            }
-
-            x += segment.Width;
-        }
+        var width = _segments.Sum(s => s.Width);
+        if (_showTomorrowBadge)
+            width += _badgeWidth + BadgeGap;
+        return new Size(width, StripHeight);
     }
 
     private void Build(IslandContext context)
@@ -88,8 +72,45 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         EnsureBrushes(context);
         _segments.Clear();
         _placeholderText = null;
+        _showTomorrowBadge = false;
 
-        var plan = context.LessonsService.CurrentClassPlan;
+        var lessons = context.LessonsService;
+        var now = context.ExactTimeService.GetCurrentLocalDateTime();
+        var mode = _settings.TomorrowScheduleShowMode;
+        var isAfterSchool = lessons.CurrentState == TimeState.AfterSchool || lessons.CurrentClassPlan == null;
+        var tomorrowClassPlan = lessons.GetClassPlanByDate(now + TimeSpan.FromDays(1));
+
+        SetTomorrowBadge(context,
+            tomorrowClassPlan != null && mode != 0 && !(!isAfterSchool && mode == 1));
+
+        ClassPlan? plan;
+        int index;
+        bool hideFinished;
+        if (mode == 2)
+        {
+            plan = tomorrowClassPlan;
+            index = -1;
+            hideFinished = false;
+        }
+        else if (tomorrowClassPlan == null || mode == 0)
+        {
+            plan = lessons.CurrentClassPlan;
+            index = lessons.CurrentSelectedIndex;
+            hideFinished = _settings.HideFinishedClass;
+        }
+        else if (!isAfterSchool)
+        {
+            plan = lessons.CurrentClassPlan;
+            index = lessons.CurrentSelectedIndex;
+            hideFinished = _settings.HideFinishedClass;
+        }
+        else
+        {
+            plan = tomorrowClassPlan;
+            index = -1;
+            hideFinished = false;
+        }
+
         if (plan == null)
         {
             _placeholderText = _settings.PlaceholderTextNoClass;
@@ -99,15 +120,13 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var layouts = plan.TimeLayout.Layouts;
         var valid = plan.ValidTimeLayoutItems;
         var subjects = context.ProfileService.Profile.Subjects;
-        var now = context.ExactTimeService.GetCurrentLocalDateTime();
-        var index = context.LessonsService.CurrentSelectedIndex;
         var selected = index >= 0 && index < layouts.Count ? layouts[index] : null;
         var onClassItems = layouts.Where(t => t.TimeType == 0).ToList();
         var showCurrentLessonOnlyOnClass = ResolveShowCurrentLessonOnlyOnClass();
 
         foreach (var item in layouts)
         {
-            var kind = Decide(item, selected, valid, now, showCurrentLessonOnlyOnClass);
+            var kind = Decide(item, selected, valid, now, showCurrentLessonOnlyOnClass, hideFinished);
             if (kind == null)
                 continue;
 
@@ -141,6 +160,64 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         }
     }
 
+    private void SetTomorrowBadge(IslandContext context, bool visible)
+    {
+        if (!visible)
+        {
+            _badgeText = null;
+            _showTomorrowBadge = false;
+            return;
+        }
+
+        var foreground = _badgeForeground ??= ResolveBadgeForeground();
+        _badgeText = MakeText("明天", BodyFontSize, FontWeights.Normal, foreground, context);
+        _badgeWidth = _badgeText.Width + BadgePaddingX * 2;
+        _badgeHeight = _badgeText.Height + BadgePaddingY * 2;
+        _showTomorrowBadge = true;
+    }
+
+    private static Brush ResolveBadgeForeground()
+        => Application.Current?.TryFindResource("MahApps.Brushes.IdealForeground") as SolidColorBrush ?? Brushes.White;
+
+    protected override void RenderContent(DrawingContext drawingContext, Rect slot, IslandContext context)
+    {
+        if (_placeholderText != null)
+        {
+            var text = MakeText(_placeholderText, EmphasizedFontSize, FontWeights.Normal, _foreground, context);
+            drawingContext.DrawText(text, new Point(slot.X + 12, slot.Y + (slot.Height - text.Height) / 2));
+            return;
+        }
+
+        var x = slot.X;
+        if (_showTomorrowBadge && _badgeText != null)
+        {
+            var badgeRect = new Rect(x, slot.Y + (slot.Height - _badgeHeight) / 2, _badgeWidth, _badgeHeight);
+            drawingContext.DrawRoundedRectangle(_accent, null, badgeRect, BadgeCornerRadius, BadgeCornerRadius);
+            drawingContext.DrawText(_badgeText,
+                new Point(badgeRect.X + BadgePaddingX, badgeRect.Y + (_badgeHeight - _badgeText.Height) / 2));
+            x += _badgeWidth + BadgeGap;
+        }
+
+        foreach (var segment in _segments)
+        {
+            var rect = new Rect(x, slot.Y, segment.Width, slot.Height);
+            switch (segment.Kind)
+            {
+                case SegmentKind.Separator:
+                    DrawSeparator(drawingContext, rect);
+                    break;
+                case SegmentKind.Minimized:
+                    DrawMinimized(drawingContext, rect, segment, context);
+                    break;
+                default:
+                    DrawExpanded(drawingContext, rect, segment, context);
+                    break;
+            }
+
+            x += segment.Width;
+        }
+    }
+
     private ILessonControlSettings ResolveAttachedSettings(Subject subject, TimeLayoutItem item, ClassPlan? classPlan)
         => (ILessonControlSettings?)IAttachedSettingsHostService
                .GetAttachedSettingsByPriority<LessonControlAttachedSettings>(
@@ -161,7 +238,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     }
 
     private SegmentKind? Decide(TimeLayoutItem item, TimeLayoutItem? selected,
-        ICollection<TimeLayoutItem> valid, DateTime now, bool showCurrentLessonOnlyOnClass)
+        ICollection<TimeLayoutItem> valid, DateTime now, bool showCurrentLessonOnlyOnClass, bool hideFinished)
     {
         if (item.TimeType == 3)
             return null;
@@ -171,7 +248,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
             return null;
 
         var itemTime = item.TimeType == 2 ? item.StartSecond : item.EndSecond;
-        if (_settings.HideFinishedClass &&
+        if (hideFinished &&
             (itemTime.TimeOfDay < selected?.StartSecond.TimeOfDay || itemTime.TimeOfDay < now.TimeOfDay))
             return null;
 
