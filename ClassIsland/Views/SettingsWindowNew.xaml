@@ -145,7 +145,10 @@
                                     ToolTip="更多选项…"
                                     ArrowVisibility="Collapsed"
                                     MenuStyle="{StaticResource MahApps.Styles.ContextMenu}"
-                                    IsExpanded="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}">
+                                        IsExpanded="{Binding ViewModel.IsPopupOpen, Mode=TwoWay}">
+                    <mah:DropDownButton.Resources>
+                        <PathGeometry x:Key="Checkmark" Figures="M 0,7.65 L 2.55,7.8 L 5.1,10.65 L 12,0.6 L 13.8,0 L 4.95,16.2 Z" />
+                    </mah:DropDownButton.Resources>
                     <mah:DropDownButton.Icon>
                         <remix:PackIconRemixIcon Kind="MoreFill" Width="16" Height="16" VerticalAlignment="Center"/>
                     </mah:DropDownButton.Icon>
