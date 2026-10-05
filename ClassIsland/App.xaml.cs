@@ -467,6 +467,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<SettingsService>();
                 services.AddSingleton<UpdateService>();
                 services.AddSingleton<ITaskBarIconService, TaskBarIconService>();
+                services.AddSingleton<TrayIconService>();
                 services.AddSingleton<WallpaperPickingService>();
                 services.AddSingleton<INotificationHostService, NotificationHostService>();
                 services.AddSingleton<IThemeService, ThemeService>();
@@ -811,6 +812,8 @@ public partial class App : AppBase, IAppHost
         AppStarted?.Invoke(this, EventArgs.Empty);
         StartUriPipeServer();
         GetService<IAutomationService>();
+        GetService<TrayIconService>().Initialize();
+        GetService<IUriNavigationService>().HandleAppNavigation("class-swap", args => GetService<TrayIconService>().OpenClassSwapWindow());
         GetService<IRulesetService>().NotifyStatusChanged();
         File.Delete(Path.Combine(AppRootFolderPath, ".startup-count"));
         if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)

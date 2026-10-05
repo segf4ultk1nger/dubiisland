@@ -507,11 +507,6 @@ public partial class MainWindow : Window
             return;
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在加载界面主题（2）");
         UpdateTheme();
-        IAppHost.GetService<ISplashService>().SetDetailedStatus("正在初始化托盘菜单");
-        SetupTrayMenu();
-        ThemeService.ThemeUpdated += (_, _) => Dispatcher.BeginInvoke(new Action(SetupTrayMenu));
-        TaskBarIconService.MainTaskBarIcon.LeftClickCommand = TrayIconLeftClickedCommand;
-        TaskBarIconService.MainTaskBarIcon.TrayLeftMouseUp += MainTaskBarIconOnTrayLeftMouseUp;
         ViewModel.OverlayRemainTimePercents = 0.5;
         WindowRuleService.ForegroundWindowChanged += WindowRuleServiceOnForegroundWindowChanged;
 
@@ -519,8 +514,6 @@ public partial class MainWindow : Window
         {
             AutoSetNotificationEffectRenderingScale();
         }
-
-        UriNavigationService.HandleAppNavigation("class-swap", args => OpenClassSwapWindow());
 
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在初始化输入");
         if (SettingsService.Settings.UseRawInput)
@@ -642,35 +635,6 @@ public partial class MainWindow : Window
         ViewModel.Settings.IsNotificationEffectRenderingScaleAutoSet = true;
     }
 
-    private void MainTaskBarIconOnTrayLeftMouseUp(object sender, RoutedEventArgs e)
-    {
-        switch (ViewModel.Settings.TaskBarIconClickBehavior)
-        {
-            case 0:
-                if (TaskBarIconService.MainTaskBarIcon.ContextMenu != null)
-                {
-                    GetCursorPos(out var ptr);
-                    if (PresentationSource.FromVisual(this) == null)
-                    {
-                        break;
-                    }
-                    GetCurrentDpi(out var dpiX, out var dpiY, TaskBarIconService.MainTaskBarIcon.ContextMenu);
-                    TaskBarIconService.MainTaskBarIcon.ShowContextMenu(new System.Drawing.Point((int)(ptr.X / dpiX), (int)
-                        (ptr.Y / dpiY)));
-                }
-                break;
-            case 1:
-                OpenProfileSettingsWindow();
-                break;
-            case 2:
-                ViewModel.Settings.IsMainWindowVisible = !ViewModel.Settings.IsMainWindowVisible;
-                break;
-            case 3:
-                OpenClassSwapWindow();
-                break;
-        }
-    }
-
     public void LoadProfile()
     {
         //ProfileService.LoadProfile();
@@ -759,15 +723,6 @@ public partial class MainWindow : Window
             SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
     }
 
-    private void SetupTrayMenu()
-    {
-        // 托盘菜单位于独立的视觉树，收不到应用级主题资源变更通知；主题切换时重建一份以套用新配色。
-        var menu = (System.Windows.Controls.ContextMenu)FindResource("AppContextMenu");
-        menu.DataContext = this;
-        TaskBarIconService.MainTaskBarIcon.DataContext = this;
-        TaskBarIconService.MainTaskBarIcon.ContextMenu = menu;
-    }
-
     private void UpdateTheme()
     {
         UpdateWindowPos();
@@ -840,11 +795,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ButtonSettings_OnClick(object sender, RoutedEventArgs e)
-    {
-        OpenProfileSettingsWindow();
-    }
-
     private void ListView_OnMouseDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
@@ -855,11 +805,6 @@ public partial class MainWindow : Window
         e.Handled = true;
     }
 
-    private void ButtonResizeDebug_OnClick(object sender, RoutedEventArgs e)
-    {
-        SizeToContent = SizeToContent.WidthAndHeight;
-    }
-
     private void MainWindow_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.LeftButton == MouseButtonState.Pressed)
@@ -867,26 +812,6 @@ public partial class MainWindow : Window
             e.Handled = true;
             //DragMove();
         }
-    }
-
-    private void MenuItemSettings_OnClick(object sender, RoutedEventArgs e)
-    {
-        App.GetService<SettingsWindowNew>().Open();
-    }
-
-
-    private async void MenuItemExitApp_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (!await ManagementService.AuthorizeByLevel(ManagementService.CredentialConfig.ExitApplicationAuthorizeLevel))
-        {
-            return;
-        }
-        ViewModel.IsClosing = true;
-        Close();
-    }
-    private void MenuItemRestartApp_OnClick(object sender, RoutedEventArgs e)
-    {
-        AppBase.Current.Restart();
     }
 
     private void MainWindow_OnClosing(object? sender, CancelEventArgs e)
@@ -994,85 +919,15 @@ public partial class MainWindow : Window
         SetBottom();
     }
 
-    private void MenuItemTemporaryClassPlan_OnClick(object sender, RoutedEventArgs e)
-    {
-        App.GetService<ProfileSettingsWindow>().OpenDrawer("TemporaryClassPlan");
-        OpenProfileSettingsWindow();
-    }
-
     public void OpenProfileSettingsWindow()
     {
         App.GetService<ProfileSettingsWindow>().Open();
-    }
-
-    private void MenuItemAbout_OnClick(object sender, RoutedEventArgs e)
-    {
-        App.GetService<SettingsWindowNew>().Open("about");
-    }
-
-    private void MenuItemHelps_OnClick(object sender, RoutedEventArgs e)
-    {
-        UriNavigationService.Navigate(new Uri("https://docs.classisland.tech/app/"));
     }
 
     private void GridRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         Width = e.NewSize.Width * ViewModel.Settings.Scale;
         Height = e.NewSize.Height * ViewModel.Settings.Scale;
-    }
-
-    private async void MenuItemDebugFitSize_OnClick(object sender, RoutedEventArgs e)
-    {
-        ViewModel.OverlayRemainTimePercents = 0.5;
-    }
-
-    private void MenuItemClearAllNotifications_OnClick(object sender, RoutedEventArgs e)
-    {
-        NotificationHostService.CancelAllNotifications();
-    }
-
-    private void MenuItemNotificationSettings_OnClick(object sender, RoutedEventArgs e)
-    {
-        App.GetService<SettingsWindowNew>().Open("notification");
-    }
-
-    private void MenuItemSwitchMainWindowVisibility_OnClick(object sender, RoutedEventArgs e)
-    {
-        ViewModel.Settings.IsMainWindowVisible = !ViewModel.Settings.IsMainWindowVisible;
-    }
-
-    private void MenuItemClassSwap_OnClick(object sender, RoutedEventArgs e)
-    {
-        OpenClassSwapWindow();
-    }
-
-    private async void OpenClassSwapWindow()
-    {
-        if (!await ManagementService.AuthorizeByLevel(ManagementService.CredentialConfig.ChangeLessonsAuthorizeLevel))
-        {
-            return;
-        }
-        if (LessonsService.CurrentClassPlan == null) // 如果今天没有课程，则选择临时课表
-        {
-            App.GetService<ProfileSettingsWindow>().OpenDrawer("TemporaryClassPlan");
-            OpenProfileSettingsWindow();
-            return;
-        }
-
-        if (ClassChangingWindow != null)
-        {
-            return;
-        }
-
-        // ViewModel.IsBusy = true;
-        ClassChangingWindow = new ClassChangingWindow()
-        {
-            ClassPlan = LessonsService.CurrentClassPlan
-        };
-        ClassChangingWindow.ShowDialog();
-        ClassChangingWindow.DataContext = null;
-        ClassChangingWindow = null;
-        // ViewModel.IsBusy = false;
     }
 
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -1138,10 +993,5 @@ public partial class MainWindow : Window
 
     private void TrayIconOnClicked_OnExecuted(object sender, ExecutedRoutedEventArgs e)
     {
-    }
-
-    private void MenuItemSettingsWindow2_OnClick(object sender, RoutedEventArgs e)
-    {
-        IAppHost.GetService<SettingsWindowNew>().Open();
     }
 }
