@@ -30,7 +30,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     private const double BadgePaddingX = 8;
     private const double BadgePaddingY = 2;
     private const double BadgeGap = 2;
-    private const double BadgeCornerRadius = 16;
+    private const double BadgeCornerRadius = 8;
 
     private static readonly Guid LessonControlAttachedSettingsId = new("58e5b69a-764a-472b-bcf7-003b6a8c7fdf");
 
