@@ -14,7 +14,6 @@
       xmlns:classIsland="clr-namespace:ClassIsland"
       xmlns:validations="clr-namespace:ClassIsland.Validations"
       xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services;assembly=ClassIsland.Core"
-      xmlns:ci="http://classisland.tech/schemas/xaml/core"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="天气"
@@ -623,10 +622,6 @@
                         </ComboBox>
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
-
-                <TextBlock TextWrapping="Wrap" FontWeight="Regular" Margin="0 8 0 0">
-                    要调整天气提醒设置，请转到<ci:NavHyperlink CommandParameter="classisland://app/settings/notification">【提醒】页面</ci:NavHyperlink>。要调整主界面上的天气快速信息，请在<ci:NavHyperlink CommandParameter="classisland://app/settings/components">【组件】页面</ci:NavHyperlink>中配置天气简报组件。
-                </TextBlock>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>
