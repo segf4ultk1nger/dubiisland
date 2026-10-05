@@ -684,7 +684,7 @@
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FontSize}" Header="字体大小"
                                     Description="调整主界面上各类字体的大小。">
                 <controls1:SettingsCard.Switcher>
-                    <Grid MinWidth="520">
+                    <Grid MaxWidth="520">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
@@ -695,10 +695,10 @@
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Grid.Row="0" Text="次级字体（时间点附加信息）" Margin="0 0 16 6" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="0" Grid.Row="1" Text="正文字体（主界面）" Margin="0 0 16 6" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="0" Grid.Row="2" Text="强调字体（课程表、时钟、提醒标题、天气）" Margin="0 0 16 6" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="0" Grid.Row="3" Text="大号字体（课程预报）" Margin="0 0 16 0" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="次级字体（时间点附加信息）" Margin="0 0 16 6" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="正文字体（主界面）" Margin="0 0 16 6" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="强调字体（课程表、时钟、提醒标题、天气）" Margin="0 0 16 6" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Grid.Column="0" Grid.Row="3" Text="大号字体（课程预报）" Margin="0 0 16 0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
 
                         <mah:NumericUpDown Grid.Column="1" Grid.Row="0" Margin="0 0 0 6" Minimum="1" Maximum="40" Interval="1" StringFormat="0"
                                            MinWidth="100" MinHeight="32" FontSize="14" VerticalAlignment="Center"

@@ -1,12 +1,16 @@
 ﻿<ci:SettingsPageBase x:Class="ClassIsland.Views.SettingPages.StorageSettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:ci="http://classisland.tech/schemas/xaml/core"
+      xmlns:controls1="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
+      xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
+      xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
       xmlns:helpers="clr-namespace:ClassIsland.Shared.Helpers;assembly=ClassIsland.Shared"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
       Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
@@ -16,11 +20,16 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       d:DataContext="{d:DesignInstance local:StorageSettingsPage}"
-      Title="StorageSettingsPage" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+      Title="存储">
+
+    <ci:SettingsPageBase.Resources>
+        <converters:RatioToWidthConverter x:Key="RatioToWidthConverter" />
+    </ci:SettingsPageBase.Resources>
 
     <ScrollViewer>
-        <StackPanel MaxWidth="750" Style="{StaticResource SettingsPageStackPanelStyle}">
-            <Border Background="#17ee7700" Margin="0 0 0 4" Panel.ZIndex="1">
+        <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
+            <!-- 配置损坏警告 -->
+            <Border Background="#17ee7700" Margin="0 0 0 6">
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>
@@ -32,10 +41,8 @@
                 </Border.Style>
                 <StackPanel Margin="8 4">
                     <DockPanel>
-                        <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.WarningOutline}" />
-                        <TextBlock TextWrapping="Wrap"
-                                   VerticalAlignment="Center"
-                                   Margin="4 0 0 0">
+                        <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.WarningOutline}" />
+                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="4 0 0 0">
                             <Run Text="LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。"/>
                         </TextBlock>
                     </DockPanel>
@@ -43,117 +50,318 @@
                             Margin="24 6 0 0" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
                             CommandParameter="classisland://app/config-errors">
-                        <ci:IconText Kind="{x:Static ciCore:IconGlyphs.OpenInNew}" Text="详细信息…"/>
+                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.OpenInNew}" Text="详细信息…"/>
                     </Button>
                 </StackPanel>
             </Border>
 
-            <!--<Separator Margin="0 16 0 8" />
             <TextBlock Text="存储空间" Style="{StaticResource SettingsSectionHeaderStyle}" />
-            <TextBlock Text="以下是 应用内 产生的各个类型文件的空间占用情况，您可以在此处清理部分临时和缓存文件。" 
-                       FontWeight="Light"
-                       TextWrapping="Wrap"/>
-
-            <Separator Margin="0 16 0 8" />-->
-            <TextBlock Text="备份" Style="{StaticResource SettingsSectionHeaderStyle}" />
-            <!-- 启用自动备份 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent"
-                          IsExpanded="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=OneWay}"
-                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.AutoMode}"
-                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                  Header="启用自动备份"
-                                                  Description="每隔一段时间自动备份档案和配置文件。"
-                                                  IsOn="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=TwoWay}"
-                                                  Margin="-12 0" />
-                    </Expander.Header>
-                    <StackPanel Margin="36 0 48 12"
-                                IsEnabled="{Binding SettingsService.Settings.IsAutoBackupEnabled}">
-                        <!-- 自动备份间隔 -->
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockAutoOutline}"
-                                               Header="自动备份间隔"
-                                               IsCompact="True"
-                                               Description="自动备份时的间隔天数。"
-                                               Margin="0 0 0 6">
-                            <ci:SettingsControl.Switcher>
-                                <TextBox
-                                         Width="100"
-                                         Text="{Binding SettingsService.Settings.AutoBackupIntervalDays, Converter={StaticResource IntToStringConverter}}"
-                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                            </ci:SettingsControl.Switcher>
-                        </ci:SettingsControl>
-                        <!-- 自动备份上限 -->
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ArchiveArrowUpOutline}"
-                                            Header="自动备份上限"
-                                            IsCompact="True"
-                                            Description="自动备份数量上限；达到后覆盖最旧备份，0为无上限。"
-                                            Margin="0 0 0 6">
-                            <ci:SettingsControl.Switcher>
-                                <TextBox
-                                         Width="100"
-                                         Text="{Binding SettingsService.Settings.AutoBackupLimit, Converter={StaticResource IntToStringConverter}}"
-                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                            </ci:SettingsControl.Switcher>
-                        </ci:SettingsControl>
-                        <TextBlock TextWrapping="Wrap" Margin="0 0 0 6">
-                            <Run Text="上次成功自动备份："/>
-                            <Run Text="{Binding SettingsService.Settings.LastAutoBackupTime, ConverterCulture=zh-cn}"/>
-                        </TextBlock>
-                        <TextBlock TextWrapping="Wrap" TextAlignment="Left">
-                            <Run Text="备份占用：" Foreground="White"/>
-                            <Run Text="{Binding SettingsService.Settings.BackupFilesSize, ConverterCulture=zh-cn}"/>
-                        </TextBlock>
-                    </StackPanel>
-                </Expander>
-            </Border>
-            <!-- 备份 -->
             <Border Padding="12 10 16 10" Margin="0 0 0 6">
                 <StackPanel>
-                    <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.BackupRestore}"
-                                        Header="手动备份"
-                                        Description="备份 Config/、Profiles/ 和 Settings.json，不会被自动清除。"
-                                        Margin="0 0 0 6"
-                                        HasSwitcher="False"/>
-                    <WrapPanel>
-                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                    <!-- 标题 + 刷新 -->
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" MinWidth="32" MinHeight="32" Padding="6"
+                                VerticalAlignment="Top" ToolTip="重新扫描存储占用"
+                                Click="ButtonRefreshStorage_OnClick">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ViewModel.IsScanningStorage}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <Grid>
+                                <remix:PackIconRemixIcon Kind="RefreshLine" Width="16" Height="16" VerticalAlignment="Center">
+                                    <remix:PackIconRemixIcon.Style>
+                                        <Style TargetType="remix:PackIconRemixIcon">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ViewModel.IsScanningStorage}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </remix:PackIconRemixIcon.Style>
+                                </remix:PackIconRemixIcon>
+                                <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5">
+                                    <remix:PackIconRemixIcon.Style>
+                                        <Style TargetType="remix:PackIconRemixIcon">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ViewModel.IsScanningStorage}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </remix:PackIconRemixIcon.Style>
+                                    <remix:PackIconRemixIcon.RenderTransform>
+                                        <RotateTransform />
+                                    </remix:PackIconRemixIcon.RenderTransform>
+                                    <remix:PackIconRemixIcon.Triggers>
+                                        <EventTrigger RoutedEvent="Loaded">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                                     From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </remix:PackIconRemixIcon.Triggers>
+                                </remix:PackIconRemixIcon>
+                            </Grid>
+                        </Button>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="磁盘占用" FontSize="14" />
+                            <TextBlock Text="{Binding ViewModel.DiskNameText}" FontSize="12" Opacity="0.6" Margin="0 2 0 0" />
+                        </StackPanel>
+                    </DockPanel>
+                    <!-- 磁盘占用条 -->
+                    <Border x:Name="DiskBar" Height="12" Margin="0 8 0 0" ClipToBounds="True"
+                            Background="{DynamicResource MahApps.Brushes.Gray7}">
+                        <Border HorizontalAlignment="Left" Background="{DynamicResource MahApps.Brushes.Accent}">
+                            <Border.Width>
+                                <MultiBinding Converter="{StaticResource RatioToWidthConverter}">
+                                    <Binding Path="ViewModel.DiskUsedRatio" />
+                                    <Binding Path="ActualWidth" ElementName="DiskBar" />
+                                </MultiBinding>
+                            </Border.Width>
+                        </Border>
+                    </Border>
+                    <TextBlock Text="{Binding ViewModel.DiskInfoText}" FontSize="12" Opacity="0.7" Margin="0 6 0 0" />
+
+                    <!-- LegacyIsland 明细条 -->
+                    <TextBlock Text="LegacyIsland 占用" FontSize="14" Margin="0 12 0 0" />
+                    <Border x:Name="AppBar" Height="12" Margin="0 8 0 0" ClipToBounds="True"
+                            Background="{DynamicResource MahApps.Brushes.Gray7}">
+                        <ItemsControl ItemsSource="{Binding ViewModel.Categories}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding Brush}" Height="12">
+                                        <Border.Width>
+                                            <MultiBinding Converter="{StaticResource RatioToWidthConverter}">
+                                                <Binding Path="Ratio" />
+                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" />
+                                            </MultiBinding>
+                                        </Border.Width>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                    <TextBlock Text="{Binding ViewModel.AppSizeText}" FontSize="12" Opacity="0.7" Margin="0 6 0 0" />
+
+                    <!-- 图例 -->
+                    <ItemsControl ItemsSource="{Binding ViewModel.Categories}" Margin="0 8 0 0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0 2 16 2">
+                                    <Border Width="10" Height="10" Background="{Binding Brush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Name}" Margin="6 0 0 0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding SizeText}" Margin="6 0 0 0" Opacity="0.6" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="清理" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <Grid Margin="12 0 16 8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"
+                        HorizontalAlignment="Left" Click="ButtonCleanupSelected_OnClick"
+                        IsEnabled="{Binding ViewModel.IsCleaning, Converter={StaticResource InvertBooleanConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <remix:PackIconRemixIcon Kind="DeleteBin6Fill" Width="16" Height="16" VerticalAlignment="Center" />
+                        <TextBlock Text="删除文件" Margin="6 0 0 0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="15">
+                    <Run Text="选定项合计：" /><Run Text="{Binding ViewModel.CleanupSelectedText}" FontWeight="SemiBold" />
+                </TextBlock>
+            </Grid>
+            <ItemsControl Margin="12 0 16 0" ItemsSource="{Binding ViewModel.CleanupTargets}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0 7">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Column="0" Style="{StaticResource MahApps.Styles.CheckBox.Win10}"
+                                      MinWidth="0" IsChecked="{Binding IsSelected}" VerticalAlignment="Top" Margin="0 1 6 0" />
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding Description}" FontSize="13" Opacity="0.6"
+                                           TextWrapping="Wrap" Margin="0 2 0 0" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="2" Text="{Binding SizeText}" VerticalAlignment="Top" Margin="10 0 0 0" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="备份" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <!-- 启用自动备份 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}" Header="启用自动备份"
+                                    Description="每隔一段时间自动备份档案和配置文件。"
+                                    IsOn="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=TwoWay}"
+                                    Margin="0 0 0 6" />
+
+            <!-- 自动备份子选项（启用时显示） -->
+            <StackPanel Margin="0 0 0 6"
+                        Visibility="{Binding SettingsService.Settings.IsAutoBackupEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockAutoOutline}" Header="自动备份间隔"
+                                        Description="自动备份时的间隔天数。"
+                                        Margin="0 0 0 6">
+                    <controls1:SettingsCard.Switcher>
+                        <StackPanel Orientation="Horizontal">
+                            <mah:NumericUpDown Value="{Binding SettingsService.Settings.AutoBackupIntervalDays}"
+                                               Minimum="1" Maximum="3650" Interval="1" StringFormat="0"
+                                               MinWidth="120" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                            <TextBlock Text="天" Margin="8 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </controls1:SettingsCard.Switcher>
+                </controls1:SettingsCard>
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ArchiveArrowUpOutline}" Header="自动备份上限"
+                                        Description="自动备份数量上限；达到后覆盖最旧备份，0 为无上限。"
+                                        Margin="0 0 0 6">
+                    <controls1:SettingsCard.Switcher>
+                        <mah:NumericUpDown Value="{Binding SettingsService.Settings.AutoBackupLimit}"
+                                           Minimum="0" Maximum="1000" Interval="1" StringFormat="0"
+                                           MinWidth="120" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </controls1:SettingsCard.Switcher>
+                </controls1:SettingsCard>
+                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="上次成功自动备份"
+                                        Description="最近一次自动备份成功的时间。">
+                    <controls1:SettingsCard.Switcher>
+                        <TextBlock Text="{Binding SettingsService.Settings.LastAutoBackupTime, ConverterCulture=zh-cn}"
+                                   VerticalAlignment="Center" />
+                    </controls1:SettingsCard.Switcher>
+                </controls1:SettingsCard>
+            </StackPanel>
+
+            <!-- 手动备份 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BackupRestore}" Header="手动备份"
+                                    Description="备份 Config/、Profiles/ 和 Settings.json，不会被自动清除。"
+                                    Margin="0 0 0 6">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"
                                 IsEnabled="{Binding ViewModel.IsBackingUp, Converter={StaticResource InvertBooleanConverter}}"
                                 Click="ButtonCreateBackup_OnClick">
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.BackupRestore}" Text="立即备份" />
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="SaveFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="立即备份" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="8 0 0 0"
                                 Click="ButtonViewBackupFiles_OnClick">
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.FolderOutline}" Text="查看备份文件…" />
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="FolderOpenFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="查看备份文件" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </Button>
-                        <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.Check}"
-                                                 VerticalAlignment="Stretch"
-                                                 ToolTip="备份成功。"
-                                                 Visibility="{Binding ViewModel.IsBackupFinished, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                        <ProgressBar Style="{StaticResource MahApps.Styles.ProgressBar}"
-                                     Visibility="{Binding ViewModel.IsBackingUp, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    </WrapPanel>
-                </StackPanel>
-            </Border>
+                        <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" Margin="8 0 0 0"
+                                                 VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
+                                                 Visibility="{Binding ViewModel.IsBackingUp, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <remix:PackIconRemixIcon.RenderTransform>
+                                <RotateTransform />
+                            </remix:PackIconRemixIcon.RenderTransform>
+                            <remix:PackIconRemixIcon.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                             From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </remix:PackIconRemixIcon.Triggers>
+                        </remix:PackIconRemixIcon>
+                        <remix:PackIconRemixIcon Kind="CheckFill" Foreground="#34C759" Width="16" Height="16" Margin="8 0 0 0"
+                                                 VerticalAlignment="Center" ToolTip="备份成功。"
+                                                 Visibility="{Binding ViewModel.IsBackupFinished, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
 
-            <Border Padding="12 10 16 10">
-                <StackPanel>
-                    <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.BackupRestore}"
-                                        Header="恢复备份"
-                                        Description="重启到恢复模式并恢复到指定的备份。"
-                                        Margin="0 0 0 6"
-                                        HasSwitcher="False"/>
-                    <WrapPanel>
-                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                IsEnabled="{Binding ViewModel.IsBackingUp, Converter={StaticResource InvertBooleanConverter}}"
-                                Click="ButtonRecoverBackup_OnClick">
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Restore}" Text="恢复备份" />
+            <!-- 恢复备份 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Restore}" Header="恢复备份"
+                                    Description="重启到恢复模式并恢复到指定的备份。">
+                <controls1:SettingsCard.Switcher>
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"
+                            IsEnabled="{Binding ViewModel.IsBackingUp, Converter={StaticResource InvertBooleanConverter}}"
+                            Click="ButtonRecoverBackup_OnClick">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="RestartLine" Width="16" Height="16" VerticalAlignment="Center" />
+                            <TextBlock Text="恢复备份" Margin="6 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
+
+            <TextBlock Text="打开目录" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FolderOpenOutline}" Header="打开目录"
+                                    Description="在文件资源管理器中打开应用的相关文件夹。">
+                <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"
+                                Tag="{Binding ViewModel.DataFolderPath}" Click="ButtonOpenFolder_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="FolderOpenFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="数据目录" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
                         </Button>
-                        
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="8 0 0 0"
+                                Tag="{Binding ViewModel.BackupFolderPath}" Click="ButtonOpenFolder_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="FolderOpenFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="备份目录" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="8 0 0 0"
+                                Tag="{Binding ViewModel.LogFolderPath}" Click="ButtonOpenFolder_OnClick">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="FolderOpenFill" Width="16" Height="16" VerticalAlignment="Center" />
+                                <TextBlock Text="日志目录" Margin="6 0 0 0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
 
-                    </WrapPanel>
-                </StackPanel>
-            </Border>
+            <TextBlock Text="重置" Style="{StaticResource SettingsSectionHeaderStyle}" />
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Refresh}" Header="重置所有设置"
+                                    Description="将所有设置恢复为默认值，不会删除档案和备份。重置后应用会重启。">
+                <controls1:SettingsCard.Switcher>
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"
+                            Click="ButtonResetSettings_OnClick">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="RestartLine" Width="16" Height="16" VerticalAlignment="Center" />
+                            <TextBlock Text="重置设置" Margin="6 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
         </StackPanel>
     </ScrollViewer>
 </ci:SettingsPageBase>
