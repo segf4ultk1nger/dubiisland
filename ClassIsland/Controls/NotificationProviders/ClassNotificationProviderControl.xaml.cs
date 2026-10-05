@@ -74,6 +74,9 @@ public partial class ClassNotificationProviderControl : UserControl, INotifyProp
 
     public ILessonsService LessonsService { get; } = App.GetService<ILessonsService>();
 
+    /// <summary>构造时传入的资源键（如 ClassPrepareNotifyOverlay / ClassOffOverlay / ClassOffNotification）。</summary>
+    public string Mode { get; }
+
     private DispatcherTimer Timer { get; } = new()
     {
         Interval = TimeSpan.FromSeconds(10)
@@ -82,6 +85,7 @@ public partial class ClassNotificationProviderControl : UserControl, INotifyProp
     public ClassNotificationProviderControl(string key)
     {
         InitializeComponent();
+        Mode = key;
         var visual = FindResource(key) as FrameworkElement;
         Element = visual;
         Timer.Tick += TimerOnTick;

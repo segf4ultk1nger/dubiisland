@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using ClassIsland.Controls.AttachedSettingsControls;
 using ClassIsland.Controls.Components;
+using ClassIsland.Controls.Island;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.Management;
 using ClassIsland.Core.Commands;
@@ -500,6 +501,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<ILocationService, LocationService>();
                 // Views
                 services.AddSingleton<MainWindow>();
+                services.AddSingleton<IslandHost>();
                 services.AddTransient<SplashWindowBase, SplashWindow>();
                 services.AddTransient<FeatureDebugWindow>();
                 services.AddSingleton<TopmostEffectWindow>(BuildTopmostEffectWindow);
@@ -771,6 +773,15 @@ public partial class App : AppBase, IAppHost
         GetService<ISplashService>().CurrentProgress = 80;
         GetService<ISplashService>().SetDetailedStatus("正在初始化主界面（步骤 2/2）");
         GetService<MainWindow>().Show();
+        // 自绘主界面宿主（由设置 UseSelfDrawnIsland 控制是否显示）。
+        try
+        {
+            GetService<IslandHost>().Show();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "初始化自绘主界面 IslandHost 失败。");
+        }
         GetService<IWindowRuleService>();
         GetService<SignalTriggerHandlerService>();
 

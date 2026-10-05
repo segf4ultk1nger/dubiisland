@@ -714,6 +714,18 @@ public partial class MainWindow : Window
         {
             UpdateFadeStatus();
         }
+        if (e.PropertyName == nameof(ViewModel.Settings.UseSelfDrawnIsland))
+        {
+            UpdateIslandRenderMode();
+        }
+    }
+
+    /// <summary>根据设置决定是否隐藏 XAML 主界面（切换为 IslandHost 自绘）。</summary>
+    private void UpdateIslandRenderMode()
+    {
+        ResourceLoaderBorder.Visibility = ViewModel.Settings.UseSelfDrawnIsland
+            ? Visibility.Collapsed
+            : Visibility.Visible;
     }
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -739,6 +751,7 @@ public partial class MainWindow : Window
         ViewModel.Profile.PropertyChanged += (sender, args) => SaveProfile();
         ViewModel.Settings.PropertyChanged += SettingsOnPropertyChanged;
         LoadSettings();
+        UpdateIslandRenderMode();
         //ViewModel.CurrentProfilePath = ViewModel.Settings.SelectedProfile;
         LoadProfile();
         IAppHost.GetService<ISplashService>().SetDetailedStatus("正在加载界面主题（1）");

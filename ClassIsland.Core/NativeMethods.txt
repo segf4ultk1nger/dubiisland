@@ -12,6 +12,8 @@ GetWindowText
 _lopen
 CloseHandle
 DwmGetColorizationColor
+DwmExtendFrameIntoClientArea
+MARGINS
 FindWindowEx
 GetClassName
 IsWindowVisible

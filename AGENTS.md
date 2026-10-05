@@ -4,6 +4,10 @@
 - **不要自行运行 `dotnet build` 或其他构建/运行命令。** 作者使用 Rider 构建与运行，编译和测试由作者负责。
 - 改完代码后说明改了什么即可，让作者在 Rider 里编译验证。
 
+## 图标
+- 一律使用 **RemixIcons**（`MahApps.Metro.IconPacks` 的 `PackIconRemixIcon` / `PackIconRemixIconKind`）。
+- **禁止使用 Segoe MDL2 Assets / `IconGlyphs`**（历史遗留，作者反感）。
+
 ## Git
 - 仅在被明确要求时提交。
 - 提交身份使用：`git -c user.name="douxiba" -c user.email="kriastans@protonmail.com"`。

@@ -319,6 +319,16 @@
                              IsOn="{Binding SettingsService.Settings.IsWindowCaptureBlockingEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
 
+            <!-- 实验性 -->
+            <TextBlock Text="实验性" Style="{StaticResource SettingsSectionHeaderStyle}" />
+
+            <!-- 自绘主界面 -->
+            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
+                             Header="自绘主界面"
+                             Description="用纯自绘渲染器绘制主界面，替代 XAML 主界面。实验性功能，可能不稳定。"
+                             IsOn="{Binding SettingsService.Settings.UseSelfDrawnIsland, Mode=TwoWay}"
+                             Margin="0 0 0 6" />
+
         </StackPanel>
     </ScrollViewer>
 </controls:SettingsPageBase>

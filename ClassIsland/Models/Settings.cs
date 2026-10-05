@@ -188,6 +188,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _isMouseInFadingReversed = false;
     private double _touchInFadingDurationMs = 0;
     private bool _isCompatibleWindowTransparentEnabled = false;
+    private bool _useSelfDrawnIsland = false;
     private double _mainWindowSecondaryFontSize = 14;
     private double _mainWindowBodyFontSize = 16;
     private double _mainWindowEmphasizedFontSize = 18;
@@ -1887,6 +1888,18 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isCompatibleWindowTransparentEnabled) return;
             _isCompatibleWindowTransparentEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>是否使用纯自绘渲染器绘制主界面（实验性）。</summary>
+    public bool UseSelfDrawnIsland
+    {
+        get => _useSelfDrawnIsland;
+        set
+        {
+            if (value == _useSelfDrawnIsland) return;
+            _useSelfDrawnIsland = value;
             OnPropertyChanged();
         }
     }
