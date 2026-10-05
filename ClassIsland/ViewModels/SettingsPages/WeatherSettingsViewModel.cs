@@ -21,6 +21,8 @@ public partial class WeatherSettingsViewModel : ObservableRecipient
     private List<City> _citySearchResults = new();
     private List<DailyForecastItem> _allDaily = new();
     private List<HourlyForecastItem> _allHourly = new();
+    private IReadOnlyList<WeatherAlert> _allAlerts = new List<WeatherAlert>();
+    private IReadOnlyList<string> _alertExclusions = new List<string>();
     private double _lastWidth = 1000;
 
     [ObservableProperty] private bool _isSearchingWeather;
@@ -35,6 +37,9 @@ public partial class WeatherSettingsViewModel : ObservableRecipient
 
     [ObservableProperty] private ObservableCollection<DailyForecastItem> _visibleDaily = [];
     [ObservableProperty] private ObservableCollection<HourlyForecastItem> _visibleHourly = [];
+
+    [ObservableProperty] private ObservableCollection<WeatherAlertItem> _alerts = [];
+    [ObservableProperty] private bool _hasAlerts;
 
     public List<City> CitySearchResults
     {
@@ -71,12 +76,15 @@ public partial class WeatherSettingsViewModel : ObservableRecipient
     /// <summary>
     /// 将天气数据摊平成 hero 与各 Tab 需要的展示字段。
     /// </summary>
-    public void BuildFrom(WeatherInfo info, IWeatherService weatherService)
+    public void BuildFrom(WeatherInfo info, IWeatherService weatherService, IReadOnlyList<string> excludedAlerts)
     {
         if (info == null)
         {
             return;
         }
+
+        _allAlerts = weatherService.AllAlerts.Count > 0 ? weatherService.AllAlerts : info.Alerts;
+        _alertExclusions = excludedAlerts;
 
         var current = info.Current;
         var suns = info.ForecastDaily.SunRiseSet.Value;
@@ -92,6 +100,7 @@ public partial class WeatherSettingsViewModel : ObservableRecipient
         HeroBackground = WeatherIconHelper.GetHeroBackground(current.Weather, isNight);
         UvText = WeatherIconHelper.GetUvText(current.UvIndex);
         UpdateTimeText = info.UpdateTime.ToString("HH:mm");
+        BuildAlerts();
 
         // 逐日
         var dailyTemps = info.ForecastDaily.Temperature.Value;
@@ -137,6 +146,42 @@ public partial class WeatherSettingsViewModel : ObservableRecipient
 
         _allHourly = hourly;
         ApplyWidth(_lastWidth);
+    }
+
+    /// <summary>
+    /// 按当前排除规则重新计算列表的排除状态，不重新请求数据。
+    /// </summary>
+    public void RefreshAlerts(IReadOnlyList<string> excludedAlerts)
+    {
+        _alertExclusions = excludedAlerts;
+        BuildAlerts();
+    }
+
+    private void BuildAlerts()
+    {
+        var gray = Color.FromRgb(0x9C, 0xA3, 0xAF);
+        var items = new List<WeatherAlertItem>();
+        foreach (var alert in _allAlerts)
+        {
+            var excluded = _alertExclusions.FirstOrDefault(x =>
+                !string.IsNullOrWhiteSpace(x) && alert.Title.Contains(x)) != null;
+            var color = excluded ? gray : WeatherAlertHelper.GetLevelColor(alert.Level);
+            items.Add(new WeatherAlertItem
+            {
+                Title = alert.Title,
+                Type = alert.Type,
+                LevelText = excluded ? "已排除" : alert.Level,
+                Detail = alert.Detail,
+                TimeText = alert.PubTime.ToString("HH:mm"),
+                IsExcluded = excluded,
+                Icon = WeatherAlertHelper.GetTypeIcon(alert.Type),
+                LevelBrush = new SolidColorBrush(color),
+                LevelTint = new SolidColorBrush(Color.FromArgb(0x1F, color.R, color.G, color.B)),
+            });
+        }
+
+        Alerts = new ObservableCollection<WeatherAlertItem>(items);
+        HasAlerts = Alerts.Count > 0;
     }
 
     private static DateTime? ParseDate(string value) =>

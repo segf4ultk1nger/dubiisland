@@ -76,6 +76,25 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- 无边框只读文本，支持选中复制 -->
+        <Style x:Key="SelectableTextStyle" TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="False"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Grid Width="300" Margin="16" x:Key="CitySearcher">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -206,19 +225,19 @@
                             <StackPanel Orientation="Horizontal" Margin="12 0">
                                 <remix:PackIconRemixIcon Foreground="White" Kind="ThermometerFill" Width="16" Height="16" VerticalAlignment="Center" />
                                 <TextBlock Margin="4 0 0 0" FontSize="13" VerticalAlignment="Center">
-                                    <Run Text="体感 " /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.FeelsLike.Value}" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.FeelsLike.Unit}" />
+                                    <Run Text="体感 " Foreground="#B3FFFFFF" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.FeelsLike.Value}" FontWeight="SemiBold" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.FeelsLike.Unit}" FontWeight="SemiBold" />
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="12 0">
                                 <remix:PackIconRemixIcon Foreground="White" Kind="WindyFill" Width="16" Height="16" VerticalAlignment="Center" />
                                 <TextBlock Margin="4 0 0 0" FontSize="13" VerticalAlignment="Center">
-                                    <Run Text="风 " /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Wind.Speed.Value}" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Wind.Speed.Unit}" />
+                                    <Run Text="风 " Foreground="#B3FFFFFF" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Wind.Speed.Value}" FontWeight="SemiBold" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Wind.Speed.Unit}" FontWeight="SemiBold" />
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="12 0">
                                 <remix:PackIconRemixIcon Foreground="White" Kind="WaterPercentFill" Width="16" Height="16" VerticalAlignment="Center" />
                                 <TextBlock Margin="4 0 0 0" FontSize="13" VerticalAlignment="Center">
-                                    <Run Text="湿度 " /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Humidity.Value}" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Humidity.Unit}" />
+                                    <Run Text="湿度 " Foreground="#B3FFFFFF" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Humidity.Value}" FontWeight="SemiBold" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Humidity.Unit}" FontWeight="SemiBold" />
                                 </TextBlock>
                             </StackPanel>
                         </StackPanel>
@@ -226,19 +245,19 @@
                             <StackPanel Orientation="Horizontal" Margin="12 0">
                                 <remix:PackIconRemixIcon Foreground="White" Kind="DashboardFill" Width="16" Height="16" VerticalAlignment="Center" />
                                 <TextBlock Margin="4 0 0 0" FontSize="13" VerticalAlignment="Center">
-                                    <Run Text="气压 " /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Pressure.Value}" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Pressure.Unit}" />
+                                    <Run Text="气压 " Foreground="#B3FFFFFF" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Pressure.Value}" FontWeight="SemiBold" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Current.Pressure.Unit}" FontWeight="SemiBold" />
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="12 0">
                                 <remix:PackIconRemixIcon Foreground="White" Kind="ShiningFill" Width="16" Height="16" VerticalAlignment="Center" />
                                 <TextBlock Margin="4 0 0 0" FontSize="13" VerticalAlignment="Center">
-                                    <Run Text="紫外线 " /><Run Text="{Binding ViewModel.UvText}" />
+                                    <Run Text="紫外线 " Foreground="#B3FFFFFF" /><Run Text="{Binding ViewModel.UvText}" FontWeight="SemiBold" />
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="12 0">
                                 <remix:PackIconRemixIcon Foreground="White" Kind="LeafFill" Width="16" Height="16" VerticalAlignment="Center" />
                                 <TextBlock Margin="4 0 0 0" FontSize="13" VerticalAlignment="Center">
-                                    <Run Text="空气质量 " /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Aqi.Aqi}" /><Run Text=" " /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Aqi.AqiLevelText, Mode=OneWay}" />
+                                    <Run Text="空气质量 " Foreground="#B3FFFFFF" /><Run Text="{Binding SettingsService.Settings.LastWeatherInfo.Aqi.AqiLevelText, Mode=OneWay}" FontWeight="SemiBold" />
                                 </TextBlock>
                             </StackPanel>
                         </StackPanel>
@@ -342,33 +361,67 @@
                 </Grid>
             </Border>
 
-            <!-- 设置 -->
-            <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
-                <!-- 气象预警（暂时隐藏，待重新设计） -->
-                <ItemsControl ItemsSource="{Binding SettingsService.Settings.LastWeatherInfo.Alerts}"
-                              Margin="0 0 0 6"
-                              Visibility="Collapsed">
+            <!-- 气象预警 -->
+            <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}"
+                        Visibility="{Binding ViewModel.HasAlerts, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="气象预警" Style="{StaticResource SettingsSectionHeaderStyle}" />
+                <ItemsControl ItemsSource="{Binding ViewModel.Alerts}" Margin="12 0 12 0">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Expander>
-                                <Expander.Header>
-                                    <StackPanel Orientation="Horizontal" Margin="0 2">
-                                        <Image Width="24" Height="24" Margin="0 0 8 0" VerticalAlignment="Center"
-                                               Source="{Binding Images[icon]}" />
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                                            <Run Text="{Binding Title}" />
-                                        </TextBlock>
+                            <Border Margin="0 0 0 6">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{Binding LevelTint}" />
+                                        <Setter Property="Opacity" Value="1" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsExcluded}" Value="True">
+                                                <Setter Property="Opacity" Value="0.55" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{Binding LevelBrush}" />
+                                    <StackPanel Grid.Column="1" Margin="12 10 12 10">
+                                        <DockPanel>
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding TimeText}"
+                                                       Opacity="0.6" FontSize="13" VerticalAlignment="Center" Margin="8 0 0 0" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <remix:PackIconRemixIcon Kind="{Binding Icon}" Foreground="{Binding LevelBrush}"
+                                                                         Width="20" Height="20" VerticalAlignment="Center" />
+                                                <TextBox Style="{StaticResource SelectableTextStyle}" Text="{Binding Title, Mode=OneWay}"
+                                                         FontSize="15" FontWeight="SemiBold"
+                                                         Margin="8 0 0 0" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding LevelText}" Opacity="0.6" FontSize="13"
+                                                           Margin="8 0 0 0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <TextBox Text="{Binding Detail, Mode=OneWay}" FontSize="13" Margin="0 6 0 0">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox" BasedOn="{StaticResource SelectableTextStyle}">
+                                                    <Setter Property="Opacity" Value="0.8" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsExcluded}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
                                     </StackPanel>
-                                </Expander.Header>
-                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap"
-                                           Foreground="{DynamicResource MahApps.Brushes.Gray}"
-                                           FontSize="12" Margin="32 0 24 0" />
-                            </Expander>
+                                </Grid>
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+            </StackPanel>
 
+            <!-- 设置 -->
+            <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
                 <TextBlock Text="设置" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
                 <!-- 定位方式 -->
@@ -544,6 +597,7 @@
                                  MaxHeight="250"
                                  VerticalScrollBarVisibility="Auto"
                                  AcceptsReturn="True"
+                                 LostFocus="TextBoxExcludedAlerts_OnLostFocus"
                                  Text="{Binding SettingsService.Settings.ExcludedWeatherAlerts, Converter={StaticResource CollectionToStringConverter}}" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>

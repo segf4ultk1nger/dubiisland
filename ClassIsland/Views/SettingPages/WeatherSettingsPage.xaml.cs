@@ -55,7 +55,8 @@ public partial class WeatherSettingsPage : SettingsPageBase
     {
         if (e.PropertyName == nameof(Settings.LastWeatherInfo))
         {
-            ViewModel.BuildFrom(SettingsService.Settings.LastWeatherInfo, WeatherService);
+            ViewModel.BuildFrom(SettingsService.Settings.LastWeatherInfo, WeatherService,
+                SettingsService.Settings.ExcludedWeatherAlerts);
         }
     }
 
@@ -67,6 +68,16 @@ public partial class WeatherSettingsPage : SettingsPageBase
     private void ButtonEditCurrentCity_OnClick(object sender, RoutedEventArgs e)
     {
         OpenDrawer("CitySearcher");
+    }
+
+    private void TextBoxExcludedAlerts_OnLostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox textBox)
+        {
+            textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+        }
+
+        ViewModel.RefreshAlerts(SettingsService.Settings.ExcludedWeatherAlerts);
     }
 
     /// <summary>
@@ -81,7 +92,8 @@ public partial class WeatherSettingsPage : SettingsPageBase
         SearchDebounceTimer.Tick += SearchDebounceTimer_Tick;
         SearchDebounceTimer.Stop();
 
-        ViewModel.BuildFrom(SettingsService.Settings.LastWeatherInfo, WeatherService);
+        ViewModel.BuildFrom(SettingsService.Settings.LastWeatherInfo, WeatherService,
+            SettingsService.Settings.ExcludedWeatherAlerts);
         ViewModel.CitySearchResults = await WeatherService.GetCitiesByName(string.Empty);
     }
 

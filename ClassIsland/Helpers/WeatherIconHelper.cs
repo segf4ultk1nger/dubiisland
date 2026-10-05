@@ -44,7 +44,7 @@ internal static class WeatherIconHelper
             return "";
         }
 
-        var level = value switch
+        return value switch
         {
             < 3 => "弱",
             < 6 => "中等",
@@ -52,7 +52,6 @@ internal static class WeatherIconHelper
             < 11 => "很强",
             _ => "极强",
         };
-        return $"{uvIndex} {level}";
     }
 
     public static Brush GetHeroBackground(string? code, bool isNight)

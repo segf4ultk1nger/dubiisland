@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -34,6 +35,11 @@ public interface IWeatherService : INotifyPropertyChanged
     /// <param name="name">搜索字符串</param>
     /// <returns>匹配搜索的城市列表</returns>
     Task<List<City>> GetCitiesByName(string name);
+
+    /// <summary>
+    /// 最近一次获取到的全部气象预警（未经“排除的气象预警”过滤），供设置页展示排除状态。
+    /// </summary>
+    IReadOnlyList<WeatherAlert> AllAlerts { get; }
 
     /// <summary>
     /// 当前天气图标模板

@@ -43,6 +43,8 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
 
     public bool IsPosUpdated { get; set; } = false;
 
+    public IReadOnlyList<WeatherAlert> AllAlerts { get; private set; } = new List<WeatherAlert>();
+
     public WeatherService(SettingsService settingsService, ILogger<WeatherService> logger, IRulesetService rulesetService, ILocationService locationService)
     {
         Logger = logger;
@@ -129,6 +131,21 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
 
     public async Task QueryWeatherAsync()
     {
+#if DEBUG
+        if (WeatherMock.IsMock(Settings.CityId))
+        {
+            var mock = WeatherMock.Create(Settings.CityId);
+            AllAlerts = mock.Alerts.ToList();
+            mock.Alerts.RemoveAll(i => Settings.ExcludedWeatherAlerts.FirstOrDefault(x =>
+                (!string.IsNullOrWhiteSpace(x)) && i.Title.Contains(x)) != null);
+            Settings.CityName = "春田镇";
+            Settings.LastWeatherInfo = mock;
+            IsWeatherRefreshed = true;
+            RulesetService.NotifyStatusChanged();
+            return;
+        }
+#endif
+
         if (!IsPosUpdated && Settings.AutoRefreshWeatherLocation)
         {
             IsPosUpdated = true;
@@ -188,6 +205,7 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
                 $"https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude={cityLatitude}&longitude={cityLongitude}&locationKey={Uri.EscapeDataString(Settings.CityId)}&days=15&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&isGlobal=false&locale=zh_cn";
             Logger.LogInformation("获取天气信息： {}", uri);
             var info = await WebRequestHelper.GetJson<WeatherInfo>(new Uri(uri));
+            AllAlerts = info.Alerts.ToList();
             info.Alerts.RemoveAll(i => Settings.ExcludedWeatherAlerts.FirstOrDefault(x =>
                 (!string.IsNullOrWhiteSpace(x)) && i.Title.Contains(x)) != null);
             Settings.LastWeatherInfo = info;
@@ -212,6 +230,12 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
 
     public Task<List<City>> GetCitiesByName(string name)
     {
+#if DEBUG
+        if (WeatherMock.Matches(name))
+        {
+            return Task.FromResult(WeatherMock.GetCities(name));
+        }
+#endif
         return Task.FromResult(CitySearchIndex.Search(name));
     }
 
