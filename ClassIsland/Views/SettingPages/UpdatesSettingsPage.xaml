@@ -27,7 +27,7 @@
 
     <controls:SettingsPageBase.Resources>
         <converters:SizeLongToStringConverter x:Key="SizeLongToStringConverter" />
-        <ScrollViewer Width="332" x:Key="AdvancedUpdateSettings"
+        <ScrollViewer x:Key="AdvancedUpdateSettings"
                       VerticalScrollBarVisibility="Auto">
             <Grid Margin="16">
                 <Grid.RowDefinitions>
@@ -35,7 +35,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="更新高级设置" Style="{StaticResource Headline5TextBlock}" />
+                    <TextBlock Text="更新高级设置" Style="{StaticResource DrawerTitleTextBlock}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0 16 0 0">
@@ -61,8 +61,9 @@
             <Setter Property="IsEnabled" Value="False" />
         </Style>
 
-        <Grid x:Key="ChangeLogsDrawer" Width="500"
-              HorizontalAlignment="Stretch">
+        <Grid x:Key="ChangeLogsDrawer"
+              HorizontalAlignment="Stretch"
+              Margin="16">
             <ScrollViewer>
                 <Grid>
                     <mdXaml:MarkdownScrollViewer

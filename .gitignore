@@ -373,3 +373,6 @@ dist/
 dist-test/
 scripts/fuckingfast.token
 scripts/zip-password.txt
+
+# Font data sub-repo (separate git repo, do not add)
+legacyisland-data/

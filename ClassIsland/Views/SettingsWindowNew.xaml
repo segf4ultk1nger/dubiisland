@@ -212,7 +212,8 @@
                         IsModal="True"
                         TitleVisibility="Collapsed"
                         IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}">
-                <ContentControl Content="{Binding ViewModel.DrawerContent}"/>
+                <ContentControl Content="{Binding ViewModel.DrawerContent}"
+                                HorizontalContentAlignment="Stretch"/>
             </mah:Flyout>
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>

@@ -94,14 +94,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Grid Width="300" Margin="16" x:Key="CitySearcher">
+        <Grid Margin="16" x:Key="CitySearcher">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
-                <TextBlock Text="搜索城市" Style="{StaticResource Headline5TextBlock}"
-                           Margin="0 0 0 8" />
+                <TextBlock Text="搜索城市" Style="{StaticResource DrawerTitleTextBlock}" />
                 <Grid>
                     <TextBox Style="{StaticResource MahApps.Styles.TextBox}"
                              mah:TextBoxHelper.ClearTextButton="True"

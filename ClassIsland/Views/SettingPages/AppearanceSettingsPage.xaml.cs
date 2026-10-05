@@ -1,8 +1,11 @@
 using ClassIsland.Core.Abstractions.Controls;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using ClassIsland.Core.Attributes;
+using ClassIsland.Models.Fonts;
 using ClassIsland.Services;
 using ClassIsland.ViewModels.SettingsPages;
 using ClassIsland.Core.Enums.SettingsWindow;
@@ -56,6 +59,32 @@ public partial class AppearanceSettingsPage : SettingsPageBase
             await WallpaperPickingService.GetWallpaperAsync();
         }
         GC.Collect();
+    }
+
+    private void ButtonOpenFontsFolder_OnClick(object sender, RoutedEventArgs e)
+    {
+        var path = AppearanceSettingsViewModel.FontsFolderPath;
+        Directory.CreateDirectory(path);
+        Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+    }
+
+    private void ButtonOpenFontDownload_OnClick(object sender, RoutedEventArgs e)
+    {
+        _ = ViewModel.LoadFontCatalogAsync();
+        OpenDrawer("FontDownloadDrawer");
+    }
+
+    private void ButtonReloadFontCatalog_OnClick(object sender, RoutedEventArgs e)
+    {
+        _ = ViewModel.LoadFontCatalogAsync();
+    }
+
+    private async void ButtonDownloadFont_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: FontCatalogItem item })
+        {
+            await ViewModel.DownloadFontAsync(item);
+        }
     }
 
     private void UIElement_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)

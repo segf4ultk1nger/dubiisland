@@ -134,6 +134,142 @@
                 </Button>
             </WrapPanel>
         </StackPanel>
+        <!-- 下载字体：抽屉 -->
+        <Grid Margin="16" x:Key="FontDownloadDrawer">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="下载字体" Style="{StaticResource DrawerTitleTextBlock}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Style="{StaticResource MahApps.Styles.TextBox}"
+                             FontSize="14" MinHeight="32" VerticalContentAlignment="Center"
+                             mah:TextBoxHelper.ClearTextButton="True"
+                             mah:TextBoxHelper.Watermark="搜索字体…"
+                             Text="{Binding ViewModel.FontSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="1" MinWidth="32" MinHeight="32" Padding="6" Margin="8 0 0 0"
+                            VerticalAlignment="Top" ToolTip="刷新列表" Click="ButtonReloadFontCatalog_OnClick">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ViewModel.IsFontCatalogLoading}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Grid>
+                            <remix:PackIconRemixIcon Kind="RefreshLine" Width="16" Height="16" VerticalAlignment="Center">
+                                <remix:PackIconRemixIcon.Style>
+                                    <Style TargetType="remix:PackIconRemixIcon">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ViewModel.IsFontCatalogLoading}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </remix:PackIconRemixIcon.Style>
+                            </remix:PackIconRemixIcon>
+                            <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5">
+                                <remix:PackIconRemixIcon.Style>
+                                    <Style TargetType="remix:PackIconRemixIcon">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ViewModel.IsFontCatalogLoading}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </remix:PackIconRemixIcon.Style>
+                                <remix:PackIconRemixIcon.RenderTransform>
+                                    <RotateTransform />
+                                </remix:PackIconRemixIcon.RenderTransform>
+                                <remix:PackIconRemixIcon.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                                 From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </remix:PackIconRemixIcon.Triggers>
+                            </remix:PackIconRemixIcon>
+                        </Grid>
+                    </Button>
+                </Grid>
+                <TextBlock Text="{Binding ViewModel.FontCatalogError}" Foreground="#FFE05555" TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin" Value="0 6 0 0" />
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ViewModel.FontCatalogError}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ViewModel.FontCatalogError}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+            <ItemsControl Grid.Row="1" Margin="0 6 0 0" ItemsSource="{Binding ViewModel.FontCatalogItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0 0 0 12">
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                                            <Setter Property="Opacity" Value="0.45" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding Description}" FontSize="12" Opacity="0.6"
+                                           TextTrimming="CharacterEllipsis" Margin="0 1 0 0"
+                                           Visibility="{Binding HasDescription, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" MinWidth="32" MinHeight="32" Padding="6"
+                                    VerticalAlignment="Center" Tag="{Binding}" ToolTip="下载"
+                                    Click="ButtonDownloadFont_OnClick">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsDownloading}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <remix:PackIconRemixIcon Kind="DownloadFill" Width="16" Height="16"
+                                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </controls:SettingsPageBase.Resources>
     <ScrollViewer>
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
@@ -402,7 +538,7 @@
                             <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="8 0 0 0"
                                     VerticalAlignment="Center" ToolTip="浏览…" Click="ButtonBrowseWindows_OnClick">
                                 <StackPanel Orientation="Horizontal">
-                                    <remix:PackIconRemixIcon Kind="FolderOpenLine" Width="16" Height="16" VerticalAlignment="Center" />
+                            <remix:PackIconRemixIcon Kind="FolderOpenFill" Width="16" Height="16" VerticalAlignment="Center" />
                                     <TextBlock Text="浏览…" Margin="6 0 0 0" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Button>
@@ -471,6 +607,7 @@
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatFont}" Header="自定义字体"
                                     Description="自定义主界面显示课表的字体。">
                 <controls1:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
                     <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                               ItemsSource="{Binding ViewModel.FontFamilies}"
                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
@@ -494,6 +631,20 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" Margin="8 0 0 0"
+                            VerticalAlignment="Center" ToolTip="把 .ttf/.otf 字体文件放进该文件夹，然后重新打开本页即可选用。"
+                            Click="ButtonOpenFontsFolder_OnClick">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="FolderOpenFill" Width="16" Height="16" VerticalAlignment="Center" />
+                            <TextBlock Text="字体文件夹" Margin="6 0 0 0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32" MinWidth="32" Padding="6"
+                            Margin="8 0 0 0" VerticalAlignment="Center" ToolTip="下载字体"
+                            Click="ButtonOpenFontDownload_OnClick">
+                        <remix:PackIconRemixIcon Kind="DownloadFill" Width="16" Height="16" VerticalAlignment="Center" />
+                    </Button>
+                    </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 自定义字重 -->

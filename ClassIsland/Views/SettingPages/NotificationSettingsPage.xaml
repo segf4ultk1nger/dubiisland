@@ -38,13 +38,11 @@
 
         <ScrollViewer Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                       x:Key="NotificationSettingsDrawer"
-                      DataContext="{Binding ViewModel.SelectedRegisterInfo}"
-                      Width="500">
+                      DataContext="{Binding ViewModel.SelectedRegisterInfo}">
             <StackPanel Margin="16"
                         IsEnabled="{Binding ProviderSettings.IsSettingsEnabled}">
-                <TextBlock Text="提醒高级设置" Style="{StaticResource Headline5TextBlock}"
-                           Margin="0 0 0 8"/>
-                <TextBlock Text="此处的设置将覆盖全局设置和提醒请求中要求的设置。" Margin="0 0 0 8"
+                <TextBlock Text="提醒高级设置" Style="{StaticResource DrawerTitleTextBlock}"/>
+                <TextBlock Text="此处的设置将覆盖全局设置和提醒请求中要求的设置。" Style="{StaticResource DrawerDescriptionTextBlock}"
                            Visibility="{Binding ProviderSettings.IsSettingsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                 <!-- 启用提醒语音 -->

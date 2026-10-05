@@ -35,14 +35,14 @@
                            Ruleset="{Binding SettingsService.Settings.HiedRules, Mode=TwoWay}"/>
 
         <!-- 隐藏窗口：抽屉 -->
-        <StackPanel x:Key="HideWindowDrawer" Width="360">
+        <StackPanel x:Key="HideWindowDrawer" Margin="16">
             <StackPanel.Resources>
                 <Style TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
                     <Setter Property="Margin" Value="0 4" />
                 </Style>
             </StackPanel.Resources>
-            <TextBlock Text="隐藏窗口" FontSize="20" Margin="0 0 0 4" />
-            <TextBlock Text="在以下情况隐藏主界面，避免遮挡屏幕。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+            <TextBlock Text="隐藏窗口" Style="{StaticResource DrawerTitleTextBlock}" />
+            <TextBlock Text="在以下情况隐藏主界面，避免遮挡屏幕。" Style="{StaticResource DrawerDescriptionTextBlock}" />
             <TabControl HorizontalContentAlignment="Left" SelectedIndex="{Binding SettingsService.Settings.HideMode}">
                 <TabItem Header="基础模式">
                     <StackPanel Margin="0 8 0 0">
@@ -65,9 +65,9 @@
         </StackPanel>
 
         <!-- 启动加载界面：抽屉 -->
-        <StackPanel x:Key="SplashDrawer" Width="360">
-            <TextBlock Text="启动加载界面" FontSize="20" Margin="0 0 0 4" />
-            <TextBlock Text="自定义启动时显示的加载界面。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+        <StackPanel x:Key="SplashDrawer" Margin="16">
+            <TextBlock Text="启动加载界面" Style="{StaticResource DrawerTitleTextBlock}" />
+            <TextBlock Text="自定义启动时显示的加载界面。" Style="{StaticResource DrawerDescriptionTextBlock}" />
             <Grid>
                 <Grid.IsEnabled>
                     <MultiBinding Converter="{StaticResource BooleanAndExpressionMultiConverter}">
@@ -136,9 +136,9 @@
         </StackPanel>
 
         <!-- 使用精确时间：抽屉 -->
-        <StackPanel x:Key="ExactTimeDrawer" Width="360">
-            <TextBlock Text="精确时间服务器" FontSize="20" Margin="0 0 0 4" />
-            <TextBlock Text="使用从指定服务器同步的时间，而非系统时间。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+        <StackPanel x:Key="ExactTimeDrawer" Margin="16">
+            <TextBlock Text="精确时间服务器" Style="{StaticResource DrawerTitleTextBlock}" />
+            <TextBlock Text="使用从指定服务器同步的时间，而非系统时间。" Style="{StaticResource DrawerDescriptionTextBlock}" />
             <ComboBox VerticalAlignment="Center"
                       Style="{StaticResource MahApps.Styles.ComboBox}"
                       mah:TextBoxHelper.Watermark="时间服务器"
@@ -164,9 +164,9 @@
         </StackPanel>
 
         <!-- 时间偏移：抽屉 -->
-        <StackPanel x:Key="TimeOffsetDrawer" Width="360">
-            <TextBlock Text="时间偏移" FontSize="20" Margin="0 0 0 4" />
-            <TextBlock Text="课程时间相对实际时间的偏移；增大以抵消铃声提前，减小以抵消滞后。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 12" />
+        <StackPanel x:Key="TimeOffsetDrawer" Margin="16">
+            <TextBlock Text="时间偏移" Style="{StaticResource DrawerTitleTextBlock}" />
+            <TextBlock Text="课程时间相对实际时间的偏移；增大以抵消铃声提前，减小以抵消滞后。" Style="{StaticResource DrawerDescriptionTextBlock}" />
             <controls1:SettingsControl Header="自动时间偏移"
                                        Description="每天自动按设定的增量值调整时间偏移。">
                 <controls1:SettingsControl.Switcher>

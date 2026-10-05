@@ -36,6 +36,18 @@
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontWeight" Value="Medium"/>
     </Style>
+    <!-- 设置窗口抽屉：统一标题 / 说明文字 -->
+    <Style x:Key="DrawerTitleTextBlock" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Margin" Value="0 0 0 4"/>
+    </Style>
+    <Style x:Key="DrawerDescriptionTextBlock" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Opacity" Value="0.6"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="0 0 0 12"/>
+    </Style>
     <Style TargetType="controls:Transitioner">
         <Setter Property="Template">
             <Setter.Value>
