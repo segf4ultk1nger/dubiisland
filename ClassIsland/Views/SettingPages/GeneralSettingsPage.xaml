@@ -454,6 +454,10 @@
                     </StackPanel>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 启用黑科技降低内存 -->
+            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Bomb}" Header="启用黑科技降低内存"
+                                    Description="使用核武器对你的内存进行不可逆打击，通过混凝土的电解让 LegacyIsland 的内存占用减小。"
+                                    IsOn="{Binding SettingsService.Settings.IsMemoryTrimEnabled, Mode=TwoWay}" />
         </StackPanel>
     </ScrollViewer>
 </controls:SettingsPageBase>

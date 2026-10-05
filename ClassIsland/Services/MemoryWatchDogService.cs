@@ -11,9 +11,11 @@ using Timer = System.Timers.Timer;
 
 namespace ClassIsland.Services;
 
-public class MemoryWatchDogService(ILogger<MemoryWatchDogService> logger) : BackgroundService
+public class MemoryWatchDogService(ILogger<MemoryWatchDogService> logger, SettingsService settingsService) : BackgroundService
 {
     private ILogger<MemoryWatchDogService> Logger { get; } = logger;
+
+    private SettingsService SettingsService { get; } = settingsService;
 
     private Timer Timer { get; } = new()
     {
@@ -32,6 +34,19 @@ public class MemoryWatchDogService(ILogger<MemoryWatchDogService> logger) : Back
 
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
+        if (SettingsService.Settings.IsMemoryTrimEnabled)
+        {
+            try
+            {
+                // 「黑科技」：裁减工作集，让任务管理器数字立刻变小。仅观感优化，不减少真实占用。
+                EmptyWorkingSet(new HANDLE(Process.GetCurrentProcess().Handle));
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex, "降低工作集失败。");
+            }
+        }
+
         var size = Process.GetCurrentProcess().PrivateMemorySize64;
         //Console.WriteLine(size);
         Logger.LogInformation("当前内存使用: {}", Helpers.StorageSizeHelper.FormatSize((ulong)size)+$"({size} Bytes)");

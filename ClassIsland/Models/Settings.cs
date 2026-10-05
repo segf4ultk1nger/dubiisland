@@ -191,6 +191,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _useSelfDrawnIsland = false;
     private bool _isIslandShowAnimationEnabled = true;
     private bool _isIslandHideAnimationEnabled = true;
+    private bool _isMemoryTrimEnabled = false;
     private int _toolWindowDestructionPolicy = 0;
     private int _toolWindowDestructionCustomSeconds = 300;
     private double _mainWindowSecondaryFontSize = 14;
@@ -1928,6 +1929,18 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isIslandHideAnimationEnabled) return;
             _isIslandHideAnimationEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>是否启用「黑科技」降低内存：定期裁减进程工作集（观感优化，不减少真实占用）。</summary>
+    public bool IsMemoryTrimEnabled
+    {
+        get => _isMemoryTrimEnabled;
+        set
+        {
+            if (value == _isMemoryTrimEnabled) return;
+            _isMemoryTrimEnabled = value;
             OnPropertyChanged();
         }
     }
