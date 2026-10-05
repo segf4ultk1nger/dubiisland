@@ -27,7 +27,7 @@
         TextOptions.TextRenderingMode="Auto"
         mc:Ignorable="d"
         MinWidth="560"
-        Title="LegacyIsland 设置" Height="650" Width="867"
+        Title="LegacyIsland 设置" Height="620" Width="867"
         ShowTitleBar="True"
         SizeChanged="SettingsWindowNew_OnSizeChanged"
         Closing="SettingsWindowNew_OnClosing"

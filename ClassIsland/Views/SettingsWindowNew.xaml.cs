@@ -149,7 +149,7 @@ public partial class SettingsWindowNew : MyWindow
                 continue;
             }
 
-            if (!firstGroup)
+            if (!firstGroup && category != SettingsPageCategory.External)
             {
                 MenuItems.Add(new HamburgerMenuSeparatorItem());
             }
