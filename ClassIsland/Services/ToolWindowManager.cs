@@ -47,8 +47,12 @@ public sealed class ToolWindowManager : IDisposable
         window.Closing += OnWindowClosing;
         window.Closed += OnWindowClosed;
         window.IsVisibleChanged += OnWindowVisibleChanged;
+        Helpers.MemoryDiagnostics.Log($"toolwindow created: {typeof(T).Name}");
         return window;
     }
+
+    /// <summary>当前仍存活（未销毁）的工具窗口类型集合，供诊断使用。</summary>
+    public System.Collections.Generic.ICollection<Type> LiveWindowTypes => _live.Keys;
 
     private T Create<T>() where T : Window
     {
@@ -112,6 +116,8 @@ public sealed class ToolWindowManager : IDisposable
         {
             _destroying.Remove(window);
         }
+
+        Helpers.MemoryDiagnostics.Log($"toolwindow destroyed: {window.GetType().Name}");
     }
 
     /// <summary>当前策略下的闲置销毁阈值（秒）；null = 永不销毁。</summary>

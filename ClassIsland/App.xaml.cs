@@ -680,6 +680,7 @@ public partial class App : AppBase, IAppHost
         }
 #if DEBUG
         MemoryProfiler.GetSnapshot("Host built");
+        Helpers.MemoryDiagnostics.Log("Host built");
 #endif
         CommandManager.RegisterClassCommandBinding(typeof(Window), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
         CommandManager.RegisterClassCommandBinding(typeof(Page), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
@@ -855,6 +856,8 @@ public partial class App : AppBase, IAppHost
                 // ignored
             }
         }
+
+        Helpers.MemoryDiagnostics.Log("startup complete");
     }
 
     /// <summary>创建并显示主窗口（惰性：自绘模式下启动时不创建，之后切回 XAML 模式再按需补建）。</summary>
@@ -869,6 +872,7 @@ public partial class App : AppBase, IAppHost
         }
 
         mw.Show();
+        Helpers.MemoryDiagnostics.Log("MainWindow shown");
     }
 
     private void OnIslandRenderModeSettingChanged(object? sender,
