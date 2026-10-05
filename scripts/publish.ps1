@@ -94,6 +94,16 @@ $exe = Get-TargetPath -Project $Proj -Configuration Release -Arch $Arch
 if (-not (Test-Path $exe)) { throw "Missing $exe" }
 Copy-Item -LiteralPath $exe -Destination (Join-Path $Dist 'LegacyIsland.exe')
 
+# UIAccess 组件：IccEvolved.UiAccess.dll 被 Costura 排除、Helper 是独立 exe，都必须放在主程序同目录，否则启动即崩。
+$exeDir = Split-Path -Parent $exe
+$packNames = @('LegacyIsland.exe')
+foreach ($name in @('IccEvolved.UiAccess.dll', 'IccEvolved.UiAccess.Helper.exe')) {
+    $src = Join-Path $exeDir $name
+    if (-not (Test-Path -LiteralPath $src)) { throw "Missing UIAccess file: $src" }
+    Copy-Item -LiteralPath $src -Destination (Join-Path $Dist $name)
+    $packNames += $name
+}
+
 # 随包附带更新日志
 $changeLog = Join-Path $Root 'CHANGELOG.txt'
 if (Test-Path -LiteralPath $changeLog) {
@@ -120,7 +130,7 @@ if ($Test) {
     if (-not $zipPassword) { throw "Empty zip password: $passwordFile" }
 
     $sevenZip = Get-SevenZip
-    $names = @('LegacyIsland.exe')
+    $names = @($packNames)
     if (Test-Path -LiteralPath (Join-Path $Dist 'CHANGELOG.txt')) { $names += 'CHANGELOG.txt' }
     Push-Location $Dist
     try {
@@ -131,7 +141,7 @@ if ($Test) {
         Pop-Location
     }
 } else {
-    $pack = @((Join-Path $Dist 'LegacyIsland.exe'))
+    $pack = @($packNames | ForEach-Object { Join-Path $Dist $_ })
     if (Test-Path -LiteralPath (Join-Path $Dist 'CHANGELOG.txt')) { $pack += (Join-Path $Dist 'CHANGELOG.txt') }
     Compress-Archive -LiteralPath $pack -DestinationPath $zipPath -Force
 }

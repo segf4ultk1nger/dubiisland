@@ -129,22 +129,44 @@ public class ThemeService : IHostedService, IThemeService
             case 2:
                 return false;
             default:
-                try
-                {
-                    var key = Registry.CurrentUser.OpenSubKey(
-                        "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
-                    if (key != null && (int?)key.GetValue("AppsUseLightTheme") == 0)
-                    {
-                        return false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "无法获取系统明暗主题，使用默认（亮色）主题。");
-                }
-
-                return true;
+                return DetectSystemUseLight();
         }
+    }
+
+    private static bool DetectSystemUseLight()
+    {
+        try
+        {
+            var key = Registry.CurrentUser.OpenSubKey(
+                "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
+            if (key != null && (int?)key.GetValue("AppsUseLightTheme") == 0)
+            {
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// 在根据设置应用主题之前，先套用一套默认（跟随系统明暗模式）的 MahApps 主题。
+    /// 否则在主题应用前创建的窗口（启动检查对话框、单实例提示、闪屏等）会因缺少
+    /// MahApps.Brushes.* 主题资源而渲染成全黑。
+    /// </summary>
+    public static void ApplyStartupTheme()
+    {
+        if (Application.Current == null)
+        {
+            return;
+        }
+
+        ApplyMahAppsTheme(
+            DetectSystemUseLight() ? ControlzExThemeManager.BaseColorLight : ControlzExThemeManager.BaseColorDark,
+            Colors.DodgerBlue);
     }
 
     private static bool MahAppsThemeMatches(string baseColorScheme, Color primary)

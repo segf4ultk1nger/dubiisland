@@ -334,6 +334,9 @@ public partial class App : AppBase, IAppHost
     {
         AppBase.CurrentLifetime = ApplicationLifetime.Initializing;
         MyWindow.ShowOssWatermark = ApplicationCommand.ShowOssWatermark;
+        // 提前套用默认主题：启动检查、单实例提示、闪屏等窗口创建于主题应用（ThemeApplyService）之前，
+        // 若不先加载 MahApps 主题资源，这些窗口会渲染成全黑。
+        ThemeService.ApplyStartupTheme();
         //DependencyPropertyHelper.ForceOverwriteDependencyPropertyDefaultValue(FrameworkElement.FocusVisualStyleProperty,
         //    Resources[SystemParameters.FocusVisualStyleKey]);
         Environment.CurrentDirectory = System.Windows.Forms.Application.StartupPath;
