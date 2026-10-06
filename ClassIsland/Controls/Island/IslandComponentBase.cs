@@ -78,7 +78,7 @@ public abstract class IslandComponentBase : IIslandComponent, IIslandComponentCl
     public Size Measure(Size availableSize, IslandContext context)
     {
         Context = context;
-        _hidByRule = Component.HideOnRule && context.RulesetService.IsRulesetSatisfied(Component.HidingRules);
+        _hidByRule = Component.HideOnRule && context.ConditionEvaluator.Evaluate(Component.HideCondition);
         if (!IsVisible)
         {
             ContentWidth = 0;

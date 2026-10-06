@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Components;
 using ClassIsland.Services;
+using ClassIsland.Services.Scripting;
 using ClassIsland.Shared;
 using FormsScreen = System.Windows.Forms.Screen;
 using SettingsModel = ClassIsland.Models.Settings;
@@ -99,6 +100,7 @@ public partial class IslandPreviewControl : UserControl
             IAppHost.GetService<IProfileService>(),
             IAppHost.GetService<IExactTimeService>(),
             IAppHost.GetService<IRulesetService>(),
+            IAppHost.GetService<ScriptConditionEvaluator>(),
             IAppHost.GetService<IWeatherService>());
 
         Loaded += OnLoaded;

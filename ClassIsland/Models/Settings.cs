@@ -181,7 +181,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private double _radiusX = 8.0;
     private double _radiusY = 0.0;
     private int _hideMode = 0;
-    private Ruleset _hiedRules = new();
+    private string _hideCondition = "";
     private bool _isAutoBackupEnabled = true;
     private DateTime _lastAutoBackupTime = DateTime.Now;
     private string _backupFilesSize = "计算中...";
@@ -435,13 +435,13 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         }
     }
 
-    public Ruleset HiedRules
+    public string HideCondition
     {
-        get => _hiedRules;
+        get => _hideCondition;
         set
         {
-            if (Equals(value, _hiedRules)) return;
-            _hiedRules = value;
+            if (value == _hideCondition) return;
+            _hideCondition = value;
             OnPropertyChanged();
         }
     }

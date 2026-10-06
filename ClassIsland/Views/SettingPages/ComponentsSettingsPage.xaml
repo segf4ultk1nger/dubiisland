@@ -121,7 +121,7 @@
             </StackPanel>
         </StackPanel>
 
-        <ci:RulesetControl x:Key="RulesetControl" />
+        <ci:ConditionEditor x:Key="ConditionEditor" />
 
         <ContextMenu x:Key="AddComponentMenu" FontFamily="{StaticResource HarmonyOsSans}">
             <MenuItem Header="普通组件"

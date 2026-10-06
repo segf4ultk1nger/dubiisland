@@ -46,6 +46,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private readonly IWeatherService _weatherService;
     private readonly IWindowRuleService _windowRuleService;
     private readonly IRulesetService _rulesetService;
+    private readonly ClassIsland.Services.Scripting.ScriptConditionEvaluator _conditionEvaluator;
     private readonly MainViewModel _viewModel;
     private readonly NotificationDisplayService _notificationDisplayService;
     private readonly TopmostEffectWindow _topmostEffectWindow;
@@ -124,6 +125,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         IWeatherService weatherService,
         IWindowRuleService windowRuleService,
         IRulesetService rulesetService,
+        ClassIsland.Services.Scripting.ScriptConditionEvaluator conditionEvaluator,
         MainViewModel viewModel,
         NotificationDisplayService notificationDisplayService,
         TopmostEffectWindow topmostEffectWindow)
@@ -135,12 +137,13 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _weatherService = weatherService;
         _windowRuleService = windowRuleService;
         _rulesetService = rulesetService;
+        _conditionEvaluator = conditionEvaluator;
         _viewModel = viewModel;
         _notificationDisplayService = notificationDisplayService;
         _topmostEffectWindow = topmostEffectWindow;
 
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
-            rulesetService, weatherService)
+            rulesetService, conditionEvaluator, weatherService)
         {
             AccentColor = themeService.PrimaryColor
         };
@@ -1109,7 +1112,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
                         visible = false;
                     break;
                 case 1:
-                    visible = !_rulesetService.IsRulesetSatisfied(settings.HiedRules);
+                    visible = !_conditionEvaluator.Evaluate(settings.HideCondition);
                     break;
             }
         }

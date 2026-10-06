@@ -11,6 +11,7 @@ using ClassIsland.Core.Extensions;
 using ClassIsland.Helpers;
 
 using ClassIsland.Core.Controls;
+using ClassIsland.Services.Scripting;
 namespace ClassIsland.Controls.Components;
 
 /// <summary>
@@ -21,6 +22,8 @@ namespace ClassIsland.Controls.Components;
 public partial class SlideComponent
 {
     public IRulesetService RulesetService { get; }
+
+    public ScriptConditionEvaluator ConditionEvaluator { get; }
 
     public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(
         nameof(SelectedIndex), typeof(int), typeof(SlideComponent), new PropertyMetadata(default(int)));
@@ -40,9 +43,10 @@ public partial class SlideComponent
         Interval = TimeSpan.FromSeconds(5)
     };
 
-    public SlideComponent(IRulesetService rulesetService)
+    public SlideComponent(IRulesetService rulesetService, ScriptConditionEvaluator conditionEvaluator)
     {
         RulesetService = rulesetService;
+        ConditionEvaluator = conditionEvaluator;
         InitializeComponent();
     }
 
@@ -70,7 +74,7 @@ public partial class SlideComponent
             ShowNext();
             if (!flag[SelectedIndex]
                 && Settings.Children[SelectedIndex].HideOnRule
-                && RulesetService.IsRulesetSatisfied(Settings.Children[SelectedIndex].HidingRules))
+                && ConditionEvaluator.Evaluate(Settings.Children[SelectedIndex].HideCondition))
             {
                 flag[SelectedIndex] = true;
                 count++;
@@ -165,8 +169,8 @@ public partial class SlideComponent
 
     private void RefreshRules()
     {
-        var isStop = RulesetService.IsRulesetSatisfied(Settings.StopRule) && Settings.IsStopOnRuleEnabled;
-        var isPause = RulesetService.IsRulesetSatisfied(Settings.PauseRule) && Settings.IsPauseOnRuleEnabled;
+        var isStop = ConditionEvaluator.Evaluate(Settings.StopCondition) && Settings.IsStopOnRuleEnabled;
+        var isPause = ConditionEvaluator.Evaluate(Settings.PauseCondition) && Settings.IsPauseOnRuleEnabled;
         if (isStop)
         {
             Timer.Stop();

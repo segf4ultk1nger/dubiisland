@@ -503,6 +503,8 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<IWindowRuleService, WindowRuleService>();
                 services.AddSingleton<IAutomationService, AutomationService>();
                 services.AddSingleton<ScriptRuntimeService>();
+                services.AddSingleton<ScriptConditionEvaluator>();
+                services.AddSingleton<IScriptConditionEvaluator>(s => s.GetRequiredService<ScriptConditionEvaluator>());
                 services.AddSingleton<ISpeechService>(GetSpeechService);
                 services.AddSingleton<IExactTimeService, ExactTimeService>();
                 //services.AddSingleton(typeof(ApplicationCommand), ApplicationCommand);

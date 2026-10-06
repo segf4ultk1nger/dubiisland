@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using ClassIsland.Core.Abstractions.Models;
-using ClassIsland.Core.Models.Ruleset;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClassIsland.Models.ComponentSettings;
@@ -23,11 +22,11 @@ public partial class SlideComponentSettings : ObservableObject, IComponentContai
 
     [ObservableProperty] private bool _isPauseOnRuleEnabled = false;
 
-    [ObservableProperty] private Ruleset _pauseRule = new();
+    [ObservableProperty] private string _pauseCondition = "";
 
     [ObservableProperty] private bool _isStopOnRuleEnabled = false;
 
-    [ObservableProperty] private Ruleset _stopRule = new();
+    [ObservableProperty] private string _stopCondition = "";
 
     [ObservableProperty] private bool _useOldPresentingBehavior = false;
 

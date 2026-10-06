@@ -1,5 +1,5 @@
 ﻿using ClassIsland.Core.Abstractions.Controls;
-using ClassIsland.Core.Controls.Ruleset;
+using ClassIsland.Core.Controls.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,16 +44,23 @@ public partial class RollingComponentSettingsControl
 
     private void ButtonOpenPauseRuleset_OnClick(object sender, RoutedEventArgs e)
     {
-        if (FindResource("RulesetControl") is RulesetControl rulesetControl)
-            rulesetControl.Ruleset = Settings.PauseRule;
-        OpenDrawer("RulesetControl");
+        OpenConditionEditor(nameof(Settings.PauseCondition));
     }
 
     private void ButtonOpenStopRuleset_OnClick(object sender, RoutedEventArgs e)
     {
-        if (FindResource("RulesetControl") is RulesetControl rulesetControl)
-            rulesetControl.Ruleset = Settings.StopRule;
-        OpenDrawer("RulesetControl");
+        OpenConditionEditor(nameof(Settings.StopCondition));
+    }
+
+    private void OpenConditionEditor(string propertyName)
+    {
+        if (FindResource("ConditionEditor") is ConditionEditor editor)
+        {
+            editor.SetBinding(ConditionEditor.ConditionProperty,
+                new Binding(propertyName) { Source = Settings, Mode = BindingMode.TwoWay });
+        }
+
+        OpenDrawer("ConditionEditor");
     }
 
     private void ButtonCloseWarningTip_OnClick(object sender, RoutedEventArgs e)

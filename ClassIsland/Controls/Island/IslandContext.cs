@@ -4,6 +4,7 @@ using System.Windows.Media;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Components;
 using ClassIsland.Models;
+using ClassIsland.Services.Scripting;
 
 namespace ClassIsland.Controls.Island;
 
@@ -23,6 +24,8 @@ public sealed class IslandContext
     public IExactTimeService ExactTimeService { get; }
 
     public IRulesetService RulesetService { get; }
+
+    public ScriptConditionEvaluator ConditionEvaluator { get; }
 
     public IWeatherService WeatherService { get; }
 
@@ -45,13 +48,14 @@ public sealed class IslandContext
 
     public IslandContext(Settings settings, ILessonsService lessonsService,
         IProfileService profileService, IExactTimeService exactTimeService,
-        IRulesetService rulesetService, IWeatherService weatherService)
+        IRulesetService rulesetService, ScriptConditionEvaluator conditionEvaluator, IWeatherService weatherService)
     {
         Settings = settings;
         LessonsService = lessonsService;
         ProfileService = profileService;
         ExactTimeService = exactTimeService;
         RulesetService = rulesetService;
+        ConditionEvaluator = conditionEvaluator;
         WeatherService = weatherService;
     }
 

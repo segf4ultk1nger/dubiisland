@@ -418,7 +418,7 @@
                                                     <ci:ComponentPresenter IsOnMainWindow="True" 
                                                                            IsRootComponent="True"
                                                                            Settings="{Binding}"
-                                                                           HidingRules="{Binding HidingRules, Mode=OneWay}"
+                                                                           HideCondition="{Binding HideCondition, Mode=OneWay}"
                                                                            HideOnRule="{Binding HideOnRule, Mode=OneWay}"
                                                                            Margin="6 0" />
                                                 </Grid>

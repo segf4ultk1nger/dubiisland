@@ -53,8 +53,8 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         set { SetValue(HideOnRuleProperty, value); }
     }
 
-    public static readonly DependencyProperty HidingRulesProperty = DependencyProperty.Register(
-        nameof(HidingRules), typeof(Models.Ruleset.Ruleset), typeof(ComponentPresenter), new PropertyMetadata(default(Models.Ruleset.Ruleset),
+    public static readonly DependencyProperty HideConditionProperty = DependencyProperty.Register(
+        nameof(HideCondition), typeof(string), typeof(ComponentPresenter), new PropertyMetadata("",
             (o, args) =>
             {
                 if (o is ComponentPresenter control)
@@ -63,10 +63,10 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
                 }
             }));
 
-    public Models.Ruleset.Ruleset? HidingRules
+    public string? HideCondition
     {
-        get { return (Models.Ruleset.Ruleset)GetValue(HidingRulesProperty); }
-        set { SetValue(HidingRulesProperty, value); }
+        get { return (string?)GetValue(HideConditionProperty); }
+        set { SetValue(HideConditionProperty, value); }
     }
 
     public static readonly DependencyProperty IsOnMainWindowProperty = DependencyProperty.Register(
@@ -118,6 +118,8 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
     }
 
     private IRulesetService RulesetService { get; } = IAppHost.GetService<IRulesetService>();
+
+    private IScriptConditionEvaluator ConditionEvaluator { get; } = IAppHost.GetService<IScriptConditionEvaluator>();
 
     /// <summary>
     /// 组件设置控件缓存：设置控件首次测量时要把大量控件的模板套一遍（课程表这类会卡 100ms+），
@@ -321,7 +323,7 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         {
             return;
         }
-        if (HidingRules != null && RulesetService.IsRulesetSatisfied(HidingRules))
+        if (ConditionEvaluator.Evaluate(HideCondition))
         {
             Visibility = Visibility.Collapsed;
         }

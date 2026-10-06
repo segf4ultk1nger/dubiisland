@@ -1,0 +1,26 @@
+<UserControl x:Class="ClassIsland.Core.Controls.Scripting.ConditionEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ClassIsland.Core.Controls.Scripting"
+             mc:Ignorable="d"
+             d:DesignHeight="140" d:DesignWidth="450">
+    <StackPanel>
+        <TextBlock Text="条件表达式"
+                   Style="{StaticResource Headline5TextBlock}"
+                   Margin="0 0 0 4" />
+        <TextBlock Text="使用 JavaScript 表达式描述条件，例如 lessons.currentSubject === &quot;数学&quot;。"
+                   TextWrapping="Wrap"
+                   Opacity="0.75"
+                   Margin="0 0 0 6" />
+        <TextBox MinHeight="72"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"
+                 FontFamily="Consolas"
+                 mah:TextBoxHelper.Watermark="输入条件表达式…"
+                 Text="{Binding Condition, RelativeSource={RelativeSource AncestorType=local:ConditionEditor}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </StackPanel>
+</UserControl>

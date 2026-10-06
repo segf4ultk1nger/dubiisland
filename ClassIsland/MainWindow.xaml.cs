@@ -28,6 +28,7 @@ using ClassIsland.Shared.Abstraction.Services;
 using ClassIsland.Shared.Interfaces;
 using ClassIsland.Shared.Models.Notification;
 using ClassIsland.Services;
+using ClassIsland.Services.Scripting;
 using ClassIsland.Shared;
 using ClassIsland.ViewModels;
 using ClassIsland.Views;
@@ -120,6 +121,7 @@ public partial class MainWindow : Window, INotificationVisualHost
     
     private IUriNavigationService UriNavigationService { get; }
     public IRulesetService RulesetService { get; }
+    public ScriptConditionEvaluator ConditionEvaluator { get; }
     public IWindowRuleService WindowRuleService { get; }
     public IManagementService ManagementService { get; }
 
@@ -161,6 +163,7 @@ public partial class MainWindow : Window, INotificationVisualHost
         ILessonsService lessonsService,
         IUriNavigationService uriNavigationService,
         IRulesetService rulesetService,
+        ScriptConditionEvaluator conditionEvaluator,
         IWindowRuleService windowRuleService,
         IManagementService managementService,
         MainViewModel viewModel)
@@ -178,6 +181,7 @@ public partial class MainWindow : Window, INotificationVisualHost
         LessonsService = lessonsService;
         UriNavigationService = uriNavigationService;
         RulesetService = rulesetService;
+        ConditionEvaluator = conditionEvaluator;
         WindowRuleService = windowRuleService;
         ManagementService = managementService;
 
@@ -250,7 +254,7 @@ public partial class MainWindow : Window, INotificationVisualHost
     {
         if (ViewModel.Settings.HideMode == 1)
         {
-            ViewModel.IsHideRuleSatisfied = RulesetService.IsRulesetSatisfied(ViewModel.Settings.HiedRules);
+            ViewModel.IsHideRuleSatisfied = ConditionEvaluator.Evaluate(ViewModel.Settings.HideCondition);
         }
         // Detect fullscreen
         var screen = ViewModel.Settings.WindowDockingMonitorIndex < Screen.AllScreens.Length &&

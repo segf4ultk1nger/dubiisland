@@ -42,7 +42,7 @@ public partial class MainWindowLineSettings : ObservableObject
 
     private bool _isVisible = true;
     [ObservableProperty] private bool _hideOnRule = false;
-    [ObservableProperty] private Ruleset.Ruleset _hidingRules = new();
+    [ObservableProperty] private string _hideCondition = "";
     /// <summary>
     /// 0 - 默认;1 - 禁用;2 - 启用
     /// </summary>

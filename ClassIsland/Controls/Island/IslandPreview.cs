@@ -10,6 +10,7 @@ using ClassIsland.Core.Models.Components;
 using ClassIsland.Core.Models.Theming;
 using ClassIsland.Models;
 using ClassIsland.Services;
+using ClassIsland.Services.Scripting;
 
 namespace ClassIsland.Controls.Island;
 
@@ -35,6 +36,7 @@ public sealed class IslandPreview : FrameworkElement
         IProfileService profileService,
         IExactTimeService exactTimeService,
         IRulesetService rulesetService,
+        ScriptConditionEvaluator conditionEvaluator,
         IWeatherService weatherService)
     {
         if (_initialized)
@@ -46,7 +48,7 @@ public sealed class IslandPreview : FrameworkElement
         _componentsService = componentsService;
 
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
-            rulesetService, weatherService)
+            rulesetService, conditionEvaluator, weatherService)
         {
             AccentColor = themeService.PrimaryColor,
             ComponentBounds = new Dictionary<ComponentSettings, Rect>()

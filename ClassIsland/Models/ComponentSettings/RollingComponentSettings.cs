@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using ClassIsland.Core.Abstractions.Models;
-using ClassIsland.Core.Models.Ruleset;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClassIsland.Models.ComponentSettings;
@@ -19,9 +18,9 @@ public partial class RollingComponentSettings : ObservableObject, IComponentCont
 
     [ObservableProperty] private bool _pauseOnRule = false;
 
-    [ObservableProperty] private Ruleset _pauseRule = new();
+    [ObservableProperty] private string _pauseCondition = "";
 
     [ObservableProperty] private bool _stopOnRule = false;
 
-    [ObservableProperty] private Ruleset _stopRule = new();
+    [ObservableProperty] private string _stopCondition = "";
 }

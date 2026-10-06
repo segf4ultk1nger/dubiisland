@@ -19,6 +19,7 @@ using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Controls;
 using ClassIsland.Core.Controls.Ruleset;
+using ClassIsland.Core.Controls.Scripting;
 using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Core.Models.Components;
 using ClassIsland.Core.Services;
@@ -537,12 +538,13 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     private void ButtonOpenRuleset_OnClick(object sender, RoutedEventArgs e)
     {
         if ((sender as FrameworkElement)?.DataContext is not ComponentSettings component ||
-            FindResource("RulesetControl") is not RulesetControl control)
+            FindResource("ConditionEditor") is not ConditionEditor control)
         {
             return;
         }
-        control.Ruleset = component.HidingRules;
-        OpenDrawer("RulesetControl");
+        control.SetBinding(ConditionEditor.ConditionProperty,
+            new Binding(nameof(ComponentSettings.HideCondition)) { Source = component, Mode = BindingMode.TwoWay });
+        OpenDrawer("ConditionEditor");
     }
 
     #endregion

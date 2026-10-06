@@ -31,8 +31,8 @@
     <controls:SettingsPageBase.Resources>
         <converters:MiniInfoGuidToMiniInfoProviderMultiConverter x:Key="MiniInfoGuidToMiniInfoProviderMultiConverter" />
 
-        <ci:RulesetControl x:Key="RulesetControl"
-                           Ruleset="{Binding SettingsService.Settings.HiedRules, Mode=TwoWay}"/>
+        <ci:ConditionEditor x:Key="ConditionEditor"
+                           Condition="{Binding SettingsService.Settings.HideCondition, Mode=TwoWay}"/>
 
         <!-- 隐藏窗口：抽屉 -->
         <StackPanel x:Key="HideWindowDrawer" Margin="16">
@@ -53,11 +53,14 @@
                 </TabItem>
                 <TabItem Header="高级模式">
                     <StackPanel Margin="0 8 0 0">
-                        <TextBlock Text="使用规则集自定义隐藏条件。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 8" />
+                        <TextBlock Text="使用 JavaScript 表达式自定义隐藏条件。" Opacity="0.75" TextWrapping="Wrap" Margin="0 0 0 8" />
                         <Button HorizontalAlignment="Left" Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 Command="{x:Static ci:SettingsPageBase.OpenDrawerCommand}"
-                                CommandParameter="{StaticResource RulesetControl}">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…"/>
+                                CommandParameter="{StaticResource ConditionEditor}">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="CodeBoxFill" Width="16" Height="16" VerticalAlignment="Center" Margin="0 0 6 0"/>
+                                <TextBlock Text="编辑条件…" VerticalAlignment="Center"/>
+                            </StackPanel>
                         </Button>
                     </StackPanel>
                 </TabItem>

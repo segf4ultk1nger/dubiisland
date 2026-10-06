@@ -19,6 +19,7 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Helpers;
 
 using ClassIsland.Core.Controls;
+using ClassIsland.Services.Scripting;
 namespace ClassIsland.Controls.Components;
 
 /// <summary>
@@ -29,6 +30,8 @@ namespace ClassIsland.Controls.Components;
 public partial class RollingComponent
 {
     public IRulesetService RulesetService { get; }
+
+    public ScriptConditionEvaluator ConditionEvaluator { get; }
 
     public static readonly DependencyProperty InnerContainerWidthProperty = DependencyProperty.Register(
         nameof(InnerContainerWidth), typeof(double), typeof(RollingComponent), new PropertyMetadata(default(double)));
@@ -72,9 +75,10 @@ public partial class RollingComponent
     private bool _isStopRuleSatisfied = false;
     private double _pausePos = 0;
 
-    public RollingComponent(IRulesetService rulesetService)
+    public RollingComponent(IRulesetService rulesetService, ScriptConditionEvaluator conditionEvaluator)
     {
         RulesetService = rulesetService;
+        ConditionEvaluator = conditionEvaluator;
         InitializeComponent();
     }
 
@@ -140,8 +144,8 @@ public partial class RollingComponent
     {
         var prevPauseState = _isPauseRuleSatisfied;
         var prevStopState = _isStopRuleSatisfied;
-        _isPauseRuleSatisfied = Settings.PauseOnRule && RulesetService.IsRulesetSatisfied(Settings.PauseRule);
-        _isStopRuleSatisfied = Settings.StopOnRule && RulesetService.IsRulesetSatisfied(Settings.StopRule);
+        _isPauseRuleSatisfied = Settings.PauseOnRule && ConditionEvaluator.Evaluate(Settings.PauseCondition);
+        _isStopRuleSatisfied = Settings.StopOnRule && ConditionEvaluator.Evaluate(Settings.StopCondition);
 
         if (prevStopState != _isStopRuleSatisfied)
         {

@@ -18,7 +18,7 @@ public class ComponentSettings : ObservableRecipient
     private object? _settings;
     private string _nameCache = "";
     private string _id = "";
-    private Ruleset.Ruleset _hidingRules = new();
+    private string? _hideCondition;
     private double _mainWindowSecondaryFontSize = 14;
     private double _mainWindowBodyFontSize = 16;
     private double _mainWindowEmphasizedFontSize = 18;
@@ -107,15 +107,15 @@ public class ComponentSettings : ObservableRecipient
     }
 
     /// <summary>
-    /// 隐藏规则
+    /// 隐藏条件表达式
     /// </summary>
-    public Ruleset.Ruleset HidingRules
+    public string? HideCondition
     {
-        get => _hidingRules;
+        get => _hideCondition;
         set
         {
-            if (Equals(value, _hidingRules)) return;
-            _hidingRules = value;
+            if (value == _hideCondition) return;
+            _hideCondition = value;
             OnPropertyChanged();
         }
     }
