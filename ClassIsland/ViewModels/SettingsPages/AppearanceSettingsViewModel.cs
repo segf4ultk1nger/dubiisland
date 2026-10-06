@@ -45,28 +45,68 @@ public partial class AppearanceSettingsViewModel : ObservableRecipient
 
     public AppearanceSettingsViewModel()
     {
-        ReloadFontFamilies();
+        _ = ReloadFontFamiliesAsync();
     }
 
-    public void ReloadFontFamilies()
+    /// <summary>
+    /// 后台线程枚举系统字体（首次枚举较慢），完成后回 UI 线程填充集合，
+    /// 避免在 UI 线程上阻塞外观页的创建。
+    /// </summary>
+    public async Task ReloadFontFamiliesAsync()
     {
-        var fonts = new List<FontFamily>(Fonts.SystemFontFamilies);
+        // 在页面/窗口存活时记下 UI 线程的 Dispatcher，供后台结果回来时派发。
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher == null)
+        {
+            return;
+        }
+
+        List<FontFamily> fonts;
         try
         {
-            if (Directory.Exists(FontsFolderPath))
+            fonts = await Task.Run(() =>
             {
-                fonts.AddRange(Fonts.GetFontFamilies(FontsFolderPath));
-            }
+                var list = new List<FontFamily>(Fonts.SystemFontFamilies);
+                try
+                {
+                    if (Directory.Exists(FontsFolderPath))
+                    {
+                        list.AddRange(Fonts.GetFontFamilies(FontsFolderPath));
+                    }
+                }
+                catch
+                {
+                    // 目录里放了损坏字体等情况，忽略即可，不影响系统字体列表。
+                }
+
+                return list;
+            }).ConfigureAwait(false);
         }
         catch
         {
-            // 目录里放了损坏字体等情况，忽略即可，不影响系统字体列表。
+            return;
         }
 
-        FontFamilies.Clear();
-        foreach (var font in fonts)
+        // 窗口/应用可能已经关闭，Dispatcher 正在或已经关闭，此时不要再碰 UI 集合。
+        if (dispatcher.HasShutdownStarted || dispatcher.HasShutdownFinished)
         {
-            FontFamilies.Add(font);
+            return;
+        }
+
+        try
+        {
+            await dispatcher.InvokeAsync(() =>
+            {
+                FontFamilies.Clear();
+                foreach (var font in fonts)
+                {
+                    FontFamilies.Add(font);
+                }
+            }).Task.ConfigureAwait(false);
+        }
+        catch
+        {
+            // 关闭过程中的派发竞态，忽略。
         }
     }
 
@@ -111,7 +151,7 @@ public partial class AppearanceSettingsViewModel : ObservableRecipient
             await FontDownloadHelper.DownloadAsync(item, progress);
             item.IsInstalled = true;
             item.StatusText = "已下载";
-            ReloadFontFamilies();
+            await ReloadFontFamiliesAsync();
         }
         catch (Exception ex)
         {

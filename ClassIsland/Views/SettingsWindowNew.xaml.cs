@@ -92,6 +92,9 @@ public partial class SettingsWindowNew : MyWindow
 
     private readonly DispatcherTimer SearchDebounceTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
 
+    /// <summary>后台预热设置页的待处理队列；窗口关闭时置空以停止。</summary>
+    private Queue<SettingsPageInfo>? _preloadQueue;
+
 
     public SettingsWindowNew(IManagementService managementService, IHangService hangService,
         ILogger<SettingsWindowNew> logger, DiagnosticService diagnosticService, SettingsService settingsService,
@@ -207,7 +210,80 @@ public partial class SettingsWindowNew : MyWindow
         var page = SettingsWindowRegistryService.Registered.FirstOrDefault(x => x.Id == LaunchSettingsPage);
         ViewModel.IsRendered = true;
         await CoreNavigate(page);
+        SchedulePreloadSettingsPages();
         //await CoreNavigate(ViewModel.SelectedPageInfo);
+    }
+
+    private bool _preloadScheduled;
+
+    /// <summary>
+    /// 后台静默预热所有设置页：逐页创建 + 跑一遍布局并缓存，避免首次打开时解析 XAML、
+    /// 初始化 ViewModel（如外观页枚举系统字体）造成的卡顿。
+    /// </summary>
+    private void SchedulePreloadSettingsPages()
+    {
+        if (_preloadScheduled)
+        {
+            return;
+        }
+
+        _preloadScheduled = true;
+        _preloadQueue = new Queue<SettingsPageInfo>(
+            SettingsWindowRegistryService.Registered.Where(PassesNavigationFilter));
+        Dispatcher.BeginInvoke(new System.Action(PreloadNextSettingsPage), DispatcherPriority.ApplicationIdle);
+    }
+
+    /// <summary>每次空闲只处理一页，避免占用主线程造成新的卡顿。</summary>
+    private void PreloadNextSettingsPage()
+    {
+        if (_preloadQueue == null)
+        {
+            return;
+        }
+
+        SettingsPageInfo? info = null;
+        while (_preloadQueue.Count > 0)
+        {
+            var candidate = _preloadQueue.Dequeue();
+            if (candidate.Id == ViewModel.SelectedPageInfo?.Id || _cachedPages.ContainsKey(candidate.Id))
+            {
+                continue;
+            }
+
+            info = candidate;
+            break;
+        }
+
+        if (info == null)
+        {
+            _preloadQueue = null;
+            return;
+        }
+
+        try
+        {
+            var page = GetPage(info.Id, out _);
+            if (page != null)
+            {
+                WarmUpPage(page);
+                _cachedPages[info.Id] = page;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "预热设置页 {PageId} 失败", info.Id);
+        }
+
+        Dispatcher.BeginInvoke(new System.Action(PreloadNextSettingsPage), DispatcherPriority.ApplicationIdle);
+    }
+
+    /// <summary>在屏外跑一遍 measure/arrange，让模板应用、绑定求值等一次性完成。</summary>
+    private void WarmUpPage(SettingsPageBase page)
+    {
+        var width = NavigationFrame.ActualWidth > 0 ? NavigationFrame.ActualWidth : 800;
+        var height = NavigationFrame.ActualHeight > 0 ? NavigationFrame.ActualHeight : 600;
+        page.Measure(new Size(width, height));
+        page.Arrange(new Rect(0, 0, width, height));
     }
 
     private async void NavigationServiceOnNavigating(object sender, NavigatingCancelEventArgs e)
@@ -573,6 +649,8 @@ public partial class SettingsWindowNew : MyWindow
 
             Activate();
         }
+
+        SchedulePreloadSettingsPages();
     }
 
     public async void Open(string key, Uri? uri = null)
@@ -600,6 +678,8 @@ public partial class SettingsWindowNew : MyWindow
         e.Cancel = true;
         IsOpened = false;
         Hide();
+        _preloadQueue = null;
+        _preloadScheduled = false;
         SettingsService.SaveSettings("关闭应用设置窗口");
         ComponentsService.SaveConfig();
         App.GetService<IAutomationService>().SaveConfig("关闭应用设置窗口");
@@ -612,8 +692,10 @@ public partial class SettingsWindowNew : MyWindow
 
     private void SettingsWindowNew_OnClosed(object? sender, EventArgs e)
     {
-        // 窗口被空闲销毁 → 退订单例设置事件，避免窗口对象无法回收。
+        // 窗口被空闲销毁 → 退订单例设置事件、停掉计时器，避免窗口对象无法回收。
         SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
+        _preloadQueue = null;
+        SearchDebounceTimer.Stop();
     }
 
     private void CommandBindingOpenDrawer_OnExecuted(object sender, ExecutedRoutedEventArgs e)
