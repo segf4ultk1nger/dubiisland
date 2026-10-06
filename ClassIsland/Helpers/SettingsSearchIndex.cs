@@ -54,6 +54,12 @@ internal static class SettingsSearchIndex
         var scored = new List<(int Score, SettingsSearchEntry Entry)>();
         foreach (var entry in entries)
         {
+            // 当前被隐藏的设置（可见性条件不满足）不参与搜索。
+            if (entry.Visible is { } visible && !visible())
+            {
+                continue;
+            }
+
             var score = Score(entry, query, ql);
             if (score > 0)
             {

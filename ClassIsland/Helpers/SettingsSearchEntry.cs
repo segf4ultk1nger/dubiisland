@@ -1,3 +1,5 @@
+using System;
+
 namespace ClassIsland.Helpers;
 
 /// <summary>设置搜索索引里的一条记录（一个设置卡片，或一个设置页面本身）。</summary>
@@ -13,4 +15,7 @@ public sealed class SettingsSearchEntry
     public string Pinyin { get; init; } = "";
     public string PinyinSpaced { get; init; } = "";
     public string Initials { get; init; } = "";
+
+    /// <summary>卡片当前是否可见；null 表示始终可见。搜索时求值，隐藏的条目不返回。</summary>
+    public Func<bool>? Visible { get; init; }
 }

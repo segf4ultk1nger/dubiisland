@@ -96,13 +96,19 @@ public sealed class SettingsSearchGenerator : IIncrementalGenerator
                     continue;
                 }
 
+                var (include, visibleExpression) = GetVisibility(element);
+                if (!include)
+                {
+                    continue;
+                }
+
                 var description = (string?)element.Attribute("Description") ?? "";
                 var tags = (string?)element.Attribute("SearchTags") ?? "";
 
                 occurrences.TryGetValue(header, out var occurrence);
                 occurrences[header] = occurrence + 1;
 
-                AppendEntry(builder, pageId, pageName, header, description, tags, occurrence, false);
+                AppendEntry(builder, pageId, pageName, header, description, tags, occurrence, false, visibleExpression);
             }
         }
 
@@ -113,8 +119,54 @@ public sealed class SettingsSearchGenerator : IIncrementalGenerator
         context.AddSource("SettingsSearchGenerated.g.cs", SourceText.From(builder.ToString(), Encoding.UTF8));
     }
 
+    /// <summary>
+    /// 解析卡片（或其祖先容器）上的 Visibility，判断当前是否应纳入索引：
+    /// - 无 / Visible → 始终可见，直接收；
+    /// - Collapsed / 无法解析的绑定 → 保守跳过，避免把隐藏的设置索引进去；
+    /// - <c>{Binding SettingsService.Settings.X, Converter=...}</c> → 生成一个按当前设置求值的可见性委托。
+    /// </summary>
+    private static (bool Include, string? VisibleExpression) GetVisibility(XElement card)
+    {
+        for (var node = card; node != null; node = node.Parent)
+        {
+            var attribute = node.Attribute("Visibility");
+            if (attribute == null)
+            {
+                continue;
+            }
+
+            var value = attribute.Value.Trim();
+            if (value.Equals("Visible", StringComparison.OrdinalIgnoreCase))
+            {
+                return (true, null);
+            }
+
+            if (value.Equals("Collapsed", StringComparison.OrdinalIgnoreCase) ||
+                value.Equals("Hidden", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, null);
+            }
+
+            var match = Regex.Match(value, @"Binding\s+([A-Za-z_][\w.]*)");
+            const string settingsPrefix = "SettingsService.Settings.";
+            if (match.Success && match.Groups[1].Value.StartsWith(settingsPrefix, StringComparison.Ordinal))
+            {
+                var property = match.Groups[1].Value.Substring(settingsPrefix.Length);
+                var access =
+                    $"ClassIsland.Shared.IAppHost.GetService<ClassIsland.Services.SettingsService>().Settings.{property}";
+                var inverse = value.Contains("Inverse", StringComparison.Ordinal);
+                return (true, inverse ? "!(" + access + ")" : access);
+            }
+
+            // 其它 Visibility 绑定（选择态等）无法在编译期判定 → 跳过。
+            return (false, null);
+        }
+
+        return (true, null);
+    }
+
     private static void AppendEntry(StringBuilder builder, string pageId, string pageName, string header,
-        string description, string tags, int occurrence, bool isPage)
+        string description, string tags, int occurrence, bool isPage, string? visibleExpression = null)
     {
         // 拼音只从标题+标签生成：描述太长，混进拼音会给模糊匹配引入噪声。
         var text = header + " " + tags;
@@ -127,8 +179,14 @@ public sealed class SettingsSearchGenerator : IIncrementalGenerator
             .Append(", Occurrence = ").Append(occurrence.ToString(System.Globalization.CultureInfo.InvariantCulture))
             .Append(", Pinyin = ").Append(Literal(PinyinMap.ToPinyin(text)))
             .Append(", PinyinSpaced = ").Append(Literal(PinyinMap.ToSpacedPinyin(text)))
-            .Append(", Initials = ").Append(Literal(PinyinMap.ToInitials(text)))
-            .AppendLine(" },");
+            .Append(", Initials = ").Append(Literal(PinyinMap.ToInitials(text)));
+
+        if (visibleExpression != null)
+        {
+            builder.Append(", Visible = static () => ").Append(visibleExpression);
+        }
+
+        builder.AppendLine(" },");
     }
 
     private static string Literal(string value)
