@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClassIsland.Core.Controls.Scripting"
              mc:Ignorable="d"
-             d:DesignHeight="140" d:DesignWidth="450">
+             d:DesignHeight="220" d:DesignWidth="450">
     <StackPanel>
         <TextBlock Text="条件表达式"
                    Style="{StaticResource Headline5TextBlock}"
@@ -15,12 +15,42 @@
                    TextWrapping="Wrap"
                    Opacity="0.75"
                    Margin="0 0 0 6" />
-        <TextBox MinHeight="72"
+        <TextBox x:Name="ConditionTextBox"
+                 MinHeight="72"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Auto"
                  FontFamily="Consolas"
                  mah:TextBoxHelper.Watermark="输入条件表达式…"
+                 TextChanged="ConditionTextBox_OnTextChanged"
                  Text="{Binding Condition, RelativeSource={RelativeSource AncestorType=local:ConditionEditor}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <Border Background="{DynamicResource MahApps.Brushes.Control.Background}"
+                CornerRadius="4"
+                Padding="8"
+                Margin="0 6 0 0">
+            <StackPanel>
+                <TextBlock Text="可用变量：lessons / window / weather / time"
+                           TextWrapping="Wrap"
+                           Opacity="0.85" />
+                <TextBlock Text="示例：lessons.currentSubject === &quot;数学&quot;、time.now().Hour &gt;= 8、window.State === &quot;fullscreen&quot;、weather.isWeather(&quot;晴&quot;)"
+                           TextWrapping="Wrap"
+                           Opacity="0.65"
+                           Margin="0 2 0 0" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" Margin="0 6 0 0">
+            <TextBlock Text="当前结果：" VerticalAlignment="Center" />
+            <TextBlock x:Name="PreviewTextBlock"
+                       Text="--"
+                       FontWeight="Medium"
+                       VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock x:Name="PreviewErrorTextBlock"
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource MahApps.Brushes.Accent3}"
+                   Visibility="Collapsed"
+                   Margin="0 2 0 0" />
     </StackPanel>
 </UserControl>

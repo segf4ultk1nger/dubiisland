@@ -159,6 +159,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _isAutomationEnabled = false;
     private bool _isAutomationWarningVisible = true;
     private string _currentAutomationConfig = "Default";
+    private bool _isScriptingEnabled = true;
     private Version _lastAppVersion = new Version("0.0.0.0");
     private bool _showComponentsMigrateTip = false;
     private bool _expAllowEditingActivatedTimeLayout = false;
@@ -1563,6 +1564,24 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isAutomationWarningVisible) return;
             _isAutomationWarningVisible = value;
+            OnPropertyChanged();
+        }
+    }
+
+    #endregion
+
+    #region Scripting
+
+    /// <summary>
+    /// 是否启用脚本运行时。禁用时不再加载或触发脚本。
+    /// </summary>
+    public bool IsScriptingEnabled
+    {
+        get => _isScriptingEnabled;
+        set
+        {
+            if (value == _isScriptingEnabled) return;
+            _isScriptingEnabled = value;
             OnPropertyChanged();
         }
     }

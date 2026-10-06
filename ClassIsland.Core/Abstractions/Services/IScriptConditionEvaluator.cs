@@ -15,6 +15,13 @@ public interface IScriptConditionEvaluator
     bool Evaluate(string? expression);
 
     /// <summary>
+    /// 非缓存的预览求值。用于编辑器实时预览，不会写入条件缓存。
+    /// </summary>
+    /// <param name="expression">条件表达式。</param>
+    /// <returns>表达式是否满足。</returns>
+    bool EvaluatePreview(string? expression);
+
+    /// <summary>
     /// 条件求值结果刷新时触发。
     /// </summary>
     event EventHandler? ConditionUpdated;

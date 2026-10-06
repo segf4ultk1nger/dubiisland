@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows;
 using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Models;
 using ClassIsland.Services.Automation.Triggers;
 using ClassIsland.Shared.Enums;
+using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Models.Profile;
 using Jint;
 using Jint.Native;
@@ -88,6 +91,9 @@ function __pulse() {
 }
 function __shutdown() {
   __fire('stopping');
+  for (var i = 0; i < __handlers.length; i++) { if (__handlers[i].active) __recover(__handlers[i]); }
+}
+function __debugRecover() {
   for (var i = 0; i < __handlers.length; i++) { if (__handlers[i].active) __recover(__handlers[i]); }
 }
 function __signalFire(name, revert) {
@@ -195,12 +201,33 @@ on.classStart(function(){ log(""class started""); });
     private readonly List<ScriptDocument> _documents = new();
     private readonly object _documentsLock = new();
     private readonly object _syncRoot = new();
+    private ScriptManifest _manifest = new();
     private Timer? _cronTimer;
     private Thread? _thread;
     private bool _initialized;
     private bool _disposed;
     private TimeState _lastTimeState = TimeState.None;
     private DateTime _lastTimePointRunTime;
+
+    /// <summary>
+    /// 脚本目录。
+    /// </summary>
+    public static string ScriptDirectory => Path.Combine(App.AppConfigPath, "Scripts", "Default");
+
+    /// <summary>
+    /// 脚本清单文件路径。
+    /// </summary>
+    public static string ManifestPath => Path.Combine(ScriptDirectory, "scripts.json");
+
+    /// <summary>
+    /// 脚本文档列表或启用状态发生变化时触发（已切换到 UI 调度线程）。
+    /// </summary>
+    public event EventHandler? ScriptsChanged;
+
+    /// <summary>
+    /// 脚本产生日志或错误时触发（已切换到 UI 调度线程）。
+    /// </summary>
+    public event EventHandler<ScriptLogEntry>? ScriptLog;
 
     private delegate void LogDelegate(params object[] args);
 
@@ -223,9 +250,132 @@ on.classStart(function(){ log(""class started""); });
         {
             lock (_documentsLock)
             {
-                return _documents.Select(d => Path.GetFileName(d.FilePath)).ToArray();
+                return _documents
+                    .Where(d => d.Engine != null)
+                    .Select(d => Path.GetFileName(d.FilePath))
+                    .ToArray();
             }
         }
+    }
+
+    /// <summary>
+    /// 当前脚本文档快照，供脚本设置页面显示。
+    /// </summary>
+    public IReadOnlyList<ScriptDocument> Documents
+    {
+        get
+        {
+            lock (_documentsLock)
+            {
+                return _documents.ToArray();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 脚本运行时是否启用。
+    /// </summary>
+    public bool IsEnabled => _settingsService.Settings.IsScriptingEnabled;
+
+    /// <summary>
+    /// 启用或禁用脚本运行时。更新设置并重新加载脚本。
+    /// </summary>
+    public void SetScriptingEnabled(bool enabled) => _settingsService.Settings.IsScriptingEnabled = enabled;
+
+    /// <summary>
+    /// 卸载并重新加载所有脚本。
+    /// </summary>
+    public void ReloadAll()
+    {
+        Post(() =>
+        {
+            UnloadAll();
+            Bootstrap();
+        });
+    }
+
+    /// <summary>
+    /// 卸载并重新加载单个脚本。
+    /// </summary>
+    public void Reload(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return;
+        }
+
+        Post(() => ReloadCore(fileName));
+    }
+
+    /// <summary>
+    /// 更新脚本的启用状态并相应加载或卸载。
+    /// </summary>
+    public void SetEnabled(string fileName, bool enabled)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return;
+        }
+
+        Post(() => SetEnabledCore(fileName, enabled));
+    }
+
+    /// <summary>
+    /// 更新脚本显示名称并写入清单。
+    /// </summary>
+    public void SetName(string fileName, string name)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return;
+        }
+
+        Post(() =>
+        {
+            var entry = EnsureManifestEntry(fileName);
+            entry.Name = name ?? "";
+            var document = FindByFileName(fileName);
+            if (document != null)
+            {
+                document.Name = name ?? "";
+            }
+
+            SaveManifest();
+        });
+    }
+
+    /// <summary>
+    /// 调试运行一个脚本：定义了 <c>trigger</c> 时以空上下文调用，否则触发一次代表性事件。
+    /// 仅供调试使用，不代表正常触发时机。
+    /// </summary>
+    public void RunDebug(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return;
+        }
+
+        Post(() => RunDebugCore(fileName));
+    }
+
+    /// <summary>
+    /// 调试恢复一个脚本中已激活的处理程序。仅供调试使用。
+    /// </summary>
+    public void RecoverDebug(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return;
+        }
+
+        Post(() =>
+        {
+            var document = FindByFileName(fileName);
+            if (document != null)
+            {
+                InvokeOnDocument(document, "__debugRecover");
+            }
+        });
     }
 
     /// <summary>
@@ -240,7 +390,8 @@ on.classStart(function(){ log(""class started""); });
             return;
         }
 
-        Post(() => RunTimePointScriptCore(scriptFileName, item));
+        var name = scriptFileName!;
+        Post(() => RunTimePointScriptCore(name, item));
     }
 
     /// <summary>
@@ -267,6 +418,8 @@ on.classStart(function(){ log(""class started""); });
         _windowFacade = new WindowFacade(windowRuleService);
         _weatherFacade = new WeatherFacade(weatherService, settingsService);
         _timeFacade = new TimeFacade(exactTimeService);
+
+        _settingsService.Settings.PropertyChanged += OnSettingsPropertyChanged;
 
         foreach (var contributor in contributors)
         {
@@ -380,7 +533,7 @@ on.classStart(function(){ log(""class started""); });
         {
             try
             {
-                document.Engine.Dispose();
+                document.Engine?.Dispose();
             }
             catch (Exception ex)
             {
@@ -428,59 +581,351 @@ on.classStart(function(){ log(""class started""); });
     {
         try
         {
-            var directory = Path.Combine(App.AppConfigPath, "Scripts", "Default");
-            Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(ScriptDirectory);
+            _manifest = ConfigureFileHelper.LoadConfig<ScriptManifest>(ManifestPath);
 
-            var files = Directory.GetFiles(directory, "*.js")
-                .OrderBy(x => Path.GetFileName(x), StringComparer.OrdinalIgnoreCase)
+            var diskFiles = Directory.GetFiles(ScriptDirectory, "*.js")
+                .Select(x => Path.GetFileName(x))
+                .Where(f => !string.IsNullOrEmpty(f))
+                .Select(f => f!)
+                .ToList();
+
+            if (diskFiles.Count == 0
+                && _manifest.Scripts.All(e => !File.Exists(Path.Combine(ScriptDirectory, e.File))))
+            {
+                File.WriteAllText(Path.Combine(ScriptDirectory, "sample.js"), SampleScript);
+                diskFiles.Add("sample.js");
+            }
+
+            foreach (var file in diskFiles)
+            {
+                if (_manifest.Scripts.All(e => !string.Equals(e.File, file, StringComparison.OrdinalIgnoreCase)))
+                {
+                    _manifest.Scripts.Add(new ScriptManifestEntry
+                    {
+                        File = file,
+                        Name = Path.GetFileNameWithoutExtension(file),
+                        Enabled = true,
+                        Order = _manifest.Scripts.Count
+                    });
+                }
+            }
+
+            foreach (var entry in _manifest.Scripts)
+            {
+                if (!File.Exists(Path.Combine(ScriptDirectory, entry.File)))
+                {
+                    _logger.LogWarning("脚本清单中的文件“{File}”不存在。", entry.File);
+                }
+            }
+
+            var globalEnabled = IsEnabled;
+            var ordered = _manifest.Scripts
+                .Where(e => File.Exists(Path.Combine(ScriptDirectory, e.File)))
+                .OrderBy(e => e.Order)
+                .ThenBy(e => e.File, StringComparer.OrdinalIgnoreCase)
                 .ToArray();
-            if (files.Length == 0)
+
+            foreach (var entry in ordered)
             {
-                var samplePath = Path.Combine(directory, "sample.js");
-                File.WriteAllText(samplePath, SampleScript);
-                files = new[] { samplePath };
+                var document = LoadScriptEntry(entry, globalEnabled && entry.Enabled);
+                lock (_documentsLock)
+                {
+                    _documents.Add(document);
+                }
             }
 
-            foreach (var file in files)
-            {
-                LoadScript(file);
-            }
+            SaveManifest();
+            RaiseScriptsChanged();
 
-            InvokeAll("__fire", "startup");
+            if (globalEnabled)
+            {
+                InvokeAll("__fire", "startup");
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "初始化脚本运行时失败。");
+            RaiseLog("", "error", "初始化脚本运行时失败：" + ex.Message);
         }
     }
 
-    private void LoadScript(string file)
+    private ScriptDocument LoadScriptEntry(ScriptManifestEntry entry, bool enabled)
     {
+        var file = Path.Combine(ScriptDirectory, entry.File);
+        var document = new ScriptDocument(file, entry.Name, entry.Enabled, entry.Order);
+        if (!enabled)
+        {
+            document.Status = ScriptStatus.Disabled;
+            return document;
+        }
+
         try
         {
             var engine = CreateEngine();
-            var document = new ScriptDocument(file, engine);
+            document.Engine = engine;
             ConfigureEngine(engine, document);
 
             engine.Execute(ScriptPrelude, "legacyisland:prelude");
             ApplyBuilder(engine, _contributorApi);
             engine.Execute(File.ReadAllText(file), file);
 
-            lock (_documentsLock)
-            {
-                _documents.Add(document);
-            }
-
+            document.Status = ScriptStatus.Loaded;
+            document.LastError = null;
             _logger.LogInformation("已加载脚本：{}", file);
         }
         catch (JavaScriptException ex)
         {
+            var message = $"{ex.Location}：{ex.GetJavaScriptErrorString()}";
+            document.Status = ScriptStatus.Faulted;
+            document.LastError = message;
+            DisposeEngine(document);
             _logger.LogError(ex, "脚本“{File}”执行失败（{Location}）：{Message}", file, ex.Location,
                 ex.GetJavaScriptErrorString());
+            RaiseLog(file, "error", message);
         }
         catch (Exception ex)
         {
+            document.Status = ScriptStatus.Faulted;
+            document.LastError = ex.Message;
+            DisposeEngine(document);
             _logger.LogError(ex, "脚本“{File}”加载失败。", file);
+            RaiseLog(file, "error", "加载失败：" + ex.Message);
+        }
+
+        return document;
+    }
+
+    private void ReloadCore(string fileName)
+    {
+        fileName = Path.GetFileName(fileName);
+        var existing = FindByFileName(fileName);
+        if (existing != null)
+        {
+            UnloadDocument(existing);
+        }
+
+        if (!File.Exists(Path.Combine(ScriptDirectory, fileName)))
+        {
+            SaveManifest();
+            RaiseScriptsChanged();
+            return;
+        }
+
+        var entry = EnsureManifestEntry(fileName);
+        var document = LoadScriptEntry(entry, IsEnabled && entry.Enabled);
+        lock (_documentsLock)
+        {
+            _documents.Add(document);
+        }
+
+        SaveManifest();
+        RaiseScriptsChanged();
+
+        if (document.Engine != null)
+        {
+            InvokeOnDocument(document, "__fire", "startup");
+        }
+    }
+
+    private void SetEnabledCore(string fileName, bool enabled)
+    {
+        fileName = Path.GetFileName(fileName);
+        var entry = EnsureManifestEntry(fileName);
+        entry.Enabled = enabled;
+
+        var existing = FindByFileName(fileName);
+        if (existing != null)
+        {
+            UnloadDocument(existing);
+        }
+
+        var document = LoadScriptEntry(entry, IsEnabled && enabled);
+        lock (_documentsLock)
+        {
+            _documents.Add(document);
+        }
+
+        SaveManifest();
+        RaiseScriptsChanged();
+
+        if (document.Engine != null)
+        {
+            InvokeOnDocument(document, "__fire", "startup");
+        }
+    }
+
+    private void RunDebugCore(string fileName)
+    {
+        var document = FindByFileName(fileName);
+        if (document?.Engine == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var trigger = document.Engine.GetValue("trigger");
+            if (trigger.IsCallable())
+            {
+                document.Engine.Invoke("trigger", new ScriptTimeLayoutItemInfo());
+            }
+            else
+            {
+                InvokeOnDocument(document, "__fire", "classStart");
+            }
+        }
+        catch (JavaScriptException ex)
+        {
+            ReportScriptError(document, "调试运行", ex);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            ReportScriptError(document, "调试运行", ex);
+        }
+    }
+
+    private void UnloadAll()
+    {
+        ScriptDocument[] snapshot;
+        lock (_documentsLock)
+        {
+            snapshot = _documents.ToArray();
+        }
+
+        foreach (var document in snapshot)
+        {
+            UnloadDocument(document);
+        }
+    }
+
+    private void UnloadDocument(ScriptDocument document)
+    {
+        if (document.Engine != null)
+        {
+            try
+            {
+                document.Engine.Invoke("__shutdown");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "脚本“{File}”卸载时执行 __shutdown 失败。", document.FilePath);
+            }
+        }
+
+        DisposeEngine(document);
+        lock (_documentsLock)
+        {
+            _documents.Remove(document);
+        }
+    }
+
+    private static void DisposeEngine(ScriptDocument document)
+    {
+        try
+        {
+            document.Engine?.Dispose();
+        }
+        catch
+        {
+        }
+
+        document.Engine = null;
+    }
+
+    private ScriptDocument? FindByFileName(string fileName)
+    {
+        var name = Path.GetFileName(fileName);
+        lock (_documentsLock)
+        {
+            return _documents.FirstOrDefault(d =>
+                string.Equals(Path.GetFileName(d.FilePath), name, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    private ScriptManifestEntry EnsureManifestEntry(string fileName)
+    {
+        fileName = Path.GetFileName(fileName);
+        var entry = _manifest.Scripts.FirstOrDefault(e =>
+            string.Equals(e.File, fileName, StringComparison.OrdinalIgnoreCase));
+        if (entry == null)
+        {
+            entry = new ScriptManifestEntry
+            {
+                File = fileName,
+                Name = Path.GetFileNameWithoutExtension(fileName),
+                Enabled = true,
+                Order = _manifest.Scripts.Count
+            };
+            _manifest.Scripts.Add(entry);
+        }
+
+        return entry;
+    }
+
+    private void SaveManifest()
+    {
+        try
+        {
+            ConfigureFileHelper.SaveConfig(ManifestPath, _manifest, true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "写入脚本清单失败。");
+        }
+    }
+
+    private void OnSettingsPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(Settings.IsScriptingEnabled))
+        {
+            return;
+        }
+
+        Post(() =>
+        {
+            UnloadAll();
+            Bootstrap();
+        });
+    }
+
+    private void RaiseScriptsChanged() => OnUi(() => ScriptsChanged?.Invoke(this, EventArgs.Empty));
+
+    /// <summary>
+    /// 向脚本设置页面推送一条日志。内部使用，会切换到 UI 调度线程。
+    /// </summary>
+    internal void RaiseLog(string file, string level, string message)
+    {
+        var entry = new ScriptLogEntry
+        {
+            File = Path.GetFileName(file ?? ""),
+            Level = level,
+            Message = message
+        };
+        OnUi(() => ScriptLog?.Invoke(this, entry));
+    }
+
+    private void ReportScriptError(ScriptDocument document, string operation, Exception ex)
+    {
+        var message = ex is JavaScriptException js ? js.GetJavaScriptErrorString() : ex.Message;
+        _logger.LogError(ex, "脚本“{File}”{Operation}时发生异常（{Location}）：{Message}", document.FilePath,
+            operation, (ex as JavaScriptException)?.Location, message);
+        RaiseLog(document.FilePath, "error", message);
+    }
+
+    private static void OnUi(Action action)
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher != null && !dispatcher.CheckAccess())
+        {
+            dispatcher.BeginInvoke(action);
+        }
+        else
+        {
+            action();
         }
     }
 
@@ -585,6 +1030,11 @@ on.classStart(function(){ log(""class started""); });
 
     private void InvokeOnDocument(ScriptDocument document, string function, params object?[] args)
     {
+        if (document.Engine == null)
+        {
+            return;
+        }
+
         try
         {
             document.Engine.Invoke(function, args);
@@ -593,6 +1043,7 @@ on.classStart(function(){ log(""class started""); });
         {
             _logger.LogError(ex, "脚本“{File}”执行 {Function} 时发生异常（{Location}）：{Message}", document.FilePath,
                 function, ex.Location, ex.GetJavaScriptErrorString());
+            RaiseLog(document.FilePath, "error", ex.GetJavaScriptErrorString());
         }
         catch (OperationCanceledException)
         {
@@ -600,6 +1051,7 @@ on.classStart(function(){ log(""class started""); });
         catch (Exception ex)
         {
             _logger.LogError(ex, "脚本“{File}”执行 {Function} 时发生异常。", document.FilePath, function);
+            RaiseLog(document.FilePath, "error", ex.Message);
         }
     }
 
@@ -679,8 +1131,9 @@ on.classStart(function(){ log(""class started""); });
     private void RunTimePointScriptCore(string scriptFileName, TimeLayoutItem item)
     {
         var document = _documents.FirstOrDefault(d =>
+            d.Engine != null &&
             string.Equals(Path.GetFileName(d.FilePath), scriptFileName, StringComparison.OrdinalIgnoreCase));
-        if (document == null)
+        if (document?.Engine == null)
         {
             _logger.LogWarning("找不到时间点脚本“{Script}”，已跳过。", scriptFileName);
             return;
@@ -708,6 +1161,7 @@ on.classStart(function(){ log(""class started""); });
         {
             _logger.LogError(ex, "脚本“{File}”执行时间点脚本时发生异常（{Location}）：{Message}", document.FilePath,
                 ex.Location, ex.GetJavaScriptErrorString());
+            RaiseLog(document.FilePath, "error", ex.GetJavaScriptErrorString());
         }
         catch (OperationCanceledException)
         {
@@ -715,6 +1169,7 @@ on.classStart(function(){ log(""class started""); });
         catch (Exception ex)
         {
             _logger.LogError(ex, "脚本“{File}”执行时间点脚本时发生异常。", document.FilePath);
+            RaiseLog(document.FilePath, "error", ex.Message);
         }
     }
 

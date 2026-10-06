@@ -22,6 +22,7 @@ public class RemixIconKindConverter : IValueConverter
             "weather" => PackIconRemixIconKind.CloudFill,
             "update" => PackIconRemixIconKind.DownloadCloudFill,
             "automation" => PackIconRemixIconKind.CodeBoxFill,
+            "scripts" => PackIconRemixIconKind.CodeBoxFill,
             "storage" => PackIconRemixIconKind.Database2Fill,
             "privacy" => PackIconRemixIconKind.ShieldCheckFill,
             "classisland.plugins" => PackIconRemixIconKind.Puzzle2Fill,

@@ -54,7 +54,9 @@ public class ScriptApiBridge
     /// </summary>
     public void Log(params object[] args)
     {
-        _logger.LogInformation("{}", string.Join(" ", args.Select(x => x?.ToString() ?? "null")));
+        var message = string.Join(" ", args.Select(x => x?.ToString() ?? "null"));
+        _logger.LogInformation("{}", message);
+        _runtime.RaiseLog(_document.FilePath, "info", message);
     }
 
     /// <summary>
@@ -63,6 +65,7 @@ public class ScriptApiBridge
     public void LogError(string message)
     {
         _logger.LogWarning("脚本“{File}”内部错误：{}", _document.FilePath, message);
+        _runtime.RaiseLog(_document.FilePath, "error", message);
     }
 
     /// <summary>
@@ -321,8 +324,8 @@ public class ScriptApiBridge
             {
                 try
                 {
-                    _document.Engine.Invoke(resolve);
-                    _document.Engine.Advanced.ProcessTasks();
+                    _document.Engine?.Invoke(resolve);
+                    _document.Engine?.Advanced.ProcessTasks();
                 }
                 catch (Exception ex)
                 {

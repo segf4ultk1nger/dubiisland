@@ -540,7 +540,8 @@ public partial class App : AppBase, IAppHost
                 services.AddSettingsPage<NotificationSettingsPage>();
                 services.AddSettingsPage<WindowSettingsPage>();
                 services.AddSettingsPage<WeatherSettingsPage>();
-                services.AddSettingsPage<AutomationSettingsPage>();
+                //services.AddSettingsPage<AutomationSettingsPage>();
+                services.AddSettingsPage<ScriptsSettingsPage>();
                 services.AddSettingsPage<StorageSettingsPage>();
                 services.AddSettingsPage<PluginsSettingsPage>();
                 services.AddSettingsPage<TestSettingsPage>();

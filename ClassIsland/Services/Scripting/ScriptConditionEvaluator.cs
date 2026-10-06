@@ -68,6 +68,22 @@ public class ScriptConditionEvaluator : IScriptConditionEvaluator, IDisposable
         return CompileAndCache(expression!);
     }
 
+    /// <inheritdoc />
+    public bool EvaluatePreview(string? expression)
+    {
+        if (string.IsNullOrWhiteSpace(expression))
+        {
+            return false;
+        }
+
+        var prepared = Engine.PrepareScript(expression!, "preview:" + expression);
+        lock (_syncRoot)
+        {
+            JsValue value = _engine.Evaluate(prepared);
+            return value.AsBoolean();
+        }
+    }
+
     /// <summary>
     /// 使用当前门面状态重新计算所有缓存的条件，并发布刷新事件。
     /// </summary>
