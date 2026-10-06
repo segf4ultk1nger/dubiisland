@@ -43,5 +43,7 @@ LegacyIsland 1.8.0.1 2026-10-05 更新日志（本版本仍在开发中，以下
 36. 高级设置新增「启用黑科技降低内存」
 37. 体积优化：排除 NAudio 未使用的 Asio / Midi / WinForms 模块
 38. 内部重构：MainViewModel 改为 DI 单例；主题应用、启动完成链、托盘菜单/动作、通知管线分别外提为 ThemeApplyService、App.CompleteStartup、TrayIconService、NotificationDisplayService
+39. UIAccess 组件（超级置顶 Helper）改为启动时自解压到应用目录，发布包只需一个 exe；组件缺失时正常启动并禁用「使用超级置顶」
+40. 修复：发布版缺少 UIAccess 组件导致一启动即崩溃；以及因主题资源尚未加载，启动早期窗口（临时目录/桌面等检查对话框、单实例提示、闪屏）渲染成全黑的问题
 
 ——————————————————————————————————————————————————————————
