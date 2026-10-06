@@ -26,6 +26,18 @@ public class ComponentSettings : ObservableRecipient
     private bool _isResourceOverridingEnabled = false;
     private Color _foregroundColor = Colors.DodgerBlue;
     private bool _isCustomForegroundColorEnabled = false;
+    private double _backgroundOpacity = 0.5;
+    private bool _isCustomBackgroundOpacityEnabled = false;
+    private Color _backgroundColor = Colors.Black;
+    private bool _isCustomBackgroundColorEnabled = false;
+    private double _customCornerRadius = 8.0;
+    private bool _isCustomCornerRadiusEnabled = false;
+    private double _opacity = 1.0;
+    private bool _isCustomMarginEnabled = false;
+    private double _marginLeft = 0.0;
+    private double _marginTop = 0.0;
+    private double _marginRight = 0.0;
+    private double _marginBottom = 0.0;
     private bool _isMinWidthEnabled = false;
     private double _minWidth = 100;
     private bool _isMaxWidthEnabled = false;
@@ -35,6 +47,7 @@ public class ComponentSettings : ObservableRecipient
     private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Stretch;
     private int _relativeLineNumber = 0;
     private bool _isVisible = true;
+    private double _lastWidthCache = 100;
 
     /// <summary>
     /// 要显示的组件Id，ClassIsland用这个来索引组件，与<see cref="ComponentInfo"/>的Guid一致。
@@ -45,7 +58,7 @@ public class ComponentSettings : ObservableRecipient
         set
         {
             if (value == _id) return;
-            _id = value;
+            _id = value.ToLower();
             OnPropertyChanged();
             OnPropertyChanged(nameof(AssociatedComponentInfo));
         }
@@ -229,6 +242,104 @@ public class ComponentSettings : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// 背景不透明度
+    /// </summary>
+    public double BackgroundOpacity
+    {
+        get => _backgroundOpacity;
+        set
+        {
+            if (value.Equals(_backgroundOpacity)) return;
+            _backgroundOpacity = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 是否启用自定义背景不透明度
+    /// </summary>
+    public bool IsCustomBackgroundOpacityEnabled
+    {
+        get => _isCustomBackgroundOpacityEnabled;
+        set
+        {
+            if (value == _isCustomBackgroundOpacityEnabled) return;
+            _isCustomBackgroundOpacityEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 自定义背景色
+    /// </summary>
+    public Color BackgroundColor
+    {
+        get => _backgroundColor;
+        set
+        {
+            if (value.Equals(_backgroundColor)) return;
+            _backgroundColor = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 是否启用自定义背景色
+    /// </summary>
+    public bool IsCustomBackgroundColorEnabled
+    {
+        get => _isCustomBackgroundColorEnabled;
+        set
+        {
+            if (value == _isCustomBackgroundColorEnabled) return;
+            _isCustomBackgroundColorEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 自定义圆角半径
+    /// </summary>
+    public double CustomCornerRadius
+    {
+        get => _customCornerRadius;
+        set
+        {
+            if (value.Equals(_customCornerRadius)) return;
+            _customCornerRadius = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 是否启用自定义圆角半径
+    /// </summary>
+    public bool IsCustomCornerRadiusEnabled
+    {
+        get => _isCustomCornerRadiusEnabled;
+        set
+        {
+            if (value == _isCustomCornerRadiusEnabled) return;
+            _isCustomCornerRadiusEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 不透明度
+    /// </summary>
+    public double Opacity
+    {
+        get => _opacity;
+        set
+        {
+            if (value.Equals(_opacity)) return;
+            _opacity = value;
+            OnPropertyChanged();
+        }
+    }
+
     #endregion
 
     #region Layouts
@@ -354,6 +465,76 @@ public class ComponentSettings : ObservableRecipient
         }
     }
 
+    /// <summary>
+    /// 启用自定义间距
+    /// </summary>
+    public bool IsCustomMarginEnabled
+    {
+        get => _isCustomMarginEnabled;
+        set
+        {
+            if (value == _isCustomMarginEnabled) return;
+            _isCustomMarginEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 左间距
+    /// </summary>
+    public double MarginLeft
+    {
+        get => _marginLeft;
+        set
+        {
+            if (value.Equals(_marginLeft)) return;
+            _marginLeft = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 上间距
+    /// </summary>
+    public double MarginTop
+    {
+        get => _marginTop;
+        set
+        {
+            if (value.Equals(_marginTop)) return;
+            _marginTop = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 右间距
+    /// </summary>
+    public double MarginRight
+    {
+        get => _marginRight;
+        set
+        {
+            if (value.Equals(_marginRight)) return;
+            _marginRight = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 下间距
+    /// </summary>
+    public double MarginBottom
+    {
+        get => _marginBottom;
+        set
+        {
+            if (value.Equals(_marginBottom)) return;
+            _marginBottom = value;
+            OnPropertyChanged();
+        }
+    }
+
     #endregion
 
     /// <summary>
@@ -367,6 +548,20 @@ public class ComponentSettings : ObservableRecipient
         {
             if (value == _isVisible) return;
             _isVisible = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 组件上次的宽度缓存。
+    /// </summary>
+    public double LastWidthCache
+    {
+        get => _lastWidthCache;
+        set
+        {
+            if (value.Equals(_lastWidthCache)) return;
+            _lastWidthCache = value;
             OnPropertyChanged();
         }
     }
