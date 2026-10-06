@@ -1738,21 +1738,31 @@
                                                     <Style TargetType="StackPanel">
                                                         <Style.Triggers>
                                                             <DataTrigger
-                                                                Binding="{Binding ViewModel.SelectedTimePoint.ActionSet}"
-                                                                Value="{x:Null}">
-                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                Binding="{Binding ViewModel.SelectedTimePoint.TimeType}"
+                                                                Value="3">
+                                                                <Setter Property="Visibility" Value="Visible" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
+                                                        <Setter Property="Visibility" Value="Collapsed" />
                                                     </Style>
                                                 </StackPanel.Style>
                                                 <TextBlock Text="行动" Style="{StaticResource SettingsSectionHeaderStyle}" />
-                                                <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
-                                                        Click="ButtonDebugTriggerAction_OnClick"
-                                                        IsEnabled="{Binding ProfileService.IsCurrentProfileTrusted, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
-                                                        Margin="0 0 0 2">
-                                                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.PlayCircleLine}" Text="触发"/>
-                                                </Button>
-                                                <action:ActionControl ActionSet="{Binding ViewModel.SelectedTimePoint.ActionSet}"/>
+                                                <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                                                          mah:TextBoxHelper.Watermark="选择脚本"
+                                                          ItemsSource="{Binding ScriptRuntimeService.ScriptFiles, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
+                                                          SelectedItem="{Binding ViewModel.SelectedTimePoint.Script, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                <WrapPanel Orientation="Horizontal" Margin="0 4 0 0">
+                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
+                                                            Click="ButtonDebugTriggerAction_OnClick"
+                                                            IsEnabled="{Binding ProfileService.IsCurrentProfileTrusted, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
+                                                            Margin="0 0 2 0">
+                                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.PlayCircleLine}" Text="触发"/>
+                                                    </Button>
+                                                    <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
+                                                            Click="ButtonOpenScriptFolder_OnClick">
+                                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FolderOpenLine}" Text="打开脚本目录"/>
+                                                    </Button>
+                                                </WrapPanel>
                                             </StackPanel>
                                         </StackPanel>
                                     </ScrollViewer>

@@ -17,6 +17,7 @@ public class TimeLayoutItem : AttachableSettingsObject, IComparable
     private Guid _defaultClassId = Guid.Empty;
     private string _breakName = "";
     private ActionSet? _actionSet;
+    private string? _script;
     private TimeSpan _startTime = TimeSpan.Zero;
     private TimeSpan _endTime = TimeSpan.Zero;
 
@@ -191,7 +192,8 @@ public class TimeLayoutItem : AttachableSettingsObject, IComparable
     }
 
     /// <summary>
-    /// 当当前时间点为【行动】时，要执行的行动组
+    /// 当当前时间点为【行动】时，要执行的行动组。
+    /// <para>已弃用，将由 <see cref="Script"/> 取代，并将在后续版本中移除。</para>
     /// </summary>
     public ActionSet? ActionSet
     {
@@ -200,6 +202,21 @@ public class TimeLayoutItem : AttachableSettingsObject, IComparable
         {
             if (Equals(value, _actionSet)) return;
             _actionSet = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 当当前时间点为【行动】时，要执行的脚本文件名。仅当 <see cref="TimeType"/> 为 3 时有意义。
+    /// </summary>
+    public string? Script
+    {
+        get => _script;
+        set
+        {
+            if (_script == value) return;
+            OnPropertyChanging();
+            _script = value;
             OnPropertyChanged();
         }
     }

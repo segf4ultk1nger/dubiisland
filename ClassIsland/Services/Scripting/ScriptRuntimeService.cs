@@ -178,6 +178,7 @@ on.classStart(function(){ log(""class started""); });
     private readonly ILogger<ScriptRuntimeService> _logger;
     private readonly ILessonsService _lessonsService;
     private readonly IExactTimeService _exactTimeService;
+    private readonly IProfileService _profileService;
     private readonly INotificationHostService _notificationHostService;
     private readonly SettingsService _settingsService;
     private readonly IUriNavigationService _uriNavigationService;
@@ -192,12 +193,14 @@ on.classStart(function(){ log(""class started""); });
     private readonly CancellationTokenSource _cts = new();
     private readonly BlockingCollection<Action> _queue = new();
     private readonly List<ScriptDocument> _documents = new();
+    private readonly object _documentsLock = new();
     private readonly object _syncRoot = new();
     private Timer? _cronTimer;
     private Thread? _thread;
     private bool _initialized;
     private bool _disposed;
     private TimeState _lastTimeState = TimeState.None;
+    private DateTime _lastTimePointRunTime;
 
     private delegate void LogDelegate(params object[] args);
 
@@ -212,6 +215,35 @@ on.classStart(function(){ log(""class started""); });
     internal IExactTimeService ExactTime => _exactTimeService;
 
     /// <summary>
+    /// 已加载的脚本文件名列表，供界面选择时间点行动脚本使用。
+    /// </summary>
+    public IReadOnlyList<string> ScriptFiles
+    {
+        get
+        {
+            lock (_documentsLock)
+            {
+                return _documents.Select(d => Path.GetFileName(d.FilePath)).ToArray();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 触发一个时间点行动脚本。任务会被投递到脚本调度线程上执行。
+    /// </summary>
+    /// <param name="scriptFileName">脚本文件名，例如 <c>morning-bell.js</c>。</param>
+    /// <param name="item">触发该脚本的时间点。</param>
+    public void RunTimePointScript(string? scriptFileName, TimeLayoutItem item)
+    {
+        if (string.IsNullOrWhiteSpace(scriptFileName))
+        {
+            return;
+        }
+
+        Post(() => RunTimePointScriptCore(scriptFileName, item));
+    }
+
+    /// <summary>
     /// 初始化一个 <see cref="ScriptRuntimeService"/> 实例，并订阅宿主事件。
     /// </summary>
     public ScriptRuntimeService(ILogger<ScriptRuntimeService> logger, ILessonsService lessonsService,
@@ -224,6 +256,7 @@ on.classStart(function(){ log(""class started""); });
         _logger = logger;
         _lessonsService = lessonsService;
         _exactTimeService = exactTimeService;
+        _profileService = profileService;
         _notificationHostService = notificationHostService;
         _settingsService = settingsService;
         _uriNavigationService = uriNavigationService;
@@ -248,11 +281,16 @@ on.classStart(function(){ log(""class started""); });
         }
 
         _lastTimeState = lessonsService.CurrentState;
+        _lastTimePointRunTime = exactTimeService.GetCurrentLocalDateTime();
 
         lessonsService.OnClass += (_, _) => Post(() => InvokeAll("__fire", "classStart"));
         lessonsService.OnBreakingTime += (_, _) => Post(() => InvokeAll("__fire", "breakingTime"));
         lessonsService.OnAfterSchool += (_, _) => Post(() => InvokeAll("__fire", "afterSchool"));
-        lessonsService.PostMainTimerTicked += (_, _) => Post(TickPreTimePoints);
+        lessonsService.PostMainTimerTicked += (_, _) => Post(() =>
+        {
+            TickPreTimePoints();
+            TickTimePoints();
+        });
         lessonsService.CurrentTimeStateChanged += (_, _) =>
         {
             var current = lessonsService.CurrentState;
@@ -428,7 +466,11 @@ on.classStart(function(){ log(""class started""); });
             ApplyBuilder(engine, _contributorApi);
             engine.Execute(File.ReadAllText(file), file);
 
-            _documents.Add(document);
+            lock (_documentsLock)
+            {
+                _documents.Add(document);
+            }
+
             _logger.LogInformation("已加载脚本：{}", file);
         }
         catch (JavaScriptException ex)
@@ -606,6 +648,77 @@ on.classStart(function(){ log(""class started""); });
             }
         }
     }
+
+    private void TickTimePoints()
+    {
+        if (!_profileService.IsCurrentProfileTrusted)
+        {
+            return;
+        }
+
+        var currentTime = _exactTimeService.GetCurrentLocalDateTime();
+        var triggered = _lessonsService.CurrentClassPlan?.TimeLayout?.Layouts
+            .Where(x => x.TimeType == 3 && !string.IsNullOrWhiteSpace(x.Script) &&
+                        x.StartTime > _lastTimePointRunTime.TimeOfDay &&
+                        x.StartTime <= currentTime.TimeOfDay)
+            .ToList();
+        _lastTimePointRunTime = currentTime;
+        if (triggered == null)
+        {
+            return;
+        }
+
+        foreach (var item in triggered)
+        {
+            _logger.LogInformation("触发时间点脚本：{}/[{}]", _lessonsService.CurrentClassPlan?.TimeLayout?.Name,
+                item.StartTime);
+            RunTimePointScriptCore(item.Script!, item);
+        }
+    }
+
+    private void RunTimePointScriptCore(string scriptFileName, TimeLayoutItem item)
+    {
+        var document = _documents.FirstOrDefault(d =>
+            string.Equals(Path.GetFileName(d.FilePath), scriptFileName, StringComparison.OrdinalIgnoreCase));
+        if (document == null)
+        {
+            _logger.LogWarning("找不到时间点脚本“{Script}”，已跳过。", scriptFileName);
+            return;
+        }
+
+        try
+        {
+            var trigger = document.Engine.GetValue("trigger");
+            if (!trigger.IsCallable())
+            {
+                _logger.LogWarning("脚本“{File}”未定义 trigger 函数，已跳过时间点脚本。", document.FilePath);
+                return;
+            }
+
+            var context = new ScriptTimeLayoutItemInfo
+            {
+                StartTime = FormatTime(item.StartTime),
+                EndTime = FormatTime(item.EndTime),
+                TimeType = item.TimeType,
+                BreakName = item.BreakNameText
+            };
+            document.Engine.Invoke("trigger", context);
+        }
+        catch (JavaScriptException ex)
+        {
+            _logger.LogError(ex, "脚本“{File}”执行时间点脚本时发生异常（{Location}）：{Message}", document.FilePath,
+                ex.Location, ex.GetJavaScriptErrorString());
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "脚本“{File}”执行时间点脚本时发生异常。", document.FilePath);
+        }
+    }
+
+    private static string FormatTime(TimeSpan time) => $"{(int)time.TotalHours:00}:{time.Minutes:00}";
 
     private void EvaluateCrons()
     {

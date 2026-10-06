@@ -25,6 +25,7 @@ using ClassIsland.Core.Models.Components;
 using ClassIsland.Models;
 using ClassIsland.Shared.Models.Profile;
 using ClassIsland.Services;
+using ClassIsland.Services.Scripting;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Extensions;
@@ -156,6 +157,8 @@ public partial class ProfileSettingsWindow : MyWindow
     public IProfileService ProfileService { get; } = App.GetService<IProfileService>();
 
     public IComponentsService ComponentsService { get; } = App.GetService<IComponentsService>();
+
+    public ScriptRuntimeService ScriptRuntimeService { get; } = App.GetService<ScriptRuntimeService>();
 
     public void OpenDrawer(string key)
     {
@@ -1044,12 +1047,24 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonDebugTriggerAction_OnClick(object sender, RoutedEventArgs e)
     {
-        var action = ViewModel.SelectedTimePoint?.ActionSet;
-        if (action == null)
+        var item = ViewModel.SelectedTimePoint;
+        if (item == null || string.IsNullOrWhiteSpace(item.Script) || !ProfileService.IsCurrentProfileTrusted)
         {
             return;
         }
-        IAppHost.GetService<IActionService>().Invoke(action);
+
+        ScriptRuntimeService.RunTimePointScript(item.Script, item);
+    }
+
+    private void ButtonOpenScriptFolder_OnClick(object sender, RoutedEventArgs e)
+    {
+        var directory = Path.Combine(App.AppConfigPath, "Scripts", "Default");
+        Directory.CreateDirectory(directory);
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = directory,
+            UseShellExecute = true
+        });
     }
 
     private async void ButtonUnTrustedProfile_OnClick(object sender, RoutedEventArgs e)
