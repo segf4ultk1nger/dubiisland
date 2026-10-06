@@ -21,6 +21,7 @@ public sealed class IslandRenderer
 
     private Brush _backgroundBrush = Brushes.Black;
     private double _contentHeight;
+    private double _contentWidth;
 
     /// <summary>是否显示提醒遮罩。</summary>
     public bool IsMaskVisible { get; set; }
@@ -127,7 +128,10 @@ public sealed class IslandRenderer
     public Size Measure(Size availableSize)
     {
         _lines.Clear();
-        var desired = new Size(0, 0);
+        var desiredWidth = 0.0;
+        var spacing = _context.Settings.MainWindowLineVerticalMargin;
+        var y = 0.0;
+        var first = true;
 
         foreach (var group in _components.Where(c => c.IsVisible)
                      .GroupBy(c => c.LineNumber)
@@ -144,23 +148,42 @@ public sealed class IslandRenderer
                 height = Math.Max(height, sizes[i].Height);
             }
 
-            _lines.Add(new IslandLine(group.Key, components, sizes, height));
-            desired.Width = Math.Max(desired.Width, width);
-            desired.Height += height;
+            if (!first)
+                y += spacing;
+            first = false;
+
+            _lines.Add(new IslandLine(group.Key, components, sizes, width, height, y));
+            desiredWidth = Math.Max(desiredWidth, width);
+            y += height;
         }
 
-        _contentHeight = desired.Height;
+        _contentHeight = y;
+        _contentWidth = desiredWidth;
         if (_lines.Count > 0)
-            desired.Width += _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
-        return desired;
+        {
+            _contentWidth += _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
+        }
+
+        return new Size(_contentWidth, _contentHeight);
     }
+
+    /// <summary>行背景在内容区内的水平对齐（0=左 0.5=中 1=右），跟随全局停靠位置。</summary>
+    private double HorizontalAlign => _context.Settings.WindowDockingLocation switch
+    {
+        1 or 4 => 0.5,
+        2 or 5 => 1.0,
+        _ => 0.0
+    };
 
     public void Render(DrawingContext drawingContext, Rect bounds)
     {
         var settings = _context.Settings;
 
         // 1) 底色条：独立于内容淡出。提醒 overlay 阶段 ContentOpacity 归 0 时底色条仍需保留。
-        var backgroundY = 0.0;
+        //    每一行是独立的岛：背景宽度贴合该行内容，按全局停靠位置水平对齐。
+        var left = settings.MainWindowLeftMargin;
+        var right = settings.MainWindowRightMargin;
+        var hAlign = HorizontalAlign;
         foreach (var line in _lines)
         {
             var opacity = GetLineOpacity(line.LineNumber);
@@ -168,7 +191,9 @@ public sealed class IslandRenderer
             if (faded)
                 drawingContext.PushOpacity(opacity);
 
-            var lineRect = new Rect(0, backgroundY, bounds.Width, line.Height);
+            var lineWidth = line.Width + left + right;
+            var lineX = (bounds.Width - lineWidth) * hAlign;
+            var lineRect = new Rect(lineX, line.Top, lineWidth, line.Height);
             if (lineRect.Width > 0 && lineRect.Height > 0)
             {
                 drawingContext.DrawGeometry(_backgroundBrush, null, CreateCornerGeometry(lineRect));
@@ -176,15 +201,12 @@ public sealed class IslandRenderer
 
             if (faded)
                 drawingContext.Pop();
-
-            backgroundY += line.Height;
         }
 
         // 2) 内容组件：受 ContentOpacity 控制（提醒时会被压低到 0）。
         var contentOpaque = ContentOpacity < 1;
         if (contentOpaque)
             drawingContext.PushOpacity(ContentOpacity);
-        var y = 0.0;
         foreach (var line in _lines)
         {
             var opacity = GetLineOpacity(line.LineNumber);
@@ -192,18 +214,17 @@ public sealed class IslandRenderer
             if (faded)
                 drawingContext.PushOpacity(opacity);
 
-            var x = settings.MainWindowLeftMargin;
+            var lineWidth = line.Width + left + right;
+            var x = (bounds.Width - lineWidth) * hAlign + left;
             for (var i = 0; i < line.Components.Length; i++)
             {
-                var slot = new Rect(x, y, line.Sizes[i].Width, line.Height);
+                var slot = new Rect(x, line.Top, line.Sizes[i].Width, line.Height);
                 line.Components[i].Render(drawingContext, slot, _context);
                 x += slot.Width;
             }
 
             if (faded)
                 drawingContext.Pop();
-
-            y += line.Height;
         }
 
         if (contentOpaque)
@@ -355,12 +376,17 @@ public sealed class IslandRenderer
     /// <summary>命中测试：给定自然坐标，返回所在行号，未命中返回 -1。</summary>
     public int HitTestLine(Point point)
     {
-        var y = 0.0;
+        var left = _context.Settings.MainWindowLeftMargin;
+        var right = _context.Settings.MainWindowRightMargin;
+        var hAlign = HorizontalAlign;
         foreach (var line in _lines)
         {
-            if (point.Y >= y && point.Y <= y + line.Height)
+            if (point.Y < line.Top || point.Y > line.Top + line.Height)
+                continue;
+            var lineWidth = line.Width + left + right;
+            var lineX = (_contentWidth - lineWidth) * hAlign;
+            if (point.X >= lineX && point.X <= lineX + lineWidth)
                 return line.LineNumber;
-            y += line.Height;
         }
 
         return -1;
@@ -445,12 +471,15 @@ public sealed class IslandRenderer
 
     private sealed class IslandLine
     {
-        public IslandLine(int lineNumber, IIslandComponent[] components, Size[] sizes, double height)
+        public IslandLine(int lineNumber, IIslandComponent[] components, Size[] sizes, double width, double height,
+            double top)
         {
             LineNumber = lineNumber;
             Components = components;
             Sizes = sizes;
+            Width = width;
             Height = height;
+            Top = top;
         }
 
         public int LineNumber { get; }
@@ -459,6 +488,12 @@ public sealed class IslandRenderer
 
         public Size[] Sizes { get; }
 
+        /// <summary>该行内容宽度（含组件外边距，不含全局左右边距）。</summary>
+        public double Width { get; }
+
         public double Height { get; }
+
+        /// <summary>该行在内容区内的顶部 Y 坐标（已含行间距）。</summary>
+        public double Top { get; }
     }
 }
