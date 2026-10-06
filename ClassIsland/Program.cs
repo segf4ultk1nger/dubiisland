@@ -11,8 +11,11 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using ClassIsland.Core;
+using ClassIsland.Core.Converters;
 using ClassIsland.Core.Enums;
 using ClassIsland.Services;
+using ClassIsland.Shared.Helpers;
+using ClassIsland.Shared.JsonConverters;
 using System.Diagnostics;
 using IccEvolved.UiAccess;
 
@@ -83,6 +86,8 @@ internal static class Program
     {
         AppDomain.CurrentDomain.UnhandledException += DiagnosticService.ProcessDomainUnhandledException;
         AppBase.CurrentLifetime = ApplicationLifetime.EarlyLoading;
+        ConfigureFileHelper.SerializerOptions.Converters.Add(new ColorHexJsonConverter());
+        ConfigureFileHelper.SerializerOptions.Converters.Add(new GuidEmptyFallbackConverter());
 
         // UIAccess 子进程特征：命令行带 marker（内含交接文件路径）→ 删除交接文件，跳过启用流程。
         var isUiAccessChild = TryGetUiAccessHandoff(args, out var handoffPath);
