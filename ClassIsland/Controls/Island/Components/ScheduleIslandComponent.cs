@@ -349,24 +349,34 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var contentX = rect.X + pad;
 
         var name = MakeText(segment.Text, EmphasizedFontSize, FontWeights.Bold, _foreground, context);
-        var nameOrigin = new Point(contentX, rect.Y + (rect.Height - name.Height) / 2);
+        var extra = GetExtraText(segment.Item!, segment.Settings, context, out var pill, out _);
+        var extraFont = extra == null
+            ? null
+            : MakeText(extra, pill ? BodyFontSize : SecondaryFontSize, FontWeights.Normal, _foreground, context);
+        var extraWidth = extraFont == null ? 0 : extraFont.Width + (pill ? PillPadding * 2 : 0);
+
+        // 复刻 LessonControlExpanded：名称与附加信息同属一个内容块，内容块在行内垂直居中；
+        // 名称在块内居中，附加信息对齐内容块底部（而非整行底部）。
+        var blockHeight = Math.Max(name.Height, extraFont?.Height ?? 0);
+        var blockTop = rect.Y + (rect.Height - blockHeight) / 2;
+
+        var nameOrigin = new Point(contentX, blockTop + (blockHeight - name.Height) / 2);
         if (segment.Changed && _settings.HighlightChangedClass)
             DrawChangedGlow(drawingContext, name, nameOrigin, 2);
 
         drawingContext.DrawText(name, nameOrigin);
 
-        var extra = GetExtraText(segment.Item!, segment.Settings, context, out var pill, out _);
-        if (extra != null)
+        if (extraFont != null)
         {
             var extraX = contentX + name.Width + ItemGap;
+            var extraY = blockTop + blockHeight - extraFont.Height;
             if (pill)
             {
-                DrawCountdownPill(drawingContext, rect, extraX, extra, context);
+                DrawCountdownPill(drawingContext, extraX, extraY, extraFont, extraWidth);
             }
             else
             {
-                var font = MakeText(extra, SecondaryFontSize, FontWeights.Normal, _foreground, context);
-                drawingContext.DrawText(font, new Point(extraX, rect.Y + rect.Height - font.Height - 4));
+                drawingContext.DrawText(extraFont, new Point(extraX, extraY));
             }
         }
 
@@ -383,12 +393,10 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         }
     }
 
-    private void DrawCountdownPill(DrawingContext drawingContext, Rect rect, double x, string text, IslandContext context)
+    private void DrawCountdownPill(DrawingContext drawingContext, double x, double y, FormattedText font, double width)
     {
-        var font = MakeText(text, BodyFontSize, FontWeights.Normal, _foreground, context);
-        var width = font.Width + PillPadding * 2;
-        var height = Math.Min(rect.Height - 8, font.Height);
-        var pill = new Rect(x, rect.Y + rect.Height - height - 2, width, height);
+        var height = font.Height;
+        var pill = new Rect(x, y, width, height);
         drawingContext.DrawRoundedRectangle(_accentFill, null, pill, height / 2, height / 2);
         drawingContext.DrawRoundedRectangle(null, _accentPen, pill, height / 2, height / 2);
         drawingContext.DrawText(font, new Point(pill.X + PillPadding, pill.Y + (height - font.Height) / 2));
