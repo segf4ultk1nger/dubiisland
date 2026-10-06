@@ -344,9 +344,37 @@
                              BorderThickness="0"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              PreviewMouseLeftButtonUp="SearchResultsList_OnPreviewMouseLeftButtonUp">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="10 7"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                <Border x:Name="Highlight"
+                                                        Background="{DynamicResource MahApps.Brushes.Accent}"
+                                                        Opacity="0"/>
+                                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                  VerticalAlignment="Center"/>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Highlight" Property="Opacity" Value="0.14"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Highlight" Property="Opacity" Value="0.28"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="4 6">
+                                <StackPanel>
                                     <TextBlock Text="{Binding Header}" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
                                     <TextBlock Text="{Binding PageName}" FontSize="11" Opacity="0.6" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>

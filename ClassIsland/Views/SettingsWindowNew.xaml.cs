@@ -535,11 +535,23 @@ public partial class SettingsWindowNew : MyWindow
 
     private async void ActivateSearchEntry(SettingsSearchEntry entry)
     {
-        ClearSearch();
-
         var info = SettingsWindowRegistryService.Registered.FirstOrDefault(x => x.Id == entry.PageId);
         if (info == null || !PassesNavigationFilter(info))
         {
+            ClearSearch();
+            return;
+        }
+
+        ClearSearch();
+
+        // 已经在目标页时，再 Navigate 不会触发 LoadCompleted，高亮得直接揭示。
+        if (ViewModel.SelectedPageInfo?.Id == info.Id)
+        {
+            if (!entry.IsPage)
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => RevealSearchTarget(entry)), DispatcherPriority.ContextIdle);
+            }
+
             return;
         }
 

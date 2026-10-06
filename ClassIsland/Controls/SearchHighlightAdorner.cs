@@ -6,7 +6,7 @@ using System.Windows.Media.Animation;
 
 namespace ClassIsland.Controls;
 
-/// <summary>搜索命中后，在目标设置卡片上短暂画一个高亮框。</summary>
+/// <summary>搜索命中后，在目标元素上闪一下红色直角矩形线框。</summary>
 internal sealed class SearchHighlightAdorner : Adorner
 {
     private static readonly Pen HighlightPen = CreatePen();
@@ -19,10 +19,11 @@ internal sealed class SearchHighlightAdorner : Adorner
     protected override void OnRender(DrawingContext drawingContext)
     {
         var rect = new Rect(AdornedElement.RenderSize);
-        rect.Inflate(2, 2);
-        drawingContext.DrawRoundedRectangle(null, HighlightPen, rect, 7, 7);
+        rect.Inflate(1, 1);
+        drawingContext.DrawRectangle(null, HighlightPen, rect);
     }
 
+    /// <summary>在元素上播放一次闪烁，结束后自动移除。</summary>
     public static void Flash(UIElement element)
     {
         var layer = AdornerLayer.GetAdornerLayer(element);
@@ -35,9 +36,9 @@ internal sealed class SearchHighlightAdorner : Adorner
         layer.Add(adorner);
 
         var animation = new DoubleAnimationUsingKeyFrames();
-        animation.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(180))));
-        animation.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(900))));
-        animation.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1350))));
+        animation.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(80))));
+        animation.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(360))));
+        animation.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(640))));
 
         var storyboard = new Storyboard();
         Storyboard.SetTarget(animation, adorner);
@@ -49,7 +50,7 @@ internal sealed class SearchHighlightAdorner : Adorner
 
     private static Pen CreatePen()
     {
-        var brush = new SolidColorBrush(Color.FromRgb(0x4C, 0xA0, 0xFF));
+        var brush = new SolidColorBrush(Color.FromRgb(0xFF, 0x3B, 0x30));
         brush.Freeze();
         var pen = new Pen(brush, 2);
         pen.Freeze();
