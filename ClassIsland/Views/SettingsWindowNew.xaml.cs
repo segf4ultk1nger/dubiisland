@@ -110,6 +110,7 @@ public partial class SettingsWindowNew : MyWindow
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
         Closed += SettingsWindowNew_OnClosed;
         InitializeComponent();
+        AnimateSearchOverlay(ViewModel.IsNavigationDrawerOpened);
         NavigationService = NavigationFrame.NavigationService;
         NavigationService.LoadCompleted += NavigationServiceOnLoadCompleted;
         NavigationService.Navigating += NavigationServiceOnNavigating;
@@ -135,6 +136,67 @@ public partial class SettingsWindowNew : MyWindow
                 return;
             await CoreNavigate(ViewModel.SelectedPageInfo);
         }
+        else if (e.PropertyName == nameof(ViewModel.IsNavigationDrawerOpened))
+        {
+            AnimateSearchOverlay(ViewModel.IsNavigationDrawerOpened);
+        }
+    }
+
+    /// <summary>
+    /// 紧凑覆盖（CompactOverlay）模式下，导航栏是滑出并靠内部 Clip 逐渐露出的，而搜索框是独立的覆盖层，
+    /// 不会跟着被裁剪。这里让搜索框宽度从紧凑宽度动画到展开宽度（配合 ClipToBounds 露出）并同步淡入淡出，
+    /// 缓动曲线与时长都取自 MahApps SplitView 的展开/收起 Storyboard（KeySpline 0.1,0.9 0.2,1.0）。
+    /// </summary>
+    private void AnimateSearchOverlay(bool open)
+    {
+        var compactLength = HamburgerMenuControl.CompactPaneLength;
+        var openLength = HamburgerMenuControl.OpenPaneLength;
+
+        // 宽屏内联展开、或窗口尚未加载（初始布局）时不做动画，直接落到目标状态。
+        if (!ViewModel.IsViewCompressed || !IsLoaded)
+        {
+            SearchOverlay.BeginAnimation(FrameworkElement.WidthProperty, null);
+            SearchOverlay.BeginAnimation(OpacityProperty, null);
+            SearchOverlay.Opacity = open ? 1 : 0;
+            SearchOverlay.Width = open ? openLength : compactLength;
+            SearchOverlay.Visibility = open ? Visibility.Visible : Visibility.Collapsed;
+            return;
+        }
+
+        if (open)
+        {
+            SearchOverlay.Visibility = Visibility.Visible;
+            SearchOverlay.BeginAnimation(OpacityProperty, null);
+            SearchOverlay.Opacity = 1;
+            SearchOverlay.BeginAnimation(FrameworkElement.WidthProperty,
+                CreateOverlayTransition(compactLength, openLength, TimeSpan.FromMilliseconds(350)));
+            return;
+        }
+
+        var widthAnimation = CreateOverlayTransition(openLength, compactLength, TimeSpan.FromMilliseconds(120));
+        widthAnimation.Completed += (_, _) =>
+        {
+            if (!ViewModel.IsNavigationDrawerOpened)
+            {
+                SearchOverlay.BeginAnimation(FrameworkElement.WidthProperty, null);
+                SearchOverlay.Opacity = 0;
+                SearchOverlay.Width = compactLength;
+                SearchOverlay.Visibility = Visibility.Collapsed;
+            }
+        };
+        SearchOverlay.BeginAnimation(FrameworkElement.WidthProperty, widthAnimation);
+        SearchOverlay.BeginAnimation(OpacityProperty,
+            CreateOverlayTransition(1, 0, TimeSpan.FromMilliseconds(120)));
+    }
+
+    /// <summary>复刻 MahApps SplitView 的缓动：KeySpline 0.1,0.9 0.2,1.0（WPF 没有 SplineEase，需用关键帧）。</summary>
+    private static DoubleAnimationUsingKeyFrames CreateOverlayTransition(double from, double to, TimeSpan duration)
+    {
+        var animation = new DoubleAnimationUsingKeyFrames();
+        animation.KeyFrames.Add(new DiscreteDoubleKeyFrame(from, KeyTime.FromPercent(0)));
+        animation.KeyFrames.Add(new SplineDoubleKeyFrame(to, KeyTime.FromTimeSpan(duration),
+            new KeySpline(0.1, 0.9, 0.2, 1.0)));
+        return animation;
     }
 
     private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -543,6 +605,12 @@ public partial class SettingsWindowNew : MyWindow
         }
 
         ClearSearch();
+
+        // 紧凑覆盖模式下选中结果后收起导航栏；同页时不会走 CoreNavigate，得在这里收。
+        if (ViewModel.IsViewCompressed)
+        {
+            ViewModel.IsNavigationDrawerOpened = false;
+        }
 
         // 已经在目标页时，再 Navigate 不会触发 LoadCompleted，高亮得直接揭示。
         if (ViewModel.SelectedPageInfo?.Id == info.Id)

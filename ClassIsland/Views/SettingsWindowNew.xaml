@@ -310,12 +310,14 @@
         </mah:HamburgerMenu>
 
         <!-- 设置搜索：贴在汉堡菜单导航栏顶部的搜索框 + 结果覆盖层（覆盖在菜单项之上） -->
+        <!-- 宽度/显隐由代码按汉堡菜单的展开动画驱动（ClipToBounds 露出），紧凑覆盖模式下与菜单滑出一致。 -->
         <Grid x:Name="SearchOverlay"
               HorizontalAlignment="Left"
               VerticalAlignment="Stretch"
               Panel.ZIndex="10"
-              Width="{Binding ElementName=HamburgerMenuControl, Path=OpenPaneLength}"
-              Visibility="{Binding ElementName=HamburgerMenuControl, Path=IsPaneOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+              Width="250"
+              ClipToBounds="True"
+              Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
