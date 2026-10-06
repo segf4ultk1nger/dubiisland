@@ -23,7 +23,7 @@ using ComponentSettingsList = ObservableCollection<ComponentSettings>;
 
 public class ComponentsService : ObservableRecipient, IComponentsService
 {
-    public static readonly string ComponentSettingsPath = Path.Combine(App.AppConfigPath, "Islands/");
+    public static readonly string ComponentSettingsPath = Path.Combine(App.AppConfigPath, "ComponentLayouts/");
 
     private ComponentSettingsList _currentComponents = new();
     private IReadOnlyList<string> _componentConfigs = new List<string>();
@@ -64,6 +64,21 @@ public class ComponentsService : ObservableRecipient, IComponentsService
             Directory.CreateDirectory(ComponentSettingsPath);
         }
 
+        var legacyComponentSettingsPath = Path.Combine(App.AppConfigPath, "Islands");
+        if (Directory.Exists(legacyComponentSettingsPath))
+        {
+            foreach (var legacyConfigPath in Directory.GetFiles(legacyComponentSettingsPath, "*.json"))
+            {
+                var targetConfigPath = Path.Combine(ComponentSettingsPath, Path.GetFileName(legacyConfigPath));
+                if (File.Exists(targetConfigPath))
+                {
+                    continue;
+                }
+                File.Copy(legacyConfigPath, targetConfigPath);
+                Logger.LogInformation("迁移组件配置文件 {} -> {}", legacyConfigPath, targetConfigPath);
+            }
+        }
+
         RefreshConfigs();
         LoadConfig();
         RefreshConfigs();
@@ -92,17 +107,17 @@ public class ComponentsService : ObservableRecipient, IComponentsService
             {
                 return;
             }
-            CurrentComponents = await ManagementService.Connection
-                .SaveJsonAsync<ComponentSettingsList>(ManagementService.Manifest.ComponentsSource.Value!,
-                    Management.ManagementService.ManagementComponentsPath);
+            CurrentComponents = FlattenComponentProfile(await ManagementService.Connection
+                .SaveJsonAsync<ComponentProfile>(ManagementService.Manifest.ComponentsSource.Value!,
+                    Management.ManagementService.ManagementComponentsPath));
             ManagementService.Versions.ComponentsVersion = ManagementService.Manifest.ComponentsSource.Version;
         }
         catch (Exception e)
         {
             Logger.LogError(e, "无法从集控拉取组件配置");
-            CurrentComponents =
-                ConfigureFileHelper.LoadConfig<ComponentSettingsList>(Management.ManagementService
-                    .ManagementComponentsPath);
+            CurrentComponents = FlattenComponentProfile(
+                ConfigureFileHelper.LoadConfig<ComponentProfile>(Management.ManagementService
+                    .ManagementComponentsPath));
         }
         LoadConfig();
     
@@ -110,6 +125,7 @@ public class ComponentsService : ObservableRecipient, IComponentsService
 
     private void LoadConfig()
     {
+        var migrated = false;
         if (!IsManagementMode)
         {
             if (!File.Exists(SelectedConfigFullPath))
@@ -117,16 +133,21 @@ public class ComponentsService : ObservableRecipient, IComponentsService
                 CurrentComponents = ConfigureFileHelper.CopyObject(DefaultComponents);
                 SaveConfig();
             }
-            else
+            else if (File.ReadAllText(SelectedConfigFullPath).TrimStart().StartsWith("[", StringComparison.Ordinal))
             {
                 CurrentComponents = ConfigureFileHelper.LoadConfig<ComponentSettingsList>(SelectedConfigFullPath);
+                migrated = true;
+            }
+            else
+            {
+                var profile = ConfigureFileHelper.LoadConfig<ComponentProfile>(SelectedConfigFullPath);
+                CurrentComponents = FlattenComponentProfile(profile);
             }
         }
         
         CurrentConfigName = SettingsService.Settings.CurrentComponentConfig;
-        CurrentComponents.CollectionChanged += (s, e) => ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, CurrentComponents);
+        CurrentComponents.CollectionChanged += (s, e) => ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, BuildComponentProfile());
 
-        var migrated = false;
         foreach (var i in CurrentComponents)
         {
             if (!ComponentRegistryService.MigrationPairs.TryGetValue(new Guid(i.Id), out var targetGuid))
@@ -151,7 +172,37 @@ public class ComponentsService : ObservableRecipient, IComponentsService
 
     public void SaveConfig()
     {
-        ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, CurrentComponents);
+        ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, BuildComponentProfile());
+    }
+
+    private ComponentProfile BuildComponentProfile()
+    {
+        var lines = CurrentComponents
+            .OrderBy(x => x.RelativeLineNumber)
+            .GroupBy(x => x.RelativeLineNumber)
+            .OrderBy(g => g.Key)
+            .Select(g => new MainWindowLineSettings
+            {
+                IsMainLine = g.Key == 0,
+                Children = new ObservableCollection<ComponentSettings>(g)
+            });
+        return new ComponentProfile { Lines = new ObservableCollection<MainWindowLineSettings>(lines) };
+    }
+
+    internal static ComponentSettingsList FlattenComponentProfile(ComponentProfile profile)
+    {
+        var flattened = new ComponentSettingsList();
+        var lineNumber = 0;
+        foreach (var line in profile.Lines)
+        {
+            foreach (var child in line.Children)
+            {
+                child.RelativeLineNumber = lineNumber;
+                flattened.Add(child);
+            }
+            lineNumber++;
+        }
+        return flattened;
     }
 
     public IReadOnlyList<string> ComponentConfigs
