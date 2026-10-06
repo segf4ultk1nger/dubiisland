@@ -459,7 +459,20 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
     #region INotificationVisualHost
 
-    public void OnNotificationTopmostChanged() => UpdateLayer();
+    public void OnNotificationTopmostChanged()
+    {
+        // 与 MainWindow 保持一致：置底模式下显示提醒时需要临时置顶，提醒结束后再回到置底。
+        if (_viewModel.IsNotificationWindowExplicitShowed && Settings.WindowLayer == 0)
+        {
+            UpdateLayer();
+            ReCheckTopmostState();
+        }
+        else if (!_viewModel.IsNotificationWindowExplicitShowed)
+        {
+            SetBottom();
+            UpdateLayer();
+        }
+    }
 
     public void OnNotificationEffectRequested()
     {
@@ -1224,7 +1237,9 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
     private void ReCheckTopmostState()
     {
-        if (_source == null || Settings.WindowLayer != 1)
+        if (_source == null)
+            return;
+        if (!_viewModel.IsNotificationWindowExplicitShowed && Settings.WindowLayer != 1)
             return;
         SetWindowPos((HWND)_hwnd, NativeWindowHelper.HWND_TOPMOST, 0, 0, 0, 0,
             SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOMOVE |
@@ -1234,6 +1249,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private void SetBottom()
     {
         if (_source == null || Settings.WindowLayer != 0)
+            return;
+        if (_viewModel.IsNotificationWindowExplicitShowed)
             return;
         SetWindowPos((HWND)_hwnd, NativeWindowHelper.HWND_BOTTOM, 0, 0, 0, 0,
             SET_WINDOW_POS_FLAGS.SWP_NOSIZE | SET_WINDOW_POS_FLAGS.SWP_NOMOVE |
