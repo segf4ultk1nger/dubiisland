@@ -92,6 +92,12 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
+        <Style TargetType="DataGrid" BasedOn="{StaticResource MahApps.Styles.DataGrid}"/>
+        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}"/>
+        <Style TargetType="DataGridCell" BasedOn="{StaticResource MahApps.Styles.DataGridCell}"/>
+        <Style TargetType="DataGridRow" BasedOn="{StaticResource MahApps.Styles.DataGridRow}"/>
+        <Style TargetType="TabControl" BasedOn="{StaticResource MahApps.Styles.TabControl}"/>
+        <Style TargetType="TabItem" BasedOn="{StaticResource MahApps.Styles.TabItem}"/>
         <Style BasedOn="{StaticResource MahApps.Styles.ComboBox}" TargetType="{x:Type ComboBox}" x:Key="ClassPlanDataGridComboBoxStyle">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
