@@ -174,6 +174,9 @@ public sealed class IslandPreview : FrameworkElement
         drawingContext.Pop();
     }
 
+    /// <summary>组件树重建后触发（此时旧槽位坐标已失效，外层应等下一帧重算高亮/聚焦）。</summary>
+    public event EventHandler? ContentChanged;
+
     /// <summary>按组件服务的当前配置重建整个组件树。</summary>
     private void BuildComponents()
     {
@@ -190,6 +193,8 @@ public sealed class IslandPreview : FrameworkElement
                 _renderer.Add(component);
             }
         }
+
+        ContentChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void HookComponentCollections()

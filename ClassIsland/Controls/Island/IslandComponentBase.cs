@@ -12,7 +12,7 @@ namespace ClassIsland.Controls.Island;
 /// 自绘组件基类。负责把 <see cref="ComponentSettings"/> 的外观设置（字号、前景色、宽高约束、对齐、
 /// 隐藏规则、外边距）统一应用到一个自绘组件上；子类只需实现“内容”的测量与绘制。
 /// </summary>
-public abstract class IslandComponentBase : IIslandComponent
+public abstract class IslandComponentBase : IIslandComponent, IIslandComponentCleanup
 {
     /// <summary>组件在行内的左右外边距（等价 ComponentPresenter 的 Margin="6 0"）。</summary>
     public const double HorizontalMargin = 6;
@@ -21,8 +21,40 @@ public abstract class IslandComponentBase : IIslandComponent
     {
         Component = component;
         component.PropertyChanged += OnComponentPropertyChanged;
+        HookSettingsNotifications();
         if (component.Children != null)
             component.Children.CollectionChanged += OnChildrenCollectionChanged;
+    }
+
+    private INotifyPropertyChanged? _settingsNotifications;
+
+    /// <summary>
+    /// 组件自己的设置对象（如 <c>TextComponentSettings</c>）是嵌套在 <see cref="ComponentSettings.Settings"/> 里的，
+    /// 外层 PropertyChanged 收不到它的变化。这里单独订阅，并在 Settings 被替换（懒反序列化）时改订。
+    /// </summary>
+    private void HookSettingsNotifications()
+    {
+        var settings = Component.Settings as INotifyPropertyChanged;
+        if (ReferenceEquals(settings, _settingsNotifications))
+            return;
+        if (_settingsNotifications != null)
+            _settingsNotifications.PropertyChanged -= OnSettingsPropertyChanged;
+        _settingsNotifications = settings;
+        if (_settingsNotifications != null)
+            _settingsNotifications.PropertyChanged += OnSettingsPropertyChanged;
+    }
+
+    /// <summary>组件被移除/重建时退订，避免组件反复重建时在设置对象上堆积事件处理器。</summary>
+    public virtual void Cleanup()
+    {
+        Component.PropertyChanged -= OnComponentPropertyChanged;
+        if (Component.Children != null)
+            Component.Children.CollectionChanged -= OnChildrenCollectionChanged;
+        if (_settingsNotifications != null)
+        {
+            _settingsNotifications.PropertyChanged -= OnSettingsPropertyChanged;
+            _settingsNotifications = null;
+        }
     }
 
     protected ComponentSettings Component { get; }
@@ -150,7 +182,14 @@ public abstract class IslandComponentBase : IIslandComponent
 
     protected void Invalidate() => Invalidated?.Invoke(this, EventArgs.Empty);
 
-    private void OnComponentPropertyChanged(object? sender, PropertyChangedEventArgs e) => Invalidate();
+    private void OnComponentPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ComponentSettings.Settings))
+            HookSettingsNotifications();
+        Invalidate();
+    }
+
+    private void OnSettingsPropertyChanged(object? sender, PropertyChangedEventArgs e) => Invalidate();
 
     protected virtual void OnChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => Invalidate();
 }

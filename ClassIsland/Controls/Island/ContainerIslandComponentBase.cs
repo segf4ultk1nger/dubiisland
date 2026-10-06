@@ -58,10 +58,26 @@ public abstract class ContainerIslandComponentBase : IslandComponentBase
         Invalidate();
     }
 
+    public override void Cleanup()
+    {
+        foreach (var child in _children)
+        {
+            child.Invalidated -= OnChildInvalidated;
+            (child as IIslandComponentCleanup)?.Cleanup();
+        }
+
+        _children.Clear();
+        base.Cleanup();
+    }
+
     private void RebuildChildren()
     {
         foreach (var child in _children)
+        {
             child.Invalidated -= OnChildInvalidated;
+            (child as IIslandComponentCleanup)?.Cleanup();
+        }
+
         _children.Clear();
 
         if (Component.Children != null)

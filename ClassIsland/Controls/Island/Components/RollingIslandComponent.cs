@@ -96,5 +96,9 @@ public sealed class RollingIslandComponent : ContainerIslandComponentBase, IIsla
         Invalidate();
     }
 
-    public void Cleanup() => Unhook();
+    public override void Cleanup()
+    {
+        Unhook();
+        base.Cleanup();
+    }
 }

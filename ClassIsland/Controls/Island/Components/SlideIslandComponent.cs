@@ -72,5 +72,9 @@ public sealed class SlideIslandComponent : ContainerIslandComponentBase, IIsland
         Invalidate();
     }
 
-    public void Cleanup() => _timer.Stop();
+    public override void Cleanup()
+    {
+        _timer.Stop();
+        base.Cleanup();
+    }
 }

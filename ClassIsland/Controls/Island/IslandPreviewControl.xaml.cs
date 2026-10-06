@@ -105,8 +105,31 @@ public partial class IslandPreviewControl : UserControl
         Unloaded += OnUnloaded;
     }
 
+    private bool _previewRefreshScheduled;
+
+    /// <summary>
+    /// 组件树重建后旧槽位坐标失效：等下一帧布局/绘制完，丢掉可能仍缓存旧画面的位图缓存，
+    /// 再用新坐标重算选中高亮与聚焦。否则重排后预览会停在旧位置（看起来「没更新」）。
+    /// </summary>
+    private void OnPreviewContentChanged(object? sender, EventArgs e)
+    {
+        if (_previewRefreshScheduled)
+            return;
+        _previewRefreshScheduled = true;
+        Dispatcher.BeginInvoke(new System.Action(() =>
+        {
+            _previewRefreshScheduled = false;
+            PreviewCanvas.CacheMode = null;
+            UpdatePreviewHighlight(false);
+            UpdatePreviewFocus();
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        IslandPreviewHost.ContentChanged -= OnPreviewContentChanged;
+        IslandPreviewHost.ContentChanged += OnPreviewContentChanged;
+
         if (_settingsService != null)
         {
             _settingsService.Settings.PropertyChanged -= OnSettingsChanged;
@@ -130,6 +153,7 @@ public partial class IslandPreviewControl : UserControl
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
+        IslandPreviewHost.ContentChanged -= OnPreviewContentChanged;
         if (_settingsService != null)
             _settingsService.Settings.PropertyChanged -= OnSettingsChanged;
         if (_wallpaperService != null)
