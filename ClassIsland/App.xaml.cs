@@ -33,6 +33,7 @@ using ClassIsland.Services.AppUpdating;
 using ClassIsland.Services.Logging;
 using ClassIsland.Services.Management;
 using ClassIsland.Services.NotificationProviders;
+using ClassIsland.Services.Scripting;
 using ClassIsland.Services.SpeechService;
 using ClassIsland.Views;
 using ClassIsland.Views.SettingPages;
@@ -501,6 +502,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<IActionService, ActionService>();
                 services.AddSingleton<IWindowRuleService, WindowRuleService>();
                 services.AddSingleton<IAutomationService, AutomationService>();
+                services.AddSingleton<ScriptRuntimeService>();
                 services.AddSingleton<ISpeechService>(GetSpeechService);
                 services.AddSingleton<IExactTimeService, ExactTimeService>();
                 //services.AddSingleton(typeof(ApplicationCommand), ApplicationCommand);
@@ -832,6 +834,7 @@ public partial class App : AppBase, IAppHost
         GetService<TrayIconService>().Initialize();
         GetService<IUriNavigationService>().HandleAppNavigation("class-swap", args => GetService<TrayIconService>().OpenClassSwapWindow());
         GetService<IRulesetService>().NotifyStatusChanged();
+        GetService<ScriptRuntimeService>().Initialize();
         File.Delete(Path.Combine(AppRootFolderPath, ".startup-count"));
         if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)
         {
@@ -1094,6 +1097,7 @@ public partial class App : AppBase, IAppHost
             Logger?.LogInformation("正在停止应用");
             AppStopping?.Invoke(this, EventArgs.Empty);
             IAppHost.Host?.Services.GetService<ILessonsService>()?.StopMainTimer();
+            GetService<ScriptRuntimeService>()?.Shutdown();
             IAppHost.Host?.StopAsync(TimeSpan.FromSeconds(5));
             IAppHost.Host?.Services.GetService<SettingsService>()?.SaveSettings("停止当前应用程序。");
             IAppHost.Host?.Services.GetService<IAutomationService>()?.SaveConfig("停止当前应用程序。");
