@@ -21,10 +21,12 @@ using ClassIsland.Core.Controls;
 using ClassIsland.Core.Converters;
 using ClassIsland.Core.Enums;
 using ClassIsland.Core.Helpers.Native;
+using ClassIsland.Core.Models.Components;
 using ClassIsland.Models;
 using ClassIsland.Shared.Models.Profile;
 using ClassIsland.Services;
 using ClassIsland.Shared;
+using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Extensions;
 using ClassIsland.Shared.Models.Action;
 using ClassIsland.Core.Services;
@@ -152,6 +154,8 @@ public partial class ProfileSettingsWindow : MyWindow
     public ILessonsService LessonsService { get; } = App.GetService<ILessonsService>();
 
     public IProfileService ProfileService { get; } = App.GetService<IProfileService>();
+
+    public IComponentsService ComponentsService { get; } = App.GetService<IComponentsService>();
 
     public void OpenDrawer(string key)
     {
@@ -1069,6 +1073,115 @@ public partial class ProfileSettingsWindow : MyWindow
         {
             ViewModel.StatusMessage = "成功导入了 CSES 课表。";
             RefreshProfiles();
+        }
+    }
+
+    private void MenuItemImportFromClassIslandProfile_OnClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsProfileImportMenuOpened = false;
+        if (ManagementService.Policy.DisableProfileClassPlanEditing ||
+            ManagementService.Policy.DisableProfileTimeLayoutEditing || ManagementService.Policy.DisableProfileEditing)
+        {
+            ViewModel.StatusMessage = $"此功能已被您的组织禁用。";
+            return;
+        }
+
+        var dialog = new OpenFileDialog
+        {
+            Filter = "ClassIsland 档案 (*.json)|*.json"
+        };
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var builder = new CommonDialogBuilder()
+                .SetContent("输入导入档案的名称")
+                .AddConfirmAction()
+                .HasInput(true);
+            builder.Dialog.InputResult = Path.GetFileNameWithoutExtension(dialog.FileName);
+            if (builder.ShowDialog(out var name, Window.GetWindow(this)) != 0)
+            {
+                return;
+            }
+
+            var profile = ConfigureFileHelper.LoadConfigUnWrapped<Profile>(dialog.FileName, false);
+#pragma warning disable CS0618
+            ProfileMigrationHelper.MigrateV1TimeLayoutItems(profile);
+#pragma warning restore CS0618
+
+            var targetPath = Path.Combine(Services.ProfileService.ProfilePath, name + ".json");
+            if (File.Exists(targetPath))
+            {
+                CommonDialog.ShowError($"无法导入：档案 {name} 已存在。");
+                return;
+            }
+
+            ConfigureFileHelper.SaveConfig(targetPath, profile);
+            RefreshProfiles();
+            ViewModel.StatusMessage = $"已导入档案 {name}。";
+        }
+        catch (Exception ex)
+        {
+            IAppHost.GetService<ILogger<ProfileSettingsWindow>>().LogError(ex, "无法导入 ClassIsland 档案");
+            CommonDialog.ShowError($"无法导入：{ex.Message}");
+        }
+    }
+
+    private void MenuItemImportFromClassIslandComponents_OnClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsProfileImportMenuOpened = false;
+        if (ManagementService.Policy.DisableProfileClassPlanEditing ||
+            ManagementService.Policy.DisableProfileTimeLayoutEditing || ManagementService.Policy.DisableProfileEditing)
+        {
+            ViewModel.StatusMessage = $"此功能已被您的组织禁用。";
+            return;
+        }
+
+        var dialog = new OpenFileDialog
+        {
+            Filter = "ClassIsland 组件配置 (*.json)|*.json"
+        };
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var builder = new CommonDialogBuilder()
+                .SetContent("输入导入组件配置的名称")
+                .AddConfirmAction()
+                .HasInput(true);
+            builder.Dialog.InputResult = Path.GetFileNameWithoutExtension(dialog.FileName);
+            if (builder.ShowDialog(out var name, Window.GetWindow(this)) != 0)
+            {
+                return;
+            }
+
+            var text = File.ReadAllText(dialog.FileName);
+            var componentProfile = text.TrimStart().StartsWith("[", StringComparison.Ordinal)
+                ? ClassIsland.Services.ComponentsService.BuildComponentProfile(
+                    JsonSerializer.Deserialize<ObservableCollection<ComponentSettings>>(text)!)
+                : ConfigureFileHelper.LoadConfigUnWrapped<ComponentProfile>(dialog.FileName, false);
+
+            var targetPath = Path.Combine(ClassIsland.Services.ComponentsService.ComponentSettingsPath, name + ".json");
+            if (File.Exists(targetPath))
+            {
+                CommonDialog.ShowError($"无法导入：组件配置 {name} 已存在。");
+                return;
+            }
+
+            ConfigureFileHelper.SaveConfig(targetPath, componentProfile);
+            ComponentsService.RefreshConfigs();
+            ViewModel.StatusMessage = $"已导入组件配置 {name}。";
+        }
+        catch (Exception ex)
+        {
+            IAppHost.GetService<ILogger<ProfileSettingsWindow>>().LogError(ex, "无法导入 ClassIsland 组件配置");
+            CommonDialog.ShowError($"无法导入：{ex.Message}");
         }
     }
 

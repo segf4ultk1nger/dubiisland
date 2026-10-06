@@ -25,6 +25,7 @@
                    xmlns:controls2="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
                    xmlns:ci="http://classisland.tech/schemas/xaml/core"
                    xmlns:action="clr-namespace:ClassIsland.Core.Controls.Action;assembly=ClassIsland.Core"
+                   xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
                    mc:Ignorable="d" 
                    d:DesignHeight="450" d:DesignWidth="800"
                    TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
@@ -2502,6 +2503,18 @@
                                                           Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ApplicationOutline}}"
                                                           Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
                                                           CommandParameter="https://migrate.classisland.tech/" />
+                                                <MenuItem Header="从 ClassIsland 档案导入…"
+                                                          Click="MenuItemImportFromClassIslandProfile_OnClick">
+                                                    <MenuItem.Icon>
+                                                        <remix:PackIconRemixIcon Kind="ImportLine" Width="16" Height="16"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
+                                                <MenuItem Header="从 ClassIsland 组件配置导入…"
+                                                          Click="MenuItemImportFromClassIslandComponents_OnClick">
+                                                    <MenuItem.Icon>
+                                                        <remix:PackIconRemixIcon Kind="FileTransferLine" Width="16" Height="16"/>
+                                                    </MenuItem.Icon>
+                                                </MenuItem>
                                                 <Separator />
                                                 <TextBlock Text="导出" Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                                            FontWeight="Bold"

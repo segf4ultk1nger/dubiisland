@@ -175,9 +175,11 @@ public class ComponentsService : ObservableRecipient, IComponentsService
         ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, BuildComponentProfile());
     }
 
-    private ComponentProfile BuildComponentProfile()
+    private ComponentProfile BuildComponentProfile() => BuildComponentProfile(CurrentComponents);
+
+    internal static ComponentProfile BuildComponentProfile(IEnumerable<ComponentSettings> components)
     {
-        var lines = CurrentComponents
+        var lines = components
             .OrderBy(x => x.RelativeLineNumber)
             .GroupBy(x => x.RelativeLineNumber)
             .OrderBy(g => g.Key)
