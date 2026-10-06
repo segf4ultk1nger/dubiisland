@@ -114,6 +114,11 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     private void TreeComponents_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         ViewModel.SelectedNode = e.NewValue;
+        // 拖拽排序落点后的选中（gong 会补选落点项）不应再触发收树。
+        if (_suppressCompactHide)
+        {
+            return;
+        }
         // 紧凑模式下鼠标按下会先于拖拽阈值触发选中；此时立即收树会把拖拽源抽走，导致无法拖拽排序。
         // 先挂起，等真正抬起（没在拖拽）时再收。
         if (ViewModel.IsCompact && ViewModel.IsTreeVisible && Mouse.LeftButton == MouseButtonState.Pressed)
@@ -124,14 +129,29 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         HideTreeIfCompact();
     }
 
+    private void TreeComponents_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        => _suppressCompactHide = false;
+
     private void TreeComponents_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (!_deferredCompactHide)
+        if (_suppressCompactHide)
         {
+            // 刚拖拽排序完，这次抬手不算点击，保留组件树。
+            _deferredCompactHide = false;
             return;
         }
-        _deferredCompactHide = false;
-        HideTreeIfCompact();
+        if (_deferredCompactHide)
+        {
+            _deferredCompactHide = false;
+            HideTreeIfCompact();
+            return;
+        }
+        // 点击已选中项不会再触发 SelectedItemChanged，这里补一次收树；点空白处不收。
+        if (ViewModel.IsCompact && ViewModel.IsTreeVisible &&
+            ComponentTreeHitTest.GetItem(TreeComponents, e.GetPosition(TreeComponents)) != null)
+        {
+            HideTreeIfCompact();
+        }
     }
 
     /// <summary>行背景铺满整宽，缩进由层级换算的 Padding 模拟。</summary>
@@ -216,6 +236,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private bool _layoutReady;
     private bool _deferredCompactHide;
+    private bool _suppressCompactHide;
 
     /// <summary>页面过窄时进入紧凑模式：组件树与属性面板互斥全宽。</summary>
     private void RootGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -598,7 +619,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     }
 
     /// <summary>设置选中节点，并同步树的选中态（否则点击已选中的项不会再触发事件，右侧面板不更新）。</summary>
-    private void SetSelectedNode(object? node)
+    /// <param name="revealDetails">紧凑模式下是否让出组件树去显示属性面板；拖拽排序时应为 false，避免刚排完就跳进设置。</param>
+    private void SetSelectedNode(object? node, bool revealDetails = true)
     {
         ViewModel.SelectedNode = node;
         if (node == null)
@@ -609,7 +631,10 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             container.IsSelected = true;
             container.BringIntoView();
         }
-        HideTreeIfCompact();
+        if (revealDetails)
+        {
+            HideTreeIfCompact();
+        }
     }
 
     private static TreeViewItem? FindContainer(ItemsControl parent, object item)
@@ -685,7 +710,10 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             sourceList.Remove(settings);
             targetList.Insert(insertIndex, settings);
         }
-        SetSelectedNode(settings);
+        // 拖拽排序结束后留在组件树里继续拖，而不是跳进属性面板；并抑制落点补选触发的收树。
+        _deferredCompactHide = false;
+        _suppressCompactHide = true;
+        SetSelectedNode(settings, revealDetails: false);
     }
 
     /// <summary>

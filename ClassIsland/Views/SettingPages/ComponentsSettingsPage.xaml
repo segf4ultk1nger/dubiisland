@@ -646,6 +646,7 @@
                           VirtualizingStackPanel.IsVirtualizing="False"
                           ItemsSource="{Binding ComponentsService.CurrentComponents.Lines}"
                           SelectedItemChanged="TreeComponents_OnSelectedItemChanged"
+                          PreviewMouseLeftButtonDown="TreeComponents_OnPreviewMouseLeftButtonDown"
                           PreviewMouseLeftButtonUp="TreeComponents_OnPreviewMouseLeftButtonUp"
                           MouseMove="TreeComponents_OnMouseMove"
                           MouseLeave="TreeComponents_OnMouseLeave"
