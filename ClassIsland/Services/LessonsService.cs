@@ -18,7 +18,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
 {
     private ClassPlan? _currentClassPlan;
     private int _currentSelectedIndex = -1;
-    private Subject _nextSubject = Subject.Empty;
+    private Subject _nextSubject = Subject.Fallback;
     private TimeLayoutItem _nextBreakingLayoutItem = TimeLayoutItem.Empty;
     private TimeSpan _onClassLeftTime = TimeSpan.Zero;
     private TimeState _currentStatus = TimeState.None;
@@ -157,18 +157,19 @@ public class LessonsService : ObservableRecipient, ILessonsService
         //}
         // 加载预定的临时课表
         if (Profile.OrderedSchedules.TryGetValue(date.Date, out var orderedScheduleInfo)
-            && Profile.ClassPlans.TryGetValue(orderedScheduleInfo.ClassPlanId, out var orderedClassPlan)
+            && Guid.TryParse(orderedScheduleInfo.ClassPlanId, out var orderedClassPlanId)
+            && Profile.ClassPlans.TryGetValue(orderedClassPlanId, out var orderedClassPlan)
             && (!orderedClassPlan.IsOverlay || Profile.IsOverlayClassPlanEnabled))
         {
-            guid = orderedScheduleInfo.ClassPlanId;
+            guid = orderedClassPlanId.ToString();
             return orderedClassPlan;
         }
         // 加载临时课表
         if (Profile.TempClassPlanId != null &&
-            Profile.ClassPlans.TryGetValue(Profile.TempClassPlanId, out var tempClassPlan) &&
+            Profile.ClassPlans.TryGetValue(Profile.TempClassPlanId ?? Guid.Empty, out var tempClassPlan) &&
             Profile.TempClassPlanSetupTime.Date >= date.Date)
         {
-            guid = Profile.TempClassPlanId;
+            guid = Profile.TempClassPlanId?.ToString();
             return tempClassPlan;
         }
         // 加载课表
@@ -176,7 +177,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
             .Where(x =>
             {
                 var group = x.Value.AssociatedGroup;
-                var matchGlobal = new Guid(group) == ClassPlanGroup.GlobalGroupGuid;
+                var matchGlobal = group == ClassPlanGroup.GlobalGroupGuid;
                 var matchDefault = group == Profile.SelectedClassPlanGroupId;
                 if (Profile is not { IsTempClassPlanGroupEnabled: true, TempClassPlanGroupId: not null } 
                     || Profile.TempClassPlanGroupExpireTime.Date < date.Date)
@@ -194,13 +195,13 @@ public class LessonsService : ObservableRecipient, ILessonsService
                 var group = x.Value.AssociatedGroup;
                 if (group == Profile.TempClassPlanGroupId) return 3;
                 if (group == Profile.SelectedClassPlanGroupId) return 2;
-                if (group == ClassPlanGroup.GlobalGroupGuid.ToString()) return 1;
+                if (group == ClassPlanGroup.GlobalGroupGuid) return 1;
                 return 0;
             })
             .Where(p => CheckClassPlan(p.Value, date))
             .Select(p => p);
         var classPlanKvp = a.FirstOrDefault();
-        guid = classPlanKvp.Key;
+        guid = classPlanKvp.Key.ToString();
         return classPlanKvp.Value;
     }
 
@@ -308,7 +309,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
             .Reverse()
             .FirstOrDefault(i =>
                 i.TimeType == 0 &&
-                i.EndSecond.TimeOfDay < now);
+                i.EndTime < now);
         if (prevClassTimeItem == null)
         {
             return false;
@@ -410,8 +411,8 @@ public class LessonsService : ObservableRecipient, ILessonsService
         // 获取当前时间点信息
         currentTimeLayoutItem = validTimeLayoutItems.FirstOrDefault(i =>
             i.TimeType is 0 or 1 &&
-            i.StartSecond.TimeOfDay <= now &&
-            i.EndSecond.TimeOfDay >= now);
+            i.StartTime <= now &&
+            i.EndTime >= now);
         if (currentTimeLayoutItem != null)
         {
             currentSelectedIndex = layout.IndexOf(currentTimeLayoutItem);
@@ -438,7 +439,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
         // 获取下节时间点信息
         nextClassTimeLayoutItem = validTimeLayoutItems.FirstOrDefault(i =>
             i.TimeType == 0 &&
-            i.EndSecond.TimeOfDay >= now);
+            i.EndTime >= now);
         if (nextClassTimeLayoutItem != null)
         {
             var i0 = GetClassIndex(layout.IndexOf(nextClassTimeLayoutItem));
@@ -448,13 +449,13 @@ public class LessonsService : ObservableRecipient, ILessonsService
         }
         nextBreakingTimeLayoutItem = validTimeLayoutItems.FirstOrDefault(i =>
             i.TimeType == 1 &&
-            i.EndSecond.TimeOfDay >= now);
+            i.EndTime >= now);
 
         // 获取剩余时间信息
         if (currentState == TimeState.OnClass)
-            onBreakingTimeLeftTime = nextBreakingTimeLayoutItem?.StartSecond.TimeOfDay - now;
+            onBreakingTimeLeftTime = nextBreakingTimeLayoutItem?.StartTime - now;
         else
-            onClassLeftTime = nextClassTimeLayoutItem?.StartSecond.TimeOfDay - now;
+            onClassLeftTime = nextClassTimeLayoutItem?.StartTime - now;
 
         if (nextClassTimeLayoutItem == null &&
             nextBreakingTimeLayoutItem == null)
@@ -465,8 +466,8 @@ public class LessonsService : ObservableRecipient, ILessonsService
         // 统一更新信息
         CurrentSelectedIndex = currentSelectedIndex ?? -1;
         CurrentState = currentState ?? TimeState.None;
-        CurrentSubject = currentSubject ?? Subject.Empty;
-        NextClassSubject = nextClassSubject ?? Subject.Empty;
+        CurrentSubject = currentSubject ?? Subject.Fallback;
+        NextClassSubject = nextClassSubject ?? Subject.Fallback;
         CurrentTimeLayoutItem = currentTimeLayoutItem ?? TimeLayoutItem.Empty;
         NextClassTimeLayoutItem = nextClassTimeLayoutItem ?? TimeLayoutItem.Empty;
         NextBreakingTimeLayoutItem = nextBreakingTimeLayoutItem ?? TimeLayoutItem.Empty;
@@ -544,9 +545,12 @@ public class LessonsService : ObservableRecipient, ILessonsService
         }
 
         CurrentClassPlan = GetClassPlanByDate(currentTime);
-        var orderedClassPlanId = Profile.OrderedSchedules[currentTime.Date]?.ClassPlanId;
+        var orderedClassPlanId = Profile.OrderedSchedules.TryGetValue(currentTime.Date, out var orderedSchedule)
+            && Guid.TryParse(orderedSchedule.ClassPlanId, out var parsedId)
+            ? parsedId
+            : (Guid?)null;
         if (orderedClassPlanId != null 
-            && Profile.ClassPlans.TryGetValue(orderedClassPlanId, out var classPlan)
+            && Profile.ClassPlans.TryGetValue(orderedClassPlanId.Value, out var classPlan)
             && classPlan.IsOverlay)
         {
             Profile.OverlayClassPlanId = orderedClassPlanId;
@@ -567,7 +571,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
             return false;
         }
 
-        if (plan.AssociatedGroup != ClassPlanGroup.GlobalGroupGuid.ToString() &&
+        if (plan.AssociatedGroup != ClassPlanGroup.GlobalGroupGuid &&
             plan.AssociatedGroup != Profile.SelectedClassPlanGroupId &&
             plan.AssociatedGroup != Profile.TempClassPlanGroupId)
         {

@@ -237,7 +237,7 @@
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
                                         <Condition Binding="{Binding SettingsService.Settings.IsSwapMode}" Value="False" />
-                                        <Condition Binding="{Binding ViewModel.TargetSubjectIndex}" Value="{x:Null}" />
+                                        <Condition Binding="{Binding ViewModel.TargetSubjectIndex}" Value="00000000-0000-0000-0000-000000000000" />
                                     </MultiDataTrigger.Conditions>
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </MultiDataTrigger>

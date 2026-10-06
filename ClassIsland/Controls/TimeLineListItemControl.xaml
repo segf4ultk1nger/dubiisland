@@ -60,10 +60,10 @@
                    VerticalAlignment="Center"
                    ToolTip="时间段">
             <Run
-                Text="{Binding TimePoint.StartSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm:ss}}" />
+                Text="{Binding TimePoint.StartTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm\\:ss}}" />
             <Run Text="-" />
             <Run
-                Text="{Binding TimePoint.EndSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm:ss}}" />
+                Text="{Binding TimePoint.EndTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm\\:ss}}" />
         </TextBlock>
 
         <!-- Last Time -->

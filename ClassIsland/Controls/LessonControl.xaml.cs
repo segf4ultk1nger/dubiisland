@@ -63,11 +63,11 @@ public partial class LessonControl : UserControl, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty SubjectsProperty = DependencyProperty.Register(
-        nameof(Subjects), typeof(ObservableDictionary<string, Subject>), typeof(LessonControl), new PropertyMetadata(default(ObservableCollection<Subject>)));
+        nameof(Subjects), typeof(ObservableDictionary<Guid, Subject>), typeof(LessonControl), new PropertyMetadata(default(ObservableCollection<Subject>)));
 
-    public ObservableDictionary<string, Subject> Subjects
+    public ObservableDictionary<Guid, Subject> Subjects
     {
-        get => (ObservableDictionary<string, Subject>)GetValue(SubjectsProperty);
+        get => (ObservableDictionary<Guid, Subject>)GetValue(SubjectsProperty);
         set => SetValue(SubjectsProperty, value);
     }
 
@@ -299,7 +299,7 @@ public partial class LessonControl : UserControl, INotifyPropertyChanged
 
     private void UpdateSeconds()
     {
-        Seconds = (long)(ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - CurrentTimeLayoutItem.StartSecond.TimeOfDay).TotalSeconds;
+        Seconds = (long)(ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - CurrentTimeLayoutItem.StartTime).TotalSeconds;
         LeftSeconds = TotalSeconds - Seconds;
 
         MasterTabIndex = LeftSeconds <= SettingsSource.CountdownSeconds &&

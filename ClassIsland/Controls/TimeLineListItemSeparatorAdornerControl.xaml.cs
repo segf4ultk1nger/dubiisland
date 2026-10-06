@@ -81,10 +81,10 @@ public partial class TimeLineListItemSeparatorAdornerControl : UserControl
             return;
         }
         var v = e.VerticalChange;
-        var d = GetDelta(TimePoint.StartSecond.TimeOfDay, v);
+        var d = GetDelta(TimePoint.StartTime, v);
 
-        TimePoint.StartSecond += d;
-        TimePoint.EndSecond += d;
+        TimePoint.StartTime += d;
+        TimePoint.EndTime += d;
     }
 
     private void Thumb_OnDragCompleted(object sender, DragCompletedEventArgs e)

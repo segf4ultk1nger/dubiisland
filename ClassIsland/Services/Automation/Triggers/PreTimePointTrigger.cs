@@ -53,9 +53,9 @@ public class PreTimePointTrigger(ILessonsService lessonsService, IExactTimeServi
                 return;
             }
 
-            var targetTime = targetTimePoint.StartSecond - TimeSpanHelper.FromSecondsSafe(Settings.TimeSeconds);
-            var targetTime2 = now.Date + targetTime.TimeOfDay;
-            //Console.WriteLine($"{LastCheckTime} {targetTime} {targetTimePoint.StartSecond} {now}");
+            var targetTime = targetTimePoint.StartTime - TimeSpanHelper.FromSecondsSafe(Settings.TimeSeconds);
+            var targetTime2 = now.Date + targetTime;
+            //Console.WriteLine($"{LastCheckTime} {targetTime} {targetTimePoint.StartTime} {now}");
             if (LastCheckTime < targetTime2 && targetTime2 <= now)
             {
                 Trigger();

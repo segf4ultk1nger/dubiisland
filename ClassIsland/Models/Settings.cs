@@ -222,7 +222,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private double _mainWindowRightMargin = 0;
     private bool _isSquircleEnabled = false;
     private double _squircleSmoothing = 0.6;
-    private ObservableCollection<string> _trustedProfileIds = [];
+    private ObservableCollection<Guid> _trustedProfileIds = [];
     private bool _isNonExactCountdownEnabled = false;
     private bool _showDetailedStatusOnSplash = false;
 
@@ -2536,7 +2536,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         }
     }
 
-    public ObservableCollection<string> TrustedProfileIds
+    public ObservableCollection<Guid> TrustedProfileIds
     {
         get => _trustedProfileIds;
         set

@@ -113,11 +113,11 @@ public partial class TimeLineListItemExpandingAdornerControl
     /// </summary>
     /// <param name="oldTime">调整前的时间</param>
     /// <param name="newTime">调整后的时间</param>
-    void DragAdjoiningSeparator(TimeSpan oldTime, DateTime newTime)
+    void DragAdjoiningSeparator(TimeSpan oldTime, TimeSpan newTime)
     {
         foreach (var s in (from s in TimeLayout where s.TimeType == 2 select s).Where(s =>
-                     s.StartSecond.TimeOfDay == oldTime))
-            s.StartSecond = s.EndSecond = newTime;
+                     s.StartTime == oldTime))
+            s.StartTime = s.EndTime = newTime;
     }
 
     static TimeSpan RoundTime(TimeSpan time) => TimeSpan.FromMinutes(time.TotalMinutes - (time.TotalMinutes % 5));
@@ -125,103 +125,103 @@ public partial class TimeLineListItemExpandingAdornerControl
 
     void ThumbTop_OnDragDelta(object _, DragDeltaEventArgs e)
     {
-        var a = TimePoint.StartSecond.TimeOfDay;
+        var a = TimePoint.StartTime;
         var b = PrevTimePoint();
         var d = GetDelta(a, e.VerticalChange);
-        if (TimePoint.EndSecond.TimeOfDay > a + d && (!(a + d < PrevTimePoint()?.EndSecond.TimeOfDay) || IsSticky))
+        if (TimePoint.EndTime > a + d && (!(a + d < PrevTimePoint()?.EndTime) || IsSticky))
         {
-            var newStart = TimePoint.StartSecond + d;
+            var newStart = TimePoint.StartTime + d;
             if (!IsSticky)
             {
-                TimePoint.StartSecond = newStart;
+                TimePoint.StartTime = newStart;
                 return;
             }
-            if (b != null && b.StartSecond.TimeOfDay >= newStart.TimeOfDay)
+            if (b != null && b.StartTime >= newStart)
             {
                 return;
             }
-            if (b != null && b.EndSecond.TimeOfDay == a)
-                b.EndSecond = newStart;
-            TimePoint.StartSecond = newStart;
+            if (b != null && b.EndTime == a)
+                b.EndTime = newStart;
+            TimePoint.StartTime = newStart;
 
             // else if (b?.TimeType == 0)
             //     App.GetService<ProfileSettingsWindow>().AddTimeLayoutItem(1, TimePoint.StartSecond, b.EndSecond);
-            DragAdjoiningSeparator(a, TimePoint.StartSecond);
+            DragAdjoiningSeparator(a, TimePoint.StartTime);
         }
     }
 
     void ThumbBottom_OnDragDelta(object sender, DragDeltaEventArgs e)
     {
-        var a = TimePoint.EndSecond.TimeOfDay;
+        var a = TimePoint.EndTime;
         var b = NextTimePoint();
         var d = GetDelta(a, e.VerticalChange);
-        if (a + d > TimePoint.StartSecond.TimeOfDay && (!(NextTimePoint()?.StartSecond.TimeOfDay < a + d) || IsSticky))
+        if (a + d > TimePoint.StartTime && (!(NextTimePoint()?.StartTime < a + d) || IsSticky))
         {
-            var newEnd = TimePoint.EndSecond + d;
+            var newEnd = TimePoint.EndTime + d;
             if (!IsSticky)
             {
-                TimePoint.EndSecond = newEnd;
+                TimePoint.EndTime = newEnd;
                 return;
             }
-            if (b != null && b.EndSecond.TimeOfDay <= newEnd.TimeOfDay)
+            if (b != null && b.EndTime <= newEnd)
             {
                 return;
             }
-            if (b != null && b.StartSecond.TimeOfDay == a)
-                b.StartSecond = newEnd;
-            TimePoint.EndSecond = newEnd;
+            if (b != null && b.StartTime == a)
+                b.StartTime = newEnd;
+            TimePoint.EndTime = newEnd;
             // else if (b?.TimeType == 0)
             //     App.GetService<ProfileSettingsWindow>().AddTimeLayoutItem(1, b.StartSecond, TimePoint.EndSecond);
-            DragAdjoiningSeparator(a, TimePoint.EndSecond);
+            DragAdjoiningSeparator(a, TimePoint.EndTime);
         }
     }
 
     void Thumb_OnDragDelta(object sender, DragDeltaEventArgs e)
     {
-        var a1 = TimePoint.StartSecond.TimeOfDay;
-        var a2 = TimePoint.EndSecond.TimeOfDay;
+        var a1 = TimePoint.StartTime;
+        var a2 = TimePoint.EndTime;
         var d = GetDelta(a1, e.VerticalChange);
 
-        if (!IsSticky && (a1 + d < PrevTimePoint()?.EndSecond.TimeOfDay || NextTimePoint()?.StartSecond.TimeOfDay < a2 + d))
+        if (!IsSticky && (a1 + d < PrevTimePoint()?.EndTime || NextTimePoint()?.StartTime < a2 + d))
             return;
 
-        var newStart = TimePoint.StartSecond + d;
-        var newEnd = TimePoint.EndSecond + d;
+        var newStart = TimePoint.StartTime + d;
+        var newEnd = TimePoint.EndTime + d;
         if (!IsSticky)
         {
-            TimePoint.StartSecond = newStart;
-            TimePoint.EndSecond = newEnd;
+            TimePoint.StartTime = newStart;
+            TimePoint.EndTime = newEnd;
             return;
         }
         var b1 = PrevTimePoint();
         var b2 = NextTimePoint();
-        //Console.WriteLine($"{a1} {b1?.EndSecond.TimeOfDay} {newStart}");
-        if (b1 != null && b1.StartSecond.TimeOfDay >= newStart.TimeOfDay)
+        //Console.WriteLine($"{a1} {b1?.EndTime} {newStart}");
+        if (b1 != null && b1.StartTime >= newStart)
         {
             return;
         }
-        if (b2 != null && b2.EndSecond.TimeOfDay <= newEnd.TimeOfDay)
+        if (b2 != null && b2.EndTime <= newEnd)
         {
             return;
         }
-        if (b1 != null && b1.EndSecond.TimeOfDay == a1)
+        if (b1 != null && b1.EndTime == a1)
         {
-            b1.EndSecond = newStart;
+            b1.EndTime = newStart;
         }
 
         // else if (b1?.TimeType == 0)
         //     App.GetService<ProfileSettingsWindow>().AddTimeLayoutItem(1, b1.EndSecond, TimePoint.StartSecond);
-        if (b2 != null && b2.StartSecond.TimeOfDay == a2)
+        if (b2 != null && b2.StartTime == a2)
         {
-            b2.StartSecond = newEnd;
+            b2.StartTime = newEnd;
         }
 
         // else if (b2?.TimeType == 0)
         //     App.GetService<ProfileSettingsWindow>().AddTimeLayoutItem(1, TimePoint.EndSecond, b2.StartSecond);
-        TimePoint.StartSecond = newStart;
-        TimePoint.EndSecond = newEnd;
-        DragAdjoiningSeparator(a1, TimePoint.StartSecond);
-        DragAdjoiningSeparator(a2, TimePoint.EndSecond);
+        TimePoint.StartTime = newStart;
+        TimePoint.EndTime = newEnd;
+        DragAdjoiningSeparator(a1, TimePoint.StartTime);
+        DragAdjoiningSeparator(a2, TimePoint.EndTime);
         // App.GetService<ProfileSettingsWindow>().UpdateTimeLayout();
     }
 }

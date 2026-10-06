@@ -854,7 +854,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         var next = _lessonsService.NextClassSubject;
         var teacher = control.ShowTeacherName ? next.TeacherName : "";
         var time =
-            $"{_lessonsService.NextClassTimeLayoutItem.StartSecond:HH:mm}-{_lessonsService.NextClassTimeLayoutItem.EndSecond:HH:mm}";
+            $"{_lessonsService.NextClassTimeLayoutItem.StartTime:hh\\:mm}-{_lessonsService.NextClassTimeLayoutItem.EndTime:hh\\:mm}";
         var nextInfo = $"下节课是：{next.Name} {teacher} {time}".Trim();
         return control.Mode switch
         {

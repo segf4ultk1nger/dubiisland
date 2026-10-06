@@ -7,6 +7,7 @@
         xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              xmlns:views="clr-namespace:ClassIsland.Views"
+             xmlns:converters="clr-namespace:ClassIsland.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
     <UserControl.Resources>
@@ -29,7 +30,7 @@
         <StackPanel Grid.Column="0"
                     Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
             <StackPanel.Resources>
-                <ci:StringToRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
+                <converters:GuidToStringRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
             </StackPanel.Resources>
             <RadioButton GroupName="ProfileSelection" VerticalAlignment="Center">
                 <RadioButton.IsChecked>

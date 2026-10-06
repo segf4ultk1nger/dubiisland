@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,7 +31,7 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
         var profile = ProfileService.Profile;
         foreach (var i in profile.ClassPlans)
         {
-            var keyClassPlan = new AttachableObjectAddress(i.Key);
+            var keyClassPlan = new AttachableObjectAddress(i.Key.ToString());
             var nodeClassPlan = Nodes.GetOrCreateDefault(keyClassPlan,
                 new AttachableObjectNode()
             {
@@ -40,7 +41,7 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
             });
 
 
-            var keyTimeLayout = new AttachableObjectAddress(i.Value.TimeLayoutId);
+            var keyTimeLayout = new AttachableObjectAddress(i.Value.TimeLayoutId.ToString());
             var nodeTimeLayout = Nodes.GetOrCreateDefault(keyTimeLayout
                 , new AttachableObjectNode()
                 {
@@ -59,7 +60,7 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
 
             foreach (var p in i.Value.TimeLayout.Layouts)
             {
-                var keyTimePoint = new AttachableObjectAddress(i.Value.TimeLayoutId,
+                var keyTimePoint = new AttachableObjectAddress(i.Value.TimeLayoutId.ToString(),
                     i.Value.TimeLayout.Layouts.IndexOf(p));
                 var nodeTimePoint = Nodes.GetOrCreateDefault(keyTimePoint, new AttachableObjectNode()
                 {
@@ -77,7 +78,7 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
 
             foreach (var j in i.Value.Classes)
             {
-                var keyClassInfo = new AttachableObjectAddress(i.Key, j.Index);
+                var keyClassInfo = new AttachableObjectAddress(i.Key.ToString(), j.Index);
                 var nodeClassInfo = new AttachableObjectNode()
                 {
                     Object = j,
@@ -85,7 +86,7 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
                     Address = keyClassInfo
                 };
 
-                var keyTimePoint = new AttachableObjectAddress(i.Value.TimeLayoutId,
+                var keyTimePoint = new AttachableObjectAddress(i.Value.TimeLayoutId.ToString(),
                     j.CurrentTimeLayout.Layouts.IndexOf(j.CurrentTimeLayoutItem));
                 var nodeTimePoint = Nodes.GetOrCreateDefault(keyTimePoint, new AttachableObjectNode()
                 {
@@ -112,7 +113,7 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
                 {
                     continue;
                 }
-                var keySubject = new AttachableObjectAddress(j.SubjectId);
+                var keySubject = new AttachableObjectAddress(j.SubjectId.ToString());
                 var nodeSubject = Nodes.GetOrCreateDefault(keySubject, new AttachableObjectNode()
                 {
                     Object = subject,
@@ -178,9 +179,14 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
         var results = new List<AttachableObjectNode>();
         Walk(Nodes[address], results, false, true);
 
+        if (!Guid.TryParse(id, out var attachedObjectId))
+        {
+            return [];
+        }
+
         return [.. results.Where(x =>
             {
-                if (x.Object != null && x.Object.AttachedObjects.TryGetValue(id, out var obj))
+                if (x.Object != null && x.Object.AttachedObjects.TryGetValue(attachedObjectId, out var obj))
                 {
                     return IAttachedSettings.GetIsEnabled(obj) || !requiresEnabled;
                 }
@@ -195,9 +201,14 @@ public class ProfileAnalyzeService(IProfileService profileService, ILogger<Profi
         var results = new List<AttachableObjectNode>();
         Walk(Nodes[address], results, true, true);
 
+        if (!Guid.TryParse(id, out var attachedObjectId))
+        {
+            return [];
+        }
+
         return [.. results.Where(x =>
             {
-                if (x.Object != null && x.Object.AttachedObjects.TryGetValue(id, out var obj))
+                if (x.Object != null && x.Object.AttachedObjects.TryGetValue(attachedObjectId, out var obj))
                 {
                     return IAttachedSettings.GetIsEnabled(obj) || !requiresEnabled;
                 }

@@ -30,23 +30,23 @@ public sealed partial class ClassPlanGroupItemControl : UserControl, INotifyProp
     }
 
     public static readonly DependencyProperty KeyProperty = DependencyProperty.Register(
-        nameof(Key), typeof(string), typeof(ClassPlanGroupItemControl), new PropertyMetadata("", (o, args) =>
+        nameof(Key), typeof(Guid), typeof(ClassPlanGroupItemControl), new PropertyMetadata(Guid.Empty, (o, args) =>
         {
             if (o is not ClassPlanGroupItemControl control) 
                 return;
             var key = control.Key;
             var policy = IAppHost.GetService<IManagementService>().Policy;
-            control.IsProtected = key == ClassPlanGroup.DefaultGroupGuid.ToString() ||
-                                  key == ClassPlanGroup.GlobalGroupGuid.ToString() ||
+            control.IsProtected = key == ClassPlanGroup.DefaultGroupGuid ||
+                                  key == ClassPlanGroup.GlobalGroupGuid ||
                                   policy.DisableProfileEditing ||
                                   policy.DisableProfileClassPlanEditing;
         }));
 
     private bool _isRenaming = false;
 
-    public string Key
+    public Guid Key
     {
-        get { return (string)GetValue(KeyProperty); }
+        get { return (Guid)GetValue(KeyProperty); }
         set { SetValue(KeyProperty, value); }
     }
 

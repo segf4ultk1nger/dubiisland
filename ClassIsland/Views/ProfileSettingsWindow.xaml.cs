@@ -96,7 +96,7 @@ public partial class ProfileSettingsWindow : MyWindow
     {
         if (ViewModel.SelectedTimePoint == null)
             return;
-        var timeLayout = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
+        var timeLayout = ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
         var index = timeLayout.Layouts.IndexOf(ViewModel.SelectedTimePoint);
         if (index == -1)
             return;
@@ -159,14 +159,14 @@ public partial class ProfileSettingsWindow : MyWindow
         ViewModel.IsDrawerOpen = true;
     }
 
-    public void OpenTimeLayoutEdit(string? key="")
+    public void OpenTimeLayoutEdit(Guid key = default)
     {
         RootTabControl.SelectedIndex = 1;
 
-        if (key != null)
+        if (ProfileService.Profile.TimeLayouts.ContainsKey(key))
         {
             ListViewTimeLayouts.SelectedItem =
-                new KeyValuePair<string, TimeLayout>(key, ProfileService.Profile.TimeLayouts[key]);
+                new KeyValuePair<Guid, TimeLayout>(key, ProfileService.Profile.TimeLayouts[key]);
         }
     }
 
@@ -223,7 +223,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonAddTimeLayout_OnClick(object sender, RoutedEventArgs e)
     {
-        MainViewModel.Profile.TimeLayouts.Add(Guid.NewGuid().ToString(), new TimeLayout()
+        MainViewModel.Profile.TimeLayouts.Add(Guid.NewGuid(), new TimeLayout()
         {
             Name = "新时间表"
         });
@@ -239,9 +239,9 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void AddTimeLayoutItem(int timeType)
     {
-        var timeLayout = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
+        var timeLayout = ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
         var selected   = (TimeLayoutItem?)ListViewTimePoints.SelectedValue;
-        var baseSec    = (timeType is 0 or 1 ? selected?.EndSecond : selected?.StartSecond) ?? DateTime.Today + new TimeSpan(7, 30, 0);
+        var baseSec    = (timeType is 0 or 1 ? selected?.EndTime : selected?.StartTime) ?? new TimeSpan(7, 30, 0);
         var settings   = App.GetService<SettingsService>().Settings;
         var lastTime   = TimeSpan.FromMinutes(timeType switch
         {
@@ -270,28 +270,28 @@ public partial class ProfileSettingsWindow : MyWindow
                 if (nexts.Count > 0)
                 {
                     var next = nexts[0];
-                    if (next.StartSecond.TimeOfDay <= baseSec.TimeOfDay)
+                    if (next.StartTime <= baseSec)
                     {
                         if (index != 0)
                         {
                             ViewModel.StatusMessage = "没有合适的位置来插入新的时间点。";
                             return;
                         }
-                        baseSec = selected.StartSecond - lastTime; // 向前插入时间点的简易实现，未考虑分割线
+                        baseSec = selected.StartTime - lastTime; // 向前插入时间点的简易实现，未考虑分割线
                         ViewModel.StatusMessage = "已向前插入了新的时间点。";
                     }
-                    if (next.StartSecond.TimeOfDay < baseSec.TimeOfDay + lastTime)
+                    if (next.StartTime < baseSec + lastTime)
                     {
                         ViewModel.StatusMessage = "没有足够的空间完全插入该时间点，已缩短时间点长度。";
-                        lastTime = next.StartSecond.TimeOfDay - baseSec.TimeOfDay;
+                        lastTime = next.StartTime - baseSec;
                     }
                 }
             }
 
             if (timeType == 2)
             {
-                baseSec = selected.EndSecond;
-                if ((from i in timeLayout.Layouts where i.TimeType == 2 select i.StartSecond).ToList().Contains(baseSec))
+                baseSec = selected.EndTime;
+                if ((from i in timeLayout.Layouts where i.TimeType == 2 select i.StartTime).ToList().Contains(baseSec))
                 {
                     ViewModel.StatusMessage = "这里已经存在一条分割线。";
                     return;
@@ -300,8 +300,8 @@ public partial class ProfileSettingsWindow : MyWindow
 
             if (timeType == 3)
             {
-                baseSec = selected.EndSecond;
-                if ((from i in timeLayout.Layouts where i.TimeType == 3 select i.StartSecond).ToList().Contains(baseSec))
+                baseSec = selected.EndTime;
+                if ((from i in timeLayout.Layouts where i.TimeType == 3 select i.StartTime).ToList().Contains(baseSec))
                 {
                     ViewModel.StatusMessage = "这里已经存在一个行动。";
                     return;
@@ -311,8 +311,8 @@ public partial class ProfileSettingsWindow : MyWindow
         var newItem = new TimeLayoutItem()
         {
             TimeType = timeType,
-            StartSecond = baseSec,
-            EndSecond = baseSec + lastTime,
+            StartTime = baseSec,
+            EndTime = baseSec + lastTime,
             ActionSet = timeType == 3 ? new ActionSet() : null
         };
         AddTimePoint(newItem);
@@ -321,20 +321,20 @@ public partial class ProfileSettingsWindow : MyWindow
         //OpenDrawer("TimePointEditor");
     }
 
-    public void AddTimeLayoutItem(int timeType, DateTime startTime, DateTime endTime)
+    public void AddTimeLayoutItem(int timeType, TimeSpan startTime, TimeSpan endTime)
     {
         var newItem = new TimeLayoutItem
         {
             TimeType    = timeType,
-            StartSecond = startTime,
-            EndSecond   = endTime,
+            StartTime   = startTime,
+            EndTime     = endTime,
         };
         AddTimePoint(newItem);
     }
 
     public void UpdateTimeLayout()
     {
-        var timeLayout = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
+        var timeLayout = ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
         var l = timeLayout.Layouts.ToList();
         l.Sort();
         l.Reverse();
@@ -361,7 +361,7 @@ public partial class ProfileSettingsWindow : MyWindow
     {
         if (ListViewTimePoints.SelectedValue is not TimeLayoutItem timePoint) 
             return;
-        var timeLayout = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedValue).Value;
+        var timeLayout = ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedValue).Value;
         var i = timeLayout.Layouts.IndexOf(timePoint);
         timeLayout.RemoveTimePoint(timePoint);
         //UpdateTimeLayout();
@@ -372,7 +372,7 @@ public partial class ProfileSettingsWindow : MyWindow
     private async void ButtonDeleteTimeLayout_OnClick(object sender, RoutedEventArgs e)
     {
         var c = (from i in MainViewModel.Profile.ClassPlans
-            where i.Value.TimeLayoutId == ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key
+            where i.Value.TimeLayoutId == ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key
             select i.Value).Count();
         var eventName = "views.ProfileSettingsWindow.timeLayout.remove";
         if (c > 0)
@@ -381,14 +381,14 @@ public partial class ProfileSettingsWindow : MyWindow
             return;
         }
 
-        var timeLayoutName = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value.Name;
+        var timeLayoutName = ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value.Name;
         var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), $"删除{timeLayoutName}",
             $"确定要删除时间表{timeLayoutName}吗？如果有与此时间表关联的课程表，那么这些课程表在时间表删除后将无法正常工作！",
             MessageDialogStyle.AffirmativeAndNegative,
             new MetroDialogSettings { AffirmativeButtonText = "删除", NegativeButtonText = "取消" });
         if (r == MessageDialogResult.Affirmative)
         {
-            MainViewModel.Profile.TimeLayouts.Remove(((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key);
+            MainViewModel.Profile.TimeLayouts.Remove(((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key);
         }
         else
         {
@@ -470,7 +470,7 @@ public partial class ProfileSettingsWindow : MyWindow
         {
             AssociatedGroup = ProfileService.Profile.SelectedClassPlanGroupId
         };
-        MainViewModel.Profile.ClassPlans.Add(Guid.NewGuid().ToString(), newClassPlan);
+        MainViewModel.Profile.ClassPlans.Add(Guid.NewGuid(), newClassPlan);
         ViewModel.SelectedClassPlan = newClassPlan;
         ViewModel.IsClassPlanEditComplete = false;
         OpenDrawer("ClassPlansInfoEditor");
@@ -478,7 +478,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonDebugAddNewClass_OnClick(object sender, RoutedEventArgs e)
     {
-        var s = (KeyValuePair<string, ClassPlan>?)ListViewClassPlans.SelectedItem;
+        var s = (KeyValuePair<Guid, ClassPlan>?)ListViewClassPlans.SelectedItem;
         s?.Value.Classes.Add(new ClassInfo());
     }
 
@@ -489,7 +489,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ListViewClassPlans_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        foreach (KeyValuePair<string, ClassPlan> i in e.AddedItems)
+        foreach (KeyValuePair<Guid, ClassPlan> i in e.AddedItems)
         {
             i.Value.RefreshClassesList();
         }
@@ -497,7 +497,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private async void ButtonDeleteClassPlan_OnClick(object sender, RoutedEventArgs e)
     {
-        var classPlanName = ((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem).Value.Name;
+        var classPlanName = ((KeyValuePair<Guid, ClassPlan>)ListViewClassPlans.SelectedItem).Value.Name;
         var r = await DialogService.ShowMessageAsync(ViewModel.DialogHostId.ToString(), $"删除{classPlanName}",
             $"确定要删除课表{classPlanName}吗？",
             MessageDialogStyle.AffirmativeAndNegative,
@@ -505,9 +505,9 @@ public partial class ProfileSettingsWindow : MyWindow
         if (r == MessageDialogResult.Affirmative)
         {
 
-            var kvp = ((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem);
+            var kvp = ((KeyValuePair<Guid, ClassPlan>)ListViewClassPlans.SelectedItem);
             MainViewModel.Profile.ClassPlans.Remove(kvp.Key);
-            foreach (var schedule in MainViewModel.Profile.OrderedSchedules.Where(x => x.Value.ClassPlanId == kvp.Key).ToList())
+            foreach (var schedule in MainViewModel.Profile.OrderedSchedules.Where(x => x.Value.ClassPlanId == kvp.Key.ToString()).ToList())
             {
                 MainViewModel.Profile.OrderedSchedules.Remove(schedule.Key);
             }
@@ -540,11 +540,11 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void AddTimePoint(TimeLayoutItem item)
     {
-        var timeLayout = ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
+        var timeLayout = ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value;
         var l = timeLayout.Layouts;
         for (var i = 0; i < l.Count - 1; i++)
         {
-            if (l[i].StartSecond.TimeOfDay <= item.StartSecond.TimeOfDay)
+            if (l[i].StartTime <= item.StartTime)
                 continue;
             timeLayout.InsertTimePoint(i, item);
             return;
@@ -564,14 +564,14 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonDuplicateClassPlan_OnClick(object sender, RoutedEventArgs e)
     {
-        var s = CopyObject(((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem).Value);
+        var s = CopyObject(((KeyValuePair<Guid, ClassPlan>)ListViewClassPlans.SelectedItem).Value);
         if (s == null)
         {
             return;
         }
 
         ViewModel.DrawerContent = FindResource("ClassPlansInfoEditor");
-        MainViewModel.Profile.ClassPlans.Add(Guid.NewGuid().ToString(), s);
+        MainViewModel.Profile.ClassPlans.Add(Guid.NewGuid(), s);
         ListViewClassPlans.SelectedItem = MainViewModel.Profile.ClassPlans.Last();
     }
 
@@ -579,14 +579,14 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonDuplicateTimeLayout_OnClick(object sender, RoutedEventArgs e)
     {
-        var s = CopyObject(((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value);
+        var s = CopyObject(((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Value);
         if (s == null)
         {
             return;
         }
 
         ViewModel.DrawerContent = FindResource("TimeLayoutInfoEditor");
-        MainViewModel.Profile.TimeLayouts.Add(Guid.NewGuid().ToString(), s);
+        MainViewModel.Profile.TimeLayouts.Add(Guid.NewGuid(), s);
         ListViewTimeLayouts.SelectedItem = MainViewModel.Profile.TimeLayouts.Last();
     }
 
@@ -814,12 +814,12 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonCreateTempOverlayClassPlan_OnClick(object sender, RoutedEventArgs e)
     {
-        var id = ProfileService.CreateTempClassPlan(((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem).Key,
+        var id = ProfileService.CreateTempClassPlan(((KeyValuePair<Guid, ClassPlan>)ListViewClassPlans.SelectedItem).Key,
             ViewModel.TempOverlayClassPlanTimeLayoutId,
             ViewModel.OverlayEnableDateTime);
         if (id != null)
         {
-            ListViewClassPlans.SelectedItem = new KeyValuePair<string,ClassPlan>(id, ProfileService.Profile.ClassPlans[id]);
+            ListViewClassPlans.SelectedItem = new KeyValuePair<Guid,ClassPlan>(id.Value, ProfileService.Profile.ClassPlans[id.Value]);
             OpenDrawer("ClassPlansInfoEditor");
         }
         else
@@ -832,7 +832,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ClassPlanSource_OnFilter(object sender, FilterEventArgs e)
     {
-        var cp = (KeyValuePair<string, ClassPlan>)e.Item;
+        var cp = (KeyValuePair<Guid, ClassPlan>)e.Item;
         e.Accepted = !cp.Value.IsOverlay;
     }
 
@@ -853,7 +853,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void TimeLayoutEditScrollToContent()
     {
-        var timeLayoutItems = ((KeyValuePair<string, TimeLayout>?)ListViewTimeLayouts.SelectedItem)?.Value.Layouts;
+        var timeLayoutItems = ((KeyValuePair<Guid, TimeLayout>?)ListViewTimeLayouts.SelectedItem)?.Value.Layouts;
         var tpr = ViewModel.SelectedTimePoint ?? (timeLayoutItems is { Count: > 0 } ? timeLayoutItems?[0] : null);
         if (tpr == null)
         {
@@ -898,7 +898,7 @@ public partial class ProfileSettingsWindow : MyWindow
         if (ViewModel.SelectedTimePoint == null)
             return;
         MainViewModel.Profile.OverwriteAllClassPlanSubject(
-            ((KeyValuePair<string, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key,
+            ((KeyValuePair<Guid, TimeLayout>)ListViewTimeLayouts.SelectedItem).Key,
             ViewModel.SelectedTimePoint,
             ViewModel.SelectedTimePoint.DefaultClassId);
     }
@@ -919,7 +919,7 @@ public partial class ProfileSettingsWindow : MyWindow
     {
         ViewModel.OverlayEnableDateTime = ExactTimeService.GetCurrentLocalDateTime().Date;
         ViewModel.TempOverlayClassPlanTimeLayoutId =
-            ((KeyValuePair<string, ClassPlan>)ListViewClassPlans.SelectedItem).Value.TimeLayoutId;
+            ((KeyValuePair<Guid, ClassPlan>)ListViewClassPlans.SelectedItem).Value.TimeLayoutId;
         PopupCreateTempOverlayClassPlan.IsOpen = true;
     }
 
@@ -943,7 +943,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
     private void ButtonNewClassPlanGroups_OnClick(object sender, RoutedEventArgs e)
     {
-        ProfileService.Profile.ClassPlanGroups.Add(Guid.NewGuid().ToString(), new());
+        ProfileService.Profile.ClassPlanGroups.Add(Guid.NewGuid(), new());
     }
 
     private void ButtonRefreshClassPlans_OnClick(object sender, RoutedEventArgs e)
@@ -1287,33 +1287,36 @@ public partial class ProfileSettingsWindow : MyWindow
         ScheduleCalendarControl.UpdateSchedule();
     }
 
-    private ClassPlan? GetTargetClassPlan(DateTime dateTime, bool overlay, out string? targetGuid)
+    private ClassPlan? GetTargetClassPlan(DateTime dateTime, bool overlay, out Guid? targetGuid)
     {
         targetGuid = null;
         var baseClassPlan = LessonsService.GetClassPlanByDate(dateTime, out var baseGuid);
-        if (baseClassPlan == null || baseGuid == null)
+        if (baseClassPlan == null || !Guid.TryParse(baseGuid, out var baseGuidValue))
         {
             return null;
         }
 
         if (!overlay || baseClassPlan.IsOverlay)
         {
-            targetGuid = baseGuid;
+            targetGuid = baseGuidValue;
             return baseClassPlan;
         }
 
-        var orderedClassPlanId = ProfileService.Profile.OrderedSchedules[dateTime]?.ClassPlanId;
+        var orderedClassPlanId = ProfileService.Profile.OrderedSchedules.TryGetValue(dateTime, out var orderedSchedule)
+            && Guid.TryParse(orderedSchedule.ClassPlanId, out var parsedId)
+            ? parsedId
+            : (Guid?)null;
         if (orderedClassPlanId != null
-            && ProfileService.Profile.ClassPlans.TryGetValue(orderedClassPlanId, out var classPlan)
+            && ProfileService.Profile.ClassPlans.TryGetValue(orderedClassPlanId.Value, out var classPlan)
             && classPlan.IsOverlay)
         {
-            targetGuid = baseGuid;
+            targetGuid = baseGuidValue;
             return baseClassPlan;
         }
 
         targetGuid =
-            ProfileService.CreateTempClassPlan(baseGuid, enableDateTime: dateTime);
-        return targetGuid == null ? null : ProfileService.Profile.ClassPlans[targetGuid];
+            ProfileService.CreateTempClassPlan(baseGuidValue, enableDateTime: dateTime);
+        return targetGuid == null ? null : ProfileService.Profile.ClassPlans[targetGuid.Value];
     }
 
     private void HyperlinkNavigateTimeLayoutPage_OnClick(object sender, RoutedEventArgs e)
@@ -1340,7 +1343,7 @@ public partial class ProfileSettingsWindow : MyWindow
             return;
         }
 
-        ViewModel.TargetSubjectIndex = "";
+        ViewModel.TargetSubjectIndex = Guid.Empty;
         ViewModel.IsClassPlanTempEditPopupOpen = true;
     }
 

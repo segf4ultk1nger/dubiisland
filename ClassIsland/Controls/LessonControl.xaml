@@ -83,11 +83,11 @@
                             <TabItem>
                                 <TextBlock VerticalAlignment="Bottom">
                                     <Run
-                                        Text="{Binding CurrentTimeLayoutItem.StartSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm}}">
+                                        Text="{Binding CurrentTimeLayoutItem.StartTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm}}">
                                     </Run><Run Text="-">
 
                                     </Run><Run
-                                              Text="{Binding CurrentTimeLayoutItem.EndSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm}}" />
+                                              Text="{Binding CurrentTimeLayoutItem.EndTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm}}" />
                                 </TextBlock>
                             </TabItem>
                             <TabItem>

@@ -105,23 +105,23 @@ public partial class ClassPlanDetailsWindow
         var nodes = new Dictionary<AttachableObjectAddress, AttachableSettingsObject>()
         {
             {
-                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId,
+                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId.ToString(),
                     ViewModel.ClassPlan.TimeLayout.Layouts.IndexOf(ViewModel.SelectedLesson.TimeLayoutItem)),
                 ViewModel.SelectedLesson.TimeLayoutItem
             },
             {
                 new AttachableObjectAddress(ProfileService.Profile.ClassPlans
-                    .FirstOrDefault(x => x.Value == ViewModel.ClassPlan).Key ?? ""),
+                    .FirstOrDefault(x => x.Value == ViewModel.ClassPlan).Key.ToString()),
                 ViewModel.ClassPlan
             },
             {
-                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId), ViewModel.ClassPlan.TimeLayout
+                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId.ToString()), ViewModel.ClassPlan.TimeLayout
             },
         };
         if (ViewModel.SelectedLesson.TimeLayoutItem.TimeType != 1)
         {
             nodes.Add(
-                new AttachableObjectAddress(ViewModel.SelectedLesson.SubjectId), ViewModel.SelectedLesson.Subject
+                new AttachableObjectAddress(ViewModel.SelectedLesson.SubjectId.ToString()), ViewModel.SelectedLesson.Subject
             );
         }
 
@@ -142,7 +142,7 @@ public partial class ClassPlanDetailsWindow
                 Node = node
             };
             
-            if (!i.Value.AttachedObjects.TryGetValue(id.ToString(), out var settings))
+            if (!i.Value.AttachedObjects.TryGetValue(id, out var settings))
             {
                 item.State = AttachedSettingsControlState.Disabled;
                 goto finish;

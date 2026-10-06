@@ -184,12 +184,13 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
         return JsonSerializer.Deserialize<T>(json)!;
     }
 
-    public string? CreateTempClassPlan(string id, string? timeLayoutId=null, DateTime? enableDateTime = null)
+    public Guid? CreateTempClassPlan(Guid id, Guid? timeLayoutId=null, DateTime? enableDateTime = null)
     {
         Logger.LogInformation("创建临时层：{}", id);
         var date = enableDateTime ?? IAppHost.GetService<IExactTimeService>().GetCurrentLocalDateTime().Date;
         if (Profile.OrderedSchedules.TryGetValue(date, out var orderedSchedule)
-            && Profile.ClassPlans.TryGetValue(orderedSchedule.ClassPlanId, out var cp1)
+            && Guid.TryParse(orderedSchedule.ClassPlanId, out var orderedClassPlanId)
+            && Profile.ClassPlans.TryGetValue(orderedClassPlanId, out var cp1)
             && cp1.IsOverlay)
         {
             return null;
@@ -199,24 +200,24 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
         var newCp = DuplicateJson(cp);
 
         newCp.IsOverlay = true;
-        newCp.TimeLayoutId = timeLayoutId;
+        newCp.TimeLayoutId = timeLayoutId.Value;
         newCp.OverlaySourceId = id;
         newCp.Name += "（临时层）";
         newCp.OverlaySetupTime = date;
         Profile.IsOverlayClassPlanEnabled = true;
-        var newId = Guid.NewGuid().ToString();
+        var newId = Guid.NewGuid();
         Profile.OverlayClassPlanId = newId;
         Profile.ClassPlans.Add(newId, newCp);
         Profile.OrderedSchedules[date] = new OrderedSchedule()
         {
-            ClassPlanId = newId
+            ClassPlanId = newId.ToString()
         };
         return newId;
     }
 
     public void ClearTempClassPlan()
     {
-        if (Profile.OverlayClassPlanId == null || !Profile.ClassPlans.ContainsKey(Profile.OverlayClassPlanId))
+        if (Profile.OverlayClassPlanId == null || !Profile.ClassPlans.ContainsKey(Profile.OverlayClassPlanId ?? Guid.Empty))
         {
             return;
         }
@@ -238,7 +239,9 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
             Logger.LogInformation("清理过期的课表预定：{}", schedule.Key);
         }
 
-        var orderedSchedules = Profile.OrderedSchedules.Select(x => x.Value.ClassPlanId).ToList();
+        var orderedSchedules = Profile.OrderedSchedules
+            .Select(x => Guid.TryParse(x.Value.ClassPlanId, out var id) ? id : Guid.Empty)
+            .ToList();
 
         foreach (var classPlan in Profile.ClassPlans.Where(x => x.Value.IsOverlay).ToList())
         {
@@ -259,11 +262,11 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
         Logger.LogInformation("将当前临时层课表转换为普通课表：{}", Profile.OverlayClassPlanId);
         if (Profile.OverlayClassPlanId != null)
         {
-            ConvertToStdClassPlan(Profile.OverlayClassPlanId);
+            ConvertToStdClassPlan(Profile.OverlayClassPlanId.Value);
         }
     }
 
-    public void ConvertToStdClassPlan(string id)
+    public void ConvertToStdClassPlan(Guid id)
     {
         Logger.LogInformation("将临时层课表转换为普通课表：{}", id);
         var today = IAppHost.GetService<IExactTimeService>().GetCurrentLocalDateTime().Date;
@@ -274,7 +277,7 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
         classPlan.IsOverlay = false;
     }
 
-    public void SetupTempClassPlanGroup(string key, DateTime? expireTime = null)
+    public void SetupTempClassPlanGroup(Guid key, DateTime? expireTime = null)
     {
         var classPlans = Profile.ClassPlans
             .Where(x => x.Value.AssociatedGroup == key)

@@ -152,7 +152,7 @@ public class ClassNotificationProvider : NotificationProviderBase<ClassNotificat
             })
             {
                 SpeechContent = $"{message} 下节课是：{LessonsService.NextClassSubject.Name}{(Settings.ShowTeacherName ? $"，{FormatTeacher(LessonsService.NextClassSubject)}" : "")}。",
-                EndTime = DateTimeToCurrentDateTimeConverter.Convert(LessonsService.NextClassTimeLayoutItem.StartSecond),
+                EndTime = DateTimeToCurrentDateTimeConverter.Convert(DateTime.Today + LessonsService.NextClassTimeLayoutItem.StartTime),
                 IsSpeechEnabled = Settings.IsSpeechEnabledOnClassPreparing
             },
             ChannelId = Guid.Parse(PrepareOnClassChannelId)
@@ -196,12 +196,12 @@ public class ClassNotificationProvider : NotificationProviderBase<ClassNotificat
 
         if (!settingsIsClassOffNotificationEnabled ||
             LessonsService.CurrentTimeLayoutItem == TimeLayoutItem.Empty ||
-            ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - LessonsService.CurrentTimeLayoutItem.StartSecond.TimeOfDay > TimeSpan.FromSeconds(5))
+            ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - LessonsService.CurrentTimeLayoutItem.StartTime > TimeSpan.FromSeconds(5))
             return;
         var overlayText = settings?.ClassOffOverlayText ?? Settings.ClassOffOverlayText;
         var showOverlayText = !string.IsNullOrWhiteSpace(overlayText);
 
-        var isNextClassEmpty = LessonsService.NextClassSubject == Subject.Empty;
+        var isNextClassEmpty = LessonsService.NextClassSubject == Subject.Fallback;
         Channel(OnBreakingChannelId).ShowNotification(new NotificationRequest()
         {
             MaskContent = new NotificationContent(new ClassNotificationProviderControl("ClassOffNotification")
@@ -248,7 +248,7 @@ public class ClassNotificationProvider : NotificationProviderBase<ClassNotificat
         if (!settingsIsClassOnNotificationEnabled ||
             IsClassOnNotified ||
             LessonsService.CurrentTimeLayoutItem == TimeLayoutItem.Empty ||
-            ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - LessonsService.CurrentTimeLayoutItem.StartSecond.TimeOfDay > TimeSpan.FromSeconds(5))
+            ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - LessonsService.CurrentTimeLayoutItem.StartTime > TimeSpan.FromSeconds(5))
             return;
 
         Channel(OnClassChannelId).ShowNotification(BuildOnClassNotificationRequest(settingsSource));

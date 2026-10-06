@@ -803,7 +803,7 @@
                                                             <Border.Style>
                                                                 <Style TargetType="Border">
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Value.TimeLayoutId}" Value="">
+                                                                        <DataTrigger Binding="{Binding Value.TimeLayoutId}" Value="00000000-0000-0000-0000-000000000000">
                                                                             <Setter Property="BorderBrush" Value="IndianRed"/>
                                                                             <Setter Property="TextElement.Foreground" Value="IndianRed"/>
                                                                         </DataTrigger>
@@ -821,7 +821,7 @@
                                                                     <TextBlock.Style>
                                                                         <Style TargetType="TextBlock">
                                                                             <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Value.TimeLayoutId}" Value="">
+                                                                                <DataTrigger Binding="{Binding Value.TimeLayoutId}" Value="00000000-0000-0000-0000-000000000000">
                                                                                     <Setter Property="Text" Value="???"/>
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
@@ -975,7 +975,7 @@
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding TimeLayoutId}" Value="">
+                                                                <DataTrigger Binding="{Binding TimeLayoutId}" Value="00000000-0000-0000-0000-000000000000">
                                                                     <Setter Property="Visibility" Value="Visible"/>
                                                                 </DataTrigger>
                                                                 <DataTrigger Binding="{Binding ProfileService.Profile.TimeLayouts.Count, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}" Value="0">
@@ -1024,10 +1024,10 @@
                                                             <DataTemplate>
                                                                 <TextBlock>
                                                                     <Run
-                                                                        Text="{Binding CurrentTimeLayoutItem.StartSecond, StringFormat={}{0:HH:mm:ss}, Mode=OneWay}" />
+                                                                        Text="{Binding CurrentTimeLayoutItem.StartTime, StringFormat={}{0:hh\\:mm\\:ss}, Mode=OneWay}" />
                                                                     <Run Text="-" />
                                                                     <Run
-                                                                        Text="{Binding CurrentTimeLayoutItem.EndSecond, StringFormat={}{0:HH:mm:ss}, Mode=OneWay}" />
+                                                                        Text="{Binding CurrentTimeLayoutItem.EndTime, StringFormat={}{0:hh\\:mm\\:ss}, Mode=OneWay}" />
                                                                 </TextBlock>
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
@@ -1500,10 +1500,10 @@
                                                 <mah:TimePicker mah:TextBoxHelper.Watermark="开始时间"
                                                                            Margin="0 12 0 0"
                                                                            Style="{StaticResource MahApps.Styles.TimePickerBase}"
-                                                                           SelectedDateTime="{Binding ViewModel.SelectedTimePoint.StartSecond, Converter={StaticResource TimeSpanToDateTimeConverter}}" />
+                                                                           SelectedDateTime="{Binding ViewModel.SelectedTimePoint.StartTime, Converter={StaticResource TimeSpanToDateTimeConverter}}" />
                                                 <mah:TimePicker mah:TextBoxHelper.Watermark="结束时间"
                                                                            Margin="0 12 0 0"
-                                                                           SelectedDateTime="{Binding ViewModel.SelectedTimePoint.EndSecond, Converter={StaticResource TimeSpanToDateTimeConverter}}">
+                                                                           SelectedDateTime="{Binding ViewModel.SelectedTimePoint.EndTime, Converter={StaticResource TimeSpanToDateTimeConverter}}">
                                                     <mah:TimePicker.Style>
                                                         <Style TargetType="mah:TimePicker"
                                                                BasedOn="{StaticResource MahApps.Styles.TimePickerBase}">
@@ -1994,7 +1994,7 @@
                                                                     <Style.Triggers>
                                                                         <DataTrigger
                                                                             Binding="{Binding ViewModel.TargetSubjectIndex}"
-                                                                            Value="">
+                                                                            Value="00000000-0000-0000-0000-000000000000">
                                                                             <Setter Property="IsEnabled" Value="False" />
                                                                         </DataTrigger>
                                                                     </Style.Triggers>

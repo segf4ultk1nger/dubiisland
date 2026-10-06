@@ -284,9 +284,9 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         if (!valid.Contains(item))
             return null;
 
-        var itemTime = item.TimeType == 2 ? item.StartSecond : item.EndSecond;
+        var itemTime = item.TimeType == 2 ? item.StartTime : item.EndTime;
         if (hideFinished &&
-            (itemTime.TimeOfDay < selected?.StartSecond.TimeOfDay || itemTime.TimeOfDay < now.TimeOfDay))
+            (itemTime < selected?.StartTime || itemTime < now.TimeOfDay))
             return null;
 
         if (item.TimeType == 2)
@@ -374,7 +374,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         var total = (long)item.Last.TotalSeconds;
         if (total > 0)
         {
-            var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartSecond.TimeOfDay).TotalSeconds;
+            var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartTime).TotalSeconds;
             var fraction = Math.Max(0, Math.Min(1, (double)elapsed / total));
             var track = new Rect(rect.X, rect.Y + rect.Height - 4, rect.Width, 4);
             drawingContext.DrawRoundedRectangle(_progressTrack, null, track, 2, 2);
@@ -398,7 +398,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
     {
         pill = false;
         var total = (long)item.Last.TotalSeconds;
-        var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartSecond.TimeOfDay).TotalSeconds;
+        var elapsed = (long)(context.ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - item.StartTime).TotalSeconds;
         leftSeconds = total - elapsed;
 
         if (!settings.ShowExtraInfoOnTimePoint)
@@ -418,7 +418,7 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
 
         return type switch
         {
-            0 => $"{item.StartSecond:HH:mm}-{item.EndSecond:HH:mm}",
+            0 => $"{item.StartTime:hh\\:mm}-{item.EndTime:hh\\:mm}",
             1 => FormatMulti(elapsed, total, false),
             2 => "-" + FormatMulti(leftSeconds, total, true),
             3 => total > 0 ? $"{(double)elapsed / total:P0}" : "0%",
@@ -486,9 +486,9 @@ public sealed class ScheduleIslandComponent : IslandComponentBase
         return index >= 0 && index < plan.Classes.Count ? plan.Classes[index] : null;
     }
 
-    private static Subject? GetSubject(ObservableDictionary<string, Subject> subjects, ClassInfo? info)
+    private static Subject? GetSubject(ObservableDictionary<Guid, Subject> subjects, ClassInfo? info)
     {
-        if (info == null || string.IsNullOrEmpty(info.SubjectId))
+        if (info == null || info.SubjectId == Guid.Empty)
             return null;
         return subjects.TryGetValue(info.SubjectId, out var subject) ? subject : null;
     }

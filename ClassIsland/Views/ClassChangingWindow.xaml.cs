@@ -73,7 +73,7 @@ public partial class ClassChangingWindow : MyWindow
         {
             return;
         }
-        var key = l[0].Key;
+        var key = (Guid?)l[0].Key;
         if (!ViewModel.WriteToSourceClassPlan && !ClassPlan.IsOverlay && ProfileService.Profile.OverlayClassPlanId != null)
         {
             var r = await DialogService.ShowMessageAsync(ViewModel.DialogIdentifier.ToString(),
@@ -89,18 +89,18 @@ public partial class ClassChangingWindow : MyWindow
 
         if (!ViewModel.WriteToSourceClassPlan && !ClassPlan.IsOverlay)
         {
-            key = ProfileService.CreateTempClassPlan(key);
+            key = ProfileService.CreateTempClassPlan(key.Value);
         }
 
         if (key == null)
         {
             return;
         }
-        var cp = ProfileService.Profile.ClassPlans[key];
+        var cp = ProfileService.Profile.ClassPlans[key.Value];
         var aI = GetSubjectIndex(ViewModel.SourceIndex);
         var bI = 0;
-        var a = "";
-        var b = "";
+        Guid a;
+        Guid b;
 
         if (SettingsService.Settings.IsSwapMode)
         {
@@ -112,7 +112,7 @@ public partial class ClassChangingWindow : MyWindow
         }
         else
         {
-            if (ViewModel.TargetSubjectIndex == null)
+            if (ViewModel.TargetSubjectIndex == Guid.Empty)
             {
                 return;
             }

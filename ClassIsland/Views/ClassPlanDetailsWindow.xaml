@@ -47,10 +47,10 @@
                         <DataTemplate>
                             <TextBlock>
                                 <Run
-                                    Text="{Binding TimeLayoutItem.StartSecond, StringFormat={}{0:HH:mm:ss}}" />
+                                    Text="{Binding TimeLayoutItem.StartTime, StringFormat={}{0:hh\\:mm\\:ss}}" />
                                 <Run Text="-" />
                                 <Run
-                                    Text="{Binding TimeLayoutItem.EndSecond, StringFormat={}{0:HH:mm:ss}}" />
+                                    Text="{Binding TimeLayoutItem.EndTime, StringFormat={}{0:hh\\:mm\\:ss}}" />
                             </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

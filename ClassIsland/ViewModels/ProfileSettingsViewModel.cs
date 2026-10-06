@@ -25,7 +25,7 @@ public class ProfileSettingsViewModel : ObservableRecipient
     private double _timeLineScale = 3.0;
     private Subject? _selectedSubject;
     private bool _isPanningModeEnabled = false;
-    private string _tempOverlayClassPlanTimeLayoutId = "";
+    private Guid _tempOverlayClassPlanTimeLayoutId = Guid.Empty;
     private ClassInfo?  _selectedClassInfo;
     private int _selectedClassIndex = -1;
     private ClassPlan _selectedClassPlan = new();
@@ -45,7 +45,7 @@ public class ProfileSettingsViewModel : ObservableRecipient
     private bool _isTempSwapMode = true;
     private int _dataGridWeekRowsWeekIndex = 0;
     private bool _isClassPlanTempEditPopupOpen = false;
-    private string _targetSubjectIndex = "";
+    private Guid _targetSubjectIndex = Guid.Empty;
     private bool _isTimeLineSticky = true;
 
     public object DrawerContent
@@ -218,7 +218,7 @@ public class ProfileSettingsViewModel : ObservableRecipient
         }
     }
 
-    public string TempOverlayClassPlanTimeLayoutId
+    public Guid TempOverlayClassPlanTimeLayoutId
     {
         get => _tempOverlayClassPlanTimeLayoutId;
         set
@@ -438,7 +438,7 @@ public class ProfileSettingsViewModel : ObservableRecipient
         }
     }
 
-    public string TargetSubjectIndex
+    public Guid TargetSubjectIndex
     {
         get => _targetSubjectIndex;
         set

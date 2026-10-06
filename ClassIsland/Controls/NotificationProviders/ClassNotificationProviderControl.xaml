@@ -44,9 +44,9 @@
                            Text="{Binding LessonsService.NextClassSubject.TeacherName}"
                            Visibility="{Binding ShowTeacherName, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <TextBlock FontSize="{DynamicResource MainWindowSecondaryFontSize}" VerticalAlignment="Bottom" Margin="2 0 0 0">
-                    <Run Text="{Binding LessonsService.NextClassTimeLayoutItem.StartSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm}}">
+                    <Run Text="{Binding LessonsService.NextClassTimeLayoutItem.StartTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm}}">
                     </Run><Run Text="-">
-                    </Run><Run Text="{Binding LessonsService.NextClassTimeLayoutItem.EndSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm}}"/>
+                    </Run><Run Text="{Binding LessonsService.NextClassTimeLayoutItem.EndTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm}}"/>
                 </TextBlock>
             </StackPanel>
         </Grid>
@@ -89,9 +89,9 @@
                            Text="{Binding LessonsService.NextClassSubject.TeacherName}"
                            Visibility="{Binding ShowTeacherName, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <TextBlock Margin="2 0 0 0" FontSize="{DynamicResource MainWindowSecondaryFontSize}" VerticalAlignment="Bottom">
-                    <Run Text="{Binding LessonsService.NextClassTimeLayoutItem.StartSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm}}">
+                    <Run Text="{Binding LessonsService.NextClassTimeLayoutItem.StartTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm}}">
                     </Run><Run Text="-">
-                    </Run><Run Text="{Binding LessonsService.NextClassTimeLayoutItem.EndSecond, ConverterCulture=zh-cn, StringFormat={}{0:HH:mm}}"/>
+                    </Run><Run Text="{Binding LessonsService.NextClassTimeLayoutItem.EndTime, ConverterCulture=zh-cn, StringFormat={}{0:hh\\:mm}}"/>
                 </TextBlock>
             </StackPanel>
         </Grid>
