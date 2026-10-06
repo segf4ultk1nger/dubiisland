@@ -84,6 +84,9 @@ public partial class SettingsWindowNew : MyWindow
 
     private readonly Dictionary<string, SettingsPageBase?> _cachedPages = new();
 
+    /// <summary>当前正在导航到的页面，用于在快速点击时补上被 <see cref="ViewModel"/> 导航锁丢弃的目标页。</summary>
+    private SettingsPageInfo? _navigatingPageInfo;
+
 
     public SettingsWindowNew(IManagementService managementService, IHangService hangService,
         ILogger<SettingsWindowNew> logger, DiagnosticService diagnosticService, SettingsService settingsService,
@@ -228,6 +231,14 @@ public partial class SettingsWindowNew : MyWindow
         }
         ViewModel.IsNavigating = false;
         ViewModel.CanGoBack = NavigationService.CanGoBack;
+
+        // 快速连续点击导航时，后一次点击会被 IsNavigating 锁丢弃，导致菜单高亮与内容不一致。
+        // 这里在当前导航完成后补上最后一次被丢弃的目标页。
+        if (ViewModel.IsRendered && ViewModel.SelectedPageInfo is { } target &&
+            !ReferenceEquals(target, _navigatingPageInfo))
+        {
+            await CoreNavigate(target);
+        }
     }
 
 
@@ -268,6 +279,7 @@ public partial class SettingsWindowNew : MyWindow
             }
 
             ViewModel.SelectedPageInfo = info;
+            _navigatingPageInfo = info;
 
             var uriQuery = HttpUtility.ParseQueryString(uri?.Query ?? "");
             var keepHistory = uriQuery[KeepHistoryParameterName] == "true";
