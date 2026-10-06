@@ -478,34 +478,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- ROW 0 预览：置顶贴边；ViewBox 保证整条岛完整可见，最大 100%，超过 2 条岛高度才缩小 -->
-        <Grid x:Name="PreviewRoot" Grid.Row="0" Background="#1E1E1E" ClipToBounds="True">
-            <!-- 画布层：壁纸 + 岛作为一个整体，聚焦时只变换这一层（岛跟着壁纸移动缩放） -->
-            <Grid x:Name="PreviewCanvas" RenderTransformOrigin="0,0">
-                <Grid.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform x:Name="FocusScale"/>
-                        <TranslateTransform x:Name="FocusTranslate"/>
-                    </TransformGroup>
-                </Grid.RenderTransform>
-                <!-- 壁纸层：壁纸铺不满（贴边留白/超出屏幕）的部分由 PreviewRoot 的底色兜底 -->
-                <Border x:Name="PreviewWallpaperLayer" Background="Transparent" IsHitTestVisible="False"/>
-                <Border x:Name="PreviewBorder" Padding="12" SizeChanged="PreviewBorder_OnSizeChanged">
-                    <Viewbox x:Name="IslandViewbox" Stretch="Uniform" StretchDirection="DownOnly"
-                             MaxHeight="{Binding PreviewContentCap, ElementName=IslandPreviewHost}"
-                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                             SizeChanged="PreviewBorder_OnSizeChanged">
-                        <island:IslandPreview x:Name="IslandPreviewHost"/>
-                    </Viewbox>
-                </Border>
-                <!-- 悬停指示：实时显示鼠标所在组件/行的位置，不做动画 -->
-                <Path x:Name="HoverHighlight" IsHitTestVisible="False" Visibility="Collapsed" Stretch="None"
-                      Stroke="#FF1E90FF" StrokeThickness="2"/>
-                <!-- 选中项高亮：几何在 PreviewCanvas 坐标里，Rect 可做过渡动画；随聚焦变换一起移动缩放 -->
-                <Path x:Name="SelectionHighlight" IsHitTestVisible="False" Visibility="Collapsed" Stretch="None"
-                      Stroke="#FFFF3B30" StrokeThickness="2"/>
-            </Grid>
-        </Grid>
+        <!-- ROW 0 预览（通用控件）：置顶只读岛预览 -->
+        <island:IslandPreviewControl x:Name="Preview" Grid.Row="0"
+                                     SelectedNode="{Binding ViewModel.SelectedNode}"
+                                     IsCompact="{Binding ViewModel.IsCompact}"/>
 
         <!-- ROW 1 操作行：左锚点（组件树/添加操作），右锚点（档案管理） -->
         <Border Grid.Row="1"

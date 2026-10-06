@@ -10,6 +10,7 @@
       xmlns:converters="clr-namespace:ClassIsland.Core.Converters;assembly=ClassIsland.Core"
       xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
       xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+      xmlns:island="clr-namespace:ClassIsland.Controls.Island"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="外观"
@@ -271,7 +272,14 @@
             </ItemsControl>
         </Grid>
     </controls:SettingsPageBase.Resources>
-    <ScrollViewer>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- 预览（通用控件）：置顶只读岛预览，跟随外观设置实时更新 -->
+        <island:IslandPreviewControl Grid.Row="0"/>
+        <ScrollViewer Grid.Row="1">
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
             <TextBlock Text="主界面" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 界面缩放 -->
@@ -862,5 +870,6 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </controls:SettingsPageBase>
