@@ -6,10 +6,7 @@ using System.Windows.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using ClassIsland.Core.Helpers.Native;
-using ClassIsland.Core.Models.Ruleset;
 using ClassIsland.Core;
-using ClassIsland.Models.Rules;
-using System.Windows.Forms;
 using ClassIsland.ViewModels;
 
 namespace ClassIsland.Services;
@@ -17,7 +14,7 @@ namespace ClassIsland.Services;
 public class WindowRuleService : IWindowRuleService
 {
     public ILogger<WindowRuleService> Logger { get; }
-    public IRulesetService RulesetService { get; }
+    public IConditionPulseService ConditionPulseService { get; }
 
     public event WINEVENTPROC? ForegroundWindowChanged;
     public HWND ForegroundHwnd { get; set; }
@@ -26,10 +23,10 @@ public class WindowRuleService : IWindowRuleService
 
     private bool _isMoving = false;
 
-    public WindowRuleService(ILogger<WindowRuleService> logger, IRulesetService rulesetService)
+    public WindowRuleService(ILogger<WindowRuleService> logger, IConditionPulseService conditionPulseService)
     {
         Logger = logger;
-        RulesetService = rulesetService;
+        ConditionPulseService = conditionPulseService;
         eventProc = PfnWinEventProc;
         uint[] events = [EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_MOVESIZEEND, EVENT_SYSTEM_MOVESIZESTART,
             EVENT_SYSTEM_MINIMIZEEND, EVENT_OBJECT_LOCATIONCHANGE];
@@ -47,63 +44,7 @@ public class WindowRuleService : IWindowRuleService
                 flags);
             _hooks.Add(hook);
         }
-        ForegroundWindowChanged += ((_, _, _, _, _, _, _) => RulesetService.NotifyStatusChanged());
-
-        RulesetService.RegisterRuleHandler("classisland.windows.className", ClassNameHandler);
-        RulesetService.RegisterRuleHandler("classisland.windows.text", TextHandler);
-        RulesetService.RegisterRuleHandler("classisland.windows.status", StatusHandler);
-        RulesetService.RegisterRuleHandler("classisland.windows.processName", ProcessNameHandler);
-    }
-
-    private unsafe bool ProcessNameHandler(object? settings)
-    {
-        if (settings is not StringMatchingSettings s) return false;
-        uint pid = 0;
-        GetWindowThreadProcessId(ForegroundHwnd, &pid);
-        var process = Process.GetProcessById((int)pid);
-        return s.IsMatching(process.ProcessName);
-    }
-
-    private bool StatusHandler(object? settings)
-    {
-        if (settings is not WindowStatusRuleSettings s) return false;
-        GetWindowRect(ForegroundHwnd, out var rect);
-        var vm = App.GetService<MainViewModel>();
-        var screen = vm.Settings.WindowDockingMonitorIndex < Screen.AllScreens.Length &&
-                     vm.Settings.WindowDockingMonitorIndex >= 0 ?
-            Screen.AllScreens[vm.Settings.WindowDockingMonitorIndex] : Screen.PrimaryScreen;
-        if (screen == null)
-        {
-            return false;
-        }
-
-        var fullscreen = NativeWindowHelper.IsForegroundFullScreen(screen);
-        var maximize = IsZoomed(ForegroundHwnd);
-        var minimize = IsIconic(ForegroundHwnd);
-        return s.State switch
-        {
-            0 => !(fullscreen || maximize || minimize),
-            1 => maximize && !fullscreen,
-            2 => minimize,
-            3 => fullscreen,
-            _ => false
-        };
-    }
-
-    private bool TextHandler(object? settings)
-    {
-        if (settings is not StringMatchingSettings s) return false;
-        using var className = new DisposablePWSTR(256);
-        GetWindowText(ForegroundHwnd, className.PWSTR, 256);
-        return s.IsMatching(className.ToString());
-    }
-
-    private bool ClassNameHandler(object? settings)
-    {
-        if (settings is not StringMatchingSettings s) return false;
-        using var className = new DisposablePWSTR(256);
-        GetClassName(ForegroundHwnd, className.PWSTR, 256);
-        return s.IsMatching(className.ToString());
+        ForegroundWindowChanged += ((_, _, _, _, _, _, _) => ConditionPulseService.NotifyStatusChanged());
     }
 
     ~WindowRuleService()

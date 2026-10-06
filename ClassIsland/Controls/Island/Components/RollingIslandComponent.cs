@@ -61,7 +61,7 @@ public sealed class RollingIslandComponent : ContainerIslandComponentBase, IIsla
         var elapsed = _nowSeconds - _startSeconds;
         var phase = total <= 0 ? 0 : elapsed % total;
 
-        // ponytail: 忽略 PauseOnRule/StopOnRule 规则驱动，需要时接 IRulesetService.StatusUpdated 再补。
+        // ponytail: 忽略 PauseOnRule/StopOnRule 规则驱动，需要时接 IConditionPulseService.StatusUpdated 再补。
         var offset = phase < pause ? -pausePos : -pausePos - (phase - pause) * speed;
 
         drawingContext.PushClip(new RectangleGeometry(slot));

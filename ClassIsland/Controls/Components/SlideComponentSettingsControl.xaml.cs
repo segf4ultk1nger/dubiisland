@@ -26,12 +26,12 @@ public partial class SlideComponentSettingsControl
         InitializeComponent();
     }
 
-    private void ButtonOpenPauseRuleset_OnClick(object sender, RoutedEventArgs e)
+    private void ButtonOpenPauseCondition_OnClick(object sender, RoutedEventArgs e)
     {
         OpenConditionEditor(nameof(Settings.PauseCondition));
     }
 
-    private void ButtonOpenStopRuleset_OnClick(object sender, RoutedEventArgs e)
+    private void ButtonOpenStopCondition_OnClick(object sender, RoutedEventArgs e)
     {
         OpenConditionEditor(nameof(Settings.StopCondition));
     }

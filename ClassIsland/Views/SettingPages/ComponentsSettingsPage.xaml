@@ -300,11 +300,11 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button HorizontalAlignment="Left"
                                         Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                        Click="ButtonOpenRuleset_OnClick"
+                                        Click="ButtonOpenConditionEditor_OnClick"
                                         Visibility="{Binding HideOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <StackPanel Orientation="Horizontal">
                                         <remix:PackIconRemixIcon Kind="PriceTag3Line" Width="16" Height="16" VerticalAlignment="Center"/>
-                                        <TextBlock Text="编辑规则集…" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                                        <TextBlock Text="编辑条件…" VerticalAlignment="Center" Margin="6 0 0 0"/>
                                     </StackPanel>
                                 </Button>
                                 <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding HideOnRule, Mode=TwoWay}"/>

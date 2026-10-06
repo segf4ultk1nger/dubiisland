@@ -870,7 +870,7 @@ public sealed class LegacyImporter
     // ============================ 条件映射 ============================
 
     /// <summary>
-    /// 将一个旧规则集转换为 JS 布尔表达式，镜像 <c>RulesetService</c> 的判定逻辑。
+    /// 将一个旧规则集转换为 JS 布尔表达式，镜像旧版规则集的判定逻辑。
     /// </summary>
     private static string MapRuleset(DtoRuleset? ruleset, Func<Guid, string?> subjectName, List<string> unmapped)
     {

@@ -24,7 +24,7 @@ public class ScriptConditionEvaluator : IScriptConditionEvaluator, IDisposable
 
     private readonly ILogger<ScriptConditionEvaluator> _logger;
     private readonly Engine _engine;
-    private readonly IRulesetService _rulesetService;
+    private readonly IConditionPulseService _conditionPulseService;
     private readonly CancellationTokenSource _cts = new();
     private readonly ConcurrentDictionary<string, ConditionEntry> _cache = new();
     private readonly object _syncRoot = new();
@@ -38,10 +38,10 @@ public class ScriptConditionEvaluator : IScriptConditionEvaluator, IDisposable
     /// </summary>
     public ScriptConditionEvaluator(ILogger<ScriptConditionEvaluator> logger, ILessonsService lessonsService,
         IExactTimeService exactTimeService, IProfileService profileService, IWindowRuleService windowRuleService,
-        IWeatherService weatherService, SettingsService settingsService, IRulesetService rulesetService)
+        IWeatherService weatherService, SettingsService settingsService, IConditionPulseService conditionPulseService)
     {
         _logger = logger;
-        _rulesetService = rulesetService;
+        _conditionPulseService = conditionPulseService;
 
         _engine = CreateEngine();
         _engine.SetValue("lessons", new LessonsFacade(lessonsService, exactTimeService, profileService));
@@ -49,7 +49,7 @@ public class ScriptConditionEvaluator : IScriptConditionEvaluator, IDisposable
         _engine.SetValue("weather", new WeatherFacade(weatherService, settingsService));
         _engine.SetValue("time", new TimeFacade(exactTimeService));
 
-        _rulesetService.StatusUpdated += OnStatusUpdated;
+        _conditionPulseService.StatusUpdated += OnStatusUpdated;
     }
 
     /// <inheritdoc />
@@ -171,7 +171,7 @@ public class ScriptConditionEvaluator : IScriptConditionEvaluator, IDisposable
         }
 
         _disposed = true;
-        _rulesetService.StatusUpdated -= OnStatusUpdated;
+        _conditionPulseService.StatusUpdated -= OnStatusUpdated;
         _cts.Cancel();
         _engine.Dispose();
         _cts.Dispose();

@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Media;
 using ClassIsland.Core.Models.Plugin;
-using ClassIsland.Core.Models.Ruleset;
 using ClassIsland.Core.Models.Weather;
 using ClassIsland.Helpers;
 using ClassIsland.Shared;
@@ -156,9 +155,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private string _updateArtifactHash = "";
     private ObservableCollection<string> _excludedWeatherAlerts = new();
     private string _currentComponentConfig = "Default";
-    private bool _isAutomationEnabled = false;
-    private bool _isAutomationWarningVisible = true;
-    private string _currentAutomationConfig = "Default";
     private bool _isScriptingEnabled = true;
     private Version _lastAppVersion = new Version("0.0.0.0");
     private bool _showComponentsMigrateTip = false;
@@ -1527,43 +1523,6 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _notificationUseStandaloneEffectUiThread) return;
             _notificationUseStandaloneEffectUiThread = value;
-            OnPropertyChanged();
-        }
-    }
-
-    #endregion
-
-    #region Automations
-
-    public bool IsAutomationEnabled
-    {
-        get => _isAutomationEnabled;
-        set
-        {
-            if (value == _isAutomationEnabled) return;
-            _isAutomationEnabled = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string CurrentAutomationConfig
-    {
-        get => _currentAutomationConfig;
-        set
-        {
-            if (value == _currentAutomationConfig) return;
-            _currentAutomationConfig = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsAutomationWarningVisible
-    {
-        get => _isAutomationWarningVisible;
-        set
-        {
-            if (value == _isAutomationWarningVisible) return;
-            _isAutomationWarningVisible = value;
             OnPropertyChanged();
         }
     }

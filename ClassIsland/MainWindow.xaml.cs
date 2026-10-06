@@ -120,7 +120,7 @@ public partial class MainWindow : Window, INotificationVisualHost
     public ClassChangingWindow? ClassChangingWindow { get; set; }
     
     private IUriNavigationService UriNavigationService { get; }
-    public IRulesetService RulesetService { get; }
+    public IConditionPulseService ConditionPulseService { get; }
     public ScriptConditionEvaluator ConditionEvaluator { get; }
     public IWindowRuleService WindowRuleService { get; }
     public IManagementService ManagementService { get; }
@@ -162,7 +162,7 @@ public partial class MainWindow : Window, INotificationVisualHost
         IComponentsService componentsService,
         ILessonsService lessonsService,
         IUriNavigationService uriNavigationService,
-        IRulesetService rulesetService,
+        IConditionPulseService conditionPulseService,
         ScriptConditionEvaluator conditionEvaluator,
         IWindowRuleService windowRuleService,
         IManagementService managementService,
@@ -180,7 +180,7 @@ public partial class MainWindow : Window, INotificationVisualHost
         ComponentsService = componentsService;
         LessonsService = lessonsService;
         UriNavigationService = uriNavigationService;
-        RulesetService = rulesetService;
+        ConditionPulseService = conditionPulseService;
         ConditionEvaluator = conditionEvaluator;
         WindowRuleService = windowRuleService;
         ManagementService = managementService;
@@ -197,7 +197,7 @@ public partial class MainWindow : Window, INotificationVisualHost
         TopmostRecheckTimer.Tick += TopmostRecheckTimerOnTick;
         InitializeComponent();
         App.GetService<NotificationDisplayService>().VisualHost = this;
-        RulesetService.StatusUpdated += RulesetServiceOnStatusUpdated;
+        ConditionPulseService.StatusUpdated += ConditionPulseServiceOnStatusUpdated;
         TouchInFadingTimer.Tick += TouchInFadingTimerOnTick;
         IsRunningCompatibleMode = SettingsService.Settings.IsCompatibleWindowTransparentEnabled;
         if (IsRunningCompatibleMode)
@@ -250,7 +250,7 @@ public partial class MainWindow : Window, INotificationVisualHost
         TopmostRecheckTimer.Start();
     }
 
-    private void RulesetServiceOnStatusUpdated(object? sender, EventArgs e)
+    private void ConditionPulseServiceOnStatusUpdated(object? sender, EventArgs e)
     {
         if (ViewModel.Settings.HideMode == 1)
         {

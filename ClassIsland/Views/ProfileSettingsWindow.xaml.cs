@@ -29,7 +29,6 @@ using ClassIsland.Services.Scripting;
 using ClassIsland.Shared;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Extensions;
-using ClassIsland.Shared.Models.Action;
 using ClassIsland.Core.Services;
 using ClassIsland.ViewModels;
 using CommunityToolkit.Mvvm.Input;
@@ -319,8 +318,7 @@ public partial class ProfileSettingsWindow : MyWindow
         {
             TimeType = timeType,
             StartTime = baseSec,
-            EndTime = baseSec + lastTime,
-            ActionSet = timeType == 3 ? new ActionSet() : null
+            EndTime = baseSec + lastTime
         };
         AddTimePoint(newItem);
         // ReSortTimeLayout(newItem);

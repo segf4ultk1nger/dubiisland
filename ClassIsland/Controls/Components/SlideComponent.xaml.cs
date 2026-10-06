@@ -21,7 +21,7 @@ namespace ClassIsland.Controls.Components;
 [ComponentInfo("7E19A113-D281-4F33-970A-834A0B78B5AD", "轮播组件", IconGlyphs.Slideshow, "轮播多个组件。")]
 public partial class SlideComponent
 {
-    public IRulesetService RulesetService { get; }
+    public IConditionPulseService ConditionPulseService { get; }
 
     public ScriptConditionEvaluator ConditionEvaluator { get; }
 
@@ -43,9 +43,9 @@ public partial class SlideComponent
         Interval = TimeSpan.FromSeconds(5)
     };
 
-    public SlideComponent(IRulesetService rulesetService, ScriptConditionEvaluator conditionEvaluator)
+    public SlideComponent(IConditionPulseService conditionPulseService, ScriptConditionEvaluator conditionEvaluator)
     {
-        RulesetService = rulesetService;
+        ConditionPulseService = conditionPulseService;
         ConditionEvaluator = conditionEvaluator;
         InitializeComponent();
     }
@@ -117,7 +117,7 @@ public partial class SlideComponent
         LoadSettings();
         Settings.PropertyChanged += OnSettingsOnPropertyChanged;
         Settings.Children.CollectionChanged += ChildrenOnCollectionChanged;
-        RulesetService.StatusUpdated += RulesetServiceOnStatusUpdated;
+        ConditionPulseService.StatusUpdated += ConditionPulseServiceOnStatusUpdated;
         Timer.Start();
         Timer.Tick -= TimerOnTick;  // 防止重复触发
         Timer.Tick += TimerOnTick;
@@ -132,7 +132,7 @@ public partial class SlideComponent
     {
         Settings.PropertyChanged -= OnSettingsOnPropertyChanged;
         Settings.Children.CollectionChanged -= ChildrenOnCollectionChanged;
-        RulesetService.StatusUpdated -= RulesetServiceOnStatusUpdated;
+        ConditionPulseService.StatusUpdated -= ConditionPulseServiceOnStatusUpdated;
         Timer.Stop();
         Timer.Tick -= TimerOnTick;
     }
@@ -162,7 +162,7 @@ public partial class SlideComponent
         }
     }
 
-    private void RulesetServiceOnStatusUpdated(object? sender, EventArgs e)
+    private void ConditionPulseServiceOnStatusUpdated(object? sender, EventArgs e)
     {
         RefreshRules();
     }

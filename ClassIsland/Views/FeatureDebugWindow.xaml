@@ -8,12 +8,8 @@
         xmlns:controls="clr-namespace:ClassIsland.Controls"
         xmlns:notificationEffects="clr-namespace:ClassIsland.Controls.NotificationEffects"
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
-        xmlns:ruleset="clr-namespace:ClassIsland.Core.Models.Ruleset;assembly=ClassIsland.Core"
-        xmlns:actionControls="clr-namespace:ClassIsland.Core.Controls.Action;assembly=ClassIsland.Core"
-        xmlns:action="clr-namespace:ClassIsland.Core.Models.Action;assembly=ClassIsland.Core"
         xmlns:mdXaml="https://github.com/whistyun/MdXaml"
         xmlns:settingPages="clr-namespace:ClassIsland.Views.SettingPages"
-        xmlns:action1="clr-namespace:ClassIsland.Shared.Models.Action;assembly=ClassIsland.Shared"
         xmlns:services="clr-namespace:ClassIsland.Services"
         xmlns:weather="clr-namespace:ClassIsland.Core.Models.Weather;assembly=ClassIsland.Core"
         mc:Ignorable="d"
@@ -123,17 +119,6 @@
                     <TextBox x:Name="CredentialStringTextBox"/>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="ActionControl">
-                <Grid Background="#99000000">
-                    <actionControls:ActionControl Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-                                          HorizontalAlignment="Right">
-                        <actionControls:ActionControl.ActionSet>
-                            <action1:ActionSet />
-                        </actionControls:ActionControl.ActionSet>
-                    </actionControls:ActionControl>
-
-                </Grid>
-            </TabItem>
             <TabItem Header="FakeLoading">
                 <StackPanel>
                     <controls:LoadingMask x:Name="LoadingMask"
@@ -143,18 +128,6 @@
                             Margin="0 8 0 0"
                             Click="ButtonTestFakeLoading_OnClick"/>
                 </StackPanel> 
-            </TabItem>
-            <TabItem Header="RulesetControl">
-                <Grid Background="#99000000">
-                    <ci:RulesetControl Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
-                                       HorizontalAlignment="Right">
-                        <ci:RulesetControl.Ruleset>
-                            <ruleset:Ruleset>
-                                
-                            </ruleset:Ruleset>
-                        </ci:RulesetControl.Ruleset>
-                    </ci:RulesetControl>
-                </Grid>
             </TabItem>
             <TabItem Header="ProgressBar">
                 <Grid>

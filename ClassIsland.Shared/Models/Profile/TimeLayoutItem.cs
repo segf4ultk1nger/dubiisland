@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
 using ClassIsland.Shared.JsonConverters;
-using ClassIsland.Shared.Models.Action;
 
 namespace ClassIsland.Shared.Models.Profile;
 
@@ -16,7 +15,6 @@ public class TimeLayoutItem : AttachableSettingsObject, IComparable
     private bool _isHideDefault = false;
     private Guid _defaultClassId = Guid.Empty;
     private string _breakName = "";
-    private ActionSet? _actionSet;
     private string? _script;
     private TimeSpan _startTime = TimeSpan.Zero;
     private TimeSpan _endTime = TimeSpan.Zero;
@@ -188,21 +186,6 @@ public class TimeLayoutItem : AttachableSettingsObject, IComparable
             _breakName = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(BreakNameText));
-        }
-    }
-
-    /// <summary>
-    /// 当当前时间点为【行动】时，要执行的行动组。
-    /// <para>已弃用，将由 <see cref="Script"/> 取代，并将在后续版本中移除。</para>
-    /// </summary>
-    public ActionSet? ActionSet
-    {
-        get => _actionSet;
-        set
-        {
-            if (Equals(value, _actionSet)) return;
-            _actionSet = value;
-            OnPropertyChanged();
         }
     }
 

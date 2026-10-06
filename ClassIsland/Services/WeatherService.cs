@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Services;
-using ClassIsland.Core.Models.Ruleset;
 using ClassIsland.Core.Models.Weather;
 using ClassIsland.Helpers;
 using ClassIsland.Models;
-using ClassIsland.Models.Rules;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -31,7 +29,7 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
     public List<XiaomiWeatherStatusCodeItem> WeatherStatusList { get; set; } = new();
 
     private ILogger<WeatherService> Logger { get; }
-    public IRulesetService RulesetService { get; }
+    public IConditionPulseService ConditionPulseService { get; }
     public ILocationService LocationService { get; }
 
     private DispatcherTimer UpdateTimer { get; } = new()
@@ -45,18 +43,15 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
 
     public IReadOnlyList<WeatherAlert> AllAlerts { get; private set; } = new List<WeatherAlert>();
 
-    public WeatherService(SettingsService settingsService, ILogger<WeatherService> logger, IRulesetService rulesetService, ILocationService locationService)
+    public WeatherService(SettingsService settingsService, ILogger<WeatherService> logger, IConditionPulseService conditionPulseService, ILocationService locationService)
     {
         Logger = logger;
-        RulesetService = rulesetService;
+        ConditionPulseService = conditionPulseService;
         LocationService = locationService;
         SettingsService = settingsService;
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
         LoadData();
         LoadWeatherIconTemplate();
-        RulesetService.RegisterRuleHandler("classisland.weather.currentWeather", CurrentWeatherRuleHandler);
-        RulesetService.RegisterRuleHandler("classisland.weather.hasWeatherAlert", HasAlertRuleHandler);
-        RulesetService.RegisterRuleHandler("classisland.weather.rainTime", RainTimeRuleHandler);
         UpdateTimer.Tick += UpdateTimerOnTick;
         UpdateTimer.Start();
         _ = QueryWeatherAsync();
@@ -79,40 +74,6 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
         {
             Logger.LogWarning("未找到 ID 为 {} 的天气图标模板", Settings.WeatherIconId);
         }
-    }
-
-    private bool RainTimeRuleHandler(object? o)
-    {
-        if (o is not RainTimeRuleSettings settings)
-        {
-            return false;
-        }
-
-        var baseTime = (settings.IsRemainingTime ? -1.0 : 1.0) * Settings.LastWeatherInfo.Minutely.Precipitation.RainRemainingMinutes;
-        return baseTime > 0 && baseTime <= settings.RainTimeMinutes;
-        
-    }
-
-    private bool HasAlertRuleHandler(object? o)
-    {
-        if (o is not StringMatchingSettings settings)
-        {
-            return false;
-        }
-
-        return IsWeatherRefreshed &&
-               Settings.LastWeatherInfo.Alerts.Exists(x => settings.IsMatching(x.Title));
-    }
-
-    private bool CurrentWeatherRuleHandler(object? o)
-    {
-        if (o is not CurrentWeatherRuleSettings settings)
-        {
-            return false;
-        }
-
-        return IsWeatherRefreshed &&
-               settings.WeatherId.ToString() == Settings.LastWeatherInfo.Current.Weather;
     }
 
     private async void UpdateTimerOnTick(object? sender, EventArgs e)
@@ -141,7 +102,7 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
             Settings.CityName = "春田镇";
             Settings.LastWeatherInfo = mock;
             IsWeatherRefreshed = true;
-            RulesetService.NotifyStatusChanged();
+            ConditionPulseService.NotifyStatusChanged();
             return;
         }
 #endif
@@ -216,7 +177,7 @@ public class WeatherService : ObservableRecipient, IHostedService, IWeatherServi
             Logger.LogError(ex, "获取天气信息失败。");
         }
 
-        RulesetService.NotifyStatusChanged();
+        ConditionPulseService.NotifyStatusChanged();
     }
 
     public string GetWeatherTextByCode(string code)

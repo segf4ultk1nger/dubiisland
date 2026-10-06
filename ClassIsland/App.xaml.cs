@@ -47,26 +47,16 @@ using UpdateStatus = ClassIsland.Shared.Enums.UpdateStatus;
 using JetBrains.Profiler.Api;
 #endif
 using ClassIsland.Core;
-using ClassIsland.Core.Models.Ruleset;
-using ClassIsland.Core.Controls.Ruleset;
-using ClassIsland.Models.Rules;
-using ClassIsland.Models.Actions;
-using ClassIsland.Controls.RuleSettingsControls;
-using ClassIsland.Controls.ActionSettingsControls;
 using ClassIsland.Controls.AuthorizeProvider;
 using ClassIsland.Core.Enums;
-using ClassIsland.Services.ActionHandlers;
 #if IsMsix
 using Windows.ApplicationModel;
 using Windows.Storage;
 #endif
-using ClassIsland.Services.Automation.Triggers;
-using ClassIsland.Controls.TriggerSettingsControls;
 using ClassIsland.Core.Abstractions.Services.Metadata;
 using ClassIsland.Core.Abstractions.Views;
 using ClassIsland.Core.Helpers;
 using ClassIsland.Core.Models.Logging;
-using ClassIsland.Models.Automation.Triggers;
 using ClassIsland.Services.Metadata;
 using ClassIsland.Shared.Helpers;
 using Microsoft.Extensions.Logging.Console;
@@ -498,10 +488,8 @@ public partial class App : AppBase, IAppHost
                 services.AddHostedService<MemoryWatchDogService>();
                 services.AddSingleton<IPluginService, PluginService>();
                 services.AddSingleton<IPluginMarketService, PluginMarketService>();
-                services.AddSingleton<IRulesetService, RulesetService>();
-                services.AddSingleton<IActionService, ActionService>();
+                services.AddSingleton<IConditionPulseService, ConditionPulseService>();
                 services.AddSingleton<IWindowRuleService, WindowRuleService>();
-                services.AddSingleton<IAutomationService, AutomationService>();
                 services.AddSingleton<ScriptRuntimeService>();
                 services.AddSingleton<ScriptConditionEvaluator>();
                 services.AddSingleton<IScriptConditionEvaluator>(s => s.GetRequiredService<ScriptConditionEvaluator>());
@@ -568,7 +556,6 @@ public partial class App : AppBase, IAppHost
                 services.AddNotificationProvider<ClassNotificationProvider, ClassNotificationProviderSettingsControl>();
                 services.AddNotificationProvider<AfterSchoolNotificationProvider, AfterSchoolNotificationProviderSettingsControl>();
                 services.AddNotificationProvider<WeatherNotificationProvider, WeatherNotificationProviderSettingsControl>();
-                services.AddNotificationProvider<ActionNotificationProvider>();
                 // Transients
                 services.AddTransient<WallpaperPreviewWindow>();
                 // Logging
@@ -598,53 +585,6 @@ public partial class App : AppBase, IAppHost
                 services.AddAttachedSettingsControl<ClassNotificationAttachedSettingsControl>();
                 services.AddAttachedSettingsControl<LessonControlAttachedSettingsControl>();
                 services.AddAttachedSettingsControl<WeatherNotificationAttachedSettingsControl>();
-                // 触发器
-                services.AddTrigger<SignalTrigger, SignalTriggerSettingsControl>();
-                services.AddTrigger<UriTrigger, UriTriggerSettingsControl>();
-                services.AddTrigger<RulesetChangedTrigger>();
-                services.AddTrigger<CronTrigger, CronTriggerSettingsControl>();
-                services.AddTrigger<AppStartupTrigger>();
-                services.AddTrigger<AppStoppingTrigger>();
-                services.AddTrigger<OnClassTrigger>();
-                services.AddTrigger<OnBreakingTimeTrigger>();
-                services.AddTrigger<OnAfterSchoolTrigger>();
-                services.AddTrigger<CurrentTimeStateChangedTrigger>();
-                services.AddTrigger<PreTimePointTrigger, PreTimePointTriggerSettingsControl>();
-                // 规则
-                services.AddRule("classisland.test.true", "总是为真", onHandle: _ => true);
-                services.AddRule("classisland.test.false", "总是为假", onHandle: _ => false);
-                services.AddRule<StringMatchingSettings, RulesetStringMatchingSettingsControl>("classisland.windows.className", "前台窗口类名", IconGlyphs.WindowMaximize);
-                services.AddRule<StringMatchingSettings, RulesetStringMatchingSettingsControl>("classisland.windows.text", "前台窗口标题", IconGlyphs.FormatTitle);
-                services.AddRule<WindowStatusRuleSettings, WindowStatusRuleSettingsControl>("classisland.windows.status", "前台窗口状态是", IconGlyphs.DockWindow);
-                services.AddRule<StringMatchingSettings, RulesetStringMatchingSettingsControl>("classisland.windows.processName", "前台窗口进程", IconGlyphs.ApplicationCogOutline);
-                services.AddRule<CurrentSubjectRuleSettings, CurrentSubjectRuleSettingsControl>("classisland.lessons.currentSubject", "科目是", IconGlyphs.BookOutline);
-                services.AddRule<CurrentSubjectRuleSettings, CurrentSubjectRuleSettingsControl>("classisland.lessons.nextSubject", "下节课科目是", IconGlyphs.BookArrowRightOutline);
-                services.AddRule<CurrentSubjectRuleSettings, CurrentSubjectRuleSettingsControl>("classisland.lessons.previousSubject", "上节课科目是", IconGlyphs.BookArrowLeftOutline);
-                services.AddRule<TimeStateRuleSettings, TimeStateRuleSettingsControl>("classisland.lessons.timeState", "当前时间状态是", IconGlyphs.ClockOutline);
-                services.AddRule<CurrentWeatherRuleSettings, CurrentWeatherRuleSettingsControl>("classisland.weather.currentWeather", "当前天气是", IconGlyphs.WeatherCloudy);
-                services.AddRule<StringMatchingSettings, RulesetStringMatchingSettingsControl>("classisland.weather.hasWeatherAlert", "存在气象预警", IconGlyphs.WeatherCloudyAlert);
-                services.AddRule<RainTimeRuleSettings, RainTimeRuleSettingsControl>("classisland.weather.rainTime", "距离降水开始/结束还剩", IconGlyphs.WeatherHeavyRain);
-                // 行动
-                services.AddAction<SignalTriggerSettings, BroadcastSignalActionSettingsControl>("classisland.broadcastSignal", "广播信号", IconGlyphs.Broadcast);
-                services.AddAction<CurrentComponentConfigActionSettings, CurrentComponentConfigActionSettingsControl>("classisland.settings.currentComponentConfig", "组件配置方案", IconGlyphs.WidgetsOutline);
-                services.AddAction<ThemeActionSettings, ThemeActionSettingsControl>("classisland.settings.theme", "应用主题", IconGlyphs.ThemeLightDark);
-                services.AddAction<WindowDockingLocationActionSettings, WindowDockingLocationActionSettingsControl>("classisland.settings.windowDockingLocation", "窗口停靠位置", IconGlyphs.Monitor);
-                services.AddAction<WindowLayerActionSettings, WindowLayerActionSettingsControl>("classisland.settings.windowLayer", "窗口层级", IconGlyphs.LayersOutline);
-                services.AddAction<WindowDockingOffsetXActionSettings, WindowDockingOffsetXActionSettingsControl>("classisland.settings.windowDockingOffsetX", "窗口向右偏移", IconGlyphs.ArrowCollapseRight);
-                services.AddAction<WindowDockingOffsetYActionSettings, WindowDockingOffsetYActionSettingsControl>("classisland.settings.windowDockingOffsetY", "窗口向下偏移", IconGlyphs.ArrowCollapseDown);
-                services.AddAction<RunActionSettings, RunActionSettingsControl>("classisland.os.run", "运行", IconGlyphs.OpenInApp);
-                services.AddAction<NotificationActionSettings, NotificationActionSettingsControl>(
-                    "classisland.showNotification", "显示提醒", IconGlyphs.BellOutline);
-                services.AddAction<SleepActionSettings, SleepActionSettingsControl>("classisland.action.sleep", "等待时长", IconGlyphs.TimerSand);
-                services.AddAction<WeatherNotificationActionSettings, WeatherNotificationActionSettingControl>(
-                    "classisland.notification.weather", "显示天气提醒", IconGlyphs.SunWirelessOutline);
-                services.AddAction("classisland.app.quit", "退出 LegacyIsland", IconGlyphs.ExitToApp, (_, _) => Current.Stop());
-                services.AddAction<AppRestartActionSettings,AppRestartActionSettingsControl>("classisland.app.restart", "重启 LegacyIsland", IconGlyphs.Restart);
-                // 行动处理
-                services.AddHostedService<AppRestartActionHandler>();
-                services.AddHostedService<RunActionHandler>();
-                services.AddHostedService<AppSettingsActionHandler>();
-                services.AddHostedService<SleepActionHandler>();
                 // 认证提供方
                 services.AddAuthorizeProvider<PasswordAuthorizeProvider>();
                 // 语音提供方
@@ -833,11 +773,10 @@ public partial class App : AppBase, IAppHost
         // https://github.com/dotnet/wpf/issues/9752
         AppStarted?.Invoke(this, EventArgs.Empty);
         StartUriPipeServer();
-        GetService<IAutomationService>();
         GetService<NotificationDisplayService>();
         GetService<TrayIconService>().Initialize();
         GetService<IUriNavigationService>().HandleAppNavigation("class-swap", args => GetService<TrayIconService>().OpenClassSwapWindow());
-        GetService<IRulesetService>().NotifyStatusChanged();
+        GetService<IConditionPulseService>().NotifyStatusChanged();
         GetService<ScriptRuntimeService>().Initialize();
         File.Delete(Path.Combine(AppRootFolderPath, ".startup-count"));
         if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)
@@ -1104,7 +1043,6 @@ public partial class App : AppBase, IAppHost
             GetService<ScriptRuntimeService>()?.Shutdown();
             IAppHost.Host?.StopAsync(TimeSpan.FromSeconds(5));
             IAppHost.Host?.Services.GetService<SettingsService>()?.SaveSettings("停止当前应用程序。");
-            IAppHost.Host?.Services.GetService<IAutomationService>()?.SaveConfig("停止当前应用程序。");
             IAppHost.Host?.Services.GetService<IProfileService>()?.SaveProfile();
             Current.Shutdown();
             if (AsyncBox.RelatedAsyncDispatchers.TryGetValue(Dispatcher, out var asyncDispatcherAwaiter))

@@ -29,7 +29,7 @@ namespace ClassIsland.Controls.Components;
 [ComponentInfo("70FCD5EA-3FAE-4E06-ACA2-4F4DF47F9ACD", "滚动组件", IconGlyphs.FormatTextRotationNone, "滚动显示组件内的内容。")]
 public partial class RollingComponent
 {
-    public IRulesetService RulesetService { get; }
+    public IConditionPulseService ConditionPulseService { get; }
 
     public ScriptConditionEvaluator ConditionEvaluator { get; }
 
@@ -75,9 +75,9 @@ public partial class RollingComponent
     private bool _isStopRuleSatisfied = false;
     private double _pausePos = 0;
 
-    public RollingComponent(IRulesetService rulesetService, ScriptConditionEvaluator conditionEvaluator)
+    public RollingComponent(IConditionPulseService conditionPulseService, ScriptConditionEvaluator conditionEvaluator)
     {
-        RulesetService = rulesetService;
+        ConditionPulseService = conditionPulseService;
         ConditionEvaluator = conditionEvaluator;
         InitializeComponent();
     }
@@ -140,7 +140,7 @@ public partial class RollingComponent
         UpdateScrollState();
     }
 
-    private void RulesetServiceOnStatusUpdated(object? sender, EventArgs e)
+    private void ConditionPulseServiceOnStatusUpdated(object? sender, EventArgs e)
     {
         var prevPauseState = _isPauseRuleSatisfied;
         var prevStopState = _isStopRuleSatisfied;
@@ -178,14 +178,14 @@ public partial class RollingComponent
 
     private void RollingComponent_OnLoaded(object sender, RoutedEventArgs e)
     {
-        RulesetService.StatusUpdated += RulesetServiceOnStatusUpdated;
+        ConditionPulseService.StatusUpdated += ConditionPulseServiceOnStatusUpdated;
         Settings.PropertyChanged += SettingsOnPropertyChanged;
     }
 
 
     private void RollingComponent_OnUnloaded(object sender, RoutedEventArgs e)
     {
-        RulesetService.StatusUpdated -= RulesetServiceOnStatusUpdated;
+        ConditionPulseService.StatusUpdated -= ConditionPulseServiceOnStatusUpdated;
         Settings.PropertyChanged -= SettingsOnPropertyChanged;
     }
 }

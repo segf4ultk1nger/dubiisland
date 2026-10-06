@@ -99,7 +99,6 @@ public partial class IslandPreviewControl : UserControl
             IAppHost.GetService<ILessonsService>(),
             IAppHost.GetService<IProfileService>(),
             IAppHost.GetService<IExactTimeService>(),
-            IAppHost.GetService<IRulesetService>(),
             IAppHost.GetService<ScriptConditionEvaluator>(),
             IAppHost.GetService<IWeatherService>());
 

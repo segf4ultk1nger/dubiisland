@@ -43,11 +43,11 @@
                 <StackPanel Orientation="Horizontal">
                     <Button HorizontalAlignment="Left"
                             Style="{StaticResource MahApps.Styles.Button.Flat}"
-                            Click="ButtonOpenPauseRuleset_OnClick"
+                            Click="ButtonOpenPauseCondition_OnClick"
                             Visibility="{Binding Settings.IsPauseOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <remix:PackIconRemixIcon Kind="PriceTag3Line" Width="16" Height="16" VerticalAlignment="Center"/>
-                            <TextBlock Text="编辑规则集…" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                            <TextBlock Text="编辑条件…" VerticalAlignment="Center" Margin="6 0 0 0"/>
                         </StackPanel>
                     </Button>
                     <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsPauseOnRuleEnabled}"/>
@@ -61,11 +61,11 @@
                 <StackPanel Orientation="Horizontal">
                     <Button HorizontalAlignment="Left"
                             Style="{StaticResource MahApps.Styles.Button.Flat}"
-                            Click="ButtonOpenStopRuleset_OnClick"
+                            Click="ButtonOpenStopCondition_OnClick"
                             Visibility="{Binding Settings.IsStopOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <remix:PackIconRemixIcon Kind="PriceTag3Line" Width="16" Height="16" VerticalAlignment="Center"/>
-                            <TextBlock Text="编辑规则集…" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                            <TextBlock Text="编辑条件…" VerticalAlignment="Center" Margin="6 0 0 0"/>
                         </StackPanel>
                     </Button>
                     <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsStopOnRuleEnabled}"/>

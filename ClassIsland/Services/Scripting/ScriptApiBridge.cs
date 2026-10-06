@@ -8,8 +8,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Notification;
-using ClassIsland.Models.Actions;
-using ClassIsland.Services.Automation.Triggers;
+using ClassIsland.Services.NotificationProviders;
 using ClassIsland.Shared.Enums;
 using Jint.Native;
 using Microsoft.Extensions.Logging;
@@ -28,7 +27,6 @@ public class ScriptApiBridge
     private readonly INotificationHostService _notificationHostService;
     private readonly SettingsService _settingsService;
     private readonly IUriNavigationService _uriNavigationService;
-    private readonly IActionService _actionService;
     private readonly SignalTriggerHandlerService _signalTriggerHandlerService;
 
     /// <summary>
@@ -36,7 +34,7 @@ public class ScriptApiBridge
     /// </summary>
     public ScriptApiBridge(ILogger logger, ScriptRuntimeService runtime, ScriptDocument document,
         INotificationHostService notificationHostService, SettingsService settingsService,
-        IUriNavigationService uriNavigationService, IActionService actionService,
+        IUriNavigationService uriNavigationService,
         SignalTriggerHandlerService signalTriggerHandlerService)
     {
         _logger = logger;
@@ -45,7 +43,6 @@ public class ScriptApiBridge
         _notificationHostService = notificationHostService;
         _settingsService = settingsService;
         _uriNavigationService = uriNavigationService;
-        _actionService = actionService;
         _signalTriggerHandlerService = signalTriggerHandlerService;
     }
 
@@ -192,21 +189,23 @@ public class ScriptApiBridge
     }
 
     /// <summary>
-    /// 显示天气提醒。复用已注册的天气提醒行动处理程序。
+    /// 显示天气提醒。直接调用天气提醒提供方。
     /// </summary>
     public void WeatherNotify(int kind)
     {
         try
         {
-            if (IActionService.Actions.TryGetValue("classisland.notification.weather", out var info)
-                && info.Handle != null)
+            var provider = _notificationHostService.NotificationProviders
+                .Select(x => x.ProviderInstance)
+                .OfType<WeatherNotificationProvider>()
+                .FirstOrDefault();
+            if (provider == null)
             {
-                info.Handle(new WeatherNotificationActionSettings { NotificationKind = kind }, "");
+                _logger.LogWarning("未找到天气提醒提供方。");
+                return;
             }
-            else
-            {
-                _logger.LogWarning("未找到天气提醒行动处理程序。");
-            }
+
+            provider.Notify(kind);
         }
         catch (Exception ex)
         {

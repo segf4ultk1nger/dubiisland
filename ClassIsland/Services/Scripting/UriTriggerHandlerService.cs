@@ -1,9 +1,12 @@
-﻿using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Models.EventArgs;
 using System;
 
-namespace ClassIsland.Services.Automation.Triggers;
+namespace ClassIsland.Services.Scripting;
 
+/// <summary>
+/// 脚本 URI 触发服务。仅向新脚本运行时转发 <c>on.uri</c> 的触发与恢复事件。
+/// </summary>
 public class UriTriggerHandlerService
 {
     private IUriNavigationService UriNavigationService { get; }

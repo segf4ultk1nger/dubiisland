@@ -97,7 +97,6 @@
                 <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.CogOutline}}" Header="覆盖设置版本" Click="MenuItemOverwriteSettingsVersion_OnClick" />
                 <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ToyBrickOutline}}" Header="显示插件使用须知" Click="MenuItemShowPluginMarketWarning_OnClick" />
                 <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.RelationManyToMany}}" Header="转储课表关系图" Click="MenuItemDumpProfileRelations_OnClick" />
-                <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.ScriptTextOutline}}" Header="显示自动化使用须知" Click="MenuItemShowAutomationWarning_OnClick" />
                 <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.RelationManyToMany}}" Header="测试课表找下级" Click="MenuItemFindNext_OnClick" />
                 <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.LanguageMarkdownOutline}}" Header="打开 Markdown 文档" Click="MenuItemOpenMdDocs_OnClick" />
                 <MenuItem Icon="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.MessageAlertOutline}}" Header="显示测试通知" Click="MenuItemShowTestNotification_OnClick" />

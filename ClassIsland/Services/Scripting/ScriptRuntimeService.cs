@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Models;
-using ClassIsland.Services.Automation.Triggers;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Models.Profile;
@@ -195,7 +194,6 @@ on.classStart(function(){ log(""class started""); });
     private readonly INotificationHostService _notificationHostService;
     private readonly SettingsService _settingsService;
     private readonly IUriNavigationService _uriNavigationService;
-    private readonly IActionService _actionService;
     private readonly SignalTriggerHandlerService _signalTriggerHandlerService;
     private readonly ScriptApiBuilder _contributorApi = new();
     private readonly LessonsFacade _lessonsFacade;
@@ -405,10 +403,10 @@ on.classStart(function(){ log(""class started""); });
     /// 初始化一个 <see cref="ScriptRuntimeService"/> 实例，并订阅宿主事件。
     /// </summary>
     public ScriptRuntimeService(ILogger<ScriptRuntimeService> logger, ILessonsService lessonsService,
-        IExactTimeService exactTimeService, IRulesetService rulesetService, IWeatherService weatherService,
+        IExactTimeService exactTimeService, IConditionPulseService conditionPulseService, IWeatherService weatherService,
         SettingsService settingsService, IProfileService profileService, IWindowRuleService windowRuleService,
         INotificationHostService notificationHostService, SignalTriggerHandlerService signalTriggerHandlerService,
-        UriTriggerHandlerService uriTriggerHandlerService, IActionService actionService,
+        UriTriggerHandlerService uriTriggerHandlerService,
         IUriNavigationService uriNavigationService, IEnumerable<IScriptApiContributor> contributors)
     {
         _logger = logger;
@@ -418,7 +416,6 @@ on.classStart(function(){ log(""class started""); });
         _notificationHostService = notificationHostService;
         _settingsService = settingsService;
         _uriNavigationService = uriNavigationService;
-        _actionService = actionService;
         _signalTriggerHandlerService = signalTriggerHandlerService;
 
         _lessonsFacade = new LessonsFacade(lessonsService, exactTimeService, profileService);
@@ -458,7 +455,7 @@ on.classStart(function(){ log(""class started""); });
             _lastTimeState = current;
             Post(() => InvokeAll("__timeStateChanged", current.ToString(), previous.ToString()));
         };
-        rulesetService.StatusUpdated += (_, _) => Post(() => InvokeAll("__statusUpdated"));
+        conditionPulseService.StatusUpdated += (_, _) => Post(() => InvokeAll("__statusUpdated"));
         signalTriggerHandlerService.Handled += (_, e) =>
             Post(() => InvokeAll("__signalFire", e.SignalName, e.Revert));
         uriTriggerHandlerService.HandledRun += (_, e) =>
@@ -939,7 +936,7 @@ on.classStart(function(){ log(""class started""); });
     private void ConfigureEngine(Engine engine, ScriptDocument document)
     {
         var bridge = new ScriptApiBridge(_logger, this, document, _notificationHostService, _settingsService,
-            _uriNavigationService, _actionService, _signalTriggerHandlerService);
+            _uriNavigationService, _signalTriggerHandlerService);
 
         engine.SetValue("log", new LogDelegate(bridge.Log));
         engine.SetValue("__logError", new Action<string>(bridge.LogError));

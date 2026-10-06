@@ -24,7 +24,6 @@
                    xmlns:services="clr-namespace:ClassIsland.Core.Abstractions.Services;assembly=ClassIsland.Core"
                    xmlns:controls2="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
                    xmlns:ci="http://classisland.tech/schemas/xaml/core"
-                   xmlns:action="clr-namespace:ClassIsland.Core.Controls.Action;assembly=ClassIsland.Core"
                    xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
                    mc:Ignorable="d" 
                    d:DesignHeight="450" d:DesignWidth="800"

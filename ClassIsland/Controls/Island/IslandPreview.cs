@@ -35,7 +35,6 @@ public sealed class IslandPreview : FrameworkElement
         ILessonsService lessonsService,
         IProfileService profileService,
         IExactTimeService exactTimeService,
-        IRulesetService rulesetService,
         ScriptConditionEvaluator conditionEvaluator,
         IWeatherService weatherService)
     {
@@ -48,7 +47,7 @@ public sealed class IslandPreview : FrameworkElement
         _componentsService = componentsService;
 
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
-            rulesetService, conditionEvaluator, weatherService)
+            conditionEvaluator, weatherService)
         {
             AccentColor = themeService.PrimaryColor,
             ComponentBounds = new Dictionary<ComponentSettings, Rect>()

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Models;
-using ClassIsland.Models.Rules;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Models.Profile;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -218,25 +217,21 @@ public class LessonsService : ObservableRecipient, ILessonsService
     private IProfileService ProfileService { get; }
     private ILogger<LessonsService> Logger { get; }
     private IExactTimeService ExactTimeService { get; }
-    public IRulesetService RulesetService { get; }
+    public IConditionPulseService ConditionPulseService { get; }
 
     private Profile Profile => ProfileService.Profile;
     private Settings Settings => SettingsService.Settings;
 
-    public LessonsService(SettingsService settingsService, IProfileService profileService, ILogger<LessonsService> logger, IExactTimeService exactTimeService, IRulesetService rulesetService)
+    public LessonsService(SettingsService settingsService, IProfileService profileService, ILogger<LessonsService> logger, IExactTimeService exactTimeService, IConditionPulseService conditionPulseService)
     {
         MainTimer.Tick += MainTimerOnTick;
         SettingsService = settingsService;
         ProfileService = profileService;
         Logger = logger;
         ExactTimeService = exactTimeService;
-        RulesetService = rulesetService;
+        ConditionPulseService = conditionPulseService;
 
-        RulesetService.RegisterRuleHandler("classisland.lessons.timeState", TimeStateHandler);
-        RulesetService.RegisterRuleHandler("classisland.lessons.currentSubject", CurrentSubjectHandler);
-        RulesetService.RegisterRuleHandler("classisland.lessons.nextSubject", NextSubjectHandler);
-        RulesetService.RegisterRuleHandler("classisland.lessons.previousSubject", PreviousSubjectHandler);
-        CurrentTimeStateChanged += (sender, args) => RulesetService.NotifyStatusChanged();
+        CurrentTimeStateChanged += (sender, args) => ConditionPulseService.NotifyStatusChanged();
         PropertyChanged += OnPropertyChanged;
         PropertyChanging += OnPropertyChanging;
 
@@ -248,7 +243,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
     {
         if (args.PropertyName == nameof(CurrentSubject))
         {
-            RulesetService.NotifyStatusChanged();
+            ConditionPulseService.NotifyStatusChanged();
         }
 
         if (args.PropertyName == nameof(CurrentClassPlan) && CurrentClassPlan != null)
@@ -269,84 +264,6 @@ public class LessonsService : ObservableRecipient, ILessonsService
     private void CurrentClassPlanOnClassesChanged(object? sender, EventArgs e)
     {
         
-    }
-
-    private bool CurrentSubjectHandler(object? settings)
-    {
-        if (settings is not CurrentSubjectRuleSettings s)
-        {
-            return false;
-        }
-
-        if (!ProfileService.Profile.Subjects.TryGetValue(s.SubjectId, out var subject))
-        {
-            return false;
-        }
-
-        return CurrentSubject == subject;
-    }
-
-    private bool PreviousSubjectHandler(object? settings)
-    {
-        if (settings is not CurrentSubjectRuleSettings s)
-        {
-            return false;
-        }
-
-        if (!ProfileService.Profile.Subjects.TryGetValue(s.SubjectId, out var subject))
-        {
-            return false;
-        }
-
-        var now = ExactTimeService.GetCurrentLocalDateTime().TimeOfDay;
-        var layout = CurrentClassPlan?.TimeLayout;
-        if (layout == null)
-        {
-            return false;
-        }
-        var prevClassTimeItem = layout.Layouts
-            .Reverse()
-            .FirstOrDefault(i =>
-                i.TimeType == 0 &&
-                i.EndTime < now);
-        if (prevClassTimeItem == null)
-        {
-            return false;
-        }
-        var i0 = GetClassIndex(layout.Layouts.IndexOf(prevClassTimeItem));
-        if (i0 >= 0 && CurrentClassPlan?.Classes.Count > i0 &&
-            Profile.Subjects.TryGetValue(CurrentClassPlan.Classes[i0].SubjectId, out var prevSubject))
-        {
-            return prevSubject == subject;
-        }
-
-        return false;
-    }
-
-    private bool NextSubjectHandler(object? settings)
-    {
-        if (settings is not CurrentSubjectRuleSettings s)
-        {
-            return false;
-        }
-
-        if (!ProfileService.Profile.Subjects.TryGetValue(s.SubjectId, out var subject))
-        {
-            return false;
-        }
-
-        return NextClassSubject == subject;
-    }
-
-    private bool TimeStateHandler(object? settings)
-    {
-        if (settings is not TimeStateRuleSettings s)
-        {
-            return false;
-        }
-
-        return CurrentState == s.State ||
-               (CurrentState == TimeState.AfterSchool && s.State == TimeState.None);
     }
 
     private void MainTimerOnTick(object? sender, EventArgs e)

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ClassIsland.Controls.NotificationProviders;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Services;
-using ClassIsland.Models.Actions;
 using ClassIsland.Shared.Abstraction.Models;
 using ClassIsland.Shared.Enums;
 using ClassIsland.Shared.Interfaces;
@@ -37,7 +36,6 @@ public class WeatherNotificationProvider : NotificationProviderBase<WeatherNotif
     private IAttachedSettingsHostService AttachedSettingsHostService { get; }
 
     private ILessonsService LessonsService { get; }
-    public IActionService ActionService { get; }
 
     private List<string> ShownAlerts { get; } = new();
 
@@ -45,31 +43,27 @@ public class WeatherNotificationProvider : NotificationProviderBase<WeatherNotif
         IAttachedSettingsHostService attachedSettingsHostService,
         IWeatherService weatherService,
         SettingsService settingsService,
-        ILessonsService lessonsService,
-        IActionService actionService)
+        ILessonsService lessonsService)
     {
         NotificationHostService = notificationHostService;
         WeatherService = weatherService;
         SettingsService = settingsService;
         AttachedSettingsHostService = attachedSettingsHostService;
         LessonsService = lessonsService;
-        ActionService = actionService;
 
         LessonsService.OnBreakingTime += NotificationHostServiceOnOnBreakingTime;
         LessonsService.OnClass += NotificationHostServiceOnOnClass;
-
-        ActionService.RegisterActionHandler("classisland.notification.weather", (settings, _) => 
-            AppBase.Current.Dispatcher.Invoke(() => HandleWeatherAction(settings)));
     }
 
-    private void HandleWeatherAction(object? s)
-    {
-        if (s is not WeatherNotificationActionSettings settings)
-        {
-            return;
-        }
+    /// <summary>
+    /// 按指定类型显示天气提醒。供脚本 API 直接调用。
+    /// </summary>
+    /// <param name="kind">提醒类型：0 为天气预报，1 为气象预警，2 为逐小时预报。</param>
+    public void Notify(int kind) => AppBase.Current.Dispatcher.Invoke(() => HandleWeatherAction(kind));
 
-        switch (settings.NotificationKind)
+    private void HandleWeatherAction(int kind)
+    {
+        switch (kind)
         {
             case 0:
                 ShowWeatherForecastCore();

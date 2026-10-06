@@ -117,7 +117,7 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         }
     }
 
-    private IRulesetService RulesetService { get; } = IAppHost.GetService<IRulesetService>();
+    private IConditionPulseService ConditionPulseService { get; } = IAppHost.GetService<IConditionPulseService>();
 
     private IScriptConditionEvaluator ConditionEvaluator { get; } = IAppHost.GetService<IScriptConditionEvaluator>();
 
@@ -301,17 +301,17 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         if (HideOnRule)
         {
             CheckHideRule();
-            RulesetService.StatusUpdated += RulesetServiceOnStatusUpdated;
+            ConditionPulseService.StatusUpdated += ConditionPulseServiceOnStatusUpdated;
         }
         else
         {
-            RulesetService.StatusUpdated -= RulesetServiceOnStatusUpdated;
+            ConditionPulseService.StatusUpdated -= ConditionPulseServiceOnStatusUpdated;
             Visibility = Visibility.Visible;
         }
         UpdateComponentHidState();
     }
 
-    private void RulesetServiceOnStatusUpdated(object? sender, EventArgs e)
+    private void ConditionPulseServiceOnStatusUpdated(object? sender, EventArgs e)
     {
         CheckHideRule();
         UpdateComponentHidState();

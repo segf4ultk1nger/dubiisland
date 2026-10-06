@@ -45,7 +45,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private readonly IComponentsService _componentsService;
     private readonly IWeatherService _weatherService;
     private readonly IWindowRuleService _windowRuleService;
-    private readonly IRulesetService _rulesetService;
+    private readonly IConditionPulseService _conditionPulseService;
     private readonly ClassIsland.Services.Scripting.ScriptConditionEvaluator _conditionEvaluator;
     private readonly MainViewModel _viewModel;
     private readonly NotificationDisplayService _notificationDisplayService;
@@ -124,7 +124,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         IComponentsService componentsService,
         IWeatherService weatherService,
         IWindowRuleService windowRuleService,
-        IRulesetService rulesetService,
+        IConditionPulseService conditionPulseService,
         ClassIsland.Services.Scripting.ScriptConditionEvaluator conditionEvaluator,
         MainViewModel viewModel,
         NotificationDisplayService notificationDisplayService,
@@ -136,14 +136,14 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _componentsService = componentsService;
         _weatherService = weatherService;
         _windowRuleService = windowRuleService;
-        _rulesetService = rulesetService;
+        _conditionPulseService = conditionPulseService;
         _conditionEvaluator = conditionEvaluator;
         _viewModel = viewModel;
         _notificationDisplayService = notificationDisplayService;
         _topmostEffectWindow = topmostEffectWindow;
 
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
-            rulesetService, conditionEvaluator, weatherService)
+            conditionEvaluator, weatherService)
         {
             AccentColor = themeService.PrimaryColor
         };
@@ -156,7 +156,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
         _topmostRecheckTimer.Tick += OnTopmostRecheckTick;
         _windowRuleService.ForegroundWindowChanged += OnForegroundWindowChanged;
-        _rulesetService.StatusUpdated += OnRulesetStatusUpdated;
+        _conditionPulseService.StatusUpdated += OnConditionPulseStatusUpdated;
         _viewModel.PropertyChanged += OnNotificationChanged;
         _notificationDisplayService.AnimationEvent += OnMainWindowAnimation;
         lessonsService.PostMainTimerTicked += OnLessonsTicked;
@@ -205,7 +205,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _lessonsService.PostMainTimerTicked -= OnLessonsTicked;
         _lessonsService.CurrentTimeStateChanged -= OnLessonsTicked;
         _windowRuleService.ForegroundWindowChanged -= OnForegroundWindowChanged;
-        _rulesetService.StatusUpdated -= OnRulesetStatusUpdated;
+        _conditionPulseService.StatusUpdated -= OnConditionPulseStatusUpdated;
         _viewModel.PropertyChanged -= OnNotificationChanged;
         _notificationDisplayService.AnimationEvent -= OnMainWindowAnimation;
         StopRenderingHook();
@@ -315,7 +315,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _renderer.Invalidate();
     }
 
-    private void OnRulesetStatusUpdated(object? sender, EventArgs e)
+    private void OnConditionPulseStatusUpdated(object? sender, EventArgs e)
     {
         UpdateVisibility();
         _renderer.Invalidate();
