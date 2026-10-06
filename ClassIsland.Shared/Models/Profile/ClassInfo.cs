@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-
+using ClassIsland.Shared.JsonConverters;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClassIsland.Shared.Models.Profile;
@@ -9,7 +9,7 @@ namespace ClassIsland.Shared.Models.Profile;
 /// </summary>
 public class ClassInfo : AttachableSettingsObject
 {
-    private string _subjectId = "";
+    private Guid _subjectId = Guid.Empty;
     private int _index = 0;
     private TimeLayout _currentTimeLayout = new();
     private bool _isChangedClass = false;
@@ -67,13 +67,14 @@ public class ClassInfo : AttachableSettingsObject
     /// <summary>
     /// 课程ID
     /// </summary>
-    public string SubjectId
+    [JsonConverter(typeof(GuidEmptyFallbackConverter))]
+    public Guid SubjectId
     {
         get => _subjectId;
         set
         {
             if (value == _subjectId) return;
-            _subjectId = value ?? "";
+            _subjectId = value;
             OnPropertyChanged();
         }
     }
@@ -105,4 +106,17 @@ public class ClassInfo : AttachableSettingsObject
             OnPropertyChanged();
         }
     }
+    
+    /// <summary>
+    /// 当前<see cref="ClassInfo"/>是否为空
+    /// </summary>
+    [JsonIgnore] public bool IsEmpty { get; private set; } = false;
+
+    /// <summary>
+    /// 代表一个空的<see cref="ClassInfo"/>
+    /// </summary>
+    public static ClassInfo Empty { get; } = new()
+    {
+        IsEmpty = true
+    };
 }

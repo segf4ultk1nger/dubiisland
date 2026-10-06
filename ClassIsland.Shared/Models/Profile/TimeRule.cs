@@ -13,7 +13,6 @@ public class TimeRule : ObservableRecipient
     private int _weekDay = new();
     private int _weekCountDiv = 0;
     private int _weekCountDivTotal = 2;
-    private ObservableCollection<string> _weekCountDivs = [];
 
     /// <summary>
     /// 在一周中的哪一天启用这个课表
@@ -64,21 +63,6 @@ public class TimeRule : ObservableRecipient
         {
             if (value == _weekCountDivTotal) return;
             _weekCountDivTotal = value;
-            OnPropertyChanged();
-        }
-    }
-
-    /// <summary>
-    /// 多周轮换选择框的项目列表
-    /// </summary>
-    [JsonIgnore]
-    public ObservableCollection<string> WeekCountDivs
-    {
-        get => _weekCountDivs;
-        set
-        {
-            if (value == _weekCountDivs) return;
-            _weekCountDivs = value;
             OnPropertyChanged();
         }
     }
