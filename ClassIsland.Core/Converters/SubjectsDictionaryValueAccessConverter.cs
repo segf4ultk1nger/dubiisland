@@ -7,22 +7,25 @@ namespace ClassIsland.Core.Converters;
 
 public class SubjectsDictionaryValueAccessConverter : IValueConverter
 {
-    public ObservableDictionary<string, Subject> SourceDictionary
+    public ObservableDictionary<Guid, Subject> SourceDictionary
     {
         get;
         set;
     } = new();
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var k = (string)value;
+        if (value is not Guid k)
+        {
+            return null;
+        }
         try
         {
             return SourceDictionary[k].Name;
         }
         catch
         {
-            return k;
+            return k.ToString();
         }
     }
 

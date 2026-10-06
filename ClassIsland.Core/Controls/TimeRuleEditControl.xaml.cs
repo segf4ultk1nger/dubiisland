@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -47,6 +48,8 @@ public partial class TimeRuleEditControl : UserControl
         set { SetValue(TimeRuleProperty, value); }
     }
 
+    public ObservableCollection<string> WeekCountDivs { get; } = new();
+
     /// <inheritdoc />
     public TimeRuleEditControl()
     {
@@ -83,9 +86,9 @@ public partial class TimeRuleEditControl : UserControl
             return;
         }
         var w = TimeRule.WeekCountDiv;
-        TimeRule.WeekCountDivs = [];
+        WeekCountDivs.Clear();
         foreach (var i in Enumerable.Range(0, TimeRule.WeekCountDivTotal + 1).ToList())
-            TimeRule.WeekCountDivs.Add(((Func<int, int, string>) delegate (int num, int total)
+            WeekCountDivs.Add(((Func<int, int, string>) delegate (int num, int total)
             {
                 if (num == 0) return "不限";
                 if (total <= 2)

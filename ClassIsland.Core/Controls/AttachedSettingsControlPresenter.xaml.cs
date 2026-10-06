@@ -233,14 +233,14 @@ public partial class AttachedSettingsControlPresenter : UserControl, INotifyProp
             return;
         }
 
-        TargetObject.AttachedObjects.TryGetValue(ControlInfo.Guid.ToString(), out var settings);
+        TargetObject.AttachedObjects.TryGetValue(ControlInfo.Guid, out var settings);
         ContentObject = AttachedSettingsControlBase.GetInstance(ControlInfo, ref settings);
         //if (ContentObject is IAttachedSettingsControlBase c)
         //{
         //    c.AttachedSettingsControlHelper.AttachedTarget = TargetObject;
         //}
         MainContentPresenter.Content = ContentObject;
-        TargetObject.AttachedObjects[ControlInfo.Guid.ToString()] = settings;
+        TargetObject.AttachedObjects[ControlInfo.Guid] = settings;
         AssociatedAttachedSettings = settings as IAttachedSettings;
 
         if (!IsDependencyMode || ProfileAnalyzeService == null || !ProfileAnalyzeService.Nodes.TryGetValue(new AttachableObjectAddress(ContentId, ContentIndex), out var node))
@@ -262,7 +262,7 @@ public partial class AttachedSettingsControlPresenter : UserControl, INotifyProp
         switch (node.Target)
         {
             case AttachedSettingsTargets.Lesson:
-                if (ProfileService.Profile.ClassPlans.TryGetValue(ContentId, out var classPlan))
+                if (Guid.TryParse(ContentId, out var lessonClassPlanId) && ProfileService.Profile.ClassPlans.TryGetValue(lessonClassPlanId, out var classPlan))
                 {
                     DependencyItemTitle = $"课表 {classPlan.Name}，第{ContentIndex}节";
                 }
@@ -273,7 +273,7 @@ public partial class AttachedSettingsControlPresenter : UserControl, INotifyProp
                 }
                 break;
             case AttachedSettingsTargets.ClassPlan:
-                if (ProfileService.Profile.ClassPlans.TryGetValue(ContentId, out var classPlan2))
+                if (Guid.TryParse(ContentId, out var classPlanId) && ProfileService.Profile.ClassPlans.TryGetValue(classPlanId, out var classPlan2))
                 {
                     DependencyItemTitle = $"课表 {classPlan2.Name}";
                 }
@@ -283,9 +283,9 @@ public partial class AttachedSettingsControlPresenter : UserControl, INotifyProp
                 }
                 break;
             case AttachedSettingsTargets.TimePoint:
-                if (ProfileService.Profile.TimeLayouts.TryGetValue(ContentId, out var timeLayout) && node.Object is TimeLayoutItem item)
+                if (Guid.TryParse(ContentId, out var timeLayoutId) && ProfileService.Profile.TimeLayouts.TryGetValue(timeLayoutId, out var timeLayout) && node.Object is TimeLayoutItem item)
                 {
-                    DependencyItemTitle = $"时间表 {timeLayout.Name}，{item.StartSecond:t}-{item.EndSecond:t}";
+                    DependencyItemTitle = $"时间表 {timeLayout.Name}，{item.StartTime.ToString(@"hh\:mm")}-{item.EndTime.ToString(@"hh\:mm")}";
                 }
                 if (policy.DisableProfileTimeLayoutEditing)
                 {

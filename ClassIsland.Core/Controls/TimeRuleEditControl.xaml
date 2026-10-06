@@ -29,7 +29,7 @@
 
             <TextBlock Text="当本周是：" Margin="0 8 0 0" />
             <ListBox Style="{StaticResource MahApps.Styles.ListBox}"
-                     ItemsSource="{Binding WeekCountDivs}"
+                     ItemsSource="{Binding WeekCountDivs, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TimeRuleEditControl}}"
                      SelectedIndex="{Binding WeekCountDiv}"
                      PreviewMouseWheel="UIElement_OnPreviewMouseWheel"/>
 

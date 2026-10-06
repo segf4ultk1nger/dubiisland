@@ -24,7 +24,7 @@ public class ClassInfoMultiConverter : IMultiValueConverter
 
         if (values[0] is not TimeLayoutItem selectedItem ||
             values[1] is not int selectedIndex ||
-            values[2] is not ObservableDictionary<string, Subject> subjects ||
+            values[2] is not ObservableDictionary<Guid, Subject> subjects ||
             values[3] is not ClassPlan classPlan)
         {
             return null;

@@ -38,11 +38,11 @@ public class LessonsListBox : ListBox
         nameof(ClassPlan), typeof(ClassPlan), typeof(LessonsListBox), new PropertyMetadata(default(ClassPlan)));
 
     public static readonly DependencyProperty SubjectsProperty = DependencyProperty.Register(
-        nameof(Subjects), typeof(ObservableDictionary<string, Subject>), typeof(LessonsListBox), new PropertyMetadata(new ObservableDictionary<string, Subject>()));
+        nameof(Subjects), typeof(ObservableDictionary<Guid, Subject>), typeof(LessonsListBox), new PropertyMetadata(new ObservableDictionary<Guid, Subject>()));
 
-    public ObservableDictionary<string, Subject> Subjects
+    public ObservableDictionary<Guid, Subject> Subjects
     {
-        get { return (ObservableDictionary<string, Subject>)GetValue(SubjectsProperty); }
+        get { return (ObservableDictionary<Guid, Subject>)GetValue(SubjectsProperty); }
         set { SetValue(SubjectsProperty, value); }
     }
 

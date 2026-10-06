@@ -146,7 +146,7 @@ public partial class LessonControlExpanded : LessonControlBase, INotifyPropertyC
         }
     }
 
-    private Subject CurrentSubject => Subjects.TryGetValue(ClassInfo?.SubjectId ?? "", out var value) ? value : Subject.Breaking;
+    private Subject CurrentSubject => Subjects.TryGetValue(ClassInfo?.SubjectId ?? Guid.Empty, out var value) ? value : Subject.Breaking;
 
     private void LessonsServiceOnPostMainTimerTicked(object? sender, EventArgs e)
     {
@@ -162,7 +162,7 @@ public partial class LessonControlExpanded : LessonControlBase, INotifyPropertyC
         if (ExactTimeService != null)
         {
             TotalSeconds = (long)CurrentTimeLayoutItem.Last.TotalSeconds;
-            Seconds = (long)(ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - CurrentTimeLayoutItem.StartSecond.TimeOfDay).TotalSeconds;
+            Seconds = (long)(ExactTimeService.GetCurrentLocalDateTime().TimeOfDay - CurrentTimeLayoutItem.StartTime).TotalSeconds;
             LeftSeconds = TotalSeconds - Seconds;
         }
 

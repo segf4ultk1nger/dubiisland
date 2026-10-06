@@ -22,14 +22,12 @@ public abstract class DictionaryValueAccessConverter<T> : IMultiValueConverter
         {
             return null;
         }
-        var dict = values[0] as IDictionary<string, T>;
-        var key = values[1] as string;
-        if (dict?.TryGetValue(key ?? "", out var o) == true)
+        if (values[0] is not System.Collections.IDictionary dict || values[1] == null)
         {
-            return o;
+            return null;
         }
 
-        return null;
+        return dict.Contains(values[1]) ? dict[values[1]] : null;
     }
 
     /// <inheritdoc />

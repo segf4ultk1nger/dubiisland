@@ -7,7 +7,7 @@ namespace ClassIsland.Core.Converters;
 
 public class ClassPlanDictionaryValueAccessConverter : IValueConverter
 {
-    public ObservableDictionary<string, TimeLayout> SourceDictionary
+    public ObservableDictionary<Guid, TimeLayout> SourceDictionary
     {
         get;
         set;
@@ -15,13 +15,16 @@ public class ClassPlanDictionaryValueAccessConverter : IValueConverter
 
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var k = (string)value;
-        return k == "" ? null : new KeyValuePair<string, TimeLayout>(k, SourceDictionary[k]);
+        if (value is not Guid k)
+        {
+            return null;
+        }
+        return k == Guid.Empty ? null : new KeyValuePair<Guid, TimeLayout>(k, SourceDictionary[k]);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var k = (KeyValuePair<string, TimeLayout>?)value ?? new KeyValuePair<string, TimeLayout>();
+        var k = (KeyValuePair<Guid, TimeLayout>?)value ?? new KeyValuePair<Guid, TimeLayout>();
         return k.Key;
     }
 }
