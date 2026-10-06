@@ -80,6 +80,18 @@
         <converters1:SubjectIdToSubjectConverter x:Key="SubjectIdToSubjectConverter"/>
         <converters1:ClassPlanGroupIdToClassPlanGroupConverter x:Key="ClassPlanGroupIdToClassPlanGroupConverter"/>
         <converters1:ClassPlanDictionaryValueAccessConverter x:Key="ClassPlanDictionaryValueAccessConverter"/>
+        <SolidColorBrush x:Key="ProfileEditorAccentFillBrush"
+                         Color="{DynamicResource MahApps.Colors.Accent}"
+                         Opacity="0.16"/>
+        <SolidColorBrush x:Key="ProfileEditorWarningFillBrush"
+                         Color="{DynamicResource MahApps.Colors.SystemErrorText}"
+                         Opacity="0.16"/>
+        <SolidColorBrush x:Key="ProfileEditorErrorBrush"
+                         Color="{DynamicResource MahApps.Colors.SystemErrorText}"/>
+        <Style TargetType="ToolBar" BasedOn="{StaticResource MahApps.Styles.ToolBar}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
         <Style BasedOn="{StaticResource MahApps.Styles.ComboBox}" TargetType="{x:Type ComboBox}" x:Key="ClassPlanDataGridComboBoxStyle">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
@@ -821,8 +833,8 @@
                                                                 <Style TargetType="Border">
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding Value.TimeLayoutId}" Value="00000000-0000-0000-0000-000000000000">
-                                                                            <Setter Property="BorderBrush" Value="IndianRed"/>
-                                                                            <Setter Property="TextElement.Foreground" Value="IndianRed"/>
+                                                                            <Setter Property="BorderBrush" Value="{DynamicResource ProfileEditorErrorBrush}"/>
+                                                                            <Setter Property="TextElement.Foreground" Value="{DynamicResource ProfileEditorErrorBrush}"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                     <Setter Property="Background" Value="{x:Null}"/>
@@ -964,7 +976,7 @@
 
                                             <!-- Warnings -->
                                             <StackPanel Grid.Row="0" Grid.Column="0">
-                                                <Border Background="#17800080" Panel.ZIndex="1">
+                                                <Border Background="{DynamicResource ProfileEditorWarningFillBrush}" Panel.ZIndex="1">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
@@ -988,7 +1000,7 @@
                                                         </DockPanel>
                                                     </Grid>
                                                 </Border>
-                                                <Border Background="#17800080" Panel.ZIndex="1">
+                                                <Border Background="{DynamicResource ProfileEditorWarningFillBrush}" Panel.ZIndex="1">
                                                     <Border.Style>
                                                         <Style TargetType="Border">
                                                             <Style.Triggers>
@@ -1035,21 +1047,23 @@
                                                       SelectedItem="{Binding ViewModel.SelectedClassInfo, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                                 <DataGrid.Columns>
                                                     <DataGridCheckBoxColumn Header="启用"
+                                                                            Width="Auto"
                                                                             Binding="{Binding IsEnabled}"/>
-                                                    <DataGridTemplateColumn Header="时间" IsReadOnly="True">
+                                                    <DataGridTemplateColumn Header="时间" IsReadOnly="True" Width="Auto">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock>
                                                                     <Run
-                                                                        Text="{Binding CurrentTimeLayoutItem.StartTime, StringFormat={}{0:hh\\:mm\\:ss}, Mode=OneWay}" />
+                                                                        Text="{Binding CurrentTimeLayoutItem.StartTime, StringFormat={}{0:hh\\:mm}, Mode=OneWay}" />
                                                                     <Run Text="-" />
                                                                     <Run
-                                                                        Text="{Binding CurrentTimeLayoutItem.EndTime, StringFormat={}{0:hh\\:mm\\:ss}, Mode=OneWay}" />
+                                                                        Text="{Binding CurrentTimeLayoutItem.EndTime, StringFormat={}{0:hh\\:mm}, Mode=OneWay}" />
                                                                 </TextBlock>
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>
                                                     </DataGridTemplateColumn>
                                                     <controls:ItemsSourceDataGridComboBoxColumn Header="科目"
+                                                        Width="*"
                                                         ItemsSourceBinding="{Binding MainViewModel.Profile.Subjects, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ProfileSettingsWindow}}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                                                         SelectedValueBinding="{Binding SubjectId}"
                                                         SelectedValuePath="Key"
@@ -1112,7 +1126,7 @@
                                                             </ListBox.ItemTemplate>
                                                         </ListBox>
                                                         <StackPanel Grid.Row="1" >
-                                                            <Border Background="#20A0D9B4" Visibility="{Binding ViewModel.IsClassPlanEditComplete, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
+                                                            <Border Background="{DynamicResource ProfileEditorAccentFillBrush}" Visibility="{Binding ViewModel.IsClassPlanEditComplete, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                                                 <DockPanel Margin="8 0 4 0">
                                                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                                             Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Close}}"
@@ -1159,7 +1173,7 @@
                                             </StackPanel>
                                         </Grid>
                                         <!-- 关闭前警告 -->
-                                        <Border Grid.Row="2" Background="Yellow" HorizontalAlignment="Stretch" Visibility="{Binding ViewModel.IsClassPlansEditing, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ProfileSettingsWindow}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                                        <Border Grid.Row="2" Background="{DynamicResource ProfileEditorWarningFillBrush}" TextElement.Foreground="{DynamicResource ProfileEditorErrorBrush}" HorizontalAlignment="Stretch" Visibility="{Binding ViewModel.IsClassPlansEditing, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ProfileSettingsWindow}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
                                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Warning}" Text="正在编辑课表。若要关闭窗口，请先完成课表编辑。" Margin="6" />
                                         </Border>
                                     </Grid>
@@ -2096,7 +2110,7 @@
                                                 </TextBlock>
                                             </StackPanel>
 
-                                            <Border Background="#204169e1" Panel.ZIndex="1" Grid.Row="2" Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Border Background="{DynamicResource ProfileEditorAccentFillBrush}" Panel.ZIndex="1" Grid.Row="2" Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <Grid>
                                                     <DockPanel Margin="8 4">
                                                         <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.SwapHorizontal}"/>
