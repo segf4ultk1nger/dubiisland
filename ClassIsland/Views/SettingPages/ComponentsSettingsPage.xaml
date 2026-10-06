@@ -168,6 +168,8 @@
             </MenuItem>
             <MenuItem Header="为选中元素显示预览高亮" IsCheckable="True"
                       IsChecked="{Binding SettingsService.Settings.IsComponentPreviewHighlightEnabled, Mode=TwoWay}"/>
+            <MenuItem Header="为预览启用聚焦动画" IsCheckable="True"
+                      IsChecked="{Binding SettingsService.Settings.IsComponentPreviewFocusAnimationEnabled, Mode=TwoWay}"/>
         </ContextMenu>
 
         <ContextMenu x:Key="LineOperationContextMenu" FontFamily="{StaticResource HarmonyOsSans}"
@@ -500,13 +502,13 @@
                               MaxWidth="300"
                               SelectedItem="{Binding SettingsService.Settings.CurrentComponentConfig}"
                               mah:TextBoxHelper.Watermark="配置方案"/>
-                    <Button ToolTip="刷新" Margin="2 0" Click="ButtonRefresh_OnClick" Style="{StaticResource ToolbarButtonStyle}">
+                    <Button ToolTip="刷新" Margin="6 0 0 0" Click="ButtonRefresh_OnClick" Style="{StaticResource ToolbarButtonStyle}">
                         <remix:PackIconRemixIcon Kind="RefreshLine"/>
                     </Button>
-                    <Button ToolTip="新建…" Margin="2 0" Click="ButtonCreateConfig_OnClick" Style="{StaticResource ToolbarButtonStyle}">
+                    <Button ToolTip="新建…" Margin="6 0 0 0" Click="ButtonCreateConfig_OnClick" Style="{StaticResource ToolbarButtonStyle}">
                         <remix:PackIconRemixIcon Kind="AddFill"/>
                     </Button>
-                    <Button ToolTip="更多" Margin="2 0" Click="ButtonMore_OnClick" Style="{StaticResource ToolbarButtonStyle}">
+                    <Button ToolTip="更多" Margin="6 0 0 0" Click="ButtonMore_OnClick" Style="{StaticResource ToolbarButtonStyle}">
                         <remix:PackIconRemixIcon Kind="MoreFill"/>
                     </Button>
                 </StackPanel>
@@ -514,7 +516,7 @@
                 <!-- 左锚点 -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <!-- 非紧凑：显示/隐藏组件树 -->
-                    <Button ToolTip="显示/隐藏组件树" Margin="0 0 2 0" Click="ButtonToggleTree_OnClick">
+                    <Button ToolTip="显示/隐藏组件树" Margin="0 0 6 0" Click="ButtonToggleTree_OnClick">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource ToolbarButtonStyle}">
                                 <Style.Triggers>
@@ -528,7 +530,7 @@
                     </Button>
 
                     <!-- 紧凑 + 树隐藏：返回组件树 -->
-                    <Button ToolTip="返回组件树" Margin="0 0 2 0" Click="ButtonToggleTree_OnClick">
+                    <Button ToolTip="返回组件树" Margin="0 0 0 0" Click="ButtonToggleTree_OnClick">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource ToolbarButtonStyle}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -603,7 +605,7 @@
                     </Button>
 
                     <!-- 树隐藏时：当前节点图标 + 名称 -->
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12 0 0 0"
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="6 0 0 0"
                                 TextElement.FontSize="15"
                                 Visibility="{Binding ViewModel.IsTreeVisible, Converter={StaticResource InverseBoolToVisConverter}}">
                         <controls2:IconText Kind="{Binding ViewModel.SelectedComponent.AssociatedComponentInfo.PackIcon}"
@@ -634,7 +636,9 @@
             </Grid.ColumnDefinitions>
 
             <Border x:Name="TreePanel" Grid.Column="0"
-                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                    BorderThickness="0 0 1 0"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
                 <TreeView x:Name="TreeComponents"
                           Background="Transparent"
                           BorderThickness="0"
@@ -642,6 +646,7 @@
                           VirtualizingStackPanel.IsVirtualizing="False"
                           ItemsSource="{Binding ComponentsService.CurrentComponents.Lines}"
                           SelectedItemChanged="TreeComponents_OnSelectedItemChanged"
+                          PreviewMouseLeftButtonUp="TreeComponents_OnPreviewMouseLeftButtonUp"
                           MouseMove="TreeComponents_OnMouseMove"
                           MouseLeave="TreeComponents_OnMouseLeave"
                           dd:DragDrop.IsDragSource="True"
@@ -657,18 +662,32 @@
                                                   ItemsSource="{Binding Children}">
                             <Border Padding="0" Background="Transparent"
                                     ContextMenu="{StaticResource LineOperationContextMenu}">
-                                <StackPanel Orientation="Horizontal">
-                                    <remix:PackIconRemixIcon Kind="LayoutRowFill" Width="15" Height="15"
-                                                             VerticalAlignment="Center" Opacity="0.7"/>
-                                    <TextBlock Text="行" VerticalAlignment="Center" Margin="6 0 0 0"/>
-                                    <remix:PackIconRemixIcon Kind="StarFill" Width="13" Height="13"
-                                                             VerticalAlignment="Center" Margin="8 0 0 0"
-                                                             Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                                             Visibility="{Binding IsMainLine, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <remix:PackIconRemixIcon Kind="Notification3Fill" Width="13" Height="13"
-                                                             VerticalAlignment="Center" Margin="6 0 0 0" Opacity="0.7"
-                                                             Visibility="{Binding IsNotificationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                </StackPanel>
+                                <DockPanel LastChildFill="False">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                        <remix:PackIconRemixIcon Kind="LayoutRowFill" Width="15" Height="15"
+                                                                 VerticalAlignment="Center" Opacity="0.7"/>
+                                        <TextBlock Text="行" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                                    </StackPanel>
+                                    <!-- 非紧凑：主行/提醒图标贴到 item 最右侧；紧凑：跟在标题后。颜色随行前景动态变化。 -->
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="DockPanel.Dock" Value="Right"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Data.ViewModel.IsCompact, Source={StaticResource DataProxy}}" Value="True">
+                                                        <Setter Property="DockPanel.Dock" Value="Left"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <remix:PackIconRemixIcon Kind="StarFill" Width="13" Height="13"
+                                                                 VerticalAlignment="Center" Margin="8 0 0 0" Opacity="0.7"
+                                                                 Visibility="{Binding IsMainLine, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                        <remix:PackIconRemixIcon Kind="Notification3Fill" Width="13" Height="13"
+                                                                 VerticalAlignment="Center" Margin="6 0 0 0" Opacity="0.7"
+                                                                 Visibility="{Binding IsNotificationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    </StackPanel>
+                                </DockPanel>
                             </Border>
                         </HierarchicalDataTemplate>
 
@@ -692,9 +711,7 @@
             <GridSplitter x:Name="Splitter" Grid.Column="1" Width="6" HorizontalAlignment="Stretch"
                           Background="Transparent" ResizeBehavior="PreviousAndNext"/>
 
-            <Border Grid.Column="2"
-                    BorderThickness="1 0 0 0"
-                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+            <Border Grid.Column="2">
                 <ContentControl Content="{Binding ViewModel.SelectedNode}"/>
             </Border>
         </Grid>

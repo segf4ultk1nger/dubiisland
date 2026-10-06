@@ -71,7 +71,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     {
         SettingsService.Settings.PropertyChanged += OnSettingsOnPropertyChanged;
         ViewModel.IsCompact = RootGrid.ActualWidth > 0 && RootGrid.ActualWidth < CompactWidthThreshold;
-        ViewModel.IsTreeVisible = true;
+        // 紧凑模式下若已有选中项（页面被缓存复用），回来时直接显示其设置，避免「树里还高亮着却没有属性面板」。
+        ViewModel.IsTreeVisible = !ViewModel.IsCompact || ViewModel.SelectedNode == null;
         _layoutReady = true;
         ApplyTreeLayout();
         SchedulePrewarmComponentSettings();
@@ -113,6 +114,23 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     private void TreeComponents_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         ViewModel.SelectedNode = e.NewValue;
+        // 紧凑模式下鼠标按下会先于拖拽阈值触发选中；此时立即收树会把拖拽源抽走，导致无法拖拽排序。
+        // 先挂起，等真正抬起（没在拖拽）时再收。
+        if (ViewModel.IsCompact && ViewModel.IsTreeVisible && Mouse.LeftButton == MouseButtonState.Pressed)
+        {
+            _deferredCompactHide = true;
+            return;
+        }
+        HideTreeIfCompact();
+    }
+
+    private void TreeComponents_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (!_deferredCompactHide)
+        {
+            return;
+        }
+        _deferredCompactHide = false;
         HideTreeIfCompact();
     }
 
@@ -197,6 +215,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     private const double CompactWidthThreshold = 660;
 
     private bool _layoutReady;
+    private bool _deferredCompactHide;
 
     /// <summary>页面过窄时进入紧凑模式：组件树与属性面板互斥全宽。</summary>
     private void RootGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)

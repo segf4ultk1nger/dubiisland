@@ -159,6 +159,9 @@ public partial class IslandPreviewControl : UserControl
             case nameof(SettingsModel.IsComponentPreviewHighlightEnabled):
                 UpdatePreviewHighlight();
                 break;
+            case nameof(SettingsModel.IsComponentPreviewFocusAnimationEnabled):
+                UpdatePreviewFocus();
+                break;
         }
     }
 
@@ -381,7 +384,8 @@ public partial class IslandPreviewControl : UserControl
     /// </summary>
     private void UpdatePreviewFocus()
     {
-        if (TryGetNodePreviewBounds(SelectedNode) is not { } bounds ||
+        if (_settingsService?.Settings.IsComponentPreviewFocusAnimationEnabled != true ||
+            TryGetNodePreviewBounds(SelectedNode) is not { } bounds ||
             PreviewCanvas.ActualWidth <= 0 || PreviewCanvas.ActualHeight <= 0)
         {
             AnimateFocus(1, 0, 0);

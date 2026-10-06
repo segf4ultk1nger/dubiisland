@@ -47,6 +47,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private int _windowDockingMonitorIndex = 0;
     private int _componentPreviewBackgroundMode = 1;
     private bool _isComponentPreviewHighlightEnabled = false;
+    private bool _isComponentPreviewFocusAnimationEnabled = true;
     private int _windowLayer = 1;
     private int _windowTopmostRecheckMode = 0;
     private int _windowTopmostRecheckIntervalMs = 500;
@@ -1784,6 +1785,20 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isComponentPreviewHighlightEnabled) return;
             _isComponentPreviewHighlightEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 组件设置页预览是否对选中元素做聚焦（缩放平移）动画。
+    /// </summary>
+    public bool IsComponentPreviewFocusAnimationEnabled
+    {
+        get => _isComponentPreviewFocusAnimationEnabled;
+        set
+        {
+            if (value == _isComponentPreviewFocusAnimationEnabled) return;
+            _isComponentPreviewFocusAnimationEnabled = value;
             OnPropertyChanged();
         }
     }
