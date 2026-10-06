@@ -10,6 +10,7 @@ using ClassIsland.Services;
 using ClassIsland.Services.Scripting;
 using ClassIsland.ViewModels.SettingsPages;
 using Microsoft.Extensions.Logging;
+using CommonDialog = ClassIsland.Core.Controls.CommonDialog.CommonDialog;
 
 namespace ClassIsland.Views.SettingPages;
 
@@ -25,16 +26,18 @@ public partial class ScriptsSettingsPage
     public ScriptRuntimeService Runtime { get; }
     public SettingsService SettingsService { get; }
     public ILogger<ScriptsSettingsPage> Logger { get; }
+    public LegacyImporter LegacyImporter { get; }
 
     private string? _pendingSelectFile;
     private string? _loadedFile;
 
     public ScriptsSettingsPage(ScriptRuntimeService runtime, SettingsService settingsService,
-        ILogger<ScriptsSettingsPage> logger)
+        ILogger<ScriptsSettingsPage> logger, LegacyImporter legacyImporter)
     {
         Runtime = runtime;
         SettingsService = settingsService;
         Logger = logger;
+        LegacyImporter = legacyImporter;
         DataContext = this;
         InitializeComponent();
 
@@ -157,6 +160,20 @@ public partial class ScriptsSettingsPage
     }
 
     private void ButtonRefresh_OnClick(object sender, RoutedEventArgs e) => Runtime.ReloadAll();
+
+    private void ButtonImportLegacy_OnClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var report = LegacyImporter.Import();
+            CommonDialog.ShowInfo(report.ToDisplayString());
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "从旧配置导入失败。");
+            CommonDialog.ShowError($"从旧配置导入失败：{ex.Message}");
+        }
+    }
 
     private void ScriptEnabled_OnClick(object sender, RoutedEventArgs e)
     {

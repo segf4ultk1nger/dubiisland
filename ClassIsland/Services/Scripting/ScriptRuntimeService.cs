@@ -39,8 +39,14 @@ var __simple = {
 };
 var __signal = [];
 var __uri = [];
+var __recBySpec = new WeakMap();
 
 function __addRecord(spec) {
+  var trackable = spec !== null && (typeof spec === 'object' || typeof spec === 'function');
+  if (trackable) {
+    var existing = __recBySpec.get(spec);
+    if (existing) return existing;
+  }
   var rec = { id: __nextId++, running: false, active: false, do: null, undo: null, when: null };
   if (typeof spec === 'function') { rec.do = spec; }
   else if (spec && typeof spec === 'object') {
@@ -50,6 +56,7 @@ function __addRecord(spec) {
   }
   __handlers.push(rec);
   __byId[rec.id] = rec;
+  if (trackable) __recBySpec.set(spec, rec);
   return rec;
 }
 function __done(rec, payload) {

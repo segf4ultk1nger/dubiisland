@@ -46,6 +46,12 @@
                         Click="ButtonRefresh_OnClick">
                     <ciCore:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.RefreshLine}" Text="刷新" />
                 </Button>
+                <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
+                        VerticalAlignment="Center"
+                        Click="ButtonImportLegacy_OnClick"
+                        ToolTip="将旧版规则集/自动化/时间点行动转换为脚本与条件表达式">
+                    <ciCore:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.ImportLine}" Text="从旧配置导入" />
+                </Button>
                 <TextBlock Text="配置方案：Default"
                            VerticalAlignment="Center"
                            Opacity="0.75"

@@ -505,6 +505,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<ScriptRuntimeService>();
                 services.AddSingleton<ScriptConditionEvaluator>();
                 services.AddSingleton<IScriptConditionEvaluator>(s => s.GetRequiredService<ScriptConditionEvaluator>());
+                services.AddSingleton<LegacyImporter>();
                 services.AddSingleton<ISpeechService>(GetSpeechService);
                 services.AddSingleton<IExactTimeService, ExactTimeService>();
                 //services.AddSingleton(typeof(ApplicationCommand), ApplicationCommand);
