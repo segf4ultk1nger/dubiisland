@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -25,6 +26,7 @@ using ClassIsland.ViewModels.SettingsPages;
 using CommunityToolkit.Mvvm.Input;
 using GongSolutions.Wpf.DragDrop;
 using Path = System.IO.Path;
+using FormsScreen = System.Windows.Forms.Screen;
 using CommonDialog = ClassIsland.Core.Controls.CommonDialog.CommonDialog;
 
 namespace ClassIsland.Views.SettingPages;
@@ -41,6 +43,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     public SettingsService SettingsService { get; }
 
+    public WallpaperPickingService WallpaperPickingService { get; }
+
     public ComponentsSettingsPage(
         IComponentsService componentsService,
         SettingsService settingsService,
@@ -49,10 +53,12 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         IProfileService profileService,
         IExactTimeService exactTimeService,
         IRulesetService rulesetService,
-        IWeatherService weatherService)
+        IWeatherService weatherService,
+        WallpaperPickingService wallpaperPickingService)
     {
         SettingsService = settingsService;
         ComponentsService = componentsService;
+        WallpaperPickingService = wallpaperPickingService;
         InitializeComponent();
 
         DataContext = this;
@@ -67,25 +73,62 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private void OnSettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if (args.PropertyName == nameof(SettingsService.Settings.CurrentComponentConfig))
+        switch (args.PropertyName)
         {
-            ViewModel.SelectedNode = null;
+            case nameof(SettingsService.Settings.CurrentComponentConfig):
+                ViewModel.SelectedNode = null;
+                break;
+            case nameof(SettingsService.Settings.WindowDockingLocation):
+            case nameof(SettingsService.Settings.WindowDockingMonitorIndex):
+            case nameof(SettingsService.Settings.WindowDockingOffsetX):
+            case nameof(SettingsService.Settings.WindowDockingOffsetY):
+            case nameof(SettingsService.Settings.IsIgnoreWorkAreaEnabled):
+            case nameof(SettingsService.Settings.Scale):
+                UpdateIslandAlignment();
+                UpdateWallpaperBackgroundIfNeeded();
+                break;
+            case nameof(SettingsService.Settings.ComponentPreviewBackgroundMode):
+                if (SettingsService.Settings.ComponentPreviewBackgroundMode == 3)
+                {
+                    _ = WallpaperPickingService.GetWallpaperAsync();
+                }
+                UpdatePreviewBackground();
+                break;
+            case nameof(SettingsService.Settings.IsComponentPreviewHighlightEnabled):
+                UpdatePreviewHighlight();
+                break;
         }
     }
 
     private void ComponentsSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
     {
         SettingsService.Settings.PropertyChanged += OnSettingsOnPropertyChanged;
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        WallpaperPickingService.PropertyChanged += OnWallpaperPickingServicePropertyChanged;
+        ViewModel.IsCompact = RootGrid.ActualWidth > 0 && RootGrid.ActualWidth < CompactWidthThreshold;
+        ViewModel.IsTreeVisible = true;
+        _layoutReady = true;
+        ApplyTreeLayout();
+        UpdateIslandAlignment();
+        UpdatePreviewBackground();
+        UpdatePreviewHighlight();
+        if (SettingsService.Settings.ComponentPreviewBackgroundMode == 3)
+        {
+            _ = WallpaperPickingService.GetWallpaperAsync();
+        }
     }
 
     private void ComponentsSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
     {
         SettingsService.Settings.PropertyChanged -= OnSettingsOnPropertyChanged;
+        ViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        WallpaperPickingService.PropertyChanged -= OnWallpaperPickingServicePropertyChanged;
     }
 
     private void TreeComponents_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         ViewModel.SelectedNode = e.NewValue;
+        HideTreeIfCompact();
     }
 
     /// <summary>行背景铺满整宽，缩进由层级换算的 Padding 模拟。</summary>
@@ -135,6 +178,300 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
         e.Accepted = info.IsComponentContainer;
     }
+
+    private void NonContainerComponentsSource_OnFilter(object sender, FilterEventArgs e)
+    {
+        if (e.Item is not ComponentInfo info)
+        {
+            return;
+        }
+
+        e.Accepted = !info.IsComponentContainer;
+    }
+
+    #region 预览（背景 / 高亮）
+
+    private const int SM_XVIRTUALSCREEN = 76;
+    private const int SM_YVIRTUALSCREEN = 77;
+    private const int SM_CXVIRTUALSCREEN = 78;
+    private const int SM_CYVIRTUALSCREEN = 79;
+
+    [DllImport("user32.dll")]
+    private static extern int GetSystemMetrics(int nIndex);
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ComponentsSettingsViewModel.SelectedNode))
+        {
+            UpdatePreviewHighlight();
+        }
+    }
+
+    private void OnWallpaperPickingServicePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(WallpaperPickingService.WallpaperImage))
+        {
+            // 壁纸在后台线程提取，WallpaperImage 可能在非 UI 线程变更。
+            Dispatcher.InvokeAsync(UpdateWallpaperBackgroundIfNeeded);
+        }
+    }
+
+    private void PreviewBorder_OnSizeChanged(object sender, SizeChangedEventArgs e) => UpdateWallpaperBackgroundIfNeeded();
+
+    private void ButtonMore_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button || FindResource("MoreMenu") is not ContextMenu menu)
+            return;
+        menu.PlacementTarget = button;
+        menu.Placement = PlacementMode.Bottom;
+        menu.IsOpen = true;
+    }
+
+    private void UpdatePreviewBackground()
+    {
+        switch (SettingsService.Settings.ComponentPreviewBackgroundMode)
+        {
+            case 0:
+                PreviewRoot.Background = Brushes.Black;
+                PreviewWallpaperLayer.Background = null;
+                break;
+            case 2:
+                PreviewRoot.Background = Brushes.White;
+                PreviewWallpaperLayer.Background = null;
+                break;
+            case 3:
+                // 壁纸贴边后可能有留白（顶部/底部/两侧），用黑色兜底。
+                PreviewRoot.Background = Brushes.Black;
+                PreviewWallpaperLayer.Background = BuildWallpaperBrush();
+                break;
+            default:
+                PreviewRoot.Background = new SolidColorBrush(Color.FromRgb(0x1E, 0x1E, 0x1E));
+                PreviewWallpaperLayer.Background = null;
+                break;
+        }
+    }
+
+    private void UpdateWallpaperBackgroundIfNeeded()
+    {
+        if (SettingsService.Settings.ComponentPreviewBackgroundMode == 3)
+        {
+            UpdatePreviewBackground();
+        }
+    }
+
+    /// <summary>预览里的岛按停靠位置贴左上/中/右下，而不是永远居中。</summary>
+    private void UpdateIslandAlignment()
+    {
+        var location = SettingsService.Settings.WindowDockingLocation;
+        IslandViewbox.HorizontalAlignment = location switch
+        {
+            0 or 3 => HorizontalAlignment.Left,
+            1 or 4 => HorizontalAlignment.Center,
+            _ => HorizontalAlignment.Right
+        };
+        IslandViewbox.VerticalAlignment = location is 3 or 4 or 5
+            ? VerticalAlignment.Bottom
+            : VerticalAlignment.Top;
+    }
+
+    /// <summary>
+    /// 取景区间 = 预览区大小的一块矩形，锚点贴在岛停靠的角/边上（即把预览框「叠」在岛的位置），
+    /// 因此壁纸铺满整个预览，且随岛的位置/大小变化，而不随设置窗口移动。
+    /// </summary>
+    private Brush? BuildWallpaperBrush()
+    {
+        var image = WallpaperPickingService.WallpaperImage;
+        var content = IslandPreviewHost.ContentSize;
+        if (image == null || image.PixelWidth <= 0 || content.Width <= 0 ||
+            PreviewBorder.ActualWidth <= 0 || PreviewBorder.ActualHeight <= 0)
+        {
+            return null;
+        }
+
+        var settings = SettingsService.Settings;
+        var scale = settings.Scale <= 0 ? 1.0 : settings.Scale;
+        var dpi = VisualTreeHelper.GetDpi(PreviewBorder);
+        var dpiX = dpi.DpiScaleX;
+        var dpiY = dpi.DpiScaleY;
+
+        var index = settings.WindowDockingMonitorIndex;
+        var screens = FormsScreen.AllScreens;
+        var screen = index >= 0 && index < screens.Length ? screens[index] : FormsScreen.PrimaryScreen;
+        if (screen == null)
+        {
+            return null;
+        }
+
+        var ignoreWorkArea = settings.IsIgnoreWorkAreaEnabled;
+        var areaTop = ignoreWorkArea ? screen.Bounds.Top : screen.WorkingArea.Top;
+        var areaBottom = ignoreWorkArea ? screen.Bounds.Bottom : screen.WorkingArea.Bottom;
+        var areaLeft = ignoreWorkArea ? screen.Bounds.Left : screen.WorkingArea.Left;
+        var areaWidth = ignoreWorkArea ? screen.Bounds.Width : screen.WorkingArea.Width;
+
+        var location = settings.WindowDockingLocation;
+        var hAlign = location switch
+        {
+            1 or 4 => 0.5,
+            2 or 5 => 1.0,
+            _ => 0.0
+        };
+        var vAlign = location is 3 or 4 or 5 ? 1.0 : 0.0;
+
+        var islandW = content.Width * scale * dpiX;
+        var islandH = content.Height * scale * dpiY;
+        var islandLeft = areaLeft + settings.WindowDockingOffsetX + (areaWidth - islandW) * hAlign;
+        var islandTop = location is 3 or 4 or 5
+            ? areaBottom + settings.WindowDockingOffsetY - islandH
+            : areaTop + settings.WindowDockingOffsetY;
+
+        // Viewbox 的缩放系数：内容过高（超过 2 条岛高度）或过宽时会被 DownOnly 等比缩小，
+        // 因此壁纸取景也要按同样比例缩放，才能反映岛上真实覆盖的壁纸区域。
+        var desiredW = content.Width * scale;
+        var desiredH = content.Height * scale;
+        var s = 1.0;
+        if (desiredW > 0.001 && IslandViewbox.ActualWidth > 0.001)
+        {
+            s = Math.Min(s, IslandViewbox.ActualWidth / desiredW);
+        }
+        if (desiredH > 0.001 && IslandViewbox.ActualHeight > 0.001)
+        {
+            s = Math.Min(s, IslandViewbox.ActualHeight / desiredH);
+        }
+        if (s <= 0.0001 || double.IsNaN(s) || double.IsInfinity(s))
+        {
+            s = 1.0;
+        }
+
+        // 岛在预览 Border 内相对左上角的偏移（按缩放后的实际尺寸），与 Viewbox 对齐方式一致。
+        var padL = PreviewBorder.Padding.Left;
+        var padT = PreviewBorder.Padding.Top;
+        var innerW = Math.Max(0, PreviewBorder.ActualWidth - PreviewBorder.Padding.Left - PreviewBorder.Padding.Right);
+        var innerH = Math.Max(0, PreviewBorder.ActualHeight - PreviewBorder.Padding.Top - PreviewBorder.Padding.Bottom);
+        var renderedW = islandW / dpiX * s;
+        var renderedH = islandH / dpiY * s;
+        var offsetX = padL + (innerW - Math.Min(renderedW, innerW)) * hAlign;
+        var offsetY = padT + (innerH - Math.Min(renderedH, innerH)) * vAlign;
+
+        // 取景框 = 预览区大小 ÷ 缩放系数，再反向定位到岛在屏幕上的位置。
+        var windowLeft = islandLeft - offsetX * dpiX / s;
+        var windowTop = islandTop - offsetY * dpiY / s;
+        var windowW = PreviewBorder.ActualWidth * dpiX / s;
+        var windowH = PreviewBorder.ActualHeight * dpiY / s;
+
+        var vx = GetSystemMetrics(SM_XVIRTUALSCREEN);
+        var vy = GetSystemMetrics(SM_YVIRTUALSCREEN);
+        var vw = Math.Max(1, GetSystemMetrics(SM_CXVIRTUALSCREEN));
+        var vh = Math.Max(1, GetSystemMetrics(SM_CYVIRTUALSCREEN));
+        var sx = (double)image.PixelWidth / vw;
+        var sy = (double)image.PixelHeight / vh;
+
+        var viewbox = new Rect((windowLeft - vx) * sx, (windowTop - vy) * sy, windowW * sx, windowH * sy);
+        return new ImageBrush(image)
+        {
+            ViewboxUnits = BrushMappingMode.Absolute,
+            Viewbox = viewbox,
+            ViewportUnits = BrushMappingMode.RelativeToBoundingBox,
+            Viewport = new Rect(0, 0, 1, 1),
+            Stretch = Stretch.Fill,
+            TileMode = TileMode.None
+        };
+    }
+
+    private void UpdatePreviewHighlight()
+    {
+        if (!SettingsService.Settings.IsComponentPreviewHighlightEnabled)
+        {
+            IslandPreviewHost.SetHighlight(null, null);
+            return;
+        }
+
+        switch (ViewModel.SelectedNode)
+        {
+            case ComponentSettings component:
+                IslandPreviewHost.SetHighlight(component, null);
+                break;
+            case MainWindowLineSettings line:
+                var index = ComponentsService.CurrentComponents.Lines.IndexOf(line);
+                IslandPreviewHost.SetHighlight(null, index >= 0 ? index : (int?)null);
+                break;
+            default:
+                IslandPreviewHost.SetHighlight(null, null);
+                break;
+        }
+    }
+
+    #endregion
+
+    #region 紧凑模式
+
+    private const double CompactWidthThreshold = 660;
+
+    private bool _layoutReady;
+
+    /// <summary>页面过窄时进入紧凑模式：组件树与属性面板互斥全宽。</summary>
+    private void RootGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (e.NewSize.Width <= 0)
+            return;
+        var compact = e.NewSize.Width < CompactWidthThreshold;
+        if (_layoutReady && ViewModel.IsCompact == compact)
+            return;
+        ViewModel.IsCompact = compact;
+        ViewModel.IsTreeVisible = true;
+        _layoutReady = true;
+        ApplyTreeLayout();
+    }
+
+    private void ButtonToggleTree_OnClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.IsTreeVisible = !ViewModel.IsTreeVisible;
+        ApplyTreeLayout();
+    }
+
+    private void ApplyTreeLayout()
+    {
+        var showTree = ViewModel.IsTreeVisible;
+        var treeFullWidth = showTree && ViewModel.IsCompact;
+
+        if (!showTree)
+        {
+            TreeColumn.MinWidth = 0;
+            TreeColumn.Width = new GridLength(0);
+            SplitterColumn.Width = new GridLength(0);
+            Splitter.Visibility = Visibility.Collapsed;
+        }
+        else if (treeFullWidth)
+        {
+            // 紧凑模式：树与详情互斥全宽。
+            TreeColumn.MinWidth = 0;
+            TreeColumn.Width = new GridLength(1, GridUnitType.Star);
+            SplitterColumn.Width = new GridLength(0);
+            Splitter.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            TreeColumn.MinWidth = 180;
+            TreeColumn.Width = new GridLength(230);
+            SplitterColumn.Width = GridLength.Auto;
+            Splitter.Visibility = Visibility.Visible;
+        }
+
+        DetailColumn.MinWidth = treeFullWidth ? 0 : 320;
+        DetailColumn.Width = treeFullWidth ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
+
+        TreePanel.Visibility = showTree ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void HideTreeIfCompact()
+    {
+        if (ViewModel.IsCompact && ViewModel.IsTreeVisible)
+        {
+            ViewModel.IsTreeVisible = false;
+            ApplyTreeLayout();
+        }
+    }
+
+    #endregion
 
     #region 配置方案
 
@@ -453,6 +790,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             container.IsSelected = true;
             container.BringIntoView();
         }
+        HideTreeIfCompact();
     }
 
     private static TreeViewItem? FindContainer(ItemsControl parent, object item)

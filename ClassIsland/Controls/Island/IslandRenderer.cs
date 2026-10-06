@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using ClassIsland.Core.Models.Components;
 using Squircle;
 
 namespace ClassIsland.Controls.Island;
@@ -84,6 +85,21 @@ public sealed class IslandRenderer
 
     /// <summary>鼠标当前所在行号，-1 表示不在岛上。用于悬停淡出。</summary>
     public int MouseInLine { get; set; } = -1;
+
+    /// <summary>预览高亮：需要描黄框的组件设置实例（仅编辑器预览使用）。</summary>
+    public ComponentSettings? HighlightedComponent { get; set; }
+
+    /// <summary>预览高亮：需要描黄框的行号（仅编辑器预览使用）。</summary>
+    public int? HighlightedLineNumber { get; set; }
+
+    private static readonly Pen HighlightPen = CreateHighlightPen();
+
+    private static Pen CreateHighlightPen()
+    {
+        var pen = new Pen(new SolidColorBrush(Color.FromRgb(0xFF, 0xC4, 0x00)), 2);
+        pen.Freeze();
+        return pen;
+    }
 
     public void Add(IIslandComponent component)
     {
@@ -167,6 +183,15 @@ public sealed class IslandRenderer
         return new Size(_contentWidth, _contentHeight);
     }
 
+    /// <summary>返回前 <paramref name="count"/> 行（不足则全部）底部的 Y 坐标，用于限制预览的最大高度。</summary>
+    public double GetLinesBottom(int count)
+    {
+        if (_lines.Count == 0)
+            return 0;
+        var line = _lines[Math.Min(count, _lines.Count) - 1];
+        return line.Top + line.Height;
+    }
+
     /// <summary>行背景在内容区内的水平对齐（0=左 0.5=中 1=右），跟随全局停靠位置。</summary>
     private double HorizontalAlign => _context.Settings.WindowDockingLocation switch
     {
@@ -178,6 +203,7 @@ public sealed class IslandRenderer
     public void Render(DrawingContext drawingContext, Rect bounds)
     {
         var settings = _context.Settings;
+        _context.HighlightedComponent = HighlightedComponent;
 
         // 1) 底色条：独立于内容淡出。提醒 overlay 阶段 ContentOpacity 归 0 时底色条仍需保留。
         //    每一行是独立的岛：背景宽度贴合该行内容，按全局停靠位置水平对齐。
@@ -229,6 +255,19 @@ public sealed class IslandRenderer
 
         if (contentOpaque)
             drawingContext.Pop();
+
+        // 2.5) 预览高亮：整行描框。
+        if (HighlightedLineNumber is { } highlightedLine)
+        {
+            foreach (var line in _lines)
+            {
+                if (line.LineNumber != highlightedLine)
+                    continue;
+                var lineWidth = line.Width + left + right;
+                var lineX = (bounds.Width - lineWidth) * hAlign;
+                drawingContext.DrawRectangle(null, HighlightPen, new Rect(lineX, line.Top, lineWidth, line.Height));
+            }
+        }
 
         // 3) overlay 正文。
         if (IsOverlayVisible && !string.IsNullOrEmpty(OverlayText))

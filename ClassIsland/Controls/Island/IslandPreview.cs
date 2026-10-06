@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Models.Components;
 using ClassIsland.Core.Models.Theming;
 using ClassIsland.Models;
 using ClassIsland.Services;
@@ -61,6 +62,19 @@ public sealed class IslandPreview : FrameworkElement
         InvalidateVisual();
     }
 
+    /// <summary>设置预览高亮：组件（传 <paramref name="component"/>）或行（传 <paramref name="lineNumber"/> 行索引）。</summary>
+    public void SetHighlight(ComponentSettings? component, int? lineNumber)
+    {
+        if (_renderer == null)
+            return;
+        _renderer.HighlightedComponent = component;
+        _renderer.HighlightedLineNumber = lineNumber;
+        InvalidateVisual();
+    }
+
+    /// <summary>预览内容（岛）的设计尺寸（未乘缩放）。</summary>
+    public Size ContentSize { get; private set; }
+
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         if (!_initialized || _hooked)
@@ -89,6 +103,15 @@ public sealed class IslandPreview : FrameworkElement
         _renderer!.Clear();
     }
 
+    private static readonly DependencyPropertyKey PreviewContentCapKey =
+        DependencyProperty.RegisterReadOnly(nameof(PreviewContentCap), typeof(double), typeof(IslandPreview),
+            new FrameworkPropertyMetadata(double.PositiveInfinity));
+
+    /// <summary>预览内容的最大高度：2 条岛在原样（100%）下的高度。超出则整体等比缩小。</summary>
+    public static readonly DependencyProperty PreviewContentCapProperty = PreviewContentCapKey.DependencyProperty;
+
+    public double PreviewContentCap => (double)GetValue(PreviewContentCapProperty);
+
     protected override Size MeasureOverride(Size availableSize)
     {
         if (_renderer == null)
@@ -96,6 +119,12 @@ public sealed class IslandPreview : FrameworkElement
         var width = double.IsInfinity(availableSize.Width) ? 960 : availableSize.Width;
         var scale = _renderer.Scale;
         var natural = _renderer.Measure(new Size(width / scale, double.PositiveInfinity));
+        ContentSize = new Size(natural.Width, natural.Height);
+        var cap = _renderer.GetLinesBottom(2) * scale;
+        if (Math.Abs(cap - PreviewContentCap) > 0.01)
+        {
+            SetValue(PreviewContentCapKey, cap);
+        }
         return new Size(natural.Width * scale, natural.Height * scale);
     }
 

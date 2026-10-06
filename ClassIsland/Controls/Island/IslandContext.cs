@@ -1,5 +1,6 @@
 using System.Windows.Media;
 using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Models.Components;
 using ClassIsland.Models;
 
 namespace ClassIsland.Controls.Island;
@@ -34,6 +35,9 @@ public sealed class IslandContext
 
     /// <summary>主题背景色，非自定义背景时使用。</summary>
     public Color ThemeBackground { get; set; } = Color.FromRgb(0x1F, 0x1F, 0x1F);
+
+    /// <summary>预览高亮：需要描黄框的组件设置实例（仅编辑器预览使用，运行时为 null）。</summary>
+    public ComponentSettings? HighlightedComponent { get; set; }
 
     public IslandContext(Settings settings, ILessonsService lessonsService,
         IProfileService profileService, IExactTimeService exactTimeService,

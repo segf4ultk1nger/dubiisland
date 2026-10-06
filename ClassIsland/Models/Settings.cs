@@ -45,6 +45,8 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private int _windowDockingOffsetX = 0;
     private int _windowDockingOffsetY = 0;
     private int _windowDockingMonitorIndex = 0;
+    private int _componentPreviewBackgroundMode = 1;
+    private bool _isComponentPreviewHighlightEnabled = false;
     private int _windowLayer = 1;
     private int _windowTopmostRecheckMode = 0;
     private int _windowTopmostRecheckIntervalMs = 500;
@@ -1754,6 +1756,34 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _windowDockingLocation) return;
             _windowDockingLocation = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 组件设置页预览区背景：0 黑色 / 1 深灰色 / 2 白色 / 3 桌面壁纸。
+    /// </summary>
+    public int ComponentPreviewBackgroundMode
+    {
+        get => _componentPreviewBackgroundMode;
+        set
+        {
+            if (value == _componentPreviewBackgroundMode) return;
+            _componentPreviewBackgroundMode = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 组件设置页是否用黄框高亮当前选中的元素。
+    /// </summary>
+    public bool IsComponentPreviewHighlightEnabled
+    {
+        get => _isComponentPreviewHighlightEnabled;
+        set
+        {
+            if (value == _isComponentPreviewHighlightEnabled) return;
+            _isComponentPreviewHighlightEnabled = value;
             OnPropertyChanged();
         }
     }
