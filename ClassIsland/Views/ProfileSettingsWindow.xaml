@@ -98,6 +98,57 @@
         <Style TargetType="DataGridRow" BasedOn="{StaticResource MahApps.Styles.DataGridRow}"/>
         <Style TargetType="TabControl" BasedOn="{StaticResource MahApps.Styles.TabControl}"/>
         <Style TargetType="TabItem" BasedOn="{StaticResource MahApps.Styles.TabItem}"/>
+        <Style x:Key="ProfileTabRadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
+            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="4 0"/>
+            <Setter Property="Margin" Value="2 0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border Background="Transparent"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Opacity" Value="1.0"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderThickness" Value="0 0 0 3"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="1.0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ProfileTabListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style BasedOn="{StaticResource MahApps.Styles.ComboBox}" TargetType="{x:Type ComboBox}" x:Key="ClassPlanDataGridComboBoxStyle">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
@@ -1501,14 +1552,14 @@
                                             </ItemsPanelTemplate>
                                         </ListBox.ItemsPanel>
                                         <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource ProfileTabListBoxItemStyle}">
                                                 <Setter Property="Padding" Value="0"/>
                                             </Style>
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
                                             <DataTemplate DataType="{x:Type controls1:RemixIconText}">
                                                 <DataTemplate.Resources>
-                                                    <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
+                                                    <Style TargetType="RadioButton" BasedOn="{StaticResource ProfileTabRadioButtonStyle}">
                                                         <Setter Property="ToolTipService.Placement" Value="Top"/>
                                                     </Style>
                                                     <converters1:StringToRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
@@ -2340,14 +2391,14 @@
                                         </ItemsPanelTemplate>
                                     </ListBox.ItemsPanel>
                                     <ListBox.ItemContainerStyle>
-                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource ProfileTabListBoxItemStyle}">
                                             <Setter Property="Padding" Value="0"/>
                                         </Style>
                                     </ListBox.ItemContainerStyle>
                                     <ListBox.ItemTemplate>
                                         <DataTemplate DataType="{x:Type controls1:RemixIconText}">
                                             <DataTemplate.Resources>
-                                                <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
+                                                <Style TargetType="RadioButton" BasedOn="{StaticResource ProfileTabRadioButtonStyle}">
                                                     <Setter Property="ToolTipService.Placement" Value="Top"/>
                                                 </Style>
                                                 <converters1:StringToRadioButtonSelectionConverter x:Key="StringToRadioButtonSelectionConverter" />
@@ -2469,14 +2520,14 @@
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
                                 <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+                                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource ProfileTabListBoxItemStyle}">
                                         <Setter Property="Padding" Value="0"/>
                                     </Style>
                                 </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DataTemplate.Resources>
-                                            <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
+                                            <Style TargetType="RadioButton" BasedOn="{StaticResource ProfileTabRadioButtonStyle}">
                                                 <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
                                                 <Setter Property="FontSize" Value="18"/>
                                                 <Setter Property="Opacity" Value="0.75"/>
