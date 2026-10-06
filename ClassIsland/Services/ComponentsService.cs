@@ -201,10 +201,34 @@ public class ComponentsService : ObservableRecipient, IComponentsService
                 HookLine(line);
             }
         }
-        SaveConfig();
+        ScheduleSave();
     }
 
-    private void OnConfigChanged(object? sender, EventArgs e) => SaveConfig();
+    private void OnConfigChanged(object? sender, EventArgs e) => ScheduleSave();
+
+    private bool _saveScheduled;
+
+    /// <summary>
+    /// 合并同一轮操作内的多次变更，只落盘一次。避免在跨集合移动（移除 + 插入）之间同步写盘
+    /// 造成 UI 线程阻塞、中间态被渲染出来（界面看起来“分两步”）。
+    /// </summary>
+    private void ScheduleSave()
+    {
+        if (_saveScheduled)
+            return;
+        var dispatcher = System.Windows.Application.Current?.Dispatcher;
+        if (dispatcher == null || dispatcher.HasShutdownStarted)
+        {
+            SaveConfig();
+            return;
+        }
+        _saveScheduled = true;
+        dispatcher.BeginInvoke(new Action(() =>
+        {
+            _saveScheduled = false;
+            SaveConfig();
+        }), System.Windows.Threading.DispatcherPriority.Background);
+    }
 
     public void SaveConfig()
     {

@@ -7,14 +7,14 @@
       xmlns:local="clr-namespace:ClassIsland.Views.SettingPages"
       xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
       xmlns:registry="clr-namespace:ClassIsland.Core.Services.Registry;assembly=ClassIsland.Core"
-      xmlns:controls1="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
-        xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
+      xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
       xmlns:dd="urn:gong-wpf-dragdrop"
       xmlns:controls2="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
       xmlns:ci="http://classisland.tech/schemas/xaml/core"
       xmlns:components="clr-namespace:ClassIsland.Core.Models.Components;assembly=ClassIsland.Core"
       xmlns:converters="clr-namespace:ClassIsland.Converters"
       xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
+      xmlns:island="clr-namespace:ClassIsland.Controls.Island"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ComponentsSettingsPage"
@@ -31,12 +31,39 @@
 
     <controls:SettingsPageBase.Resources>
         <ci:BindingProxy x:Key="DataProxy"/>
-        <ci:BindingProxy x:Key="DataProxyDuplicate"/>
         <CollectionViewSource x:Key="RegisteredComponentsSource" 
                               Source="{x:Static registry:ComponentRegistryService.Registered}"/>
         <CollectionViewSource x:Key="ContainerComponentsSource" 
                               Source="{x:Static registry:ComponentRegistryService.Registered}"
                               Filter="ContainerComponentsSource_OnFilter"/>
+        <converters:HorizontalAlignmentToIntConverter x:Key="HorizontalAlignmentToIntConverter" />
+
+        <Style x:Key="ComponentTreeItemStyle" TargetType="TreeViewItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TreeViewItem">
+                        <StackPanel>
+                            <Border x:Name="Row" Background="Transparent" MinHeight="30" SnapsToDevicePixels="True">
+                                <ContentPresenter x:Name="PART_Header"
+                                                  ContentSource="Header"
+                                                  HorizontalAlignment="Stretch"
+                                                  VerticalAlignment="Center"
+                                                  Margin="8 0"/>
+                            </Border>
+                            <ItemsPresenter x:Name="ItemsHost" Margin="18 0 0 0"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Row" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <StackPanel x:Key="CreateProfileDialog" VerticalAlignment="Stretch" Margin="16" MaxWidth="400">
             <TextBlock Style="{StaticResource Headline6TextBlock}" Text="新建档案"/>
@@ -53,34 +80,51 @@
 
         <ci:RulesetControl x:Key="RulesetControl" />
 
-        <ContextMenu x:Key="ComponentOperationContextMenu" FontFamily="{StaticResource HarmonyOsSans}">
-            <MenuItem Header="向上移动一行"
-                      Command="{Binding Data.MoveComponentToPreviousLineCommand, Source={StaticResource DataProxy}}"
+        <ContextMenu x:Key="AddComponentMenu" FontFamily="{StaticResource HarmonyOsSans}"
+                     ItemsSource="{Binding Source={StaticResource RegisteredComponentsSource}}">
+            <ContextMenu.ItemContainerStyle>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource MahApps.Styles.MenuItem}">
+                    <Setter Property="Header" Value="{Binding Name}"/>
+                    <Setter Property="Command" Value="{Binding Data.AddComponentCommand, Source={StaticResource DataProxy}}"/>
+                    <Setter Property="CommandParameter" Value="{Binding}"/>
+                </Style>
+            </ContextMenu.ItemContainerStyle>
+        </ContextMenu>
+
+        <ContextMenu x:Key="LineOperationContextMenu" FontFamily="{StaticResource HarmonyOsSans}"
+                     Opened="LineOperationContextMenu_OnOpened">
+            <MenuItem Header="在下方插入一行" Click="MenuItemInsertLine_OnClick">
+                <MenuItem.Icon>
+                    <remix:PackIconRemixIcon Kind="AddLine" Width="16" Height="16"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="设为主要行" Click="MenuItemSetMainLine_OnClick">
+                <MenuItem.Icon>
+                    <remix:PackIconRemixIcon Kind="StarFill" Width="16" Height="16"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="删除行" Click="MenuItemRemoveLine_OnClick">
+                <MenuItem.Icon>
+                    <remix:PackIconRemixIcon Kind="DeleteBin6Fill" Width="16" Height="16"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
+
+        <ContextMenu x:Key="ComponentOperationContextMenu" FontFamily="{StaticResource HarmonyOsSans}"
+                     Opened="ComponentOperationContextMenu_OnOpened">
+            <MenuItem Header="上移"
+                      Command="{Binding Data.MoveComponentUpCommand, Source={StaticResource DataProxy}}"
                       CommandParameter="{Binding}">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="ArrowUpLine" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="向下移动一行"
-                      Command="{Binding Data.MoveComponentToNextLineCommand, Source={StaticResource DataProxy}}"
+            <MenuItem Header="下移"
+                      Command="{Binding Data.MoveComponentDownCommand, Source={StaticResource DataProxy}}"
                       CommandParameter="{Binding}">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="ArrowDownLine" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="移动到选中的容器"
-                      IsEnabled="{Binding Data.ViewModel.IsComponentChildrenViewOpen, Source={StaticResource DataProxy}}"
-                      Command="{Binding Data.MoveToCurrentContainerComponentCommand, Source={StaticResource DataProxy}}"
-                      CommandParameter="{Binding}">
-                <MenuItem.Icon>
-                    <remix:PackIconRemixIcon Kind="DragMove2Line" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="从容器组件移出"
-                      Command="{Binding Data.MoveComponentsToMainLinesCommand, Source={StaticResource DataProxy}}"
-                      CommandParameter="{Binding}">
-                <MenuItem.Icon>
-                    <remix:PackIconRemixIcon Kind="ArrowLeftUpLine" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
             <Separator/>
@@ -101,115 +145,326 @@
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-            <MenuItem Header="创建副本" Click="MenuItemDuplicateComponent_OnClick">
+            <MenuItem Header="移出容器"
+                      Command="{Binding Data.MoveOutOfContainerCommand, Source={StaticResource DataProxy}}"
+                      CommandParameter="{Binding}">
+                <MenuItem.Icon>
+                    <remix:PackIconRemixIcon Kind="ArrowLeftUpLine" Width="16" Height="16"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="创建副本"
+                      Command="{Binding Data.DuplicateComponentCommand, Source={StaticResource DataProxy}}"
+                      CommandParameter="{Binding}">
                 <MenuItem.Icon>
                     <remix:PackIconRemixIcon Kind="FileCopyFill" Width="16" Height="16"/>
                 </MenuItem.Icon>
             </MenuItem>
+            <MenuItem Header="删除"
+                      Command="{Binding Data.RemoveComponentCommand, Source={StaticResource DataProxy}}"
+                      CommandParameter="{Binding}">
+                <MenuItem.Icon>
+                    <remix:PackIconRemixIcon Kind="DeleteBin6Fill" Width="16" Height="16"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
 
-        <Style x:Key="ComponentListBoxStyle" BasedOn="{StaticResource MahApps.Styles.ListBox}"
-               TargetType="ListBox">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="dd:DragDrop.IsDragSource" Value="True"/>
-            <Setter Property="dd:DragDrop.IsDropTarget" Value="True"/>
-            <Setter Property="dd:DragDrop.UseDefaultEffectDataTemplate" Value="False"/>
-            <Setter Property="dd:DragDrop.SelectDroppedItems" Value="True"/>
-            <Setter Property="dd:DragDrop.DropTargetAdornerBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="ScrollViewer.PanningMode" Value="HorizontalOnly"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="dd:DragDrop.EffectMoveAdornerTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
-                            <controls2:IconText Kind="{x:Static controls2:IconGlyphs.ArrowAll}" Text="移动"
-                                                Margin="4 0"
-                                                IconMargin="2"
-                                                TextElement.FontWeight="Medium"
-                                                VerticalAlignment="Center"/>
-                        </Border>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ItemContainerStyle">
-                <Setter.Value>
-                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
-                        <Setter Property="ContextMenu" Value="{StaticResource ComponentOperationContextMenu}"/>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ItemTemplate">
-                <Setter.Value>
-                    <DataTemplate DataType="{x:Type components:ComponentSettings}">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <controls2:IconText Kind="{Binding AssociatedComponentInfo.PackIcon}"
-                                                     VerticalAlignment="Center"
-                                                     />
-                            <TextBlock Text="{Binding AssociatedComponentInfo.Name}"
-                                       VerticalAlignment="Center"/>
-                            <Button Margin="4 -16 0 -16"
-                                    VerticalAlignment="Center"
-                                    ToolTip="更多选项…"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                    Command="{Binding OpenContextMenuCommand, RelativeSource={RelativeSource AncestorType=local:ComponentsSettingsPage}}"
-                                    Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Style="{StaticResource MahApps.Styles.Button.Flat}">
-                                <remix:PackIconRemixIcon Kind="MoreFill"/>
-                            </Button>
-                            <Button Margin="0 -16 0 -16"
-                                    VerticalAlignment="Center"
-                                    ToolTip="查看子组件"
-                                    Click="ButtonShowChildrenComponents_OnClick"
-                                    Style="{StaticResource MahApps.Styles.Button.Flat}">
-                                <remix:PackIconRemixIcon Kind="NodeTree"/>
-                                <Button.Visibility>
-                                    <MultiBinding Converter="{StaticResource BooleanAndToVisibilityMultiConverter}">
-                                        <Binding Path="IsSelected" RelativeSource="{RelativeSource FindAncestor, AncestorType=ListBoxItem}"/>
-                                        <Binding Path="AssociatedComponentInfo.IsComponentContainer"/>
-                                    </MultiBinding>
-                                </Button.Visibility>
-                            </Button>
-                            <Button Foreground="IndianRed"
-                                    Margin="0 -16 -4 -16"
-                                    VerticalAlignment="Center"
-                                    ToolTip="删除"
-                                    Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    Click="ButtonRemoveSelectedComponent_OnClick"
-                                    Style="{StaticResource MahApps.Styles.Button.Flat}">
-                                <remix:PackIconRemixIcon Kind="DeleteBin6Fill"/>
-                            </Button>
+        <!-- 属性面板：行 -->
+        <DataTemplate DataType="{x:Type components:MainWindowLineSettings}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
+                    <TextBlock Text="主界面行" Style="{StaticResource SettingsSectionHeaderStyle}"/>
+                    <Grid Margin="0 0 0 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <remix:PackIconRemixIcon Grid.Column="0" Kind="StarFill" VerticalAlignment="Center" Margin="0 0 8 0"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="主要行"/>
+                            <TextBlock Text="主要行会承载提醒内容。" FontSize="12" Opacity="0.6" TextWrapping="Wrap"/>
                         </StackPanel>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <converters:HorizontalAlignmentToIntConverter x:Key="HorizontalAlignmentToIntConverter" />
+                        <Button Grid.Column="2" VerticalAlignment="Center"
+                                Click="ButtonSetMainLine_OnClick"
+                                Style="{StaticResource MahApps.Styles.Button.Flat}">
+                            <StackPanel Orientation="Horizontal">
+                                <remix:PackIconRemixIcon Kind="StarFill" VerticalAlignment="Center"/>
+                                <TextBlock Text="设为主要行" VerticalAlignment="Center" Margin="4 0 0 0"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <Grid Margin="0 0 0 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <remix:PackIconRemixIcon Grid.Column="0" Kind="Notification3Fill" VerticalAlignment="Center" Margin="0 0 8 0"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="显示提醒"/>
+                            <TextBlock Text="允许在此行显示提醒遮罩。" FontSize="12" Opacity="0.6" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <mah:ToggleSwitch Grid.Column="2" VerticalAlignment="Center" MinWidth="0"
+                                          OnContent="开" OffContent="关"
+                                          IsOn="{Binding IsNotificationEnabled, Mode=TwoWay}"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <remix:PackIconRemixIcon Grid.Column="0" Kind="EyeOffLine" VerticalAlignment="Center" Margin="0 0 8 0"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="按规则隐藏"/>
+                            <TextBlock Text="规则满足时自动隐藏此行。" FontSize="12" Opacity="0.6" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <mah:ToggleSwitch Grid.Column="2" VerticalAlignment="Center" MinWidth="0"
+                                          OnContent="开" OffContent="关"
+                                          IsOn="{Binding HideOnRule, Mode=TwoWay}"/>
+                    </Grid>
+                    <TextBlock Text="提示：在左侧树中拖动可调整行序与组件层级。" Opacity="0.55" FontSize="12"
+                               TextWrapping="Wrap" Margin="0 12 0 0"/>
+                </StackPanel>
+            </ScrollViewer>
+        </DataTemplate>
 
+        <!-- 属性面板：组件 -->
+        <DataTemplate DataType="{x:Type components:ComponentSettings}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AssociatedComponentInfo.SettingsType}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Text="组件设置" Style="{StaticResource SettingsSectionHeaderStyle}"/>
+                        <controls2:ComponentPresenter Settings="{Binding}" IsPresentingSettings="True"/>
+                    </StackPanel>
+
+                    <Separator Margin="0 16 0 8"/>
+                    <TextBlock Text="显示" Style="{StaticResource SettingsSectionHeaderStyle}"/>
+                    <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.HideOutline}"
+                                            Header="按规则隐藏"
+                                            Description="规则满足时自动隐藏组件，不释放组件资源。"
+                                            Margin="0 0 0 6">
+                        <controls2:SettingsCard.Switcher>
+                            <StackPanel Orientation="Horizontal">
+                                <Button HorizontalAlignment="Left"
+                                        Style="{StaticResource MahApps.Styles.Button.Flat}"
+                                        Click="ButtonOpenRuleset_OnClick"
+                                        Visibility="{Binding HideOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <controls2:IconText Kind="{x:Static controls2:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
+                                </Button>
+                                <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding HideOnRule}"/>
+                            </StackPanel>
+                        </controls2:SettingsCard.Switcher>
+                    </controls2:SettingsCard>
+
+                    <Separator Margin="0 16 0 8"/>
+                    <TextBlock Text="字体" Style="{StaticResource SettingsSectionHeaderStyle}"/>
+                    <Border Margin="0 0 0 6">
+                        <Expander Background="Transparent"
+                                  IsExpanded="{Binding IsResourceOverridingEnabled, Mode=OneWay}"
+                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                            <Expander.Header>
+                                <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.FontSize}"
+                                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                                           Header="字体大小"
+                                                           Description="调整组件字体大小，覆盖【外观】设置。"
+                                                           IsOn="{Binding IsResourceOverridingEnabled, Mode=TwoWay}"
+                                                           Margin="-12 0" />
+                            </Expander.Header>
+                            <Grid Margin="36 0 48 12" IsEnabled="{Binding IsResourceOverridingEnabled, Mode=OneWay}">
+                                <Grid.Resources>
+                                    <Style TargetType="controls2:NumbericTextBox"
+                                           BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                                        <Setter Property="Width" Value="100" />
+                                        <Setter Property="MinValue" Value="1" />
+                                        <Setter Property="MaxValue" Value="40" />
+                                    </Style>
+                                </Grid.Resources>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="次级字体大小（时间点附加信息）"
+                                           Margin="0 0 0 6" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="正文字体大小（主界面）"
+                                           Margin="0 0 0 6" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Grid.Row="2"
+                                           Text="强调字体大小（课程表、时钟、提醒标题、天气预报）" Margin="0 0 0 6"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="0" Grid.Row="3" Text="大号字体大小（课程预报）"
+                                           Margin="0 0 0 6" VerticalAlignment="Center" />
+
+                                <controls2:NumbericTextBox
+                                    Grid.Column="1" Grid.Row="0"
+                                    Text="{Binding MainWindowSecondaryFontSize, Converter={StaticResource IntToStringConverter}}" />
+                                <controls2:NumbericTextBox
+                                    Grid.Column="1" Grid.Row="1"
+                                    Text="{Binding MainWindowBodyFontSize, Converter={StaticResource IntToStringConverter}}" />
+                                <controls2:NumbericTextBox
+                                    Grid.Column="1" Grid.Row="2"
+                                    Text="{Binding MainWindowEmphasizedFontSize, Converter={StaticResource IntToStringConverter}}" />
+                                <controls2:NumbericTextBox
+                                    Grid.Column="1" Grid.Row="3"
+                                    Text="{Binding MainWindowLargeFontSize, Converter={StaticResource IntToStringConverter}}" />
+                            </Grid>
+                        </Expander>
+                    </Border>
+                    <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.FormatColorFill}"
+                                            Header="字体颜色"
+                                            IsOn="True"
+                                            Description="调整字体颜色，覆盖【外观】设置。"
+                                            Margin="0 0 0 6">
+                        <controls2:SettingsCard.Switcher>
+                            <StackPanel Orientation="Horizontal">
+                                <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0 0 6 0"
+                                                 SelectedColor="{Binding ForegroundColor, Mode=TwoWay}"
+                                                 Visibility="{Binding IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsCustomForegroundColorEnabled}"/>
+                            </StackPanel>
+                        </controls2:SettingsCard.Switcher>
+                    </controls2:SettingsCard>
+
+                    <Separator Margin="0 16 0 8"/>
+                    <TextBlock Text="布局" Style="{StaticResource SettingsSectionHeaderStyle}"/>
+                    <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.AlignHorizontalCenter}"
+                                           Header="对齐方式"
+                                           IsOn="True"
+                                           Description="设置组件在容器中的对齐方式。"
+                                           Margin="0 0 0 6">
+                        <controls2:SettingsCard.Switcher>
+                            <Grid>
+                                <ListBox SelectedIndex="{Binding HorizontalAlignment, Converter={StaticResource HorizontalAlignmentToIntConverter}}">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalLeft}}" ToolTip="左对齐"/>
+                                    <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalCenter}}" ToolTip="居中"/>
+                                    <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalRight}}" ToolTip="右对齐"/>
+                                    <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalDistribute}}" ToolTip="拉伸"/>
+                                </ListBox>
+                            </Grid>
+                        </controls2:SettingsCard.Switcher>
+                    </controls2:SettingsCard>
+                    <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.PinOutline}"
+                                           Header="固定宽度"
+                                           IsOn="True"
+                                           Description="组件使用固定宽度，不自动适应内容。"
+                                           Margin="0 0 0 6">
+                        <controls2:SettingsCard.Switcher>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox VerticalAlignment="Center"
+                                         Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         Margin="0 0 6 0"
+                                         Width="100"
+                                         Text="{Binding FixedWidth, Converter={StaticResource IntToStringConverter}}"/>
+                                <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsFixedWidthEnabled}"/>
+                            </StackPanel>
+                        </controls2:SettingsCard.Switcher>
+                    </controls2:SettingsCard>
+                    <Border Margin="0 0 0 6" Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
+                        <Expander Background="Transparent"
+                                  IsExpanded="True"
+                                  TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
+                            <Expander.Header>
+                                <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.Resize}"
+                                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                                           Header="宽度限制"
+                                                           IsOn="True"
+                                                           Description="限制控件的最大和最小宽度。"
+                                                           HasSwitcher="False"
+                                                           Margin="-12 0" />
+                            </Expander.Header>
+                            <Grid Margin="36 0 48 12">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+
+                                <mah:ToggleSwitch Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsMinWidthEnabled}"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"
+                                           Text="最小宽度"/>
+                                <TextBox Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
+                                         IsEnabled="{Binding IsMinWidthEnabled}"
+                                         Text="{Binding MinWidth, Converter={StaticResource IntToStringConverter}}"/>
+                                <mah:ToggleSwitch Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsMaxWidthEnabled}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                                           Text="最大宽度"/>
+                                <TextBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
+                                         IsEnabled="{Binding IsMaxWidthEnabled}"
+                                         Text="{Binding MaxWidth, Converter={StaticResource IntToStringConverter}}"/>
+                            </Grid>
+                        </Expander>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" ToolTip="GUID" HorizontalAlignment="Left">
+                        <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Code}" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Id, Mode=OneWay}"
+                                 Margin="4 0 0 0"
+                                 IsReadOnly="True"
+                                 VerticalAlignment="Center"
+                                 BorderThickness="0"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </DataTemplate>
     </controls:SettingsPageBase.Resources>
+
     <Grid Margin="8 0" IsEnabled="{Binding ComponentsService.IsManagementMode, Converter={StaticResource InvertBooleanConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
         <!-- ROW 0 集控提示 -->
         <TextBlock Text="部分设置由您的组织管理，您只能查看这些设置。" MaxWidth="750" TextWrapping="Wrap"
                    Grid.Row="0" Visibility="{Binding ComponentsService.IsManagementMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
         <!-- ROW 1 组件方案管理 -->
-        <Grid Grid.Row="1" MaxWidth="750">
+        <Grid Grid.Row="1" MaxWidth="750" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="以下组件将显示在主界面上，从组件库拖动组件以添加组件。" 
+            <TextBlock Text="以下组件将显示在主界面上。"
                        TextWrapping="Wrap"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left"/>
-            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal"
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
                 <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
@@ -241,426 +496,103 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <!-- ROW 2 主界面行编辑区域 -->
+
+        <!-- ROW 2 预览 -->
         <Border Grid.Row="2"
-                Background="{DynamicResource MahApps.Brushes.Control.Background}"
-                Margin="-8 8">
+                Margin="0 8"
+                MinHeight="72"
+                CornerRadius="6"
+                Padding="12"
+                Background="#1E1E1E">
+            <island:IslandPreview x:Name="IslandPreviewHost"/>
         </Border>
-        <ListBox Grid.Row="2"
-                 x:Name="ListBoxMainWindowLines"
-                 Margin="-8 8"
-                 MaxHeight="240"
-                 HorizontalContentAlignment="Stretch"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 ItemsSource="{Binding ComponentsService.CurrentComponents.Lines}"
-                 SelectedItem="{Binding ViewModel.SelectedMainWindowLineSettings}">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type components:MainWindowLineSettings}">
-                    <Grid Height="40">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <ListBox Grid.Column="0"
-                                 x:Name="ListBoxComponents"
-                                 Style="{StaticResource ComponentListBoxStyle}"
-                                 ItemsSource="{Binding Children}"
-                                 HorizontalContentAlignment="Left"
-                                 dd:DragDrop.DropHandler="{Binding RelativeSource={RelativeSource AncestorType=local:ComponentsSettingsPage}}"
-                                 SelectionChanged="SelectorComponents_OnSelectionChanged"
-                                 Loaded="ListBoxMainWindowLineSettings_OnLoaded"
-                                 Unloaded="ListBoxMainWindowLineSettings_OnUnloaded">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                        </ListBox>
-                        <Border Grid.Column="1" VerticalAlignment="Center"
-                                Padding="4"
-                                CornerRadius="4"
-                                Margin="4 0"
-                                Background="{DynamicResource MahApps.Brushes.Control.Background}"
-                                Visibility="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ToggleButton IsChecked="{Binding IsMainLine, Mode=TwoWay}"
-                                              Click="ToggleButtonIsMainLine_OnClick"
-                                              VerticalAlignment="Center"
-                                              ToolTip="此行是主要行"
-                                              Background="Transparent"
-                                              BorderThickness="0">
-                                    <remix:PackIconRemixIcon Kind="StarFill"/>
-                                </ToggleButton>
-                                <ToggleButton IsChecked="{Binding IsNotificationEnabled, Mode=TwoWay}"
-                                              VerticalAlignment="Center"
-                                              ToolTip="此行可以显示提醒"
-                                              Background="Transparent"
-                                              BorderThickness="0">
-                                    <remix:PackIconRemixIcon Kind="Notification3Fill"/>
-                                </ToggleButton>
-                                <Button VerticalAlignment="Center"
-                                        ToolTip="在下方插入一行"
-                                        Click="ButtonCreateMainWindowLine_OnClick"
-                                        Style="{StaticResource MahApps.Styles.Button.Flat}">
-                                    <remix:PackIconRemixIcon Kind="AddLine"/>
-                                </Button>
-                                <Button Foreground="IndianRed"
-                                        VerticalAlignment="Center"
-                                        ToolTip="删除"
-                                        Click="ButtonRemoveSelectedMainWindowLine_OnClick"
-                                        Style="{StaticResource MahApps.Styles.Button.Flat}">
-                                    <remix:PackIconRemixIcon Kind="DeleteBin6Fill"/>
-                                </Button>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
 
-        <!-- ROW 3 容器子组件 -->
-        <GroupBox Grid.Row="3" Margin="0 4" Visibility="{Binding ViewModel.IsComponentChildrenViewOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <GroupBox.HeaderTemplate>
-                <DataTemplate>
-                    <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ComponentsSettingsPage}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0"
-                                Margin="0 -16 4 -16"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                ToolTip="返回上一层级"
-                                Visibility="{Binding ViewModel.CanChildrenNavigateBack, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
-                                Click="ButtonNavigateUp_OnClick"
-                                Style="{StaticResource MahApps.Styles.Button.Flat}">
-                            <remix:PackIconRemixIcon Kind="ArrowUpLine"/>
-                        </Button>
-                        <TextBlock VerticalAlignment="Center"
-                                   Grid.Column="1"
-                                   HorizontalAlignment="Left">
-                            <Run Text="此组件的子组件" />
-                        </TextBlock>
-                        <Button Grid.Column="1"
-                                Margin="4 -16 -4 -16"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
-                                ToolTip="关闭"
-                                Click="ButtonChildrenViewClose_OnClick"
-                                Style="{StaticResource MahApps.Styles.Button.Flat}">
-                            <remix:PackIconRemixIcon Kind="CloseFill"/>
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </GroupBox.HeaderTemplate>
-            <StackPanel Margin="0 0 0 0">
-                <ListBox Margin="-8 -8 -8 -8"
-                         x:Name="ListBoxComponentsChildren"
-                         Background="{DynamicResource MahApps.Brushes.Control.Background}"
-                         ItemsSource="{Binding ViewModel.SelectedComponentContainerChildren}"
-                         SelectedItem="{Binding ViewModel.SelectedComponentSettingsChild}"
-                         Style="{StaticResource ComponentListBoxStyle}"
-                         dd:DragDrop.DropHandler="{Binding RelativeSource={RelativeSource AncestorType=local:ComponentsSettingsPage}}"
-                         SelectionChanged="SelectorComponentsChildren_OnSelectionChanged">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
-            </StackPanel>
-        </GroupBox>
+        <!-- ROW 3 组件树 + 属性面板 -->
+        <Grid Grid.Row="3" Margin="0 0 0 8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" MinWidth="200"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MinWidth="320"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- ROW 4 组件设置 -->
-        <Grid Grid.Row="4" HorizontalAlignment="Stretch">
+            <DockPanel Grid.Column="0">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0 0 0 4">
+                    <Button ToolTip="添加组件"
+                            Click="ButtonAddComponent_OnClick"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="AddFill" VerticalAlignment="Center"/>
+                            <TextBlock Text="添加组件" VerticalAlignment="Center" Margin="4 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button ToolTip="新建主界面行"
+                            Click="ButtonCreateMainWindowLine_OnClick"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="AddLine" VerticalAlignment="Center"/>
+                            <TextBlock Text="行" VerticalAlignment="Center" Margin="4 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <TreeView x:Name="TreeComponents"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ItemsSource="{Binding ComponentsService.CurrentComponents.Lines}"
+                          SelectedItemChanged="TreeComponents_OnSelectedItemChanged"
+                          dd:DragDrop.IsDragSource="True"
+                          dd:DragDrop.IsDropTarget="True"
+                          dd:DragDrop.UseDefaultEffectDataTemplate="False"
+                          dd:DragDrop.SelectDroppedItems="True"
+                          dd:DragDrop.DropTargetAdornerBrush="{DynamicResource MahApps.Brushes.Accent}"
+                          dd:DragDrop.DropHandler="{Binding RelativeSource={RelativeSource AncestorType=local:ComponentsSettingsPage}}"
+                          ItemContainerStyle="{StaticResource ComponentTreeItemStyle}">
+                    <TreeView.Resources>
+                        <!-- 组件树节点：行 -->
+                        <HierarchicalDataTemplate DataType="{x:Type components:MainWindowLineSettings}"
+                                                  ItemsSource="{Binding Children}">
+                            <Border Padding="0" Background="Transparent"
+                                    ContextMenu="{StaticResource LineOperationContextMenu}">
+                                <StackPanel Orientation="Horizontal">
+                                    <remix:PackIconRemixIcon Kind="LayoutRowFill" Width="15" Height="15"
+                                                             VerticalAlignment="Center" Opacity="0.7"/>
+                                    <TextBlock Text="行" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                                    <remix:PackIconRemixIcon Kind="StarFill" Width="13" Height="13"
+                                                             VerticalAlignment="Center" Margin="8 0 0 0"
+                                                             Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                             Visibility="{Binding IsMainLine, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <remix:PackIconRemixIcon Kind="Notification3Fill" Width="13" Height="13"
+                                                             VerticalAlignment="Center" Margin="6 0 0 0" Opacity="0.7"
+                                                             Visibility="{Binding IsNotificationEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </StackPanel>
+                            </Border>
+                        </HierarchicalDataTemplate>
 
-            <TabControl HorizontalContentAlignment="Left" 
-                        MaxWidth="750"
-                        SelectedIndex="{Binding ViewModel.SettingsTabControlIndex}">
-                <TabItem Header="组件库">
-                    <ListBox ItemsSource="{Binding Source={StaticResource RegisteredComponentsSource}}"
-                             dd:DragDrop.IsDragSource="True"
-                             dd:DragDrop.IsDropTarget="False"
-                             dd:DragDrop.DragDropCopyKeyState="LeftMouseButton"
-                             dd:DragDrop.UseDefaultEffectDataTemplate="False"
-                             HorizontalContentAlignment="Stretch"
-                             VerticalContentAlignment="Stretch">
-                        <dd:DragDrop.EffectCopyAdornerTemplate>
-                            <DataTemplate>
-                                <Border Height="24" CornerRadius="12" Background="{DynamicResource MahApps.Brushes.Accent}" TextElement.Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
-                                    <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Add}" Text="添加"
-                                                        Margin="4 0"
-                                                        IconMargin="2"
-                                                        TextElement.FontWeight="Medium"
+                        <!-- 组件树节点：组件 -->
+                        <HierarchicalDataTemplate DataType="{x:Type components:ComponentSettings}"
+                                                  ItemsSource="{Binding Children}">
+                            <Border Padding="0" Background="Transparent"
+                                    ContextMenu="{StaticResource ComponentOperationContextMenu}">
+                                <StackPanel Orientation="Horizontal">
+                                    <controls2:IconText Kind="{Binding AssociatedComponentInfo.PackIcon}"
                                                         VerticalAlignment="Center"/>
-                                </Border>
-                            </DataTemplate>
-                        </dd:DragDrop.EffectCopyAdornerTemplate>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid HorizontalAlignment="Stretch" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <controls2:IconText IconSize="32" Grid.Column="0" Grid.Row="0"
-                                                             Grid.RowSpan="2"
-                                                             VerticalAlignment="Center"
-                                                             Margin="0 0 4 0"
-                                                             Kind="{Binding PackIcon}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1"
-                                               Text="{Binding Name}"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Top"
-                                               TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1"
-                                               Text="{Binding Description}"
-                                               Opacity="0.75"
-                                               FontSize="12"
-                                               FontWeight="Regular"
-                                               TextWrapping="Wrap"
-                                               HorizontalAlignment="Stretch"
-                                               TextAlignment="Left"
-                                               TextTrimming="CharacterEllipsis"
-                                               />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <controls1:VirtualizingWrapPanel IsItemsHost="True"
-                                                                 StretchItems="True">
-                                    <controls1:VirtualizingWrapPanel.ItemSize>
-                                        <Size Width="170" Height="67"/>
-                                    </controls1:VirtualizingWrapPanel.ItemSize>
-                                </controls1:VirtualizingWrapPanel>
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                    </ListBox>
-                </TabItem>
-                <TabItem Header="组件设置" Visibility="{Binding ViewModel.IsComponentSettingsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <controls2:ComponentPresenter Settings="{Binding ViewModel.SelectedComponentSettings}"
-                                                  IsPresentingSettings="True"/>
-                </TabItem>
-                <TabItem Header="高级设置" Visibility="{Binding ViewModel.IsComponentAdvancedSettingsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ContentPresenter Content="{Binding ViewModel.SelectedComponentSettings}">
-                        <ContentPresenter.ContentTemplate>
-                            <DataTemplate DataType="{x:Type components:ComponentSettings}">
-                                <ScrollViewer>
-                                    <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
-                                        <!-- 按规则隐藏 -->
-                                        <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.HideOutline}"
-                                                                Header="按规则隐藏"
-                                                                Description="规则满足时自动隐藏组件，不释放组件资源。"
-                                                                Margin="0 0 0 6">
-                                            <controls2:SettingsCard.Switcher>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Button HorizontalAlignment="Left"
-                                                            Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                            Click="ButtonOpenRuleset_OnClick"
-                                                            Visibility="{Binding HideOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                        <controls2:IconText Kind="{x:Static controls2:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
-                                                    </Button>
-                                                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding HideOnRule}"/>
-                                                </StackPanel>
-                                            </controls2:SettingsCard.Switcher>
-                                        </controls2:SettingsCard>
+                                    <TextBlock Text="{Binding AssociatedComponentInfo.Name}"
+                                               VerticalAlignment="Center" Margin="6 0 0 0"/>
+                                </StackPanel>
+                            </Border>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </DockPanel>
 
-                                        <Separator Margin="0 16 0 8" />
-                                        <TextBlock Text="字体" Style="{StaticResource SettingsSectionHeaderStyle}" />
-                                        <!-- 字体大小 -->
-                                        <Border Margin="0 0 0 6">
-                                            <Expander Background="Transparent"
-                                                      IsExpanded="{Binding IsResourceOverridingEnabled, Mode=OneWay}"
-                                                      TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                                                <Expander.Header>
-                                                    <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.FontSize}"
-                                                                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                               Header="字体大小"
-                                                                               Description="调整组件字体大小，覆盖【外观】设置。"
-                                                                               IsOn="{Binding IsResourceOverridingEnabled, Mode=TwoWay}"
-                                                                               Margin="-12 0" />
-                                                </Expander.Header>
-                                                <Grid Margin="36 0 48 12" IsEnabled="{Binding IsResourceOverridingEnabled, Mode=OneWay}">
-                                                    <Grid.Resources>
-                                                        <Style TargetType="controls2:NumbericTextBox"
-                                                               BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                                                            <Setter Property="Width" Value="100" />
-                                                            <Setter Property="MinValue" Value="1" />
-                                                            <Setter Property="MaxValue" Value="40" />
-                                                        </Style>
-                                                    </Grid.Resources>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
-                                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="次级字体大小（时间点附加信息）"
-                                                               Margin="0 0 0 6" VerticalAlignment="Center" />
-                                                    <TextBlock Grid.Column="0" Grid.Row="1" Text="正文字体大小（主界面）"
-                                                               Margin="0 0 0 6" VerticalAlignment="Center" />
-                                                    <TextBlock Grid.Column="0" Grid.Row="2"
-                                                               Text="强调字体大小（课程表、时钟、提醒标题、天气预报）" Margin="0 0 0 6"
-                                                               VerticalAlignment="Center" />
-                                                    <TextBlock Grid.Column="0" Grid.Row="3" Text="大号字体大小（课程预报）"
-                                                               Margin="0 0 0 6" VerticalAlignment="Center" />
+            <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Stretch"
+                          Background="Transparent" ResizeBehavior="PreviousAndNext"/>
 
-                                                    <controls2:NumbericTextBox
-                                                        Grid.Column="1" Grid.Row="0"
-                                                        Text="{Binding MainWindowSecondaryFontSize, Converter={StaticResource IntToStringConverter}}" />
-                                                    <controls2:NumbericTextBox
-                                                        Grid.Column="1" Grid.Row="1"
-                                                        Text="{Binding MainWindowBodyFontSize, Converter={StaticResource IntToStringConverter}}" />
-                                                    <controls2:NumbericTextBox
-                                                        Grid.Column="1" Grid.Row="2"
-                                                        Text="{Binding MainWindowEmphasizedFontSize, Converter={StaticResource IntToStringConverter}}" />
-                                                    <controls2:NumbericTextBox
-                                                        Grid.Column="1" Grid.Row="3"
-                                                        Text="{Binding MainWindowLargeFontSize, Converter={StaticResource IntToStringConverter}}" />
-                                                </Grid>
-                                            </Expander>
-                                        </Border>
-                                        <!-- 字体颜色 -->
-                                        <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.FormatColorFill}"
-                                                                Header="字体颜色"
-                                                                IsOn="True"
-                                                                Description="调整字体颜色，覆盖【外观】设置。"
-                                                                Margin="0 0 0 6">
-                                            <controls2:SettingsCard.Switcher>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
-                                                                     VerticalAlignment="Center"
-                                                                     Margin="0 0 6 0"
-                                                                     SelectedColor="{Binding ForegroundColor, Mode=TwoWay}"
-                                                                     Visibility="{Binding IsCustomForegroundColorEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsCustomForegroundColorEnabled}"/>
-                                                </StackPanel>
-                                            </controls2:SettingsCard.Switcher>
-                                        </controls2:SettingsCard>
-
-                                        <Separator Margin="0 16 0 8" />
-                                        <TextBlock Text="布局" Style="{StaticResource SettingsSectionHeaderStyle}" />
-                                        <!-- 对齐方式 -->
-                                        <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.AlignHorizontalCenter}"
-                                                               Header="对齐方式"
-                                                               IsOn="True"
-                                                               Description="设置组件在容器中的对齐方式。"
-                                                               Margin="0 0 0 6">
-                                            <controls2:SettingsCard.Switcher>
-                                                <Grid>
-                                                    <ListBox SelectedIndex="{Binding HorizontalAlignment, Converter={StaticResource HorizontalAlignmentToIntConverter}}">
-                                                        <ListBox.ItemContainerStyle>
-                                                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="IsSelected" Value="True">
-                                                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </ListBox.ItemContainerStyle>
-                                                        <ListBox.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
-                                                            </ItemsPanelTemplate>
-                                                        </ListBox.ItemsPanel>
-                                                        <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalLeft}}" ToolTip="左对齐"/>
-                                                        <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalCenter}}" ToolTip="居中"/>
-                                                        <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalRight}}" ToolTip="右对齐"/>
-                                                        <ListBoxItem Content="{controls2:GlyphIcon {x:Static controls2:IconGlyphs.AlignHorizontalDistribute}}" ToolTip="拉伸"/>
-                                                    </ListBox>
-                                                </Grid>
-                                            </controls2:SettingsCard.Switcher>
-                                        </controls2:SettingsCard>
-                                        <!-- 固定宽度 -->
-                                        <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.PinOutline}"
-                                                               Header="固定宽度"
-                                                               IsOn="True"
-                                                               Description="组件使用固定宽度，不自动适应内容。"
-                                                               Margin="0 0 0 6">
-                                            <controls2:SettingsCard.Switcher>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBox VerticalAlignment="Center"
-                                                             Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                             Margin="0 0 6 0"
-                                                             Width="100"
-                                                             Text="{Binding FixedWidth, Converter={StaticResource IntToStringConverter}}"/>
-                                                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsFixedWidthEnabled}"/>
-                                                </StackPanel>
-                                            </controls2:SettingsCard.Switcher>
-                                        </controls2:SettingsCard>
-                                        <!-- 宽度限制 -->
-                                        <Border Margin="0 0 0 6" Visibility="{Binding IsFixedWidthEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
-                                            <Expander Background="Transparent"
-                                                      IsExpanded="True"
-                                                      TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                                                <Expander.Header>
-                                                    <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.Resize}"
-                                                                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                                              Header="宽度限制"
-                                                                              IsOn="True"
-                                                                              Description="限制控件的最大和最小宽度。"
-                                                                              HasSwitcher="False"
-                                                                              Margin="-12 0" />
-                                                </Expander.Header>
-                                                <Grid Margin="36 0 48 12">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition/>
-                                                        <ColumnDefinition Width="100"/>
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <!-- 最小宽度 -->
-                                                    <mah:ToggleSwitch Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsMinWidthEnabled}"/>
-                                                    <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"
-                                                               Text="最小宽度"/>
-                                                    <TextBox Grid.Row="0" Grid.Column="2" VerticalAlignment="Center"
-                                                             IsEnabled="{Binding IsMinWidthEnabled}"
-                                                             Text="{Binding MinWidth, Converter={StaticResource IntToStringConverter}}"/>
-                                                    <!-- 最大宽度 -->
-                                                    <mah:ToggleSwitch Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0 0 4 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding IsMaxWidthEnabled}"/>
-                                                    <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
-                                                               Text="最大宽度"/>
-                                                    <TextBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center"
-                                                             IsEnabled="{Binding IsMaxWidthEnabled}"
-                                                             Text="{Binding MaxWidth, Converter={StaticResource IntToStringConverter}}"/>
-                                                </Grid>
-                                            </Expander>
-                                        </Border>
-                                        <StackPanel Orientation="Horizontal" ToolTip="GUID" HorizontalAlignment="Left">
-                                            <controls2:IconText Kind="{x:Static controls2:IconGlyphs.Code}" VerticalAlignment="Center"/>
-                                            <TextBox Text="{Binding Id, Mode=OneWay}"
-                                                     Margin="4 0 0 0"
-                                                     IsReadOnly="True"
-                                                     VerticalAlignment="Center"
-                                                     BorderThickness="0"/>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </DataTemplate>
-                        </ContentPresenter.ContentTemplate>
-                    </ContentPresenter>
-                </TabItem>
-            </TabControl>
+            <Border Grid.Column="2"
+                    BorderThickness="1 0 0 0"
+                    BorderBrush="{DynamicResource MahApps.Brushes.Control.Border}">
+                <ContentControl Content="{Binding ViewModel.SelectedNode}"/>
+            </Border>
         </Grid>
     </Grid>
 </controls:SettingsPageBase>

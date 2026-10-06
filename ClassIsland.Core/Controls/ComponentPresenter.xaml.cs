@@ -20,7 +20,15 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         nameof(Settings), typeof(ComponentSettings), typeof(ComponentPresenter), new PropertyMetadata(default(ComponentSettings), PropertyChangedCallback));
 
     public static readonly DependencyProperty IsPresentingSettingsProperty = DependencyProperty.Register(
-        nameof(IsPresentingSettings), typeof(bool), typeof(ComponentPresenter), new PropertyMetadata(false));
+        nameof(IsPresentingSettings), typeof(bool), typeof(ComponentPresenter), new PropertyMetadata(false,
+            (o, args) =>
+            {
+                // Settings 可能先于 IsPresentingSettings 生效，需在后者变化时用正确模式重渲染内容。
+                if (o is ComponentPresenter presenter && presenter.Settings != null)
+                {
+                    presenter.UpdateContent(presenter.Settings);
+                }
+            }));
 
     public bool IsPresentingSettings
     {

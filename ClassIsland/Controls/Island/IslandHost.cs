@@ -362,10 +362,10 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private void OnLinesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         HookComponentCollections();
-        BuildComponents();
+        RequestBuildComponents();
     }
 
-    private void OnChildrenChanged(object? sender, NotifyCollectionChangedEventArgs e) => BuildComponents();
+    private void OnChildrenChanged(object? sender, NotifyCollectionChangedEventArgs e) => RequestBuildComponents();
 
     private void OnComponentsServicePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -373,8 +373,26 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         {
             UnhookComponentCollections();
             HookComponentCollections();
-            BuildComponents();
+            RequestBuildComponents();
         }
+    }
+
+    private bool _rebuildScheduled;
+
+    /// <summary>
+    /// 合并同一轮操作内的多次集合变更，只重建一次。跨集合移动是「移除 + 插入」两次变更，
+    /// 若每次都同步重建（含窗口重排），中间态会在渲染线程上画出来（界面看起来“分两步”）。
+    /// </summary>
+    private void RequestBuildComponents()
+    {
+        if (_rebuildScheduled)
+            return;
+        _rebuildScheduled = true;
+        _surface.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _rebuildScheduled = false;
+            BuildComponents();
+        }), DispatcherPriority.Render);
     }
 
     private void OnNotificationChanged(object? sender, PropertyChangedEventArgs e)

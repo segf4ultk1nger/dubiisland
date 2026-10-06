@@ -1,0 +1,217 @@
+using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
+using ClassIsland.Core.Abstractions.Services;
+using ClassIsland.Core.Models.Theming;
+using ClassIsland.Models;
+using ClassIsland.Services;
+
+namespace ClassIsland.Controls.Island;
+
+/// <summary>
+/// 只读的主界面岛预览。复用 <see cref="IslandRenderer"/> 的布局与绘制，实时跟随当前组件配置变化，
+/// 供组件设置页在编辑时确认外观。以 <see cref="OnRender"/> 绘制，适配普通 WPF 视觉树（非 HwndSource）。
+/// </summary>
+public sealed class IslandPreview : FrameworkElement
+{
+    private SettingsService? _settingsService;
+    private IThemeService? _themeService;
+    private IComponentsService? _componentsService;
+    private IslandContext? _context;
+    private IslandRenderer? _renderer;
+    private bool _initialized;
+    private bool _hooked;
+
+    public void Initialize(
+        SettingsService settingsService,
+        IThemeService themeService,
+        IComponentsService componentsService,
+        ILessonsService lessonsService,
+        IProfileService profileService,
+        IExactTimeService exactTimeService,
+        IRulesetService rulesetService,
+        IWeatherService weatherService)
+    {
+        if (_initialized)
+            return;
+        _initialized = true;
+
+        _settingsService = settingsService;
+        _themeService = themeService;
+        _componentsService = componentsService;
+
+        _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
+            rulesetService, weatherService)
+        {
+            AccentColor = themeService.PrimaryColor
+        };
+        _renderer = new IslandRenderer(_context);
+        _renderer.Invalidated += OnRendererInvalidated;
+
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnRendererInvalidated(object? sender, EventArgs e)
+    {
+        InvalidateMeasure();
+        InvalidateVisual();
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (!_initialized || _hooked)
+            return;
+        _hooked = true;
+        _context!.PixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
+        HookComponentCollections();
+        BuildComponents();
+        RefreshTheme();
+        _componentsService!.PropertyChanged += OnComponentsServicePropertyChanged;
+        _settingsService!.Settings.PropertyChanged += OnSettingsChanged;
+        _themeService!.ThemeUpdated += OnThemeUpdated;
+        InvalidateMeasure();
+        InvalidateVisual();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (!_hooked)
+            return;
+        _hooked = false;
+        UnhookComponentCollections();
+        _componentsService!.PropertyChanged -= OnComponentsServicePropertyChanged;
+        _settingsService!.Settings.PropertyChanged -= OnSettingsChanged;
+        _themeService!.ThemeUpdated -= OnThemeUpdated;
+        _renderer!.Clear();
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        if (_renderer == null)
+            return new Size(0, 0);
+        var width = double.IsInfinity(availableSize.Width) ? 960 : availableSize.Width;
+        var scale = _renderer.Scale;
+        var natural = _renderer.Measure(new Size(width / scale, double.PositiveInfinity));
+        return new Size(natural.Width * scale, natural.Height * scale);
+    }
+
+    protected override void OnRender(DrawingContext drawingContext)
+    {
+        if (_renderer == null)
+            return;
+        var width = double.IsInfinity(RenderSize.Width) ? 960 : RenderSize.Width;
+        var scale = _renderer.Scale;
+        var natural = _renderer.Measure(new Size(width / scale, double.PositiveInfinity));
+        var contentWidth = natural.Width * scale;
+        var contentHeight = natural.Height * scale;
+        var x = Math.Max(0, (RenderSize.Width - contentWidth) / 2);
+        var y = Math.Max(0, (RenderSize.Height - contentHeight) / 2);
+
+        drawingContext.PushTransform(new ScaleTransform(scale, scale));
+        drawingContext.PushTransform(new TranslateTransform(x / scale, y / scale));
+        _renderer.Render(drawingContext, new Rect(natural));
+        drawingContext.Pop();
+        drawingContext.Pop();
+    }
+
+    /// <summary>按组件服务的当前配置重建整个组件树。</summary>
+    private void BuildComponents()
+    {
+        _renderer!.Clear();
+        var lines = _componentsService!.CurrentComponents.Lines;
+        for (var lineIndex = 0; lineIndex < lines.Count; lineIndex++)
+        {
+            foreach (var settings in lines[lineIndex].Children)
+            {
+                var component = IslandComponentFactory.Create(settings, _context!);
+                if (component == null)
+                    continue;
+                component.LineNumber = lineIndex;
+                _renderer.Add(component);
+            }
+        }
+    }
+
+    private void HookComponentCollections()
+    {
+        var lines = _componentsService!.CurrentComponents.Lines;
+        lines.CollectionChanged -= OnLinesChanged;
+        lines.CollectionChanged += OnLinesChanged;
+        foreach (var line in lines)
+        {
+            line.Children.CollectionChanged -= OnChildrenChanged;
+            line.Children.CollectionChanged += OnChildrenChanged;
+        }
+    }
+
+    private void UnhookComponentCollections()
+    {
+        var lines = _componentsService!.CurrentComponents.Lines;
+        lines.CollectionChanged -= OnLinesChanged;
+        foreach (var line in lines)
+        {
+            line.Children.CollectionChanged -= OnChildrenChanged;
+        }
+    }
+
+    private void OnLinesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        HookComponentCollections();
+        RequestBuildComponents();
+    }
+
+    private void OnChildrenChanged(object? sender, NotifyCollectionChangedEventArgs e) => RequestBuildComponents();
+
+    private void OnComponentsServicePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(IComponentsService.CurrentComponents))
+        {
+            UnhookComponentCollections();
+            HookComponentCollections();
+            RequestBuildComponents();
+        }
+    }
+
+    private bool _rebuildScheduled;
+
+    /// <summary>
+    /// 合并同一轮操作内的多次集合变更，只重建一次。跨集合移动是「移除 + 插入」两次变更，
+    /// 若每次都同步重建，中间态会在渲染线程上画出来（界面看起来“分两步”）。
+    /// </summary>
+    private void RequestBuildComponents()
+    {
+        if (_rebuildScheduled)
+            return;
+        _rebuildScheduled = true;
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _rebuildScheduled = false;
+            BuildComponents();
+        }), DispatcherPriority.Render);
+    }
+
+    private void OnSettingsChanged(object? sender, PropertyChangedEventArgs e) => RefreshTheme();
+
+    private void OnThemeUpdated(object? sender, ThemeUpdatedEventArgs e) => RefreshTheme();
+
+    /// <summary>把主题色、前景色、主题背景色同步给渲染上下文，并重建画笔。</summary>
+    private void RefreshTheme()
+    {
+        var settings = _settingsService!.Settings;
+        _context!.InvalidateFont();
+        _context.AccentColor = _themeService!.PrimaryColor;
+        _context.ForegroundColor = settings.IsCustomForegroundColorEnabled
+            ? settings.CustomForegroundColor
+            : ResolveThemeColor("MahApps.Brushes.ThemeForeground", Colors.White);
+        _context.ThemeBackground = ResolveThemeColor("MahApps.Brushes.ThemeBackground", Color.FromRgb(0x1F, 0x1F, 0x1F));
+        _renderer!.RefreshStyles();
+        _renderer.Invalidate();
+    }
+
+    private static Color ResolveThemeColor(string key, Color fallback)
+        => Application.Current?.TryFindResource(key) is SolidColorBrush brush ? brush.Color : fallback;
+}

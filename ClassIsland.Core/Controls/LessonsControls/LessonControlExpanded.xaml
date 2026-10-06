@@ -6,9 +6,11 @@
              xmlns:local="clr-namespace:ClassIsland.Core.Controls.LessonsControls"
              xmlns:profile="clr-namespace:ClassIsland.Shared.Models.Profile;assembly=ClassIsland.Shared"
              xmlns:converters="clr-namespace:ClassIsland.Core.Converters"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <local:LessonControlBase.Resources>
+        <system:Boolean x:Key="TrueValue">True</system:Boolean>
         <converters:SubjectIdToSubjectConverter x:Key="SubjectIdToSubjectConverter" />
         <converters:SecondsToFormatTimeConverter x:Key="SecondsToFormatTimeConverter" />
         <converters:SecondsToFormatTimeConverter x:Key="SecondsToFormatTimeConverterCeiling" Ceiling="True"/>
