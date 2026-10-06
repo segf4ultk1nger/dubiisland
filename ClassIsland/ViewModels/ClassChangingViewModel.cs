@@ -14,7 +14,7 @@ public class ClassChangingViewModel : ObservableRecipient
     private int _swapModeTargetIndex = -1;
     private Subject? _targetSubject;
     private bool _isAutoNextStep = false;
-    private string? _targetSubjectIndex;
+    private Guid _targetSubjectIndex = Guid.Empty;
 
     public bool WriteToSourceClassPlan
     {
@@ -60,7 +60,7 @@ public class ClassChangingViewModel : ObservableRecipient
         }
     }
 
-    public string? TargetSubjectIndex
+    public Guid TargetSubjectIndex
     {
         get => _targetSubjectIndex;
         set
