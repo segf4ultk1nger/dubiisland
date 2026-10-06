@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Media;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Components;
@@ -36,8 +38,10 @@ public sealed class IslandContext
     /// <summary>主题背景色，非自定义背景时使用。</summary>
     public Color ThemeBackground { get; set; } = Color.FromRgb(0x1F, 0x1F, 0x1F);
 
-    /// <summary>预览高亮：需要描黄框的组件设置实例（仅编辑器预览使用，运行时为 null）。</summary>
-    public ComponentSettings? HighlightedComponent { get; set; }
+    /// <summary>
+    /// 各组件最近一次渲染时的槽位矩形（内容自然坐标）。仅编辑器预览会赋值，运行时为 null。
+    /// </summary>
+    public Dictionary<ComponentSettings, Rect>? ComponentBounds { get; set; }
 
     public IslandContext(Settings settings, ILessonsService lessonsService,
         IProfileService profileService, IExactTimeService exactTimeService,

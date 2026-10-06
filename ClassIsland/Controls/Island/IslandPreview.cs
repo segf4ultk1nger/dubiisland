@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
@@ -47,7 +48,8 @@ public sealed class IslandPreview : FrameworkElement
         _context = new IslandContext(settingsService.Settings, lessonsService, profileService, exactTimeService,
             rulesetService, weatherService)
         {
-            AccentColor = themeService.PrimaryColor
+            AccentColor = themeService.PrimaryColor,
+            ComponentBounds = new Dictionary<ComponentSettings, Rect>()
         };
         _renderer = new IslandRenderer(_context);
         _renderer.Invalidated += OnRendererInvalidated;
@@ -58,22 +60,37 @@ public sealed class IslandPreview : FrameworkElement
 
     private void OnRendererInvalidated(object? sender, EventArgs e)
     {
+        _layoutDirty = true;
         InvalidateMeasure();
-        InvalidateVisual();
-    }
-
-    /// <summary>设置预览高亮：组件（传 <paramref name="component"/>）或行（传 <paramref name="lineNumber"/> 行索引）。</summary>
-    public void SetHighlight(ComponentSettings? component, int? lineNumber)
-    {
-        if (_renderer == null)
-            return;
-        _renderer.HighlightedComponent = component;
-        _renderer.HighlightedLineNumber = lineNumber;
         InvalidateVisual();
     }
 
     /// <summary>预览内容（岛）的设计尺寸（未乘缩放）。</summary>
     public Size ContentSize { get; private set; }
+
+    /// <summary>取组件在内容自然坐标中的槽位矩形。</summary>
+    public bool TryGetComponentBounds(ComponentSettings component, out Rect bounds)
+    {
+        if (_renderer == null)
+        {
+            bounds = Rect.Empty;
+            return false;
+        }
+
+        return _renderer.TryGetComponentBounds(component, out bounds);
+    }
+
+    /// <summary>取整行在内容自然坐标中的矩形。</summary>
+    public bool TryGetLineBounds(int lineNumber, out Rect bounds)
+    {
+        if (_renderer == null)
+        {
+            bounds = Rect.Empty;
+            return false;
+        }
+
+        return _renderer.TryGetLineBounds(lineNumber, out bounds);
+    }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
@@ -112,37 +129,47 @@ public sealed class IslandPreview : FrameworkElement
 
     public double PreviewContentCap => (double)GetValue(PreviewContentCapProperty);
 
+    private bool _layoutDirty = true;
+    private Size _naturalSize;
+    private double _measuredWidth = -1;
+
     protected override Size MeasureOverride(Size availableSize)
     {
         if (_renderer == null)
             return new Size(0, 0);
         var width = double.IsInfinity(availableSize.Width) ? 960 : availableSize.Width;
         var scale = _renderer.Scale;
-        var natural = _renderer.Measure(new Size(width / scale, double.PositiveInfinity));
-        ContentSize = new Size(natural.Width, natural.Height);
-        var cap = _renderer.GetLinesBottom(2) * scale;
-        if (Math.Abs(cap - PreviewContentCap) > 0.01)
+        // 只在布局失效或可用宽度变化时重建组件树。否则每次重绘（选中/高亮）都会重新 Build 全部组件，
+        // 课程表这类组件重建成本很高，会明显卡顿。
+        if (_layoutDirty || Math.Abs(width - _measuredWidth) > 0.01)
         {
-            SetValue(PreviewContentCapKey, cap);
+            _measuredWidth = width;
+            _naturalSize = _renderer.Measure(new Size(width / scale, double.PositiveInfinity));
+            _layoutDirty = false;
+            ContentSize = _naturalSize;
+            var cap = _renderer.GetLinesBottom(2) * scale;
+            if (Math.Abs(cap - PreviewContentCap) > 0.01)
+            {
+                SetValue(PreviewContentCapKey, cap);
+            }
         }
-        return new Size(natural.Width * scale, natural.Height * scale);
+
+        return new Size(_naturalSize.Width * scale, _naturalSize.Height * scale);
     }
 
     protected override void OnRender(DrawingContext drawingContext)
     {
-        if (_renderer == null)
+        if (_renderer == null || _naturalSize.Width <= 0 || _naturalSize.Height <= 0)
             return;
-        var width = double.IsInfinity(RenderSize.Width) ? 960 : RenderSize.Width;
         var scale = _renderer.Scale;
-        var natural = _renderer.Measure(new Size(width / scale, double.PositiveInfinity));
-        var contentWidth = natural.Width * scale;
-        var contentHeight = natural.Height * scale;
+        var contentWidth = _naturalSize.Width * scale;
+        var contentHeight = _naturalSize.Height * scale;
         var x = Math.Max(0, (RenderSize.Width - contentWidth) / 2);
         var y = Math.Max(0, (RenderSize.Height - contentHeight) / 2);
 
         drawingContext.PushTransform(new ScaleTransform(scale, scale));
         drawingContext.PushTransform(new TranslateTransform(x / scale, y / scale));
-        _renderer.Render(drawingContext, new Rect(natural));
+        _renderer.Render(drawingContext, new Rect(_naturalSize));
         drawingContext.Pop();
         drawingContext.Pop();
     }

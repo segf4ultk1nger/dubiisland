@@ -94,26 +94,14 @@
                             <ItemsPresenter x:Name="ItemsHost"/>
                         </StackPanel>
                         <ControlTemplate.Triggers>
+                            <!-- hover 只认 Row 自身（不含展开的子项），避免悬停子组件时父级也亮起；不做淡入淡出。 -->
+                            <Trigger SourceName="Row" Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Hover" Property="Opacity" Value="0.09"/>
+                            </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="Row" Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                 <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                             </Trigger>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity"
-                                                         To="0.09" Duration="0:0:0.15"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity"
-                                                         To="0" Duration="0:0:0.15"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -492,16 +480,31 @@
 
         <!-- ROW 0 预览：置顶贴边；ViewBox 保证整条岛完整可见，最大 100%，超过 2 条岛高度才缩小 -->
         <Grid x:Name="PreviewRoot" Grid.Row="0" Background="#1E1E1E" ClipToBounds="True">
-            <!-- 壁纸层：壁纸铺不满（贴边留白/超出屏幕）的部分由 PreviewRoot 的底色兜底 -->
-            <Border x:Name="PreviewWallpaperLayer" Background="Transparent" IsHitTestVisible="False"/>
-            <Border x:Name="PreviewBorder" Padding="12" SizeChanged="PreviewBorder_OnSizeChanged">
-                <Viewbox x:Name="IslandViewbox" Stretch="Uniform" StretchDirection="DownOnly"
-                         MaxHeight="{Binding PreviewContentCap, ElementName=IslandPreviewHost}"
-                         HorizontalAlignment="Center" VerticalAlignment="Center"
-                         SizeChanged="PreviewBorder_OnSizeChanged">
-                    <island:IslandPreview x:Name="IslandPreviewHost"/>
-                </Viewbox>
-            </Border>
+            <!-- 画布层：壁纸 + 岛作为一个整体，聚焦时只变换这一层（岛跟着壁纸移动缩放） -->
+            <Grid x:Name="PreviewCanvas" RenderTransformOrigin="0,0">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="FocusScale"/>
+                        <TranslateTransform x:Name="FocusTranslate"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <!-- 壁纸层：壁纸铺不满（贴边留白/超出屏幕）的部分由 PreviewRoot 的底色兜底 -->
+                <Border x:Name="PreviewWallpaperLayer" Background="Transparent" IsHitTestVisible="False"/>
+                <Border x:Name="PreviewBorder" Padding="12" SizeChanged="PreviewBorder_OnSizeChanged">
+                    <Viewbox x:Name="IslandViewbox" Stretch="Uniform" StretchDirection="DownOnly"
+                             MaxHeight="{Binding PreviewContentCap, ElementName=IslandPreviewHost}"
+                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                             SizeChanged="PreviewBorder_OnSizeChanged">
+                        <island:IslandPreview x:Name="IslandPreviewHost"/>
+                    </Viewbox>
+                </Border>
+                <!-- 悬停指示：实时显示鼠标所在组件/行的位置，不做动画 -->
+                <Path x:Name="HoverHighlight" IsHitTestVisible="False" Visibility="Collapsed" Stretch="None"
+                      Stroke="#FF1E90FF" StrokeThickness="2"/>
+                <!-- 选中项高亮：几何在 PreviewCanvas 坐标里，Rect 可做过渡动画；随聚焦变换一起移动缩放 -->
+                <Path x:Name="SelectionHighlight" IsHitTestVisible="False" Visibility="Collapsed" Stretch="None"
+                      Stroke="#FFFF3B30" StrokeThickness="2"/>
+            </Grid>
         </Grid>
 
         <!-- ROW 1 操作行：左锚点（组件树/添加操作），右锚点（档案管理） -->
@@ -663,6 +666,8 @@
                           VirtualizingStackPanel.IsVirtualizing="False"
                           ItemsSource="{Binding ComponentsService.CurrentComponents.Lines}"
                           SelectedItemChanged="TreeComponents_OnSelectedItemChanged"
+                          MouseMove="TreeComponents_OnMouseMove"
+                          MouseLeave="TreeComponents_OnMouseLeave"
                           dd:DragDrop.IsDragSource="True"
                           dd:DragDrop.IsDropTarget="True"
                           dd:DragDrop.UseDefaultEffectDataTemplate="False"
@@ -717,5 +722,8 @@
                 <ContentControl Content="{Binding ViewModel.SelectedNode}"/>
             </Border>
         </Grid>
+
+        <!-- 隐藏宿主：空闲时把组件设置控件在这里测量一遍，预热模板，避免首次选中卡顿。 -->
+        <ContentControl x:Name="PrewarmHost" Grid.RowSpan="4" Visibility="Hidden" IsHitTestVisible="False"/>
     </Grid>
 </controls:SettingsPageBase>

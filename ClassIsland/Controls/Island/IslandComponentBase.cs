@@ -62,6 +62,9 @@ public abstract class IslandComponentBase : IIslandComponent
     public void Render(DrawingContext drawingContext, Rect slot, IslandContext context)
     {
         Context = context;
+        var componentBounds = context.ComponentBounds;
+        if (componentBounds != null)
+            componentBounds[Component] = slot;
         var available = Math.Max(0, slot.Width - HorizontalMargin * 2);
         var contentWidth = Math.Min(ContentWidth, available);
         var slack = available - contentWidth;
@@ -73,20 +76,6 @@ public abstract class IslandComponentBase : IIslandComponent
         };
         RenderContent(drawingContext,
             new Rect(slot.X + HorizontalMargin + offset, slot.Y, contentWidth, slot.Height), context);
-
-        if (ReferenceEquals(Component, context.HighlightedComponent))
-        {
-            drawingContext.DrawRectangle(null, HighlightPen, slot);
-        }
-    }
-
-    private static readonly Pen HighlightPen = CreateHighlightPen();
-
-    private static Pen CreateHighlightPen()
-    {
-        var pen = new Pen(Frozen(Color.FromRgb(0xFF, 0xC4, 0x00)), 2);
-        pen.Freeze();
-        return pen;
     }
 
     protected double ResolveOuterWidth(double content)

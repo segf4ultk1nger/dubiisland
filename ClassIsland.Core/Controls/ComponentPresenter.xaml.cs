@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Threading;
+using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Models.Components;
 using ClassIsland.Shared;
@@ -117,6 +119,43 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
 
     private IRulesetService RulesetService { get; } = IAppHost.GetService<IRulesetService>();
 
+    /// <summary>
+    /// 组件设置控件缓存：设置控件首次测量时要把大量控件的模板套一遍（课程表这类会卡 100ms+），
+    /// 复用已实例化的控件可以避免反复套模板。以 <see cref="ComponentSettings"/> 为键，删除组件后自动回收。
+    /// </summary>
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<ComponentSettings, ComponentBase> SettingsControlCache = new();
+
+    /// <summary>
+    /// 预热：提前创建设置控件并在 <paramref name="host"/> 里测量一遍以套好模板，写入缓存，
+    /// 使首次选中组件时不再阻塞。仅应在空闲（如 ApplicationIdle）时调用。
+    /// </summary>
+    public static void Prewarm(ComponentSettings settings, System.Windows.Controls.ContentControl host)
+    {
+        if (settings == null || SettingsControlCache.TryGetValue(settings, out _))
+        {
+            return;
+        }
+
+        var content = IAppHost.GetService<IComponentsService>().GetComponent(settings, true);
+        if (content == null)
+        {
+            return;
+        }
+
+        try
+        {
+            host.Content = content;
+            host.UpdateLayout();
+            host.Content = null;
+        }
+        catch
+        {
+            // 预热失败无所谓，正式选中时会正常创建。
+        }
+
+        SettingsControlCache.Add(settings, content);
+    }
+
     private object? _presentingContent;
 
     public ComponentSettings? Settings
@@ -124,6 +163,8 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         get { return (ComponentSettings)GetValue(SettingsProperty); }
         set { SetValue(SettingsProperty, value); }
     }
+
+    private bool _contentUpdateScheduled;
 
     private void UpdateContent(ComponentSettings? oldSettings)
     {
@@ -137,21 +178,50 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
         }
         RaiseEvent(new RoutedEventArgs(ComponentVisibilityChangedEvent));
         if (Settings == null)
+        {
+            PresentingContent = null;
             return;
+        }
         Settings.PropertyChanged += SettingsOnPropertyChanged;
         if (Settings.Children != null)
         {
             Settings.Children.CollectionChanged += ChildrenOnCollectionChanged;
         }
-        var content = IAppHost.GetService<IComponentsService>().GetComponent(Settings, IsPresentingSettings);
-        // 理论上展示的内容的数据上下文应为MainWindow，这里不便用前端xaml绑定，故在后台设置。
-        if (content != null && IsOnMainWindow)
-        {
-            content.DataContext = Window.GetWindow(this);
-        }
 
-        PresentingContent = content;
-        UpdateTheme();
+        // Settings 与 IsPresentingSettings 在 XAML 中分两次赋值：若先赋值 Settings，会先按「组件模式」
+        // 实例化出真正的组件（课程表这类组件构建列表很慢），随后又被设置控件替换，白做一次昂贵实例化。
+        // 这里合并到下一轮消息泵，只用最终模式创建一次。
+        if (_contentUpdateScheduled)
+        {
+            return;
+        }
+        _contentUpdateScheduled = true;
+        Dispatcher.BeginInvoke(new System.Action(() =>
+        {
+            _contentUpdateScheduled = false;
+            ComponentBase? content;
+            if (IsPresentingSettings && Settings != null &&
+                SettingsControlCache.TryGetValue(Settings, out var cached))
+            {
+                content = cached;
+            }
+            else
+            {
+                content = IAppHost.GetService<IComponentsService>().GetComponent(Settings, IsPresentingSettings);
+                if (IsPresentingSettings && Settings != null && content != null)
+                {
+                    SettingsControlCache.Add(Settings, content);
+                }
+            }
+            // 理论上展示的内容的数据上下文应为MainWindow，这里不便用前端xaml绑定，故在后台设置。
+            if (content != null && IsOnMainWindow && Window.GetWindow(this) is { } window)
+            {
+                content.DataContext = window;
+            }
+
+            PresentingContent = content;
+            UpdateTheme();
+        }), DispatcherPriority.DataBind);
     }
 
     private void ChildrenOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

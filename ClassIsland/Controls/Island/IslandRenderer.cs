@@ -86,21 +86,6 @@ public sealed class IslandRenderer
     /// <summary>鼠标当前所在行号，-1 表示不在岛上。用于悬停淡出。</summary>
     public int MouseInLine { get; set; } = -1;
 
-    /// <summary>预览高亮：需要描黄框的组件设置实例（仅编辑器预览使用）。</summary>
-    public ComponentSettings? HighlightedComponent { get; set; }
-
-    /// <summary>预览高亮：需要描黄框的行号（仅编辑器预览使用）。</summary>
-    public int? HighlightedLineNumber { get; set; }
-
-    private static readonly Pen HighlightPen = CreateHighlightPen();
-
-    private static Pen CreateHighlightPen()
-    {
-        var pen = new Pen(new SolidColorBrush(Color.FromRgb(0xFF, 0xC4, 0x00)), 2);
-        pen.Freeze();
-        return pen;
-    }
-
     public void Add(IIslandComponent component)
     {
         component.Invalidated += OnComponentInvalidated;
@@ -203,7 +188,7 @@ public sealed class IslandRenderer
     public void Render(DrawingContext drawingContext, Rect bounds)
     {
         var settings = _context.Settings;
-        _context.HighlightedComponent = HighlightedComponent;
+        _context.ComponentBounds?.Clear();
 
         // 1) 底色条：独立于内容淡出。提醒 overlay 阶段 ContentOpacity 归 0 时底色条仍需保留。
         //    每一行是独立的岛：背景宽度贴合该行内容，按全局停靠位置水平对齐。
@@ -255,19 +240,6 @@ public sealed class IslandRenderer
 
         if (contentOpaque)
             drawingContext.Pop();
-
-        // 2.5) 预览高亮：整行描框。
-        if (HighlightedLineNumber is { } highlightedLine)
-        {
-            foreach (var line in _lines)
-            {
-                if (line.LineNumber != highlightedLine)
-                    continue;
-                var lineWidth = line.Width + left + right;
-                var lineX = (bounds.Width - lineWidth) * hAlign;
-                drawingContext.DrawRectangle(null, HighlightPen, new Rect(lineX, line.Top, lineWidth, line.Height));
-            }
-        }
 
         // 3) overlay 正文。
         if (IsOverlayVisible && !string.IsNullOrEmpty(OverlayText))
@@ -411,6 +383,34 @@ public sealed class IslandRenderer
     private FormattedText MakeIcon(string glyph, double size, Brush brush)
         => new(glyph, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
             new Typeface("MahApps.Metro.IconPacks.RemixIcon"), size, brush, _context.PixelsPerDip);
+
+    /// <summary>取组件在内容自然坐标中的槽位矩形（用于预览聚焦）。</summary>
+    public bool TryGetComponentBounds(ComponentSettings component, out Rect bounds)
+    {
+        if (_context.ComponentBounds != null && _context.ComponentBounds.TryGetValue(component, out bounds))
+            return true;
+        bounds = Rect.Empty;
+        return false;
+    }
+
+    /// <summary>取整行（岛背景）在内容自然坐标中的矩形。</summary>
+    public bool TryGetLineBounds(int lineNumber, out Rect bounds)
+    {
+        var left = _context.Settings.MainWindowLeftMargin;
+        var right = _context.Settings.MainWindowRightMargin;
+        var hAlign = HorizontalAlign;
+        foreach (var line in _lines)
+        {
+            if (line.LineNumber != lineNumber)
+                continue;
+            var lineWidth = line.Width + left + right;
+            bounds = new Rect((_contentWidth - lineWidth) * hAlign, line.Top, lineWidth, line.Height);
+            return true;
+        }
+
+        bounds = Rect.Empty;
+        return false;
+    }
 
     /// <summary>命中测试：给定自然坐标，返回所在行号，未命中返回 -1。</summary>
     public int HitTestLine(Point point)

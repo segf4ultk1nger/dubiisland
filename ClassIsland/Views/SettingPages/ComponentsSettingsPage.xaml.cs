@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,6 +12,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
@@ -62,6 +65,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         InitializeComponent();
 
         DataContext = this;
+        SelectionHighlight.Data = _highlightGeometry;
+        HoverHighlight.Data = _hoverGeometry;
         if (FindResource("DataProxy") is BindingProxy proxy)
         {
             proxy.Data = this;
@@ -86,6 +91,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             case nameof(SettingsService.Settings.Scale):
                 UpdateIslandAlignment();
                 UpdateWallpaperBackgroundIfNeeded();
+                UpdatePreviewFocus();
+                UpdatePreviewHighlight(false);
                 break;
             case nameof(SettingsService.Settings.ComponentPreviewBackgroundMode):
                 if (SettingsService.Settings.ComponentPreviewBackgroundMode == 3)
@@ -112,9 +119,39 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         UpdateIslandAlignment();
         UpdatePreviewBackground();
         UpdatePreviewHighlight();
+        UpdatePreviewFocus();
         if (SettingsService.Settings.ComponentPreviewBackgroundMode == 3)
         {
             _ = WallpaperPickingService.GetWallpaperAsync();
+        }
+        SchedulePrewarmComponentSettings();
+    }
+
+    /// <summary>空闲时预热所有组件的设置控件，避免首次选中时套模板卡顿。</summary>
+    private void SchedulePrewarmComponentSettings()
+    {
+        var all = ComponentsService.CurrentComponents.Lines
+            .SelectMany(line => line.Children ?? Enumerable.Empty<ComponentSettings>());
+        foreach (var component in EnumerateComponentSettings(all))
+        {
+            var target = component;
+            Dispatcher.BeginInvoke(new System.Action(() => ComponentPresenter.Prewarm(target, PrewarmHost)),
+                DispatcherPriority.ApplicationIdle);
+        }
+    }
+
+    private static IEnumerable<ComponentSettings> EnumerateComponentSettings(IEnumerable<ComponentSettings> source)
+    {
+        foreach (var component in source)
+        {
+            yield return component;
+            if (component.Children != null)
+            {
+                foreach (var child in EnumerateComponentSettings(component.Children))
+                {
+                    yield return child;
+                }
+            }
         }
     }
 
@@ -204,6 +241,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         if (e.PropertyName == nameof(ComponentsSettingsViewModel.SelectedNode))
         {
             UpdatePreviewHighlight();
+            UpdatePreviewFocus();
         }
     }
 
@@ -216,7 +254,13 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         }
     }
 
-    private void PreviewBorder_OnSizeChanged(object sender, SizeChangedEventArgs e) => UpdateWallpaperBackgroundIfNeeded();
+    private void PreviewBorder_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateWallpaperBackgroundIfNeeded();
+        UpdatePreviewFocus();
+        UpdatePreviewHighlight(false);
+        UpdateHoverHighlight();
+    }
 
     private void ButtonMore_OnClick(object sender, RoutedEventArgs e)
     {
@@ -377,27 +421,187 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         };
     }
 
-    private void UpdatePreviewHighlight()
+    private void UpdatePreviewHighlight(bool animate = true)
     {
-        if (!SettingsService.Settings.IsComponentPreviewHighlightEnabled)
+        if (!SettingsService.Settings.IsComponentPreviewHighlightEnabled ||
+            TryGetNodePreviewBounds(ViewModel.SelectedNode) is not { } bounds)
         {
-            IslandPreviewHost.SetHighlight(null, null);
+            // 消失不做动画。
+            _highlightGeometry.BeginAnimation(RectangleGeometry.RectProperty, null);
+            SelectionHighlight.Visibility = Visibility.Collapsed;
+            _highlightVisible = false;
             return;
         }
 
-        switch (ViewModel.SelectedNode)
+        // 出现不做动画；选中项之间过渡做动画（仅非紧凑模式）。
+        if (_highlightVisible && animate && !ViewModel.IsCompact)
         {
-            case ComponentSettings component:
-                IslandPreviewHost.SetHighlight(component, null);
-                break;
-            case MainWindowLineSettings line:
-                var index = ComponentsService.CurrentComponents.Lines.IndexOf(line);
-                IslandPreviewHost.SetHighlight(null, index >= 0 ? index : (int?)null);
-                break;
-            default:
-                IslandPreviewHost.SetHighlight(null, null);
-                break;
+            _highlightGeometry.BeginAnimation(RectangleGeometry.RectProperty,
+                new RectAnimation(bounds, TimeSpan.FromMilliseconds(180))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
+                });
         }
+        else
+        {
+            _highlightGeometry.BeginAnimation(RectangleGeometry.RectProperty, null);
+            _highlightGeometry.Rect = bounds;
+        }
+
+        SelectionHighlight.Visibility = Visibility.Visible;
+        _highlightVisible = true;
+    }
+
+    private void TreeComponents_OnMouseMove(object sender, MouseEventArgs e)
+    {
+        // 命中整行（含行内留白），而不是只看文字那一小块。
+        var item = ComponentTreeHitTest.GetItem(TreeComponents, e.GetPosition(TreeComponents));
+        SetHoveredNode(item?.DataContext);
+    }
+
+    private void TreeComponents_OnMouseLeave(object sender, MouseEventArgs e) => SetHoveredNode(null);
+
+    private void SetHoveredNode(object? node)
+    {
+        if (ReferenceEquals(node, _hoveredNode))
+        {
+            return;
+        }
+
+        _hoveredNode = node;
+        UpdateHoverHighlight();
+    }
+
+    /// <summary>预览里实时指示鼠标所在的组件/行（蓝框，无动画）。</summary>
+    private void UpdateHoverHighlight()
+    {
+        if (TryGetNodePreviewBounds(_hoveredNode) is not { } bounds)
+        {
+            HoverHighlight.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        _hoverGeometry.Rect = bounds;
+        HoverHighlight.Visibility = Visibility.Visible;
+    }
+
+    /// <summary>
+    /// 聚焦预览：把选中组件/行所在的画布区域平移到预览中心并放大（画布含岛与壁纸，作为整体变换）。
+    /// 放大上限 150%，且保证选中元素放大后仍完整可见；未选中时带动画复位。
+    /// </summary>
+    private void UpdatePreviewFocus()
+    {
+        if (TryGetNodePreviewBounds(ViewModel.SelectedNode) is not { } bounds ||
+            PreviewCanvas.ActualWidth <= 0 || PreviewCanvas.ActualHeight <= 0)
+        {
+            AnimateFocus(1, 0, 0);
+            return;
+        }
+
+        var w = PreviewCanvas.ActualWidth;
+        var h = PreviewCanvas.ActualHeight;
+        // 放大后仍完整可见：元素缩放到不超出预览区，且不超过 150%。
+        var k = Math.Min(1.5, Math.Min(w / bounds.Width, h / bounds.Height));
+        var centerX = bounds.X + bounds.Width / 2;
+        var centerY = bounds.Y + bounds.Height / 2;
+        // 变换 p -> k*p + t，使元素中心落到预览中心。
+        AnimateFocus(k, w / 2 - k * centerX, h / 2 - k * centerY);
+    }
+
+    /// <summary>组件/行在 <see cref="PreviewCanvas"/> 坐标中的矩形（已含缩放与岛内偏移）。</summary>
+    private Rect? TryGetNodePreviewBounds(object? node)
+    {
+        if (TryGetNodeBounds(node) is not { } r || r.Width <= 0 || r.Height <= 0)
+        {
+            return null;
+        }
+
+        var scale = SettingsService.Settings.Scale <= 0 ? 1.0 : SettingsService.Settings.Scale;
+        var contentW = IslandPreviewHost.ContentSize.Width * scale;
+        var contentH = IslandPreviewHost.ContentSize.Height * scale;
+        var offX = Math.Max(0, (IslandPreviewHost.ActualWidth - contentW) / 2);
+        var offY = Math.Max(0, (IslandPreviewHost.ActualHeight - contentH) / 2);
+
+        GeneralTransform toCanvas;
+        try
+        {
+            toCanvas = IslandPreviewHost.TransformToAncestor(PreviewCanvas);
+        }
+        catch
+        {
+            return null;
+        }
+
+        var tl = toCanvas.Transform(new Point(r.Left * scale + offX, r.Top * scale + offY));
+        var br = toCanvas.Transform(new Point(r.Right * scale + offX, r.Bottom * scale + offY));
+        var bounds = new Rect(tl, br);
+        return bounds.Width > 0 && bounds.Height > 0 ? bounds : null;
+    }
+
+    private Rect? TryGetNodeBounds(object? node)
+    {
+        if (node is ComponentSettings component &&
+            IslandPreviewHost.TryGetComponentBounds(component, out var componentBounds))
+        {
+            return componentBounds;
+        }
+
+        if (node is MainWindowLineSettings line)
+        {
+            var index = ComponentsService.CurrentComponents.Lines.IndexOf(line);
+            if (index >= 0 && IslandPreviewHost.TryGetLineBounds(index, out var lineBounds))
+            {
+                return lineBounds;
+            }
+        }
+
+        return null;
+    }
+
+    private readonly RectangleGeometry _highlightGeometry = new();
+    private readonly RectangleGeometry _hoverGeometry = new();
+    private bool _highlightVisible;
+    private object? _hoveredNode;
+    private BitmapCache? _focusCache;
+    private int _focusAnimationToken;
+    private bool _hasFocusTarget;
+    private double _focusTargetScale = 1;
+    private double _focusTargetX;
+    private double _focusTargetY;
+
+    private void AnimateFocus(double scale, double tx, double ty)
+    {
+        // 布局反复触发时目标往往不变，重启动画会让它一直从头开始（看起来卡顿）。
+        if (_hasFocusTarget && Math.Abs(scale - _focusTargetScale) < 0.001 &&
+            Math.Abs(tx - _focusTargetX) < 0.5 && Math.Abs(ty - _focusTargetY) < 0.5)
+        {
+            return;
+        }
+
+        _hasFocusTarget = true;
+        _focusTargetScale = scale;
+        _focusTargetX = tx;
+        _focusTargetY = ty;
+
+        // 画布内是矢量/文字内容（课程表分段最多），变换动画时会被每帧重新光栅化；
+        // 动画期间缓存成位图，缩放/平移只作用于位图，动画结束后撤掉缓存恢复清晰。
+        PreviewCanvas.CacheMode ??= _focusCache ??= new BitmapCache();
+
+        var token = ++_focusAnimationToken;
+        var duration = TimeSpan.FromMilliseconds(260);
+        var ease = new CubicEase { EasingMode = EasingMode.EaseInOut };
+        var scaleX = new DoubleAnimation(scale, duration) { EasingFunction = ease };
+        scaleX.Completed += (_, _) =>
+        {
+            if (token == _focusAnimationToken)
+            {
+                PreviewCanvas.CacheMode = null;
+            }
+        };
+        FocusScale.BeginAnimation(ScaleTransform.ScaleXProperty, scaleX);
+        FocusScale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(scale, duration) { EasingFunction = ease });
+        FocusTranslate.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation(tx, duration) { EasingFunction = ease });
+        FocusTranslate.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(ty, duration) { EasingFunction = ease });
     }
 
     #endregion
@@ -424,6 +628,15 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private void ButtonToggleTree_OnClick(object sender, RoutedEventArgs e)
     {
+        // 紧凑模式下树与属性面板互斥：从属性面板返回树时清空选中，避免树里残留高亮。
+        if (ViewModel.IsCompact && !ViewModel.IsTreeVisible && ViewModel.SelectedNode is { } selected)
+        {
+            if (FindContainer(TreeComponents, selected) is { } container)
+            {
+                container.IsSelected = false;
+            }
+            ViewModel.SelectedNode = null;
+        }
         ViewModel.IsTreeVisible = !ViewModel.IsTreeVisible;
         ApplyTreeLayout();
     }
