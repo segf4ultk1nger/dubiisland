@@ -204,15 +204,16 @@ public partial class AttachedSettingsControlPresenter : UserControl, INotifyProp
         IsLoading = true;
         var contentId = ContentId;
         var contentIndex = ContentIndex;
+        var contentGuid = Guid.TryParse(contentId, out var parsedContentGuid) ? parsedContentGuid : Guid.Empty;
         var guid = ControlInfo.Guid;
         await Task.Run(() =>
         {
             ProfileAnalyzeService.Analyze();
-            NextItems = new ObservableCollection<AttachableObjectNode>(ProfileAnalyzeService.FindNextObjects(new AttachableObjectAddress(contentId, contentIndex),
-                guid.ToString())!);
+            NextItems = new ObservableCollection<AttachableObjectNode>(ProfileAnalyzeService.FindNextObjects(new AttachableObjectAddress(contentGuid, contentIndex),
+                guid)!);
             PreviousItems = new ObservableCollection<AttachableObjectNode>(ProfileAnalyzeService.FindPreviousObjects(
-                new AttachableObjectAddress(contentId, contentIndex),
-                guid.ToString())!);
+                new AttachableObjectAddress(contentGuid, contentIndex),
+                guid)!);
         });
         IsLoading = false;
     }
@@ -243,7 +244,9 @@ public partial class AttachedSettingsControlPresenter : UserControl, INotifyProp
         TargetObject.AttachedObjects[ControlInfo.Guid] = settings;
         AssociatedAttachedSettings = settings as IAttachedSettings;
 
-        if (!IsDependencyMode || ProfileAnalyzeService == null || !ProfileAnalyzeService.Nodes.TryGetValue(new AttachableObjectAddress(ContentId, ContentIndex), out var node))
+        if (!IsDependencyMode || ProfileAnalyzeService == null ||
+            !Guid.TryParse(ContentId, out var dependencyContentId) ||
+            !ProfileAnalyzeService.Nodes.TryGetValue(new AttachableObjectAddress(dependencyContentId, ContentIndex), out var node))
         {
             return;
         }

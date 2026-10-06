@@ -176,10 +176,10 @@ public partial class DebugPage : SettingsPageBase
         new CommonDialogBuilder().SetContent("输入要找的元素 GUID").AddConfirmAction().HasInput(true).ShowDialog(out var guid, Window.GetWindow(this));
         new CommonDialogBuilder().SetContent("输入要找的元素索引（没有填-1）").AddConfirmAction().HasInput(true).ShowDialog(out var index, Window.GetWindow(this));
         new CommonDialogBuilder().SetContent("输入要找的设置的GUID").AddConfirmAction().HasInput(true).ShowDialog(out var settingsId, Window.GetWindow(this));
-        if (int.TryParse(index, out var i))
+        if (int.TryParse(index, out var i) && Guid.TryParse(guid, out var parsedGuid) && Guid.TryParse(settingsId, out var parsedSettingsId))
         {
             ProfileAnalyzeService.Analyze();
-            var obj = ProfileAnalyzeService.FindNextObjects(new AttachableObjectAddress(guid.ToLower(), i), settingsId);
+            var obj = ProfileAnalyzeService.FindNextObjects(new AttachableObjectAddress(parsedGuid, i), parsedSettingsId);
             CommonDialog.ShowInfo(string.Join("\n", obj));
         }
     }

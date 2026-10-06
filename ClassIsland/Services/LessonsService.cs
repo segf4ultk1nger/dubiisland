@@ -144,7 +144,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
 
     public ClassPlan? GetClassPlanByDate(DateTime date) => GetClassPlanByDate(date, out _);
 
-    public ClassPlan? GetClassPlanByDate(DateTime date, out string? guid)
+    public ClassPlan? GetClassPlanByDate(DateTime date, out Guid? guid)
     {
         guid = null;
         // 加载临时层（弃用）
@@ -157,11 +157,10 @@ public class LessonsService : ObservableRecipient, ILessonsService
         //}
         // 加载预定的临时课表
         if (Profile.OrderedSchedules.TryGetValue(date.Date, out var orderedScheduleInfo)
-            && Guid.TryParse(orderedScheduleInfo.ClassPlanId, out var orderedClassPlanId)
-            && Profile.ClassPlans.TryGetValue(orderedClassPlanId, out var orderedClassPlan)
+            && Profile.ClassPlans.TryGetValue(orderedScheduleInfo.ClassPlanId, out var orderedClassPlan)
             && (!orderedClassPlan.IsOverlay || Profile.IsOverlayClassPlanEnabled))
         {
-            guid = orderedClassPlanId.ToString();
+            guid = orderedScheduleInfo.ClassPlanId;
             return orderedClassPlan;
         }
         // 加载临时课表
@@ -169,7 +168,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
             Profile.ClassPlans.TryGetValue(Profile.TempClassPlanId ?? Guid.Empty, out var tempClassPlan) &&
             Profile.TempClassPlanSetupTime.Date >= date.Date)
         {
-            guid = Profile.TempClassPlanId?.ToString();
+            guid = Profile.TempClassPlanId;
             return tempClassPlan;
         }
         // 加载课表
@@ -201,7 +200,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
             .Where(p => CheckClassPlan(p.Value, date))
             .Select(p => p);
         var classPlanKvp = a.FirstOrDefault();
-        guid = classPlanKvp.Key.ToString();
+        guid = classPlanKvp.Key;
         return classPlanKvp.Value;
     }
 
@@ -546,8 +545,7 @@ public class LessonsService : ObservableRecipient, ILessonsService
 
         CurrentClassPlan = GetClassPlanByDate(currentTime);
         var orderedClassPlanId = Profile.OrderedSchedules.TryGetValue(currentTime.Date, out var orderedSchedule)
-            && Guid.TryParse(orderedSchedule.ClassPlanId, out var parsedId)
-            ? parsedId
+            ? orderedSchedule.ClassPlanId
             : (Guid?)null;
         if (orderedClassPlanId != null 
             && Profile.ClassPlans.TryGetValue(orderedClassPlanId.Value, out var classPlan)

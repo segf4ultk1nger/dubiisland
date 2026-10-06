@@ -507,7 +507,7 @@ public partial class ProfileSettingsWindow : MyWindow
 
             var kvp = ((KeyValuePair<Guid, ClassPlan>)ListViewClassPlans.SelectedItem);
             MainViewModel.Profile.ClassPlans.Remove(kvp.Key);
-            foreach (var schedule in MainViewModel.Profile.OrderedSchedules.Where(x => x.Value.ClassPlanId == kvp.Key.ToString()).ToList())
+            foreach (var schedule in MainViewModel.Profile.OrderedSchedules.Where(x => x.Value.ClassPlanId == kvp.Key).ToList())
             {
                 MainViewModel.Profile.OrderedSchedules.Remove(schedule.Key);
             }
@@ -1291,31 +1291,30 @@ public partial class ProfileSettingsWindow : MyWindow
     {
         targetGuid = null;
         var baseClassPlan = LessonsService.GetClassPlanByDate(dateTime, out var baseGuid);
-        if (baseClassPlan == null || !Guid.TryParse(baseGuid, out var baseGuidValue))
+        if (baseClassPlan == null || baseGuid == null)
         {
             return null;
         }
 
         if (!overlay || baseClassPlan.IsOverlay)
         {
-            targetGuid = baseGuidValue;
+            targetGuid = baseGuid;
             return baseClassPlan;
         }
 
         var orderedClassPlanId = ProfileService.Profile.OrderedSchedules.TryGetValue(dateTime, out var orderedSchedule)
-            && Guid.TryParse(orderedSchedule.ClassPlanId, out var parsedId)
-            ? parsedId
+            ? orderedSchedule.ClassPlanId
             : (Guid?)null;
         if (orderedClassPlanId != null
             && ProfileService.Profile.ClassPlans.TryGetValue(orderedClassPlanId.Value, out var classPlan)
             && classPlan.IsOverlay)
         {
-            targetGuid = baseGuidValue;
+            targetGuid = baseGuid;
             return baseClassPlan;
         }
 
         targetGuid =
-            ProfileService.CreateTempClassPlan(baseGuidValue, enableDateTime: dateTime);
+            ProfileService.CreateTempClassPlan(baseGuid.Value, enableDateTime: dateTime);
         return targetGuid == null ? null : ProfileService.Profile.ClassPlans[targetGuid.Value];
     }
 

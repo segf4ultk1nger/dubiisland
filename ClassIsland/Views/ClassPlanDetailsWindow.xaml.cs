@@ -105,23 +105,23 @@ public partial class ClassPlanDetailsWindow
         var nodes = new Dictionary<AttachableObjectAddress, AttachableSettingsObject>()
         {
             {
-                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId.ToString(),
+                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId,
                     ViewModel.ClassPlan.TimeLayout.Layouts.IndexOf(ViewModel.SelectedLesson.TimeLayoutItem)),
                 ViewModel.SelectedLesson.TimeLayoutItem
             },
             {
                 new AttachableObjectAddress(ProfileService.Profile.ClassPlans
-                    .FirstOrDefault(x => x.Value == ViewModel.ClassPlan).Key.ToString()),
+                    .FirstOrDefault(x => x.Value == ViewModel.ClassPlan).Key),
                 ViewModel.ClassPlan
             },
             {
-                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId.ToString()), ViewModel.ClassPlan.TimeLayout
+                new AttachableObjectAddress(ViewModel.ClassPlan.TimeLayoutId), ViewModel.ClassPlan.TimeLayout
             },
         };
         if (ViewModel.SelectedLesson.TimeLayoutItem.TimeType != 1)
         {
             nodes.Add(
-                new AttachableObjectAddress(ViewModel.SelectedLesson.SubjectId.ToString()), ViewModel.SelectedLesson.Subject
+                new AttachableObjectAddress(ViewModel.SelectedLesson.SubjectId), ViewModel.SelectedLesson.Subject
             );
         }
 

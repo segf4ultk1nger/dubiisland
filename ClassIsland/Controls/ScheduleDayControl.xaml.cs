@@ -49,11 +49,11 @@ public partial class ScheduleDayControl : UserControl
     }
 
     public static readonly DependencyProperty SelectedClassPlanIdProperty = DependencyProperty.Register(
-        nameof(SelectedClassPlanId), typeof(string), typeof(ScheduleDayControl), new PropertyMetadata(""));
+        nameof(SelectedClassPlanId), typeof(Guid), typeof(ScheduleDayControl), new PropertyMetadata(Guid.Empty));
 
-    public string SelectedClassPlanId
+    public Guid SelectedClassPlanId
     {
-        get { return (string)GetValue(SelectedClassPlanIdProperty); }
+        get { return (Guid)GetValue(SelectedClassPlanIdProperty); }
         set { SetValue(SelectedClassPlanIdProperty, value); }
     }
 
@@ -106,7 +106,7 @@ public partial class ScheduleDayControl : UserControl
     private void ButtonConfirmTempClassPlan_OnClick(object sender, RoutedEventArgs e)
     {
         var date = Date;
-        if (string.IsNullOrWhiteSpace(SelectedClassPlanId))
+        if (SelectedClassPlanId == Guid.Empty)
         {
             IsClassPlanSelectionPopupOpen = false;
             return;
@@ -124,7 +124,7 @@ public partial class ScheduleDayControl : UserControl
     {
         var date = Date;
         ProfileService.Profile.OrderedSchedules.Remove(date);
-        SelectedClassPlanId = "";
+        SelectedClassPlanId = Guid.Empty;
         IsClassPlanSelectionPopupOpen = false;
         UpdateData();
         e.Handled = true;
