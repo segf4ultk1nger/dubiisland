@@ -39,6 +39,8 @@
                    Icon="/Assets/AppLogo.ico"
                    Closing="ProfileSettingsWindow_OnClosing"
                    MinWidth="750"
+                   Width="1040"
+                   Height="680"
                    Button.Click="GlobalUpdated"
                    ListBox.SelectionChanged="GlobalUpdated"
                    dialogs:DialogService.Identifier="{Binding ViewModel.DialogHostId, Mode=OneWay}">
@@ -49,6 +51,20 @@
                     Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ContentSave}, Size=16}"/>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="MyDrawerHost"
+                        Position="Right"
+                        Width="360"
+                        IsModal="True"
+                        TitleVisibility="Collapsed"
+                        IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}"
+                        IsOpenChanged="DrawerHost_OnDrawerClosing">
+                <ContentControl Content="{Binding ViewModel.DrawerContent, Mode=OneWay}"
+                                HorizontalContentAlignment="Stretch"/>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
     <controls1:MyWindow.InputBindings>
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveProfileCommand}"/>
     </controls1:MyWindow.InputBindings>
@@ -2531,17 +2547,6 @@
                     </Grid>
 
                 </Grid>
-                <mah:FlyoutsControl>
-                    <mah:Flyout x:Name="MyDrawerHost"
-                                Position="Right"
-                                Width="360"
-                                IsModal="True"
-                                TitleVisibility="Collapsed"
-                                IsOpen="{Binding ViewModel.IsDrawerOpen, Mode=TwoWay}"
-                                IsOpenChanged="DrawerHost_OnDrawerClosing">
-                        <ContentControl Content="{Binding ViewModel.DrawerContent, Mode=OneWay}"/>
-                    </mah:Flyout>
-                </mah:FlyoutsControl>
             </Grid>
 
         <!-- 顶层元素 -->
