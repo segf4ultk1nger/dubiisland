@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Abstractions.Services.Management;
+using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.Models.Profile;
 
 using Microsoft.Extensions.Logging;
@@ -133,6 +134,13 @@ public class ProfileService : IProfileService, INotifyPropertyChanged
         var r = LoadConfig<Profile>(path);
 
         Profile = r;
+#pragma warning disable CS0618
+        if (ProfileMigrationHelper.MigrateV1TimeLayoutItems(Profile))
+        {
+            Logger.LogInformation("已迁移旧格式档案：{}", path);
+            SaveProfile(filename);
+        }
+#pragma warning restore CS0618
         if (ManagementService.IsManagementEnabled)
         {
             await MergeManagementProfileAsync();
