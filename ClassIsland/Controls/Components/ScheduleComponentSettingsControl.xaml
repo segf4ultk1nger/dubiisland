@@ -7,273 +7,190 @@
                   xmlns:local="clr-namespace:ClassIsland.Controls.Components"
                   xmlns:models="clr-namespace:ClassIsland.Models"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
-        xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
+                  xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
+                  xmlns:dialogs="clr-namespace:ClassIsland.Core.Services;assembly=ClassIsland.Core"
                   xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                   xmlns:system="clr-namespace:System;assembly=System.Runtime"
                   mc:Ignorable="d"
-                  d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
-    <ci:ComponentBase.Resources>
-    </ci:ComponentBase.Resources>
-    <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ScheduleComponentSettingsControl}}">
-        <ScrollViewer>
-            <StackPanel>
-                <!-- 附加设置覆盖提示 -->
-                <Border Background="{DynamicResource MahApps.Brushes.Control.Background}" Margin="0 0 0 4">
-                    <Grid>
-                        <DockPanel Margin="8 0 4 0">
-                            <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                    DockPanel.Dock="Right"
-                                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                    Click="ButtonShowAttachedSettings_OnClick">
-                                <ci:IconText Kind="{x:Static ciCore:IconGlyphs.MoreCircleOutline}" Text="查看…"/>
-                            </Button>
-                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.LayersOutline}"
-                                                     Margin="0 0 4 0"
-                                                     VerticalAlignment="Center"/>
-                            <TextBlock Text="此处的设置可以在档案设置中被附加设置覆盖。"
-                                       TextWrapping="Wrap"
-                                       VerticalAlignment="Center"/>
-                        </DockPanel>
-                    </Grid>
-                </Border>
-                <!-- 显示时间点附加信息 -->
-                <Border Margin="0 0 0 6">
-                    <Expander Background="Transparent"
-                              IsExpanded="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                        <Expander.Header>
-                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TableSearch}"
-                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                Header="显示时间点附加信息"
-                                                Description="显示当前时间点的附加信息。"
-                                                IsOn="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}"
-                                                Margin="-12 0" />
-                        </Expander.Header>
-                        <Grid Margin="36 0 48 12"
-                              IsEnabled="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=OneWay}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="0" Text="要显示的附加信息" VerticalAlignment="Center" />
-                            <ComboBox Grid.Row="0" Grid.Column="1"
-                                      VerticalAlignment="Center"
-                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                      SelectedIndex="{Binding Settings.ExtraInfoType}"
-                                      HorizontalContentAlignment="Left"
-                                      HorizontalAlignment="Right">
-                                <ComboBoxItem HorizontalContentAlignment="Left">
-                                    <TextBlock Text="时间点持续时间" />
-                                </ComboBoxItem>
-                                <ComboBoxItem HorizontalContentAlignment="Left">
-                                    <TextBlock Text="已过时间/持续时间" />
-                                </ComboBoxItem>
-                                <ComboBoxItem HorizontalContentAlignment="Left">
-                                    <TextBlock Text="剩余时间/持续时间" />
-                                </ComboBoxItem>
-                                <ComboBoxItem HorizontalContentAlignment="Left">
-                                    <TextBlock Text="已过时间百分比" />
-                                </ComboBoxItem>
-                                <ComboBoxItem HorizontalContentAlignment="Left">
-                                    <TextBlock Text="剩余时间" />
-                                </ComboBoxItem>
-                                <ComboBoxItem HorizontalContentAlignment="Left">
-                                    <TextBlock Text="倒计时" />
-                                </ComboBoxItem>
-                            </ComboBox>
+                  d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ScheduleComponentSettingsControl}}">
+        <!-- 附加设置覆盖提示 -->
+        <TextBlock TextWrapping="Wrap" Foreground="#FFE05555" FontSize="14" Margin="12 0 0 8">
+            <Run>*此处设置可以在档案设置中被附加设置覆盖。</Run>
+            <Hyperlink Foreground="#FFE05555" Click="ButtonShowAttachedSettings_OnClick">查看覆盖项</Hyperlink>
+        </TextBlock>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="0 5 0 -3"
-                                       Text="显示精确倒计时" VerticalAlignment="Center"
-                                           Opacity="0.75">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Settings.ExtraInfoType}" Value="4">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+        <!-- 显示时间点附加信息 -->
+        <ci:SettingsCard Header="显示时间点附加信息"
+                         Description="显示当前时间点的附加信息。"
+                         IsOn="{Binding Settings.ShowExtraInfoOnTimePoint, Mode=TwoWay}" />
+        <StackPanel Margin="0 0 0 6"
+                    Visibility="{Binding Settings.ShowExtraInfoOnTimePoint, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ci:SettingsCard Header="要显示的附加信息">
+                <ci:SettingsCard.Switcher>
+                    <ComboBox VerticalAlignment="Center"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              SelectedIndex="{Binding Settings.ExtraInfoType}"
+                              HorizontalContentAlignment="Left"
+                              MinWidth="160">
+                        <ComboBoxItem HorizontalContentAlignment="Left">
+                            <TextBlock Text="时间点持续时间" />
+                        </ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">
+                            <TextBlock Text="已过时间/持续时间" />
+                        </ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">
+                            <TextBlock Text="剩余时间/持续时间" />
+                        </ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">
+                            <TextBlock Text="已过时间百分比" />
+                        </ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">
+                            <TextBlock Text="剩余时间" />
+                        </ComboBoxItem>
+                        <ComboBoxItem HorizontalContentAlignment="Left">
+                            <TextBlock Text="倒计时" />
+                        </ComboBoxItem>
+                    </ComboBox>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+            <ci:SettingsCard Header="显示精确倒计时">
+                <ci:SettingsCard.Style>
+                    <Style TargetType="ci:SettingsCard">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Settings.ExtraInfoType}" Value="4">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ci:SettingsCard.Style>
+                <ci:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="当剩余时间不足" VerticalAlignment="Center" Opacity="0.75"/>
+                        <mah:NumericUpDown Value="{Binding Settings.ExtraInfo4ShowSecondsSeconds}"
+                                           Minimum="0" Interval="1" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="6 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        <TextBlock Text="秒时显示" VerticalAlignment="Center" Margin="6 0 0 0" Opacity="0.75"/>
+                    </StackPanel>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+        </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Margin="0 5 0 -3" HorizontalAlignment="Right">
-                                <StackPanel.Style>
-                                    <Style TargetType="StackPanel">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Settings.ExtraInfoType}" Value="4">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </Style>
-                                </StackPanel.Style>
-                                
-                                <TextBlock Text="当剩余时间不足" VerticalAlignment="Center"
-                                           Opacity="0.75"/>
-                                <TextBox Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                         Text="{Binding Settings.ExtraInfo4ShowSecondsSeconds, Converter={StaticResource IntToStringConverter}}"
-                                         MinWidth="75" Margin="3 0 0 0" TextAlignment="Center"/>
-                            </StackPanel>
-                        </Grid>
-                    </Expander>
-                </Border>
-                <!-- 时间点结束倒计时 -->
-                <Border Margin="0 0 0 6">
-                    <Expander Background="Transparent"
-                              IsExpanded="{Binding Settings.IsCountdownEnabled, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                        <Expander.Header>
-                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockEnd}"
-                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                Header="时间点结束倒计时"
-                                                Description="时间点结束前显示倒计时。"
-                                                IsOn="{Binding Settings.IsCountdownEnabled, Mode=TwoWay}"
-                                                Margin="-12 0" />
-                        </Expander.Header>
-                        <Grid Margin="36 0 48 12"
-                              IsEnabled="{Binding Settings.IsCountdownEnabled, Mode=OneWay}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="时间点结束倒计时时长" VerticalAlignment="Center" />
-                            <ci:NumbericTextBox Grid.Row="0" MaxValue="36000" MinValue="0" Width="100"
-                                                Grid.Column="1"
-                                                VerticalAlignment="Center"
-                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                Style="{StaticResource MahApps.Styles.TextBox}"
-                                                Text="{Binding Settings.CountdownSeconds, Mode=TwoWay, Converter={StaticResource IntToStringConverter}}" />
+        <!-- 时间点结束倒计时 -->
+        <ci:SettingsCard Header="时间点结束倒计时"
+                         Description="时间点结束前显示倒计时。"
+                         IsOn="{Binding Settings.IsCountdownEnabled, Mode=TwoWay}" />
+        <StackPanel Margin="0 0 0 6"
+                    Visibility="{Binding Settings.IsCountdownEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ci:SettingsCard Header="时间点结束倒计时时长">
+                <ci:SettingsCard.Switcher>
+                    <StackPanel Orientation="Horizontal">
+                        <Slider Width="220" Minimum="0" Maximum="36000" VerticalAlignment="Center"
+                                Value="{Binding Settings.CountdownSeconds}"
+                                AutoToolTipPlacement="BottomRight" TickFrequency="60" TickPlacement="None"
+                                IsSnapToTickEnabled="True" AutoToolTipPrecision="0" />
+                        <mah:NumericUpDown Value="{Binding Settings.CountdownSeconds}"
+                                           Minimum="0" Maximum="36000" Interval="60" StringFormat="0"
+                                           MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                        <TextBlock Text="秒" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                    </StackPanel>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+            <ci:SettingsCard Header="使用模糊倒计时"
+                             Description="以大约时间显示，不显示精确的秒数。"
+                             IsOn="{Binding Settings.IsNonExactCountdownEnabled, Mode=TwoWay}" />
+        </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                        Margin="0 8 0 0">
-                                <mah:ToggleSwitch OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsNonExactCountdownEnabled}"/>
-                                <TextBlock Text="使用模糊倒计时" Margin="4 0 0 0"/>
-                            </StackPanel>
-                        </Grid>
-                    </Expander>
-                </Border>
-                <!-- 上课时仅显示当前课程 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
-                                 Header="上课时仅显示当前课程"
-                                 Description="上课时间点只显示当前时间点。"
-                                 IsOn="{Binding Settings.ShowCurrentLessonOnlyOnClass, Mode=TwoWay}"
-                                 Margin="0 0 0 6" />
-                <!-- 不显示已结束的课程 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.HideOutline}"
-                 Header="不显示已结束的课程"
-                 Description="隐藏已结束课程，仅显示当前及未开始课程。"
-                 IsOn="{Binding Settings.HideFinishedClass, Mode=TwoWay}"
-                 Margin="0 0 0 6" />
-                <!-- 标记换课课程 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.SwapHorizontal}"
-                                 Header="标记换课课程"
-                                 Description="高亮标记临时层中通过“换课”修改的课程。"
-                                 IsOn="{Binding Settings.HighlightChangedClass, Mode=TwoWay}"
-                                 Margin="0 0 0 6" />
-                <!-- 课程表文本间距 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ArrowExpandHorizontal}"
-                                 Header="课程表文本间距"
-                                 Description="使课程表显示更紧凑或宽松。"
-                                 Margin="0 0 0 6">
-                    <ci:SettingsCard.Switcher>
-                        <Slider Width="150" Minimum="0.3" Maximum="1"
-                                Value="{Binding Settings.ScheduleSpacing}"
-                                TickFrequency="0.05" IsSnapToTickEnabled="True"
-                                AutoToolTipPrecision="2"
-                                AutoToolTipPlacement="BottomRight"/>
-                    </ci:SettingsCard.Switcher>
-                </ci:SettingsCard>
-                <!-- 无课程时显示占位符 -->
-                <Border Margin="0 0 0 6">
-                    <Expander Background="Transparent"
-                              IsExpanded="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=OneWay}"
-                              TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                        <Expander.Header>
-                            <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.FileChartOutline}"
-                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                Header="无课程时显示占位符"
-                                                Description="无课表或当日课程结束且不显示次日课表时显示占位符。"
-                                                IsOn="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=TwoWay}"
-                                                Margin="-12 0" />
-                        </Expander.Header>
-                        <StackPanel Margin="36 0 48 12"
-                                    IsEnabled="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=OneWay}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="0" Text="当日没有课程的占位符内容" VerticalAlignment="Center" />
-                                <ComboBox MinWidth="100"
-                                      MaxWidth="300"
-                                      Grid.Column="1"
-                                      VerticalAlignment="Center"
-                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                      IsEditable="True"
-                                      Text="{Binding Settings.PlaceholderTextNoClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                    <system:String>今天没有课程。</system:String>
-                                    <system:String>无</system:String>
-                                    <system:String>[ ]</system:String>
-                                </ComboBox>
-                            </Grid>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="0" Text="当日课程结束的占位符内容" VerticalAlignment="Center" />
-                                <ComboBox MinWidth="100"
-                                      MaxWidth="300"
-                                      Grid.Column="1"
-                                      VerticalAlignment="Center"
-                                      Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                      IsEditable="True"
-                                      Text="{Binding Settings.PlaceholderTextAllClassEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                    <system:String>今日课程已全部结束。</system:String>
-                                    <system:String>无</system:String>
-                                    <system:String>[ ]</system:String>
-                                </ComboBox>
-                            </Grid>
-                        </StackPanel>
-                    </Expander>
-                </Border>
-                <!-- 放学后显示明天课表 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CalendarOutline}"
-                                 Header="显示明天课表"
-                                 Description="设置什么时候显示明天课表。"
-                                 Margin="0 0 0 6">
-                    <ci:SettingsCard.Switcher>
-                        <Grid>
-                            <ComboBox SelectedIndex="{Binding Settings.TomorrowScheduleShowMode}">
-                                <ComboBoxItem>不显示</ComboBoxItem>
-                                <ComboBoxItem>放学后显示</ComboBoxItem>
-                                <ComboBoxItem>总是显示</ComboBoxItem>
-                            </ComboBox>
-                        </Grid>
-                    </ci:SettingsCard.Switcher>
-                </ci:SettingsCard>
-                <Button Margin="0 0 0 6" HorizontalAlignment="Left"
-                        Style="{StaticResource MahApps.Styles.Button.Flat}"
-                        Click="ButtonImportLegacySettings_OnClick"
-                        Visibility="{Binding SettingsService.Settings.IsMigratedFromv1_4, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Import}" Text="导入旧版设置"/>
-                </Button>
+        <!-- 上课时仅显示当前课程 -->
+        <ci:SettingsCard Header="上课时仅显示当前课程"
+                         Description="上课时间点只显示当前时间点。"
+                         IsOn="{Binding Settings.ShowCurrentLessonOnlyOnClass, Mode=TwoWay}" />
+        <!-- 不显示已结束的课程 -->
+        <ci:SettingsCard Header="不显示已结束的课程"
+                         Description="隐藏已结束课程，仅显示当前及未开始课程。"
+                         IsOn="{Binding Settings.HideFinishedClass, Mode=TwoWay}" />
+        <!-- 标记换课课程 -->
+        <ci:SettingsCard Header="标记换课课程"
+                         Description="高亮标记临时层中通过“换课”修改的课程。"
+                         IsOn="{Binding Settings.HighlightChangedClass, Mode=TwoWay}" />
+        <!-- 课程表文本间距 -->
+        <ci:SettingsCard Header="课程表文本间距"
+                         Description="使课程表显示更紧凑或宽松。">
+            <ci:SettingsCard.Switcher>
+                <StackPanel Orientation="Horizontal">
+                    <Slider Width="220" Minimum="0.3" Maximum="1" VerticalAlignment="Center"
+                            Value="{Binding Settings.ScheduleSpacing}"
+                            AutoToolTipPlacement="BottomRight" TickFrequency="0.05" TickPlacement="None"
+                            IsSnapToTickEnabled="True" AutoToolTipPrecision="2" />
+                    <mah:NumericUpDown Value="{Binding Settings.ScheduleSpacing}"
+                                       Minimum="0.3" Maximum="1" Interval="0.05" StringFormat="0.00"
+                                       MinWidth="100" MinHeight="32" FontSize="14" Margin="12 0 0 0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                </StackPanel>
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+
+        <!-- 无课程时显示占位符 -->
+        <ci:SettingsCard Header="无课程时显示占位符"
+                         Description="无课表或当日课程结束且不显示次日课表时显示占位符。"
+                         IsOn="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Mode=TwoWay}" />
+        <StackPanel Margin="0 0 0 6"
+                    Visibility="{Binding Settings.ShowPlaceholderOnEmptyClassPlan, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ci:SettingsCard Header="当日没有课程的占位符内容">
+                <ci:SettingsCard.Switcher>
+                    <ComboBox MinWidth="100"
+                              MaxWidth="300"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              IsEditable="True"
+                              Text="{Binding Settings.PlaceholderTextNoClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <system:String>今天没有课程。</system:String>
+                        <system:String>无</system:String>
+                        <system:String>[ ]</system:String>
+                    </ComboBox>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+            <ci:SettingsCard Header="当日课程结束的占位符内容">
+                <ci:SettingsCard.Switcher>
+                    <ComboBox MinWidth="100"
+                              MaxWidth="300"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              IsEditable="True"
+                              Text="{Binding Settings.PlaceholderTextAllClassEnded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <system:String>今日课程已全部结束。</system:String>
+                        <system:String>无</system:String>
+                        <system:String>[ ]</system:String>
+                    </ComboBox>
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
+        </StackPanel>
+
+        <!-- 放学后显示明天课表 -->
+        <ci:SettingsCard Header="显示明天课表"
+                         Description="设置什么时候显示明天课表。">
+            <ci:SettingsCard.Switcher>
+                <ComboBox SelectedIndex="{Binding Settings.TomorrowScheduleShowMode}">
+                    <ComboBoxItem>不显示</ComboBoxItem>
+                    <ComboBoxItem>放学后显示</ComboBoxItem>
+                    <ComboBoxItem>总是显示</ComboBoxItem>
+                </ComboBox>
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+        <Button Margin="0 0 0 6" HorizontalAlignment="Left"
+                Style="{StaticResource MahApps.Styles.Button.Flat}"
+                Click="ButtonImportLegacySettings_OnClick"
+                Visibility="{Binding SettingsService.Settings.IsMigratedFromv1_4, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <remix:PackIconRemixIcon Kind="ImportLine" Width="16" Height="16" VerticalAlignment="Center"/>
+                <TextBlock Text="导入旧版设置" VerticalAlignment="Center" Margin="6 0 0 0"/>
             </StackPanel>
-        </ScrollViewer>
-    </Grid>
+        </Button>
+    </StackPanel>
 </ci:ComponentBase>

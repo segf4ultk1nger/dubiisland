@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
@@ -84,6 +86,44 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     private void TreeComponents_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
         ViewModel.SelectedNode = e.NewValue;
+    }
+
+    /// <summary>行背景铺满整宽，缩进由层级换算的 Padding 模拟。</summary>
+    private void ComponentTreeItem_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not TreeViewItem item)
+            return;
+        var depth = 0;
+        for (var parent = ItemsControl.ItemsControlFromItemContainer(item);
+             parent is TreeViewItem parentItem;
+             parent = ItemsControl.ItemsControlFromItemContainer(parentItem))
+        {
+            depth++;
+        }
+
+        item.Padding = new Thickness(8 + depth * 18, 0, 8, 0);
+    }
+
+    /// <summary>把 ListBox 截获的滚轮事件转给外层 ScrollViewer，避免鼠标悬停在对齐按钮上时无法滚动页面。</summary>
+    private void UIElement_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (e.Handled)
+            return;
+        e.Handled = true;
+        var scrollViewer = FindAncestorScrollViewer(sender as DependencyObject);
+        scrollViewer?.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta / 3.0);
+    }
+
+    private static ScrollViewer? FindAncestorScrollViewer(DependencyObject? d)
+    {
+        while (d != null)
+        {
+            if (d is ScrollViewer scrollViewer)
+                return scrollViewer;
+            d = VisualTreeHelper.GetParent(d);
+        }
+
+        return null;
     }
 
     private void ContainerComponentsSource_OnFilter(object sender, FilterEventArgs e)

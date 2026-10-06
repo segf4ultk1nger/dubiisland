@@ -44,8 +44,22 @@
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Margin="0 1 0 0" 
                        Opacity="0.75"
-                       Style="{StaticResource DescriptionTextBlockStyle}"
-                       Text="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
+                       Text="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource DescriptionTextBlockStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                                         Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                                         Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
 
             <!-- switcher -->
             <ContentPresenter

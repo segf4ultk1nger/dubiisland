@@ -6,94 +6,80 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls.Components"
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
+             xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
              xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+             d:DesignHeight="450" d:DesignWidth="800">
     <ci:ComponentBase.Resources>
         <ci:RulesetControl x:Key="RulesetControl"/>
     </ci:ComponentBase.Resources>
-    <ScrollViewer>
-        <StackPanel
-            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:SlideComponentSettingsControl}}">
-            <StackPanel.Resources>
-                
-            </StackPanel.Resources>
-            <!-- 轮换间隔 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.TimerOutline}"
-                             Header="轮换间隔"
-                             Description="组件自动轮换的间隔时间"
-                             Margin="0 0 0 6">
-                <ci:SettingsCard.Switcher>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox
-                                 Width="100"
-                                 Text="{Binding Settings.SlideSeconds, Converter={StaticResource IntToStringConverter}}" />
-                    </StackPanel>
-                </ci:SettingsCard.Switcher>
-            </ci:SettingsCard>
-            <!-- 轮换模式 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AutoMode}"
-                             Header="轮换模式"
-                             Description="设定轮换组件的行为"
-                             Margin="0 0 0 6">
-                <ci:SettingsCard.Switcher>
-                    <StackPanel Orientation="Horizontal">
-                        <ComboBox SelectedIndex="{Binding Settings.SlideMode}"
-                                  Width="100">
-                            <ComboBoxItem>循环</ComboBoxItem>
-                            <ComboBoxItem>随机</ComboBoxItem>
-                            <ComboBoxItem>往复</ComboBoxItem>
-                        </ComboBox>
-                    </StackPanel>
-                </ci:SettingsCard.Switcher>
-            </ci:SettingsCard>
-            <!-- 满足规则时暂停 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Pause}"
-                             Header="满足规则时暂停"
-                             Description="规则满足时暂停轮播，保留当前组件。"
-                             Margin="0 0 0 6">
-                <ci:SettingsCard.Switcher>
-                    <StackPanel Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                Click="ButtonOpenPauseRuleset_OnClick"
-                                Visibility="{Binding Settings.IsPauseOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
-                        </Button>
-                        <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsPauseOnRuleEnabled}"/>
-                    </StackPanel>
-                </ci:SettingsCard.Switcher>
-            </ci:SettingsCard>
-            <!-- 满足规则时停止 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
-                             Header="满足规则时停止"
-                             Description="规则满足时停止轮播并回到首个组件，优先于暂停规则。"
-                             Margin="0 0 0 6">
-                <ci:SettingsCard.Switcher>
-                    <StackPanel Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                Click="ButtonOpenStopRuleset_OnClick"
-                                Visibility="{Binding Settings.IsStopOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
-                        </Button>
-                        <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsStopOnRuleEnabled}"/>
-                    </StackPanel>
-                </ci:SettingsCard.Switcher>
-            </ci:SettingsCard>
-            <!-- 启用动画 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AnimationPlayOutline}"
-                             Header="启用动画"
-                             Description="切换组件时播放过渡动画。"
-                             Visibility="{Binding Settings.UseOldPresentingBehavior, Converter={StaticResource InverseBoolToVisConverter}}"
-                             IsOn="{Binding Settings.IsAnimationEnabled, Mode=TwoWay}"
-                             Margin="0 0 0 6" />
-            <!-- 使用旧版轮播行为 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.UndoVariant}"
-                               Header="使用旧版轮播行为"
-                               Description="轮播到对应组件时才加载内容；组件异常时可回滚旧版行为。"
-                               IsOn="{Binding Settings.UseOldPresentingBehavior, Mode=TwoWay}"
-                               Margin="0 0 0 6" />
-        </StackPanel>
-    </ScrollViewer>
+    <StackPanel
+        DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:SlideComponentSettingsControl}}">
+        <!-- 轮换间隔 -->
+        <ci:SettingsCard Header="轮换间隔"
+                         Description="组件自动轮换的间隔时间">
+            <ci:SettingsCard.Switcher>
+                <TextBox
+                         Width="100"
+                         Text="{Binding Settings.SlideSeconds, Converter={StaticResource IntToStringConverter}}" />
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+        <!-- 轮换模式 -->
+        <ci:SettingsCard Header="轮换模式"
+                         Description="设定轮换组件的行为">
+            <ci:SettingsCard.Switcher>
+                <ComboBox SelectedIndex="{Binding Settings.SlideMode}"
+                          Width="100">
+                    <ComboBoxItem>循环</ComboBoxItem>
+                    <ComboBoxItem>随机</ComboBoxItem>
+                    <ComboBoxItem>往复</ComboBoxItem>
+                </ComboBox>
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+        <!-- 满足规则时暂停 -->
+        <ci:SettingsCard Header="满足规则时暂停"
+                         Description="规则满足时暂停轮播，保留当前组件。">
+            <ci:SettingsCard.Switcher>
+                <StackPanel Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
+                            Click="ButtonOpenPauseRuleset_OnClick"
+                            Visibility="{Binding Settings.IsPauseOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="PriceTag3Line" Width="16" Height="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="编辑规则集…" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsPauseOnRuleEnabled}"/>
+                </StackPanel>
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+        <!-- 满足规则时停止 -->
+        <ci:SettingsCard Header="满足规则时停止"
+                         Description="规则满足时停止轮播并回到首个组件，优先于暂停规则。">
+            <ci:SettingsCard.Switcher>
+                <StackPanel Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
+                            Click="ButtonOpenStopRuleset_OnClick"
+                            Visibility="{Binding Settings.IsStopOnRuleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="PriceTag3Line" Width="16" Height="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="编辑规则集…" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.IsStopOnRuleEnabled}"/>
+                </StackPanel>
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+        <!-- 启用动画 -->
+        <ci:SettingsCard Header="启用动画"
+                         Description="切换组件时播放过渡动画。"
+                         Visibility="{Binding Settings.UseOldPresentingBehavior, Converter={StaticResource InverseBoolToVisConverter}}"
+                         IsOn="{Binding Settings.IsAnimationEnabled, Mode=TwoWay}" />
+        <!-- 使用旧版轮播行为 -->
+        <ci:SettingsCard Header="使用旧版轮播行为"
+                         Description="轮播到对应组件时才加载内容；组件异常时可回滚旧版行为。"
+                         IsOn="{Binding Settings.UseOldPresentingBehavior, Mode=TwoWay}" />
+    </StackPanel>
 </ci:ComponentBase>

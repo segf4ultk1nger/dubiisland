@@ -354,6 +354,8 @@ public class ComponentSettings : ObservableRecipient
             if (value == _isMinWidthEnabled) return;
             _isMinWidthEnabled = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(WidthMode));
+            OnPropertyChanged(nameof(MinWidthRange));
         }
     }
 
@@ -385,6 +387,8 @@ public class ComponentSettings : ObservableRecipient
             if (value == _isMaxWidthEnabled) return;
             _isMaxWidthEnabled = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(WidthMode));
+            OnPropertyChanged(nameof(MaxWidthRange));
         }
     }
 
@@ -416,6 +420,74 @@ public class ComponentSettings : ObservableRecipient
             if (value == _isFixedWidthEnabled) return;
             _isFixedWidthEnabled = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(WidthMode));
+        }
+    }
+
+    /// <summary>
+    /// 组件宽度模式（仅用于设置界面）：0=根据内容计算，1=固定宽度，2=范围内限制宽度。
+    /// </summary>
+    [JsonIgnore]
+    public int WidthMode
+    {
+        get => IsFixedWidthEnabled ? 1 : IsMinWidthEnabled || IsMaxWidthEnabled ? 2 : 0;
+        set
+        {
+            if (value == WidthMode) return;
+            IsFixedWidthEnabled = value == 1;
+            IsMinWidthEnabled = value == 2 && MinWidth >= 0;
+            IsMaxWidthEnabled = value == 2 && MaxWidth >= 0;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(MinWidthRange));
+            OnPropertyChanged(nameof(MaxWidthRange));
+        }
+    }
+
+    /// <summary>
+    /// 范围内限制宽度的最小宽度；-1 表示不启用。
+    /// </summary>
+    [JsonIgnore]
+    public double MinWidthRange
+    {
+        get => IsMinWidthEnabled && MinWidth >= 0 ? MinWidth : -1;
+        set
+        {
+            if (value < 0)
+            {
+                IsMinWidthEnabled = false;
+            }
+            else
+            {
+                MinWidth = value;
+                IsMinWidthEnabled = true;
+            }
+
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(WidthMode));
+        }
+    }
+
+    /// <summary>
+    /// 范围内限制宽度的最大宽度；-1 表示不启用。
+    /// </summary>
+    [JsonIgnore]
+    public double MaxWidthRange
+    {
+        get => IsMaxWidthEnabled && MaxWidth >= 0 ? MaxWidth : -1;
+        set
+        {
+            if (value < 0)
+            {
+                IsMaxWidthEnabled = false;
+            }
+            else
+            {
+                MaxWidth = value;
+                IsMaxWidthEnabled = true;
+            }
+
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(WidthMode));
         }
     }
 

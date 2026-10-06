@@ -6,120 +6,95 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:local="clr-namespace:ClassIsland.Controls.Components"
                   xmlns:ci="http://classisland.tech/schemas/xaml/core"
+                  xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
                   xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
                   mc:Ignorable="d"
-                  d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+                  d:DesignHeight="450" d:DesignWidth="800">
     <ci:ComponentBase.Resources>
         <ci:RulesetControl x:Key="RulesetControl"/>
     </ci:ComponentBase.Resources>
-    <ScrollViewer>
-        <StackPanel
-            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:RollingComponentSettingsControl}}">
-            <StackPanel.Resources>
+    <StackPanel
+        DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:RollingComponentSettingsControl}}">
 
-            </StackPanel.Resources>
+        <Border Background="#204169e1" CornerRadius="4" Margin="0 0 0 6"
+                Visibility="{Binding SettingsService.Settings.IsRollingComponentWarningVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel Margin="8 6">
+                    <remix:PackIconRemixIcon Kind="InformationLine" Width="20" Height="20"
+                                             VerticalAlignment="Center" Margin="0 0 4 0"/>
+                    <TextBlock TextWrapping="Wrap"
+                               VerticalAlignment="Center"
+                               Margin="4 0 0 0" >
+                        <Run Text="滚动组件仅在组件内容超出滚动组件宽度时才会开始滚动。您可能需要在【高级设置】中为本组件设置【最大宽度】或【固定宽度】以限制组件的宽度，这样在组件内容超出限制的宽度时内容才会开始滚动。"/>
+                    </TextBlock>
+                </DockPanel>
+                <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
+                        VerticalAlignment="Top"
+                        ToolTip="关闭"
+                        Click="ButtonCloseWarningTip_OnClick">
+                    <remix:PackIconRemixIcon Kind="CloseLine" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+        </Border>
 
-            <Border Background="#204169e1" Panel.ZIndex="1" Margin="0 0 0 5" Visibility="{Binding SettingsService.Settings.IsRollingComponentWarningVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <DockPanel Margin="8 4">
-                        <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.InfoOutline}"/>
-                        <TextBlock TextWrapping="Wrap"
-                                   VerticalAlignment="Center"
-                                   Margin="4 0 0 0" >
-                            <Run Text="滚动组件仅在组件内容超出滚动组件宽度时才会开始滚动。您可能需要在【高级设置】中为本组件设置【最大宽度】或【固定宽度】以限制组件的宽度，这样在组件内容超出限制的宽度时内容才会开始滚动。"/>
-                        </TextBlock>
-                    </DockPanel>
-                    <Button Content="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Close}}"
-                            Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.Flat}"
-                            Margin="0 -8"
-                            ToolTip="关闭"
-                            Click="ButtonCloseWarningTip_OnClick"/>
-                </Grid>
-            </Border>
+        <!-- 滚动速度 -->
+        <ci:SettingsCard Header="滚动速度"
+                         Description="组件内容的滚动速度">
+            <ci:SettingsCard.Switcher>
+                <TextBox
+                         Width="100"
+                         Text="{Binding Settings.SpeedPixelPerSecond, Converter={StaticResource IntToStringConverter}}" />
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
 
-            <!-- 滚动速度 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CarSpeedLimiter}"
-                             Header="滚动速度"
-                             Description="组件内容的滚动速度"
-                             Margin="0 0 0 6">
+        <!-- 定时暂停 -->
+        <ci:SettingsCard Header="定时暂停"
+                         Description="滚动到指定位置后暂停一段时间。"
+                         IsOn="{Binding Settings.IsPauseEnabled, Mode=TwoWay}"/>
+
+        <StackPanel Margin="0 0 0 6"
+                    Visibility="{Binding Settings.IsPauseEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <!-- 暂停时长 -->
+            <ci:SettingsCard Header="暂停时长"
+                             Description="每次暂停时停留的时长">
                 <ci:SettingsCard.Switcher>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox
-                                 Width="100"
-                                 Text="{Binding Settings.SpeedPixelPerSecond, Converter={StaticResource IntToStringConverter}}" />
-                    </StackPanel>
+                    <TextBox
+                             Width="100"
+                             Text="{Binding Settings.PauseSeconds, Converter={StaticResource IntToStringConverter}}" />
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
-
-            <!-- 定时暂停 -->
-            <Border Margin="0 0 0 6">
-                <Expander Background="Transparent"
-                          IsExpanded="{Binding Settings.IsPauseEnabled, Mode=OneWay}"
-                          TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                    <Expander.Header>
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TimerPauseOutline}"
-                                                  Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                                                  Header="定时暂停"
-                                                  Description="滚动到指定位置后暂停一段时间。"
-                                                  IsOn="{Binding Settings.IsPauseEnabled, Mode=TwoWay}"
-                                                  Margin="-12 0" />
-                    </Expander.Header>
-                    <StackPanel Margin="36 0 48 12"
-                                IsEnabled="{Binding Settings.IsPauseEnabled}">
-                        <!-- 暂停时长 -->
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}"
-                                            Header="暂停时长"
-                                            Description="每次暂停时停留的时长"
-                                            Margin="0 0 0 4"
-                                            IsCompact="True">
-                            <ci:SettingsControl.Switcher>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBox
-                                             Width="100"
-                                             Text="{Binding Settings.PauseSeconds, Converter={StaticResource IntToStringConverter}}" />
-                                </StackPanel>
-                            </ci:SettingsControl.Switcher>
-                        </ci:SettingsControl>
-                        <!-- 暂停位置 -->
-                        <ci:SettingsControl IconGlyph="{x:Static ciCore:IconGlyphs.TimelineTextOutline}"
-                                         Header="暂停位置"
-                                         Description="暂停时的滚动偏移值"
-                                         Margin="0 0 0 4"
-                                         IsCompact="True">
-                            <ci:SettingsControl.Switcher>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBox
-                                             Width="100"
-                                             Text="{Binding Settings.PauseOffsetX, Converter={StaticResource IntToStringConverter}}" />
-                                </StackPanel>
-                            </ci:SettingsControl.Switcher>
-                        </ci:SettingsControl>
-                    </StackPanel>
-                </Expander>
-            </Border>
-
-            <!-- 满足规则时停止 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Stop}"
-                             Header="满足规则时停止"
-                             Description="规则满足时停止滚动并回到初始位置。"
-                             Margin="0 0 0 6">
+            <!-- 暂停位置 -->
+            <ci:SettingsCard Header="暂停位置"
+                             Description="暂停时的滚动偏移值">
                 <ci:SettingsCard.Switcher>
-                    <StackPanel Orientation="Horizontal">
-                        <Button HorizontalAlignment="Left"
-                                Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                Click="ButtonOpenStopRuleset_OnClick"
-                                Visibility="{Binding Settings.StopOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ci:IconText Kind="{x:Static ciCore:IconGlyphs.TagMultipleOutline}" Text="编辑规则集…" />
-                        </Button>
-                        <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.StopOnRule}"/>
-                    </StackPanel>
+                    <TextBox
+                             Width="100"
+                             Text="{Binding Settings.PauseOffsetX, Converter={StaticResource IntToStringConverter}}" />
                 </ci:SettingsCard.Switcher>
             </ci:SettingsCard>
-            
         </StackPanel>
-    </ScrollViewer>
+
+        <!-- 满足规则时停止 -->
+        <ci:SettingsCard Header="满足规则时停止"
+                         Description="规则满足时停止滚动并回到初始位置。">
+            <ci:SettingsCard.Switcher>
+                <StackPanel Orientation="Horizontal">
+                    <Button HorizontalAlignment="Left"
+                            Style="{StaticResource MahApps.Styles.Button.Flat}"
+                            Click="ButtonOpenStopRuleset_OnClick"
+                            Visibility="{Binding Settings.StopOnRule, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <remix:PackIconRemixIcon Kind="PriceTag3Line" Width="16" Height="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="编辑规则集…" VerticalAlignment="Center" Margin="6 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                    <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.StopOnRule}"/>
+                </StackPanel>
+            </ci:SettingsCard.Switcher>
+        </ci:SettingsCard>
+    </StackPanel>
 </ci:ComponentBase>

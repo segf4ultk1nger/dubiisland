@@ -6,71 +6,61 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                         xmlns:local="clr-namespace:ClassIsland.Controls.Components"
                         xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
+                        xmlns:controls2="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
                         xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
+                        xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
                         xmlns:ci="http://classisland.tech/schemas/xaml/core"
                         mc:Ignorable="d" 
-                        d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
-    <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherComponentSettingsControl}}">
-        <ScrollViewer>
-            <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}">
-                <Border Background="#204169e1" Panel.ZIndex="1" CornerRadius="4" Margin="0 0 0 5">
-                    <Grid>
-                        <DockPanel Margin="8 4">
-                            <ciCore:IconText IconSize="20" Kind="{x:Static ciCore:IconGlyphs.Info}"/>
-                            <TextBlock TextWrapping="Wrap"
-                                       VerticalAlignment="Center"
-                                       Margin="4 0 0 0" >
-                                <Run>本页面仅包含</Run><Bold>组件设置</Bold>
-                                <Run>要调整显示天气的城市，请转到</Run>
-                                <ci:NavHyperlink 
-                                    CommandParameter="classisland://app/settings/weather">
-                                    【天气】</ci:NavHyperlink>
-                                <Run>选项卡。</Run>
-                            </TextBlock>
-                        </DockPanel>
-                    </Grid>
-                </Border>
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CardTextOutline}"
-                                 Header="显示天气信息"
-                                 Description="显示当前天气信息摘要。"
-                                 Margin="0 0 0 6">
-                    <ci:SettingsCard.Switcher>
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox SelectedIndex="{Binding Settings.MainWeatherInfoKind}"
-                                      MinWidth="110">
-                                <ComboBoxItem>天气类型/气温</ComboBoxItem>
-                                <ComboBoxItem>湿度</ComboBoxItem>
-                                <ComboBoxItem>风力</ComboBoxItem>
-                                <ComboBoxItem>AQI</ComboBoxItem>
-                                <ComboBoxItem>气压</ComboBoxItem>
-                                <ComboBoxItem>体感温度</ComboBoxItem>
-                            </ComboBox>
-                            <mah:ToggleSwitch Margin="4 0 0 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.ShowMainWeatherInfo}"/>
-                        </StackPanel>
-                    </ci:SettingsCard.Switcher>
-                </ci:SettingsCard>
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.AlertCircleCheckOutline}" Header="显示预警信号"
-                                 Description="以图标形式显示天气预警。"
-                                 Margin="0 0 0 6"
-                                 IsOn="{Binding Settings.ShowAlerts, Mode=TwoWay}"/>
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MessageAlertOutline}"
-                                 Header="显示预警类型"
-                                 Description="设置何种情况下显示预警类型。"
-                                 Margin="0 0 0 6">
-                    <ci:SettingsCard.Switcher>
-                        <Grid>
-                            <ComboBox SelectedIndex="{Binding Settings.AlertsTitleShowMode}">
-                                <ComboBoxItem>不显示</ComboBoxItem>
-                                <ComboBoxItem>仅当没有对应图标时</ComboBoxItem>
-                                <ComboBoxItem>总是显示</ComboBoxItem>
-                            </ComboBox>
-                        </Grid>
-                    </ci:SettingsCard.Switcher>
-                </ci:SettingsCard>
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.WeatherPouring}" Header="显示降水提示"
-                                 Description="显示降水的到来或剩余时间，正数为即将到来，负数为剩余。"
-                                 IsOn="{Binding Settings.ShowRainTime, Mode=TwoWay}"/>
-            </StackPanel>
-        </ScrollViewer>
-    </Grid>
+                        d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherComponentSettingsControl}}">
+        <Border Background="#204169e1" CornerRadius="4" Margin="0 0 0 6">
+            <DockPanel Margin="8 6">
+                <remix:PackIconRemixIcon Kind="InformationLine" Width="20" Height="20"
+                                         VerticalAlignment="Center" Margin="0 0 4 0"/>
+                <TextBlock TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Margin="4 0 0 0" >
+                    <Run>本页面仅包含</Run><Bold>组件设置</Bold>
+                    <Run>要调整显示天气的城市，请转到</Run>
+                    <ci:NavHyperlink 
+                        CommandParameter="classisland://app/settings/weather">
+                        【天气】</ci:NavHyperlink>
+                    <Run>选项卡。</Run>
+                </TextBlock>
+            </DockPanel>
+        </Border>
+        <controls2:SettingsCard Header="显示天气信息"
+                                Description="显示当前天气信息摘要。">
+            <controls2:SettingsCard.Switcher>
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox SelectedIndex="{Binding Settings.MainWeatherInfoKind}"
+                              MinWidth="110">
+                        <ComboBoxItem>天气类型/气温</ComboBoxItem>
+                        <ComboBoxItem>湿度</ComboBoxItem>
+                        <ComboBoxItem>风力</ComboBoxItem>
+                        <ComboBoxItem>AQI</ComboBoxItem>
+                        <ComboBoxItem>气压</ComboBoxItem>
+                        <ComboBoxItem>体感温度</ComboBoxItem>
+                    </ComboBox>
+                    <mah:ToggleSwitch Margin="8 0 0 0" OnContent="开" OffContent="关" MinWidth="0" IsOn="{Binding Settings.ShowMainWeatherInfo}"/>
+                </StackPanel>
+            </controls2:SettingsCard.Switcher>
+        </controls2:SettingsCard>
+        <controls2:SettingsCard Header="显示预警信号"
+                                Description="以图标形式显示天气预警。"
+                                IsOn="{Binding Settings.ShowAlerts, Mode=TwoWay}"/>
+        <controls2:SettingsCard Header="显示预警类型"
+                                Description="设置何种情况下显示预警类型。">
+            <controls2:SettingsCard.Switcher>
+                <ComboBox SelectedIndex="{Binding Settings.AlertsTitleShowMode}">
+                    <ComboBoxItem>不显示</ComboBoxItem>
+                    <ComboBoxItem>仅当没有对应图标时</ComboBoxItem>
+                    <ComboBoxItem>总是显示</ComboBoxItem>
+                </ComboBox>
+            </controls2:SettingsCard.Switcher>
+        </controls2:SettingsCard>
+        <controls2:SettingsCard Header="显示降水提示"
+                                Description="显示降水的到来或剩余时间，正数为即将到来，负数为剩余。"
+                                IsOn="{Binding Settings.ShowRainTime, Mode=TwoWay}"/>
+    </StackPanel>
 </controls:ComponentBase>
