@@ -34,7 +34,19 @@ public partial class WindowSettingsPage : SettingsPageBase
         {
             SettingsService.Settings.IsWindowCaptureBlockingEnabled = false;
         }
+        Loaded += WindowSettingsPage_OnLoaded;
+        Unloaded += WindowSettingsPage_OnUnloaded;
+    }
+
+    private void WindowSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
         SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
+    }
+
+    private void WindowSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
     }
 
     private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

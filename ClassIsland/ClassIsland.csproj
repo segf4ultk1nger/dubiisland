@@ -133,6 +133,14 @@
             <OutputItemType>Content</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </ProjectReference>
+        <!-- 设置搜索：编译期读取设置页 XAML，烘焙标题/标签/拼音的索引 -->
+        <ProjectReference Include="..\ClassIsland.SettingsSearchGenerator\ClassIsland.SettingsSearchGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="Views\SettingPages\*.xaml" />
+        <AdditionalFiles Include="Views\SettingPages\*.xaml.cs" />
     </ItemGroup>
 	<ItemGroup>
 		<Page Update="Themes\LightTheme.xaml">

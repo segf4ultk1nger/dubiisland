@@ -284,7 +284,8 @@
             <TextBlock Text="主界面" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 界面缩放 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ZoomInOutline}" Header="界面缩放"
-                                    Description="主界面的缩放大小。">
+                                    Description="主界面的缩放大小。"
+                                    SearchTags="缩放 大小 比例 尺寸 scale zoom size">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <Slider Width="220" Minimum="0.2" Maximum="5" VerticalAlignment="Center"
@@ -447,7 +448,8 @@
             <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ThemeLightDark}" Header="应用主题"
-                                                           Description="控制应用的明暗主题。">
+                                                           Description="控制应用的明暗主题。"
+                                                           SearchTags="主题 明暗 深色 浅色 黑暗 dark light theme">
                 <controls1:SettingsCard.Switcher>
                     <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
                               Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"

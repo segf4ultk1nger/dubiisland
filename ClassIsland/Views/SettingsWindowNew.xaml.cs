@@ -87,6 +87,11 @@ public partial class SettingsWindowNew : MyWindow
     /// <summary>当前正在导航到的页面，用于在快速点击时补上被 <see cref="ViewModel"/> 导航锁丢弃的目标页。</summary>
     private SettingsPageInfo? _navigatingPageInfo;
 
+    /// <summary>搜索结果点击后，导航完成时要滚动到并高亮的卡片。</summary>
+    private SettingsSearchEntry? _pendingSearchTarget;
+
+    private readonly DispatcherTimer SearchDebounceTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
+
 
     public SettingsWindowNew(IManagementService managementService, IHangService hangService,
         ILogger<SettingsWindowNew> logger, DiagnosticService diagnosticService, SettingsService settingsService,
@@ -107,6 +112,11 @@ public partial class SettingsWindowNew : MyWindow
         NavigationService.Navigating += NavigationServiceOnNavigating;
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         RebuildMenu();
+        SearchDebounceTimer.Tick += (_, _) =>
+        {
+            SearchDebounceTimer.Stop();
+            RunSearch(SearchTextBox.Text);
+        };
 
         if (ManagementService.Policy.DisableSettingsEditing)
         {
@@ -232,6 +242,17 @@ public partial class SettingsWindowNew : MyWindow
         ViewModel.IsNavigating = false;
         ViewModel.CanGoBack = NavigationService.CanGoBack;
 
+        // 搜索命中：目标页加载完成后滚动到对应卡片并高亮。
+        if (_pendingSearchTarget is { } searchTarget)
+        {
+            _pendingSearchTarget = null;
+            if (ViewModel.SelectedPageInfo?.Id == searchTarget.PageId)
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => RevealSearchTarget(searchTarget)),
+                    DispatcherPriority.ContextIdle);
+            }
+        }
+
         // 快速连续点击导航时，后一次点击会被 IsNavigating 锁丢弃，导致菜单高亮与内容不一致。
         // 这里在当前导航完成后补上最后一次被丢弃的目标页。
         if (ViewModel.IsRendered && ViewModel.SelectedPageInfo is { } target &&
@@ -328,6 +349,185 @@ public partial class SettingsWindowNew : MyWindow
         }
 
         return pageNew;
+    }
+
+    private void SearchTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        SetSearchBoxExpanded(!string.IsNullOrWhiteSpace(SearchTextBox.Text));
+        SearchDebounceTimer.Stop();
+        SearchDebounceTimer.Start();
+    }
+
+    private void SetSearchBoxExpanded(bool expanded)
+    {
+        var animation = new ThicknessAnimation(
+            expanded ? new Thickness(8, 9, 8, 9) : new Thickness(48, 9, 8, 9),
+            TimeSpan.FromMilliseconds(160))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        SearchTextBox.BeginAnimation(FrameworkElement.MarginProperty, animation);
+    }
+
+    private void SearchTextBox_OnPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case Key.Enter:
+                if (SearchResultsList.Items.Count > 0)
+                {
+                    var entry = SearchResultsList.SelectedItem as SettingsSearchEntry
+                                ?? SearchResultsList.Items[0] as SettingsSearchEntry;
+                    if (entry != null)
+                    {
+                        ActivateSearchEntry(entry);
+                    }
+                }
+
+                e.Handled = true;
+                break;
+            case Key.Down:
+                if (SearchResultsList.Items.Count > 0)
+                {
+                    SearchResultsList.Focus();
+                    SearchResultsList.SelectedIndex = Math.Max(0, SearchResultsList.SelectedIndex);
+                }
+
+                e.Handled = true;
+                break;
+            case Key.Escape:
+                ClearSearch();
+                e.Handled = true;
+                break;
+        }
+    }
+
+    private void SearchResultsList_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (e.OriginalSource is DependencyObject source &&
+            ItemsControl.ContainerFromElement(SearchResultsList, source) is ListBoxItem { DataContext: SettingsSearchEntry entry })
+        {
+            ActivateSearchEntry(entry);
+        }
+    }
+
+    private void RunSearch(string query)
+    {
+        EnsureIndexBuilt();
+
+        query = (query ?? "").Trim();
+        if (query.Length == 0)
+        {
+            SearchResultsPanel.Visibility = Visibility.Collapsed;
+            SearchStatusPanel.Visibility = Visibility.Collapsed;
+            SearchResultsList.ItemsSource = null;
+            return;
+        }
+
+        if (!SettingsSearchIndex.IsBuilt)
+        {
+            SearchResultsPanel.Visibility = Visibility.Collapsed;
+            SearchResultsList.ItemsSource = null;
+            SearchStatusText.Text = "正在建立设置索引…";
+            SearchStatusPanel.Visibility = Visibility.Visible;
+            return;
+        }
+
+        var results = SettingsSearchIndex.Search(query);
+        if (results.Count == 0)
+        {
+            SearchResultsPanel.Visibility = Visibility.Collapsed;
+            SearchResultsList.ItemsSource = null;
+            SearchStatusText.Text = "无结果";
+            SearchStatusPanel.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            SearchResultsList.ItemsSource = results;
+            SearchStatusPanel.Visibility = Visibility.Collapsed;
+            SearchResultsPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void EnsureIndexBuilt()
+    {
+        if (!SettingsSearchIndex.IsBuilt)
+        {
+            SettingsSearchIndex.Build(PassesNavigationFilter);
+        }
+    }
+
+    private async void ActivateSearchEntry(SettingsSearchEntry entry)
+    {
+        ClearSearch();
+
+        var info = SettingsWindowRegistryService.Registered.FirstOrDefault(x => x.Id == entry.PageId);
+        if (info == null || !PassesNavigationFilter(info))
+        {
+            return;
+        }
+
+        _pendingSearchTarget = entry.IsPage ? null : entry;
+        await CoreNavigate(info);
+    }
+
+    private void ClearSearch()
+    {
+        SearchTextBox.Text = "";
+        SearchResultsPanel.Visibility = Visibility.Collapsed;
+        SearchStatusPanel.Visibility = Visibility.Collapsed;
+        SearchResultsList.ItemsSource = null;
+    }
+
+    private void RevealSearchTarget(SettingsSearchEntry entry)
+    {
+        var card = FindSettingsCard(NavigationFrame, entry.Header, entry.Occurrence);
+        if (card == null)
+        {
+            return;
+        }
+
+        card.BringIntoView();
+        SearchHighlightAdorner.Flash(card);
+    }
+
+    private static SettingsCard? FindSettingsCard(DependencyObject root, string header, int occurrence)
+    {
+        var seen = 0;
+        foreach (var card in EnumerateVisual<SettingsCard>(root))
+        {
+            if (card.Header != header)
+            {
+                continue;
+            }
+
+            if (seen == occurrence)
+            {
+                return card;
+            }
+
+            seen++;
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<T> EnumerateVisual<T>(DependencyObject root)
+    {
+        var count = VisualTreeHelper.GetChildrenCount(root);
+        for (var i = 0; i < count; i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            if (child is T match)
+            {
+                yield return match;
+            }
+
+            foreach (var descendant in EnumerateVisual<T>(child))
+            {
+                yield return descendant;
+            }
+        }
     }
 
     private void SettingsWindowNew_OnSizeChanged(object sender, SizeChangedEventArgs e)

@@ -198,7 +198,8 @@
             <TextBlock Text="行为" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 开机自启 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutomaticStart}" Header="开机自启"
-                                    Description="系统启动时自动运行本应用。">
+                                    Description="系统启动时自动运行本应用。"
+                                    SearchTags="启动 自启 开机 引导 autostart startup boot">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsAutoStartEnabled, Mode=TwoWay}"
@@ -258,7 +259,8 @@
             </controls1:SettingsCard>
             <!-- 隐藏窗口 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.HideOutline}" Header="隐藏窗口"
-                                    Description="在以下情况隐藏主界面，避免遮挡屏幕。">
+                                    Description="在以下情况隐藏主界面，避免遮挡屏幕。"
+                                    SearchTags="隐藏 遮挡 全屏 hide conceal">
                 <controls1:SettingsCard.Switcher>
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             HorizontalAlignment="Left"
@@ -310,7 +312,8 @@
             <TextBlock Text="时钟" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 使用精确时间 -->
             <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.TimerSyncOutline}" Header="使用精确时间"
-                                    Description="使用从指定服务器同步的时间，而非系统时间。">
+                                    Description="使用从指定服务器同步的时间，而非系统时间。"
+                                    SearchTags="时间 时钟 同步 校时 ntp time sync">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
                         <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.IsExactTimeEnabled, Mode=TwoWay}" OnContent="开" OffContent="关" MinWidth="0"/>

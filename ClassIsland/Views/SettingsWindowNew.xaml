@@ -308,6 +308,67 @@
                 </Frame>
             </Grid>
         </mah:HamburgerMenu>
+
+        <!-- 设置搜索：贴在汉堡菜单导航栏顶部的搜索框 + 结果覆盖层（覆盖在菜单项之上） -->
+        <Grid x:Name="SearchOverlay"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Stretch"
+              Panel.ZIndex="10"
+              Width="{Binding ElementName=HamburgerMenuControl, Path=OpenPaneLength}"
+              Visibility="{Binding ElementName=HamburgerMenuControl, Path=IsPaneOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- 搜索框放在导航栏顶端；聚焦/输入时向左伸长，盖住左侧的菜单按钮 -->
+            <Grid Grid.Row="0" Height="48">
+                <TextBox x:Name="SearchTextBox"
+                         Margin="48 9 8 9"
+                         Style="{StaticResource MahApps.Styles.TextBox}"
+                         mah:TextBoxHelper.Watermark="搜索设置…"
+                         mah:TextBoxHelper.ClearTextButton="True"
+                         VerticalContentAlignment="Center"
+                         TextChanged="SearchTextBox_OnTextChanged"
+                         PreviewKeyDown="SearchTextBox_OnPreviewKeyDown"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Border x:Name="SearchResultsPanel"
+                        Visibility="Collapsed"
+                        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                        BorderBrush="{DynamicResource MahApps.Brushes.Gray5}"
+                        BorderThickness="0 0 1 0">
+                    <ListBox x:Name="SearchResultsList"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             PreviewMouseLeftButtonUp="SearchResultsList_OnPreviewMouseLeftButtonUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="4 6">
+                                    <TextBlock Text="{Binding Header}" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding PageName}" FontSize="11" Opacity="0.6" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+                <Border x:Name="SearchStatusPanel"
+                        Visibility="Collapsed"
+                        Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                        BorderBrush="{DynamicResource MahApps.Brushes.Gray5}"
+                        BorderThickness="0 0 1 0">
+                    <TextBlock x:Name="SearchStatusText"
+                               Margin="16 8"
+                               VerticalAlignment="Top"
+                               Opacity="0.6"
+                               TextWrapping="Wrap"
+                               IsHitTestVisible="False"/>
+                </Border>
+            </Grid>
+        </Grid>
+
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="16" TextWrapping="Wrap" FontWeight="Medium" Text="{Binding ViewModel.StatusMessage}"/>
     </Grid>
 </controls:MyWindow>

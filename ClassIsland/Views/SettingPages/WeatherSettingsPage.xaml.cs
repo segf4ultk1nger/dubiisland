@@ -46,9 +46,9 @@ public partial class WeatherSettingsPage : SettingsPageBase
         LocationService = locationService;
         Logger = logger;
         SettingsService = settingsService;
-        SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
         // [搜索城市或地区] 初始化防抖定时器
         Loaded += WeatherSettingsPage_Loaded;
+        Unloaded += WeatherSettingsPage_Unloaded;
     }
 
     private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -85,8 +85,15 @@ public partial class WeatherSettingsPage : SettingsPageBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
+    private void WeatherSettingsPage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
+    }
+
     private async void WeatherSettingsPage_Loaded(object sender, RoutedEventArgs e)
     {
+        SettingsService.Settings.PropertyChanged -= SettingsOnPropertyChanged;
+        SettingsService.Settings.PropertyChanged += SettingsOnPropertyChanged;
         // 初始化防抖定时器，设置间隔时间为50毫秒
         SearchDebounceTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
         SearchDebounceTimer.Tick += SearchDebounceTimer_Tick;
