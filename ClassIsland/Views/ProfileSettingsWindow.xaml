@@ -1067,7 +1067,7 @@
                                                         <ListBox
                                                             Grid.Row="0"
                                                             SelectedValuePath="Key"
-                                                            SelectedValue="{Binding ViewModel.SelectedClassInfo.SubjectId, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, FallbackValue='', Converter={StaticResource PreventNullConverter}}"
+                                                            SelectedValue="{Binding ViewModel.SelectedClassInfo.SubjectId, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, FallbackValue={x:Static system:Guid.Empty}, Converter={StaticResource PreventNullConverter}}"
                                                             ItemsSource="{Binding ProfileService.Profile.Subjects, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}"
                                                             Style="{StaticResource NavigationPrimaryListBox}">
                                                             <ListBox.ItemContainerStyle>
