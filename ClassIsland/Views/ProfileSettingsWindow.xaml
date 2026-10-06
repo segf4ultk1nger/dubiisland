@@ -48,7 +48,7 @@
         <mah:WindowCommands>
             <Button ToolTip="保存当前档案。"
                     Click="ButtonSave_OnClick"
-                    Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ContentSave}, Size=16}"/>
+                    Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.SaveLine}, Size=16}"/>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.Flyouts>
@@ -131,7 +131,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <StackPanel Orientation="Horizontal" Margin="0 16 0 0">
-                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Code}" VerticalAlignment="Center" 
+                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CodeLine}" VerticalAlignment="Center" 
                                              Margin="0 0 3 0"/>
                     <TextBlock VerticalAlignment="Center" TextWrapping="Wrap"
                                Text="{Binding Key, Mode=OneWay}">
@@ -160,7 +160,7 @@
                         BorderBrush="{DynamicResource MahApps.Brushes.Gray7}" 
                         BorderThickness="1" CornerRadius="8">
                     <StackPanel>
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.InfoCircleOutline}" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.InformationLine}" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
                         <TextBlock TextWrapping="Wrap" FontSize="13" Margin="0 4 0 0">
                             这是一个临时层课表，将在使用过后自动删除。
                         </TextBlock>
@@ -171,7 +171,7 @@
                                 FontSize="13"
                                 Click="ButtonConvertToStdClassPlan_OnClick"
                                 ToolTip="将当前临时层课表转换为正常课表。">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CogTransferOutline}" Text="转换为普通课表"/>
+                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FileTransferLine}" Text="转换为普通课表"/>
                         </Button>
                         <!--<Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 HorizontalAlignment="Left"
@@ -290,7 +290,7 @@
                                 HorizontalAlignment="Left"
                                 Click="ButtonClearTempOverlay_OnClick"
                                 ToolTip="清除临时层课表。">
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClearOutline}" Text="清除临时层"/>
+                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.EraserLine}" Text="清除临时层"/>
                         </Button>
                     </StackPanel>
 
@@ -308,7 +308,7 @@
                                 <Binding Path="ProfileService.Profile.HasOverlayClassPlan"/>
                             </MultiBinding>
                         </Button.Visibility>
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClearOutline}" Text="清除临时课表"/>
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.EraserLine}" Text="清除临时课表"/>
                     </Button>
                     <TextBlock Text="临时课表被临时层课表覆盖。要使用临时课表，请暂时禁用或清除临时层课表。"
                                TextWrapping="Wrap"
@@ -355,7 +355,7 @@
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                             HorizontalAlignment="Left"
                             Click="ButtonOpenWeekOffsetSettings_OnClick">
-                        <ci:IconText Kind="{x:Static controls1:IconGlyphs.CalendarMultiple}" Text="调整多周轮换偏移…"/>
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.Calendar2Line}" Text="调整多周轮换偏移…"/>
                     </Button>
                 </StackPanel>
                 <Popup Grid.Row="2"
@@ -428,13 +428,13 @@
                         </Style>
                     </WrapPanel.Resources>
                     <Button ToolTip="新建档案。" Click="ButtonCreateProfile_OnClick">
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileDocumentAddOutline}" Text="新建档案"/>
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FileAddLine}" Text="新建档案"/>
                     </Button>
                     <Button ToolTip="打开档案文件夹。" Click="ButtonOpenProfileFolder_OnClick">
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FolderOpenOutline}" Text="打开文件夹"/>
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FolderOpenLine}" Text="打开文件夹"/>
                     </Button>
                     <Button ToolTip="重新加载档案列表。" Click="ButtonRefreshProfiles_OnClick">
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.RefreshLine}" Text="刷新"/>
                     </Button>
                 </WrapPanel>
             </StackPanel>
@@ -448,10 +448,10 @@
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="Transparent">
                             <StackPanel.ContextMenu>
                                 <ContextMenu FontFamily="{StaticResource HarmonyOsSans}">
-                                    <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.RenameOutline}}" Header="重命名" Click="MenuItemRenameProfile_OnClick"/>
-                                    <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ContentCopy}}" Header="复制" Click="MenuItemProfileDuplicate_OnClick"/>
+                                    <MenuItem Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.EditLine}}" Header="重命名" Click="MenuItemRenameProfile_OnClick"/>
+                                    <MenuItem Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.FileCopyLine}}" Header="复制" Click="MenuItemProfileDuplicate_OnClick"/>
                                     <!--<MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileExportOutline}}" Header="导出"/>-->
-                                    <MenuItem Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.DeleteOutline}}" Header="删除" Click="MenuItemDeleteProfile_OnClick"/>
+                                    <MenuItem Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.DeleteBinLine}}" Header="删除" Click="MenuItemDeleteProfile_OnClick"/>
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
                             <StackPanel.Resources>
@@ -509,7 +509,7 @@
                             </Style>
                         </StackPanel.Style>
                         <Separator Margin="0 16 0 4" />
-                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Group}" Text="临时课表群" Margin="0 0 0 4" />
+                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.GroupLine}" Text="临时课表群" Margin="0 0 0 4" />
                         <ContentPresenter>
                             <ContentPresenter.ContentTemplate>
                                 <DataTemplate DataType="{x:Type profile:ClassPlanGroup}">
@@ -520,7 +520,7 @@
                                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                 VerticalAlignment="Center"
                                                 Click="ButtonClearTempClassPlanGroup_OnClick">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Clear}" Text="清除" />
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.EraserLine}" Text="清除" />
                                         </Button>
                                     </StackPanel>
                                 </DataTemplate>
@@ -559,7 +559,7 @@
                         </Grid>
                     </StackPanel>
                     <Separator Margin="0 16 0 4" />
-                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Group}" Text="管理课表群" Margin="0 0 0 4"/>
+                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.GroupLine}" Text="管理课表群" Margin="0 0 0 4"/>
                     
                     <WrapPanel Orientation="Horizontal">
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}" 
@@ -573,7 +573,7 @@
                                     <Binding Path="ManagementService.Policy.DisableProfileEditing" Mode="OneWay" Converter="{StaticResource InvertBooleanConverter}"/>
                                 </MultiBinding>
                             </Button.IsEnabled>
-                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="新建课表群"/>
+                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AddLine}" Text="新建课表群"/>
                         </Button>
                     </WrapPanel>
                 </StackPanel>
@@ -643,7 +643,7 @@
                                     <!-- 课表操作 -->
                                     <ToolBar Grid.Row="0" ToolBarTray.IsLocked="True" IsEnabled="{Binding ManagementService.Policy.DisableProfileClassPlanEditing, Converter={StaticResource InvertBooleanConverter}}">
                                         <Button Click="ButtonAddClassPlan_OnClick" ToolTip="新建课表。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="添加"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AddLine}" Text="添加"/>
                                         </Button>
                                         <Button Click="ButtonDuplicateClassPlan_OnClick" ToolTip="复制选中的课表。"
                                                 Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
@@ -657,11 +657,11 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </Button.Style>
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ContentCopy}" Text="复制"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FileCopyLine}" Text="复制"/>
                                         </Button>
                                         <Separator/>
                                         <Button Click="ButtonRefreshClassPlans_OnClick" ToolTip="刷新当前视图。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.RefreshLine}" Text="刷新"/>
                                         </Button>
                                         <!--<Button Click="ButtonImportFromFile_OnClick" ToolTip="从表格导入课表。" Visibility="{Binding MainViewModel.Settings.ExpIsExcelImportEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                                             <controls:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="从表格导入…"/>
@@ -729,7 +729,7 @@
                                                     
                                                     <WrapPanel Orientation="Horizontal"
                                                                Grid.Column="0">
-                                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.FileChartOutline}"
+                                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FileChartLine}"
                                                             VerticalAlignment="Center"/>
                                                         <TextBlock Text="{Binding Value.Name}"
                                                                    VerticalAlignment="Center"/>
@@ -754,23 +754,23 @@
                                                                 </Style>
                                                             </Border.Style>
                                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                                <controls1:IconText VerticalAlignment="Center">
-                                                                    <controls1:IconText.Style>
-                                                                        <Style TargetType="controls1:IconText">
+                                                                <controls1:RemixIconText VerticalAlignment="Center">
+                                                                    <controls1:RemixIconText.Style>
+                                                                        <Style TargetType="controls1:RemixIconText">
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding Value.IsEnabled}"
                                                                                     Value="False">
-                                                                                    <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.LabelOffOutline}"/>
+                                                                                    <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.ForbidLine}"/>
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding Value.IsOverlay}"
                                                                                     Value="True">
-                                                                                    <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.LayersOutline}"/>
+                                                                                    <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.StackLine}"/>
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
-                                                                            <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.LabelMultipleOutline}"/>
+                                                                            <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.PriceTagLine}"/>
                                                                         </Style>
-                                                                    </controls1:IconText.Style>
-                                                                </controls1:IconText>
+                                                                    </controls1:RemixIconText.Style>
+                                                                </controls1:RemixIconText>
                                                                 <TextBlock Text="{Binding Value.TimeRule.WeekDay, Converter={StaticResource WeekIndexToWeekStringConverter}}"
                                                                            Margin="2 0 0 0">
                                                                     <TextBlock.Style>
@@ -850,7 +850,7 @@
                                                                 </Style>
                                                             </Border.Style>
                                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                                <controls1:IconText VerticalAlignment="Center" Kind="{x:Static controls1:IconGlyphs.Timetable}"/>
+                                                                <controls1:RemixIconText VerticalAlignment="Center" Kind="{x:Static remix:PackIconRemixIconKind.CalendarScheduleLine}"/>
                                                                 <TextBlock VerticalAlignment="Center"
                                                                            Margin="4 0 0 0">
                                                                     <TextBlock.Style>
@@ -913,17 +913,17 @@
                                         </Button>-->
                                             <Button Click="ButtonClassPlanInfoEdit_OnClick" ToolTip="查看并编辑课表的基本信息。"
                                                     Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.InfoOutline}" Text="课表信息" />
+                                                <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.InformationLine}" Text="课表信息" />
                                             </Button>
                                             <Button Click="ButtonClassPlanDetails_OnClick" 
                                                     ToolTip="查看课表的所有时间点的附加设置继承情况。">
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Text}" Text="详细看板…" />
+                                                <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.ArticleLine}" Text="详细看板…" />
                                             </Button>
                                             <Separator />
                                             <Button ToolTip="创建临时课表层。"
                                                     Click="ButtonBeginCreateTempOverlayClassPlan_OnClick"
                                                     IsEnabled="{Binding IsOverlay, Converter={StaticResource BooleanToBooleanReConverter}}">
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.LayersOutline}" Text="创建临时层" />
+                                                <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.StackLine}" Text="创建临时层" />
                                             </Button>
                                             <Popup x:Name="PopupCreateTempOverlayClassPlan"
                                                                     StaysOpen="False"
@@ -957,14 +957,14 @@
                                                                     Style="{StaticResource MahApps.Styles.DatePicker}"/>
                                                         <Button HorizontalAlignment="Right" Margin="0 12 0 0"
                                                                 Click="ButtonCreateTempOverlayClassPlan_OnClick">
-                                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="创建"/>
+                                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CheckLine}" Text="创建"/>
                                                         </Button>
                                                     </StackPanel>
                                                 </Border>
                                             </Popup>
                                             <Separator />
                                             <Button Click="ButtonDeleteClassPlan_OnClick" ToolTip="删除该课表。">
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Delete}" Text="删除课表" />
+                                                <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.DeleteBinLine}" Text="删除课表" />
                                             </Button>
                                         </ToolBar>
 
@@ -995,7 +995,7 @@
                                                     </Border.Style>
                                                     <Grid>
                                                         <DockPanel Margin="8 4">
-                                                            <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}"/>
+                                                            <controls1:RemixIconText IconSize="20" Kind="{x:Static remix:PackIconRemixIconKind.ErrorWarningLine}"/>
                                                             <TextBlock TextWrapping="Wrap"
                                                                        VerticalAlignment="Center"
                                                                        Margin="4 0 0 0" >
@@ -1022,7 +1022,7 @@
                                                     </Border.Style>
                                                     <Grid>
                                                         <DockPanel Margin="8 4">
-                                                            <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.MessageAlertOutline}"/>
+                                                            <controls1:RemixIconText IconSize="20" Kind="{x:Static remix:PackIconRemixIconKind.ErrorWarningLine}"/>
                                                             <TextBlock TextWrapping="Wrap"
                                                                        VerticalAlignment="Center"
                                                                        Margin="4 0 0 0" >
@@ -1135,7 +1135,7 @@
                                                             <Border Background="{DynamicResource ProfileEditorAccentFillBrush}" Visibility="{Binding ViewModel.IsClassPlanEditComplete, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                                                 <DockPanel Margin="8 0 4 0">
                                                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Close}}"
+                                                                            Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.CloseLine}}"
                                                                             VerticalAlignment="Center"
                                                                             DockPanel.Dock="Right"
                                                                             ToolTip="关闭"
@@ -1144,9 +1144,9 @@
                                                                             DockPanel.Dock="Right"
                                                                             Click="ButtonAddClassPlanFromCompletedTip_OnClick"
                                                                             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
-                                                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="添加课表"/>
+                                                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AddLine}" Text="添加课表"/>
                                                                     </Button>
-                                                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.DoneOutline}" Text="此课表已完成录入。"
+                                                                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CheckDoubleLine}" Text="此课表已完成录入。"
                                                                         VerticalAlignment="Center"/>
                                                                 </DockPanel>
                                                             </Border>
@@ -1172,7 +1172,7 @@
                                                         <Setter Property="Visibility" Value="Collapsed"/>
                                                     </Style>
                                                 </StackPanel.Style>
-                                                <controls1:IconText IconSize="72" Kind="{x:Static controls1:IconGlyphs.FileChartOutline}"
+                                                <controls1:RemixIconText IconSize="72" Kind="{x:Static remix:PackIconRemixIconKind.FileChartLine}"
                                                                          HorizontalAlignment="Center"/>
                                                 <TextBlock Text="在左侧课表中选择一节课程，然后在此处进行设置。" TextWrapping="Wrap"
                                                            Margin="0 8 0 0"/>
@@ -1180,7 +1180,7 @@
                                         </Grid>
                                         <!-- 关闭前警告 -->
                                         <Border Grid.Row="2" Background="{DynamicResource ProfileEditorWarningFillBrush}" TextElement.Foreground="{DynamicResource ProfileEditorErrorBrush}" HorizontalAlignment="Stretch" Visibility="{Binding ViewModel.IsClassPlansEditing, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:ProfileSettingsWindow}, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Warning}" Text="正在编辑课表。若要关闭窗口，请先完成课表编辑。" Margin="6" />
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AlertLine}" Text="正在编辑课表。若要关闭窗口，请先完成课表编辑。" Margin="6" />
                                         </Border>
                                     </Grid>
                                 </Grid>
@@ -1196,7 +1196,7 @@
                                             <Setter Property="Visibility" Value="Collapsed"/>
                                         </Style>
                                     </StackPanel.Style>
-                                    <controls1:IconText IconSize="72" Kind="{x:Static controls1:IconGlyphs.FileChartOutline}"
+                                    <controls1:RemixIconText IconSize="72" Kind="{x:Static remix:PackIconRemixIconKind.FileChartLine}"
                                                              HorizontalAlignment="Center"/>
                                     <TextBlock Text="在左侧选择一个课表，然后在此处进行设置。" TextWrapping="Wrap"
                                                Margin="0 8 0 0"/>
@@ -1223,7 +1223,7 @@
                                     <ToolBar Grid.Row="0" ToolBarTray.IsLocked="True" IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}}">
                                         <Button Click="ButtonAddTimeLayout_OnClick" ToolTip="新建时间表。"
                                                 Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="添加"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AddLine}" Text="添加"/>
                                         </Button>
                                         <Button Click="ButtonDuplicateTimeLayout_OnClick" ToolTip="复制选中的时间表。"
                                                 Command="{x:Static local:ProfileSettingsWindow.OpenDrawerCommand}">
@@ -1236,7 +1236,7 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </Button.Style>
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ContentCopy}" Text="复制"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FileCopyLine}" Text="复制"/>
                                         </Button>
                                     </ToolBar>
 
@@ -1254,7 +1254,7 @@
                                             <DataTemplate>
                                                 <Grid HorizontalAlignment="Stretch">
                                                     <TextBlock Text="{Binding Value.Name}" HorizontalAlignment="Left"/>
-                                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.MapMarkerRadiusOutline}" HorizontalAlignment="Right"
+                                                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.MapPinRangeLine}" HorizontalAlignment="Right"
                                                                              ToolTip="此时间表正在活动。"
                                                                              Visibility="{Binding Value.IsActivated, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                                 </Grid>
@@ -1313,17 +1313,17 @@
                                              IsEnabled="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Converter={StaticResource InvertBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}}">
                                         <!--<TextBlock Text="{Binding Layouts}"/>-->
                                         <Button Click="ButtonAddClassTime_OnClick" ToolTip="添加上课时间点。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.NotePlusOutline}" Text="上课"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AddCircleLine}" Text="上课"/>
                                         </Button>
                                         <Button Click="ButtonAddBreakTime_OnClick" ToolTip="添加课间休息时间点。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClockPlusOutline}" Text="课间"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.TimerLine}" Text="课间"/>
                                         </Button>
                                         <Button Click="ButtonAddSeparator_OnClick" ToolTip="添加分割线。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowSplitHorizontal}" Text="分割线"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.Separator}" Text="分割线"/>
                                         </Button>
                                         <Button Click="ButtonAddActionTimePoint_OnClick" ToolTip="添加行动时间点。"
                                                 IsEnabled="{Binding ProfileService.IsCurrentProfileTrusted, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.AirplanePlus}" Text="行动"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.PlaneLine}" Text="行动"/>
                                         </Button>
                                         <Separator/>
                                         <Button Click="ButtonRemoveTimePoint_OnClick" ToolTip="删除选中的时间点。">
@@ -1336,12 +1336,12 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </Button.Style>
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Remove}" Text="删除"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.DeleteBinLine}" Text="删除"/>
                                         </Button>
                                         <Button Click="ButtonRefreshTimeLayout_OnClick"
                                                 ToolTip="重新排序该时间表中的时间点。"
                                                >
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.RefreshLine}" Text="刷新"/>
                                         </Button>
                                         <!--<Button  Click="ButtonEditTimePoint_OnClick"
                                                  ToolTip="编辑选中的时间点。">
@@ -1365,11 +1365,11 @@
                                         <Separator/>-->
                                         <Button Click="ButtonEditTimeLayoutInfo_OnClick"
                                                 ToolTip="查看并编辑时间表的基本信息。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.InfoOutline}" Text="时间表信息"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.InformationLine}" Text="时间表信息"/>
                                         </Button>
                                         <Button Click="ButtonDeleteTimeLayout_OnClick"
                                                 ToolTip="删除该时间表。">
-                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Delete}" Text="删除时间表"/>
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.DeleteBinLine}" Text="删除时间表"/>
                                         </Button>
                                     </ToolBar>
 
@@ -1379,7 +1379,7 @@
                                                 HorizontalContentAlignment="Left"
                                                 x:Name="TabTimeLayoutEditors">
                                         <!-- 旧版编辑器 -->
-                                        <TabItem Header="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ListBoxOutline}}" 
+                                        <TabItem Header="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.ListUnordered}}" 
                                                  Visibility="Collapsed"
                                                  ToolTip="列表" Padding="4">
                                             <ListBox SelectionMode="Single"
@@ -1403,7 +1403,7 @@
                                             </ListBox>
                                         </TabItem>
                                         <!-- 新编辑器 -->
-                                        <TabItem Header="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.TimelineOutline}}"
+                                        <TabItem Header="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.TimeLine}}"
                                                  Visibility="Collapsed">
                                             <controls:TimeLineListControl SelectedItem="{Binding ViewModel.SelectedTimePoint, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, Mode=TwoWay}"
                                                                           ItemsSource="{Binding Layouts, Mode=OneWay}"
@@ -1434,20 +1434,20 @@
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                             </Style>
                                         </StackPanel.Style>
-                                        <Button Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Target}}"
+                                        <Button Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.Focus3Line}}"
                                                 ToolTip="定位选中项目"
                                                 VerticalAlignment="Center"
                                                 Margin="2 0"
                                                 ToolTipService.Placement="Top"
                                                 Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                 Click="ButtonTimeLayoutEditScrollToContent_OnClick"/>
-                                        <ToggleButton Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Magnet}, Size=14}" IsChecked="{Binding ViewModel.IsTimeLineSticky, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}" Style="{StaticResource MahApps.Styles.ToggleButton}" ToolTip="启用时间点吸附" Margin="2 0" ToolTipService.Placement="Top" Width="24" Height="24"/>
+                                        <ToggleButton Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.CompassLine}, Size=14}" IsChecked="{Binding ViewModel.IsTimeLineSticky, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}" Style="{StaticResource MahApps.Styles.ToggleButton}" ToolTip="启用时间点吸附" Margin="2 0" ToolTipService.Placement="Top" Width="24" Height="24"/>
                                         <TextBlock Text="{Binding ViewModel.TimeLineScale, RelativeSource={RelativeSource FindAncestor, AncestorType=local:ProfileSettingsWindow}, Mode=OneWay, StringFormat={}{0:P0}}" 
                                                    Margin="4 0 4 0"
                                                    ToolTip="缩放比例"
                                                    ToolTipService.Placement="Top"
                                                    VerticalAlignment="Center"/>
-                                        <RepeatButton Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ZoomOut}}"
+                                        <RepeatButton Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.ZoomOutLine}}"
                                                       ToolTip="缩小"
                                                       Delay="500" Interval="100"
                                                       ToolTipService.Placement="Top"
@@ -1455,7 +1455,7 @@
                                                       Margin="2 0"
                                                       Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                       Click="ButtonZoomOut_OnClick"/>
-                                        <RepeatButton Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ZoomIn}}"
+                                        <RepeatButton Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.ZoomInLine}}"
                                                       ToolTip="放大"
                                                       Delay="500" Interval="100"
                                                       ToolTipService.Placement="Top"
@@ -1469,7 +1469,7 @@
                                             Grid.Column="0"
                                             VerticalAlignment="Bottom"
                                             HorizontalAlignment="Right"
-                                            Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.Target}}"
+                                            Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.Focus3Line}}"
                                             ToolTip="定位选中项目"
                                             Margin="2 0"
                                             Click="ButtonTimeLayoutEditScrollToContent_OnClick">
@@ -1506,7 +1506,7 @@
                                             </Style>
                                         </ListBox.ItemContainerStyle>
                                         <ListBox.ItemTemplate>
-                                            <DataTemplate DataType="{x:Type controls1:IconText}">
+                                            <DataTemplate DataType="{x:Type controls1:RemixIconText}">
                                                 <DataTemplate.Resources>
                                                     <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                                                         <Setter Property="ToolTipService.Placement" Value="Top"/>
@@ -1515,12 +1515,12 @@
                                                 </DataTemplate.Resources>
                                                 <RadioButton ToolTip="{Binding ToolTip}"
                                                              IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
-                                                    <controls1:IconText Kind="{Binding Kind}"/>
+                                                    <controls1:RemixIconText Kind="{Binding Kind}"/>
                                                 </RadioButton>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ListBoxOutline}" ToolTip="列表视图"/>
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.TimelineOutline}" ToolTip="时间线视图"/>
+                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.ListUnordered}" ToolTip="列表视图"/>
+                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.TimeLine}" ToolTip="时间线视图"/>
                                     </ListBox>
 
                                     <GridSplitter Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Grid.RowSpan="2"/>
@@ -1584,16 +1584,16 @@
                                                         SelectedIndex="{Binding ViewModel.SelectedTimePoint.TimeType}"
                                                         PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
                                                         <ListBoxItem>
-                                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.BookOutline}" Text="上课" />
+                                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.BookOpenLine}" Text="上课" />
                                                         </ListBoxItem>
                                                         <ListBoxItem>
-                                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ClockOutline}" Text="课间休息" />
+                                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.TimeLine}" Text="课间休息" />
                                                         </ListBoxItem>
                                                         <ListBoxItem Visibility="Collapsed">
-                                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ArrowSplitHorizontal}" Text="分割线" />
+                                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.Separator}" Text="分割线" />
                                                         </ListBoxItem>
                                                         <ListBoxItem Visibility="Collapsed">
-                                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Airplane}" Text="行动" />
+                                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.PlaneLine}" Text="行动" />
                                                         </ListBoxItem>
                                                     </ListBox>
                                                 </StackPanel>
@@ -1616,7 +1616,7 @@
                                                 <TextBlock Text="若默认隐藏一个时间点，那么只有在处于此时间点时，此时间点才会显示。" TextWrapping="Wrap" />
 
                                                 <Separator Margin="0 20 0 8" />
-                                                <controls1:IconText Kind="{x:Static controls1:IconGlyphs.BookOutline}" Text="默认课程" Margin="0 0 0 4" />
+                                                <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.BookOpenLine}" Text="默认课程" Margin="0 0 0 4" />
                                                 <ComboBox mah:TextBoxHelper.Watermark="默认课程"
                                                           Style="{StaticResource MahApps.Styles.ComboBox}"
                                                           ItemsSource="{Binding ProfileService.Profile.Subjects, UpdateSourceTrigger=PropertyChanged}"
@@ -1632,7 +1632,7 @@
                                                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                                             Click="ButtonOverwriteClasses_OnClick"
                                                             IsEnabled="{Binding ManagementService.Policy.DisableProfileClassPlanEditing, Converter={StaticResource InvertBooleanConverter}}">
-                                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Upload}" Text="覆盖现有课程"/>
+                                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.UploadLine}" Text="覆盖现有课程"/>
                                                     </Button>
                                                 </WrapPanel>
                                             </StackPanel>
@@ -1699,7 +1699,7 @@
                                                         Click="ButtonDebugTriggerAction_OnClick"
                                                         IsEnabled="{Binding ProfileService.IsCurrentProfileTrusted, RelativeSource={RelativeSource AncestorType=local:ProfileSettingsWindow}}"
                                                         Margin="0 0 0 2">
-                                                    <ci:IconText Kind="{x:Static controls1:IconGlyphs.MotionPlayOutline}" Text="触发"/>
+                                                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.PlayCircleLine}" Text="触发"/>
                                                 </Button>
                                                 <action:ActionControl ActionSet="{Binding ViewModel.SelectedTimePoint.ActionSet}"/>
                                             </StackPanel>
@@ -1719,8 +1719,8 @@
                                             </Style>
                                         </Grid.Style>
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="16">
-                                            <controls1:IconText IconSize="56"
-                                                               Kind="{x:Static controls1:IconGlyphs.ClockCheckOutline}"
+                                            <controls1:RemixIconText IconSize="56"
+                                                               Kind="{x:Static remix:PackIconRemixIconKind.TimeLine}"
                                                                Margin="0 0 0 8"/>
                                             <TextBlock Text="您还没有创建时间点。点击上方工具栏新建时间点按钮以新建时间点。"
                                                        TextAlignment="Center"
@@ -1753,7 +1753,7 @@
                                             <Setter Property="Visibility" Value="Collapsed"/>
                                         </Style>
                                     </StackPanel.Style>
-                                    <controls1:IconText IconSize="72" Kind="{x:Static controls1:IconGlyphs.Timetable}"
+                                    <controls1:RemixIconText IconSize="72" Kind="{x:Static remix:PackIconRemixIconKind.CalendarScheduleLine}"
                                                              HorizontalAlignment="Center"/>
                                     <TextBlock Text="在左侧选择一个时间表，然后在此处进行设置。" TextWrapping="Wrap"
                                                Margin="0 8 0 0"/>
@@ -1778,7 +1778,7 @@
                                          IsEnabled="{Binding ManagementService.Policy.DisableProfileSubjectsEditing, Converter={StaticResource InvertBooleanConverter}}"
                                          Grid.Row="0" ToolBarTray.IsLocked="True">
                                     <Button Click="ButtonAddSubject_OnClick" ToolTip="添加科目。">
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Add}" Text="添加"/>
+                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.AddLine}" Text="添加"/>
                                     </Button>
                                     <Separator/>
                                     <!--<TextBlock>
@@ -1796,10 +1796,10 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </Button.Style>
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ContentCopy}" Text="复制"/>
+                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.FileCopyLine}" Text="复制"/>
                                     </Button>
                                     <Button Click="ButtonSubject_OnClick">
-                                        <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Delete}" Text="删除"/>
+                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.DeleteBinLine}" Text="删除"/>
                                     </Button>
                                 </ToolBar>
                                 <!-- 科目选择 -->
@@ -1828,21 +1828,21 @@
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Grid>
-                                                            <controls1:IconText>
-                                                                <controls1:IconText.Style>
-                                                                    <Style TargetType="controls1:IconText">
+                                                            <controls1:RemixIconText>
+                                                                <controls1:RemixIconText.Style>
+                                                                    <Style TargetType="controls1:RemixIconText">
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding IsNewItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}, Mode=OneWay}" Value="True">
-                                                                                <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.Add}"/>
+                                                                                <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.AddLine}"/>
                                                                             </DataTrigger>
                                                                             <DataTrigger Binding="{Binding IsOutDoor}" Value="True">
-                                                                                <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.BasketballHoopOutline}"/>
+                                                                                <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.BasketballLine}"/>
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
-                                                                        <Setter Property="Kind" Value="{x:Static controls1:IconGlyphs.BookOutline}"/>
+                                                                        <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.BookOpenLine}"/>
                                                                     </Style>
-                                                                </controls1:IconText.Style>
-                                                            </controls1:IconText>
+                                                                </controls1:RemixIconText.Style>
+                                                            </controls1:RemixIconText>
                                                         </Grid>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -1950,7 +1950,7 @@
                                             <Setter Property="Visibility" Value="Collapsed"/>
                                         </Style>
                                     </StackPanel.Style>
-                                    <controls1:IconText IconSize="72" Kind="{x:Static controls1:IconGlyphs.BookMultipleOutline}"
+                                    <controls1:RemixIconText IconSize="72" Kind="{x:Static remix:PackIconRemixIconKind.Book2Line}"
                                                              HorizontalAlignment="Center"/>
                                     <TextBlock Text="在左侧选择一个科目，然后在此处进行设置。" TextWrapping="Wrap"
                                                Margin="0 8 0 0"/>
@@ -1973,7 +1973,7 @@
                                 <ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                                          ToolBarTray.IsLocked="True">
                                     <Button Click="ButtonRefreshScheduleAdjustmentView_OnClick" IsEnabled="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource InvertBooleanConverter}}">
-                                        <ci:IconText Kind="{x:Static controls1:IconGlyphs.Refresh}" Text="刷新"/>
+                                        <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.RefreshLine}" Text="刷新"/>
                                     </Button>
                                     <Separator/>
                                     <StackPanel Orientation="Horizontal">
@@ -1994,7 +1994,7 @@
                                             <Button Click="ButtonEditClassInfoTemp_OnClick"
                                                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                                                     IsEnabled="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource InvertBooleanConverter}}">
-                                                <ci:IconText Kind="{x:Static controls1:IconGlyphs.EditOutline}" Text="修改课程" />
+                                                <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.EditLine}" Text="修改课程" />
                                             </Button>
                                             <Popup AllowsTransparency="True"
                                                                     StaysOpen="False"
@@ -2037,7 +2037,7 @@
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Button.Style>
-                                                            <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="确定" />
+                                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CheckLine}" Text="确定" />
                                                         </Button>
                                                     </StackPanel>
                                                 </Border>
@@ -2045,15 +2045,15 @@
                                         </Grid>
                                         <Button Click="ButtonSwapSchedule_OnClick"
                                                 IsEnabled="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource InvertBooleanConverter}}">
-                                            <ci:IconText Kind="{x:Static controls1:IconGlyphs.SwapHorizontal}" Text="交换课程" />
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.SwapLine}" Text="交换课程" />
                                         </Button>
                                         <Button Click="ButtonCancelClassSwap_OnClick"
                                                 Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                            <ci:IconText Kind="{x:Static controls1:IconGlyphs.Cancel}" Text="取消" />
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CloseCircleLine}" Text="取消" />
                                         </Button>
                                         <Button Click="ButtonSwapScheduleComplete_OnClick"
                                                 Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                            <ci:IconText Kind="{x:Static controls1:IconGlyphs.Check}" Text="完成交换" />
+                                            <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CheckLine}" Text="完成交换" />
                                         </Button>
                                         <CheckBox
                                             Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -2101,12 +2101,12 @@
                                                 <DatePicker SelectedDate="{Binding ViewModel.ScheduleCalendarSelectedDate}"
                                                             Width="100"/>
                                                 <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                        Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowLeft}}"
+                                                        Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.ArrowLeftLine}}"
                                                         ToolTip="上一周"
                                                         Margin="4 0 0 0"
                                                         Click="ButtonPreviousWeek_OnClick"/>
                                                 <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
-                                                        Content="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ArrowRight}}"
+                                                        Content="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.ArrowRightLine}}"
                                                         ToolTip="下一周"
                                                         Margin="4 0 0 0"
                                                         Click="ButtonNextWeek_OnClick"/>
@@ -2119,7 +2119,7 @@
                                             <Border Background="{DynamicResource ProfileEditorAccentFillBrush}" Panel.ZIndex="1" Grid.Row="2" Visibility="{Binding ViewModel.IsInScheduleSwappingMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <Grid>
                                                     <DockPanel Margin="8 4">
-                                                        <controls1:IconText IconSize="20" Kind="{x:Static controls1:IconGlyphs.SwapHorizontal}"/>
+                                                        <controls1:RemixIconText IconSize="20" Kind="{x:Static remix:PackIconRemixIconKind.SwapLine}"/>
                                                         <TextBlock TextWrapping="Wrap"
                                                                    VerticalAlignment="Center"
                                                                    Margin="4 0 0 0" >
@@ -2345,7 +2345,7 @@
                                         </Style>
                                     </ListBox.ItemContainerStyle>
                                     <ListBox.ItemTemplate>
-                                        <DataTemplate DataType="{x:Type controls1:IconText}">
+                                        <DataTemplate DataType="{x:Type controls1:RemixIconText}">
                                             <DataTemplate.Resources>
                                                 <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                                                     <Setter Property="ToolTipService.Placement" Value="Top"/>
@@ -2354,12 +2354,12 @@
                                             </DataTemplate.Resources>
                                             <RadioButton ToolTip="{Binding ToolTip}"
                                                              IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}">
-                                                <controls1:IconText Kind="{Binding Kind}"/>
+                                                <controls1:RemixIconText Kind="{Binding Kind}"/>
                                             </RadioButton>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
-                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Table}" ToolTip="周视图"/>
-                                    <controls1:IconText Kind="{x:Static controls1:IconGlyphs.CalendarOutline}" ToolTip="日历视图"/>
+                                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.TableLine}" ToolTip="周视图"/>
+                                    <controls1:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CalendarLine}" ToolTip="日历视图"/>
                                 </ListBox>
                             </Grid>
                         </TabItem>
@@ -2369,7 +2369,7 @@
                     <Border Grid.Row="2" Background="{DynamicResource MahApps.Brushes.ThemeBackground}" 
                             Visibility="{Binding ManagementService.Policy.DisableProfileEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
-                            <controls1:IconText IconSize="64" Kind="{x:Static controls1:IconGlyphs.Work}" HorizontalAlignment="Center"/>
+                            <controls1:RemixIconText IconSize="64" Kind="{x:Static remix:PackIconRemixIconKind.BriefcaseLine}" HorizontalAlignment="Center"/>
                             <TextBlock Text="档案编辑功能已被您的组织禁用。" HorizontalAlignment="Center" Margin="0 6 0 0"/>
                         </StackPanel>
                     </Border>
@@ -2533,10 +2533,10 @@
                                                            FontWeight="Bold"
                                                            Margin="12 8 8 4" />
                                                 <MenuItem Header="从 CSES 导入…"
-                                                          Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileCodeOutline}}"
+                                                          Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.FileCodeLine}}"
                                                           Click="MenuItemImportFromCses_OnClick" />
                                                 <MenuItem Header="从其它课表软件导入…"
-                                                          Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.ApplicationOutline}}"
+                                                          Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.Apps2Line}}"
                                                           Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
                                                           CommandParameter="https://migrate.classisland.tech/" />
                                                 <MenuItem Header="从 ClassIsland 档案导入…"
@@ -2557,7 +2557,7 @@
                                                            Margin="12 8 8 4" />
                                                 <MenuItem Header="导出到 CSES…"
                                                           Click="MenuItemExportCses_OnClick"
-                                                          Icon="{controls1:GlyphIcon {x:Static controls1:IconGlyphs.FileCodeOutline}}" />
+                                                          Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.FileCodeLine}}" />
                                             </StackPanel>
                                         </Border>
                                     </Popup>

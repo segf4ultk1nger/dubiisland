@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClassIsland.Controls"
              xmlns:controls="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
+             xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              SizeChanged="TimeLineListItemControl_OnSizeChanged">
@@ -21,39 +22,39 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <!-- Icon -->
-        <controls:IconText Grid.Column="0" Grid.Row="0"
+        <controls:RemixIconText Grid.Column="0" Grid.Row="0"
             Margin="0 0 2 0"
             VerticalAlignment="Center">
-            <controls:IconText.Style>
-                <Style TargetType="controls:IconText">
+            <controls:RemixIconText.Style>
+                <Style TargetType="controls:RemixIconText">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                             Value="0">
-                            <Setter Property="Kind" Value="{x:Static controls:IconGlyphs.BookOutline}" />
+                            <Setter Property="Kind" Value="{x:Static remix:PackIconRemixIconKind.BookOpenLine}" />
                             <Setter Property="ToolTip" Value="上课时间" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                             Value="1">
                             <Setter Property="Kind"
-                                Value="{x:Static controls:IconGlyphs.ClockOutline}" />
+                                Value="{x:Static remix:PackIconRemixIconKind.TimeLine}" />
                             <Setter Property="ToolTip" Value="课间休息" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                             Value="2">
                             <Setter Property="Kind"
-                                Value="{x:Static controls:IconGlyphs.ArrowSplitHorizontal}" />
+                                Value="{x:Static remix:PackIconRemixIconKind.Separator}" />
                             <Setter Property="ToolTip" Value="分割线" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TimePoint.TimeType}"
                                      Value="3">
                             <Setter Property="Kind"
-                                    Value="{x:Static controls:IconGlyphs.Airplane}" />
+                                    Value="{x:Static remix:PackIconRemixIconKind.PlaneLine}" />
                             <Setter Property="ToolTip" Value="行动" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
-            </controls:IconText.Style>
-        </controls:IconText>
+            </controls:RemixIconText.Style>
+        </controls:RemixIconText>
 
         <!-- Time -->
         <TextBlock Grid.Column="1" Grid.Row="0"
@@ -67,8 +68,8 @@
         </TextBlock>
 
         <!-- Last Time -->
-        <controls:IconText Grid.Column="1" Grid.Row="1"
-                           Kind="{x:Static controls:IconGlyphs.ClockAutoOutline}"
+        <controls:RemixIconText Grid.Column="1" Grid.Row="1"
+                           Kind="{x:Static remix:PackIconRemixIconKind.TimerLine}"
                            Text="{Binding TimePoint.Last}"
                            Margin="0 0 0 0" ToolTip="持续时间" />
 

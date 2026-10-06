@@ -7,7 +7,8 @@
              xmlns:ci="http://classisland.tech/schemas/xaml/core"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
-             IsVisibleChanged="WeekOffsetSettingsControl_OnIsVisibleChanged" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+             IsVisibleChanged="WeekOffsetSettingsControl_OnIsVisibleChanged" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
+             xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon">
     <Grid
          Margin="12"
          DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:WeekOffsetSettingsControl}}">
@@ -46,11 +47,11 @@
             </ListBox>
             <WrapPanel Margin="0 6 0 0">
                 <Button HorizontalAlignment="Left" Click="ButtonFinish_OnClick">
-                    <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Check}" Text="应用" />
+                    <ciCore:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.CheckLine}" Text="应用" />
                 </Button>
                 <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                         Click="ButtonClear_OnClick">
-                    <ci:IconText Kind="{x:Static ciCore:IconGlyphs.Refresh}" Text="重置偏移"/>
+                    <ciCore:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.RefreshLine}" Text="重置偏移"/>
                 </Button>
             </WrapPanel>
         </StackPanel>

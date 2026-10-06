@@ -9,18 +9,19 @@
              xmlns:views="clr-namespace:ClassIsland.Views"
              xmlns:converters="clr-namespace:ClassIsland.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
+             d:DesignHeight="450" d:DesignWidth="800" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
+             xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon">
     <UserControl.Resources>
     </UserControl.Resources>
     <Grid DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:ClassPlanGroupItemControl}}">
         <Grid.ContextMenu>
             <ContextMenu FontFamily="{StaticResource HarmonyOsSans}">
-                <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileDocumentMultipleOutline}}" Header="临时启用" Click="MenuItemTemp_OnClick"/>
+                <MenuItem Icon="{ciCore:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.FileCopy2Line}}" Header="临时启用" Click="MenuItemTemp_OnClick"/>
                 <Separator/>
-                <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.RenameOutline}}" Header="重命名" Click="MenuItemRename_OnClick" IsEnabled="{Binding IsProtected, Converter={StaticResource InvertBooleanConverter}}"/>
+                <MenuItem Icon="{ciCore:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.EditLine}}" Header="重命名" Click="MenuItemRename_OnClick" IsEnabled="{Binding IsProtected, Converter={StaticResource InvertBooleanConverter}}"/>
                 <!--<MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.FileExportOutline}}" Header="导出"/>-->
-                <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.Remove}}" Header="解散" Click="MenuItemDisband_OnClick" IsEnabled="{Binding IsProtected, Converter={StaticResource InvertBooleanConverter}}"/>
-                <MenuItem Icon="{ciCore:GlyphIcon {x:Static ciCore:IconGlyphs.DeleteOutline}}" Header="删除" Click="MenuItemDelete_OnClick" IsEnabled="{Binding IsProtected, Converter={StaticResource InvertBooleanConverter}}"/>
+                <MenuItem Icon="{ciCore:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.DeleteBinLine}}" Header="解散" Click="MenuItemDisband_OnClick" IsEnabled="{Binding IsProtected, Converter={StaticResource InvertBooleanConverter}}"/>
+                <MenuItem Icon="{ciCore:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.DeleteBinLine}}" Header="删除" Click="MenuItemDelete_OnClick" IsEnabled="{Binding IsProtected, Converter={StaticResource InvertBooleanConverter}}"/>
             </ContextMenu>
         </Grid.ContextMenu>
         <Grid.ColumnDefinitions>
