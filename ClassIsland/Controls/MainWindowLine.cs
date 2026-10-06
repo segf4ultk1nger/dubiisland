@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using System.Xml.Linq;
 using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Controls;
+using ClassIsland.Core.Models.Components;
 using ClassIsland.Models.EventArgs;
 using ClassIsland.Services;
 using ClassIsland.Shared;
@@ -92,15 +93,6 @@ public class MainWindowLine : Control
         set { SetValue(IsMouseInProperty, value); }
     }
 
-    public static readonly DependencyProperty LineNumberProperty = DependencyProperty.Register(
-        nameof(LineNumber), typeof(int), typeof(MainWindowLine), new PropertyMetadata(default(int)));
-
-    public int LineNumber
-    {
-        get { return (int)GetValue(LineNumberProperty); }
-        set { SetValue(LineNumberProperty, value); }
-    }
-
     public static readonly DependencyProperty IsAllComponentsHidProperty = DependencyProperty.Register(
         nameof(IsAllComponentsHid), typeof(bool), typeof(MainWindowLine), new PropertyMetadata(default(bool)));
 
@@ -133,8 +125,6 @@ public class MainWindowLine : Control
 
     private ILogger<MainWindowLine> Logger { get; } = IAppHost.GetService<ILogger<MainWindowLine>>();
 
-    private IComponentsService ComponentsService { get; } = IAppHost.GetService<IComponentsService>();
-
     private Grid? GridWrapper;
 
     public MainWindowLine()
@@ -147,9 +137,8 @@ public class MainWindowLine : Control
     private void UpdateVisibilityState(object sender, RoutedEventArgs args)
     {
         Logger.LogTrace("ComponentVisibilityChangedEvent handled");
-        IsAllComponentsHid = ComponentsService.CurrentComponents
-            .Where(x => x.RelativeLineNumber == LineNumber)
-            .FirstOrDefault(x => x.IsVisible) == null;
+        IsAllComponentsHid = (DataContext as MainWindowLineSettings)?
+            .Children.FirstOrDefault(x => x.IsVisible) == null;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)

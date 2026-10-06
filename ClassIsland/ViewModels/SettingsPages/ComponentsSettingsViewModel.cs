@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Controls;
+using ClassIsland.Core.Attributes;
 using ClassIsland.Core.Models.Components;
+using ClassIsland.Core.Services.Registry;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClassIsland.ViewModels.SettingsPages;
@@ -21,6 +25,47 @@ public class ComponentsSettingsViewModel : ObservableRecipient
     private ComponentSettings? _selectedContainerComponent;
     private bool _canChildrenNavigateBack = false;
     private ComponentSettings? _selectedRootComponent;
+    private MainWindowLineSettings? _selectedMainWindowLineSettings;
+    private bool _isSelectedComponentOnRoot;
+
+    /// <summary>
+    /// 当前选中的主界面行。
+    /// </summary>
+    public MainWindowLineSettings? SelectedMainWindowLineSettings
+    {
+        get => _selectedMainWindowLineSettings;
+        set
+        {
+            if (Equals(value, _selectedMainWindowLineSettings)) return;
+            _selectedMainWindowLineSettings = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 当前选中的组件是否位于根层级（即某一直属行内，而非容器内）。
+    /// </summary>
+    public bool IsSelectedComponentOnRoot
+    {
+        get => _isSelectedComponentOnRoot;
+        set
+        {
+            if (value == _isSelectedComponentOnRoot) return;
+            _isSelectedComponentOnRoot = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 各主界面行的组件列表控件缓存，用于跨行同步清除选中状态。
+    /// </summary>
+    public Dictionary<ListBox, MainWindowLineSettings> MainWindowLineListBoxCacheReversed { get; } = new();
+
+    /// <summary>
+    /// 可用的组件容器，用于"包裹到容器"。
+    /// </summary>
+    public IReadOnlyList<ComponentInfo> ContainerComponents { get; } =
+        ComponentRegistryService.Registered.Where(x => x.IsComponentContainer).ToList();
 
     public ComponentSettings? SelectedComponentSettings
     {

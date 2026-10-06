@@ -9,8 +9,8 @@ namespace ClassIsland.Controls.Island;
 /// </summary>
 public interface IIslandComponent
 {
-    /// <summary>所在行号（对应 ComponentSettings.RelativeLineNumber）。</summary>
-    int LineNumber { get; }
+    /// <summary>所在行号（组件配置中行的索引，由宿主在构建时设置）。</summary>
+    int LineNumber { get; set; }
 
     /// <summary>为 false 时本帧不参与布局与绘制。</summary>
     bool IsVisible { get; }

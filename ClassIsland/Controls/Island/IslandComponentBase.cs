@@ -37,7 +37,7 @@ public abstract class IslandComponentBase : IIslandComponent
     private Color _foregroundColor;
     private bool _foregroundCustom;
 
-    public int LineNumber => Component.RelativeLineNumber;
+    public int LineNumber { get; set; }
 
     public virtual bool IsVisible => Component.IsVisible && !_hidByRule;
 

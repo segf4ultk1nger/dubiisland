@@ -3,27 +3,29 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Models;
 using ClassIsland.Core.Abstractions.Services;
-using ClassIsland.Core.Services;
 using ClassIsland.Core.Attributes;
+using ClassIsland.Core.Controls;
 using ClassIsland.Core.Controls.Ruleset;
 using ClassIsland.Core.Enums.SettingsWindow;
 using ClassIsland.Core.Models.Components;
+using ClassIsland.Core.Services;
 using ClassIsland.Services;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.ViewModels.SettingsPages;
 using CommunityToolkit.Mvvm.Input;
 using GongSolutions.Wpf.DragDrop;
 using Path = System.IO.Path;
+using CommonDialog = ClassIsland.Core.Controls.CommonDialog.CommonDialog;
 
-using ClassIsland.Core.Controls;
 namespace ClassIsland.Views.SettingPages;
 
 /// <summary>
@@ -43,14 +45,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         SettingsService = settingsService;
         ComponentsService = componentsService;
         InitializeComponent();
-        
+
         DataContext = this;
-        var mainHandler = FindResource("MainComponentsSettingsPageDropHandler") as ComponentsSettingsPageDropHandler;
-        var childHandler = FindResource("ChildComponentsSettingsPageDropHandler") as ComponentsSettingsPageDropHandler;
-        if (mainHandler is not null)
-        {
-            mainHandler.Components = ComponentsService.CurrentComponents;
-        }
         if (FindResource("DataProxy") is BindingProxy proxy)
         {
             proxy.Data = this;
@@ -65,8 +61,17 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     {
         if (args.PropertyName == nameof(SettingsService.Settings.CurrentComponentConfig))
         {
-            CloseComponentChildrenView();
+            ClearSelectedComponents();
         }
+    }
+
+    private void ClearSelectedComponents()
+    {
+        ViewModel.SelectedComponentSettingsMain = null;
+        ViewModel.SelectedComponentSettings = null;
+        ViewModel.SelectedMainWindowLineSettings = null;
+        CloseComponentChildrenView();
+        UpdateSettingsVisibility();
     }
 
     private void CloseComponentChildrenView()
@@ -90,7 +95,13 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         ViewModel.SelectedComponentSettings = null;
         if (ViewModel.SelectedComponentSettingsMain != null)
         {
-            ComponentsService.CurrentComponents.Remove(remove);
+            foreach (var line in ComponentsService.CurrentComponents.Lines)
+            {
+                if (line.Children.Remove(remove))
+                {
+                    break;
+                }
+            }
         } else if (ViewModel.SelectedComponentSettingsChild != null)
         {
             ViewModel.SelectedComponentContainerChildren.Remove(remove);
@@ -99,6 +110,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private void ButtonRefresh_OnClick(object sender, RoutedEventArgs e)
     {
+        ClearSelectedComponents();
         ComponentsService.RefreshConfigs();
     }
 
@@ -117,9 +129,11 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         {
             return;
         }
-        ConfigureFileHelper.SaveConfig(path, ClassIsland.Services.ComponentsService.DefaultComponents);
+        ConfigureFileHelper.SaveConfig(path, ClassIsland.Services.ComponentsService.DefaultComponentProfile);
         ComponentsService.RefreshConfigs();
         SettingsService.Settings.CurrentComponentConfig = ViewModel.CreateProfileName;
+        ViewModel.SelectedComponentSettings = null;
+        UpdateSettingsVisibility();
     }
 
     private void ButtonOpenConfigFolder_OnClick(object sender, RoutedEventArgs e)
@@ -133,12 +147,37 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private void SelectorComponents_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel.SelectedComponentSettingsMain != null)
+        if (e.AddedItems.Count <= 0 || e.AddedItems[0] is not ComponentSettings settings)
         {
-            ViewModel.SelectedComponentSettings = ViewModel.SelectedComponentSettingsMain;
-            ViewModel.SelectedComponentSettingsChild = null;
+            UpdateSettingsVisibility();
+            return;
         }
+        foreach (var listBox in ViewModel.MainWindowLineListBoxCacheReversed.Keys.Where(x => !Equals(x, sender)))
+        {
+            listBox.SelectedItem = null;
+        }
+        ListBoxComponentsChildren.SelectedItem = null;
+        ViewModel.SelectedComponentSettingsMain = settings;
+        ViewModel.SelectedComponentSettings = settings;
+        ViewModel.SelectedComponentSettingsChild = null;
         UpdateSettingsVisibility();
+    }
+
+    private void ListBoxMainWindowLineSettings_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ListBox { DataContext: MainWindowLineSettings settings } listBox)
+        {
+            return;
+        }
+        ViewModel.MainWindowLineListBoxCacheReversed[listBox] = settings;
+    }
+
+    private void ListBoxMainWindowLineSettings_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is ListBox listBox)
+        {
+            ViewModel.MainWindowLineListBoxCacheReversed.Remove(listBox);
+        }
     }
 
     private void UpdateSettingsVisibility()
@@ -152,6 +191,8 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         }
 
         ViewModel.IsComponentAdvancedSettingsVisible = true;
+        ViewModel.IsSelectedComponentOnRoot =
+            ViewModel.SelectedComponentSettings == ViewModel.SelectedComponentSettingsMain;
         if (ViewModel.SelectedComponentSettings.AssociatedComponentInfo.SettingsType == null)
         {
             ViewModel.IsComponentSettingsVisible = false;
@@ -183,6 +224,11 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             return;
         }
 
+        var type = componentSettings.AssociatedComponentInfo.ComponentType?.BaseType;
+        if (componentSettings.Settings is System.Text.Json.JsonElement && type != null)
+        {
+            componentSettings.Settings = ClassIsland.Services.ComponentsService.LoadComponentSettings(componentSettings, type);
+        }
         if (componentSettings.Settings is not IComponentContainerSettings settings)
         {
             return;
@@ -203,11 +249,19 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
 
     private void SelectorComponentsChildren_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ViewModel.SelectedComponentSettingsChild != null)
+        if (e.AddedItems.Count <= 0 || e.AddedItems[0] is not ComponentSettings settings)
         {
-            ViewModel.SelectedComponentSettings = ViewModel.SelectedComponentSettingsChild;
-            ViewModel.SelectedComponentSettingsMain = null;
+            UpdateSettingsVisibility();
+            return;
         }
+        foreach (var listBox in ViewModel.MainWindowLineListBoxCacheReversed.Keys.Where(x => !Equals(x, sender)))
+        {
+            listBox.SelectedItem = null;
+        }
+
+        ViewModel.SelectedComponentSettingsChild = settings;
+        ViewModel.SelectedComponentSettings = settings;
+        ViewModel.SelectedComponentSettingsMain = null;
         UpdateSettingsVisibility();
     }
 
@@ -222,9 +276,252 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         {
             return;
         }
-
         var settings = ViewModel.ChildrenComponentSettingsNavigationStack.Pop();
         SetCurrentSelectedComponentContainer(settings, true);
+    }
+
+    private void ButtonCreateMainWindowLine_OnClick(object sender, RoutedEventArgs e)
+    {
+        var lines = ComponentsService.CurrentComponents.Lines;
+        var index = ViewModel.SelectedMainWindowLineSettings == null
+            ? lines.Count
+            : Math.Max(0, lines.IndexOf(ViewModel.SelectedMainWindowLineSettings) + 1);
+        var lineSettings = new MainWindowLineSettings();
+        lines.Insert(index, lineSettings);
+        ViewModel.SelectedMainWindowLineSettings = lineSettings;
+    }
+
+    private void ButtonRemoveSelectedMainWindowLine_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (ComponentsService.CurrentComponents.Lines.Count <= 1)
+        {
+            CommonDialog.ShowError("至少需要保留 1 个主界面行。");
+            return;
+        }
+
+        if (ViewModel.SelectedMainWindowLineSettings != null)
+        {
+            ComponentsService.CurrentComponents.Lines.Remove(ViewModel.SelectedMainWindowLineSettings);
+        }
+    }
+
+    private void ToggleButtonIsMainLine_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not ToggleButton button || button.DataContext is not MainWindowLineSettings line)
+        {
+            return;
+        }
+
+        if (button.IsChecked == true)
+        {
+            foreach (var other in ComponentsService.CurrentComponents.Lines.Where(x => !ReferenceEquals(x, line)))
+            {
+                other.IsMainLine = false;
+            }
+        }
+        else
+        {
+            var firstLine = ComponentsService.CurrentComponents.Lines.FirstOrDefault();
+            if (firstLine != null)
+            {
+                firstLine.IsMainLine = true;
+            }
+            CommonDialog.ShowHint("已将第一行设置为主要行。");
+        }
+    }
+
+    private void ComponentsSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        SettingsService.Settings.PropertyChanged += OnSettingsOnPropertyChanged;
+    }
+
+    private void ComponentsSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        SettingsService.Settings.PropertyChanged -= OnSettingsOnPropertyChanged;
+    }
+
+    private void ContainerComponentsSource_OnFilter(object sender, FilterEventArgs e)
+    {
+        if (e.Item is not ComponentInfo info)
+        {
+            return;
+        }
+
+        e.Accepted = info.IsComponentContainer;
+    }
+
+    [RelayCommand]
+    private void OpenContextMenu(FrameworkElement element)
+    {
+        if (element.ContextMenu == null)
+        {
+            return;
+        }
+
+        element.ContextMenu.IsOpen = true;
+    }
+
+    [RelayCommand]
+    private void CreateContainerComponent(ComponentInfo container)
+    {
+        if (ViewModel.SelectedComponentSettings == null)
+        {
+            return;
+        }
+
+        var selected = ViewModel.SelectedComponentSettings;
+        var list = GetSelectedComponentSource(selected);
+        var index = list.IndexOf(selected);
+
+        if (index == -1)
+        {
+            return;
+        }
+
+        index = Math.Min(list.Count - 1, index);
+        var newComp = new ComponentSettings()
+        {
+            Id = container.Guid.ToString(),
+        };
+        if (container.ComponentType?.BaseType != null)
+        {
+            newComp.Settings =
+                ClassIsland.Services.ComponentsService.LoadComponentSettings(newComp, container.ComponentType.BaseType);
+        }
+        list.Insert(index, newComp);
+        if (selected == ViewModel.SelectedComponentSettingsMain)
+        {
+            ViewModel.SelectedComponentSettingsMain = newComp;
+        }
+        else
+        {
+            ViewModel.SelectedComponentSettingsChild = newComp;
+        }
+        SetCurrentSelectedComponentContainer(newComp);
+        list.Remove(selected);
+        newComp.Children?.Add(selected);
+        ViewModel.SelectedComponentSettings = newComp;
+    }
+
+    private ObservableCollection<ComponentSettings> GetSelectedComponentSource(ComponentSettings selected)
+    {
+        return ComponentsService.CurrentComponents.Lines
+            .FirstOrDefault(x => x.Children.Contains(selected))?
+            .Children ?? ViewModel.SelectedComponentContainerChildren;
+    }
+
+    [RelayCommand]
+    private void DuplicateComponent(ComponentSettings settings)
+    {
+        var list = GetSelectedComponentSource(settings);
+        var index = list.IndexOf(settings);
+        if (index == -1)
+        {
+            return;
+        }
+        index = Math.Min(list.Count - 1, index);
+
+        var newSettings = ConfigureFileHelper.CopyObject(settings);
+        list.Insert(index, newSettings);
+        if (settings == ViewModel.SelectedComponentSettingsMain)
+        {
+            ViewModel.SelectedComponentSettingsMain = newSettings;
+        }
+        else
+        {
+            ViewModel.SelectedComponentSettingsChild = newSettings;
+        }
+        ViewModel.SelectedComponentSettings = newSettings;
+    }
+
+    private void MenuItemDuplicateComponent_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedComponentSettings != null)
+        {
+            DuplicateComponent(ViewModel.SelectedComponentSettings);
+        }
+    }
+
+    [RelayCommand]
+    private void MoveComponentToPreviousLine(ComponentSettings settings)
+    {
+        var list = GetSelectedComponentSource(settings);
+        if (list == ViewModel.SelectedComponentContainerChildren)
+        {
+            return;
+        }
+
+        var index = ComponentsService.CurrentComponents.Lines.IndexOf(
+            ComponentsService.CurrentComponents.Lines.First(x => x.Children == list));
+
+        list.Remove(settings);
+        if (index - 1 >= 0)
+        {
+            ComponentsService.CurrentComponents.Lines[index - 1].Children.Add(settings);
+            return;
+        }
+
+        var newLine = new MainWindowLineSettings { Children = { settings } };
+        ComponentsService.CurrentComponents.Lines.Insert(0, newLine);
+        CommonDialog.ShowHint("已向上创建新主界面行。");
+    }
+
+    [RelayCommand]
+    private void MoveComponentToNextLine(ComponentSettings settings)
+    {
+        var list = GetSelectedComponentSource(settings);
+        if (list == ViewModel.SelectedComponentContainerChildren)
+        {
+            return;
+        }
+
+        var index = ComponentsService.CurrentComponents.Lines.IndexOf(
+            ComponentsService.CurrentComponents.Lines.First(x => x.Children == list));
+
+        list.Remove(settings);
+        if (index + 1 < ComponentsService.CurrentComponents.Lines.Count)
+        {
+            ComponentsService.CurrentComponents.Lines[index + 1].Children.Add(settings);
+            return;
+        }
+
+        var newLine = new MainWindowLineSettings { Children = { settings } };
+        ComponentsService.CurrentComponents.Lines.Add(newLine);
+        CommonDialog.ShowHint("已向下创建新主界面行。");
+    }
+
+    [RelayCommand]
+    private void MoveToCurrentContainerComponent(ComponentSettings settings)
+    {
+        var list = GetSelectedComponentSource(settings);
+        if (list == ViewModel.SelectedComponentContainerChildren)
+        {
+            return;
+        }
+
+        if (settings == ViewModel.SelectedRootComponent)
+        {
+            CommonDialog.ShowError("不能将容器组件移动到自身（或其子级）的子组件中。");
+            return;
+        }
+
+        list.Remove(settings);
+        ViewModel.SelectedComponentContainerChildren.Add(settings);
+        Dispatcher.InvokeAsync(() => ViewModel.SelectedComponentSettingsChild = settings);
+    }
+
+    [RelayCommand]
+    private void MoveComponentsToMainLines(ComponentSettings settings)
+    {
+        if (!ViewModel.SelectedComponentContainerChildren.Remove(settings))
+        {
+            return;
+        }
+
+        var selectedList = ViewModel.SelectedMainWindowLineSettings?.Children ??
+                           ComponentsService.CurrentComponents.Lines.FirstOrDefault()?.Children;
+
+        selectedList?.Add(settings);
     }
 
     public void DragEnter(IDropInfo dropInfo)
@@ -285,128 +582,6 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
                     components.Move(oldIndex, finalIndex);
                 }
                 break;
-        }
-    }
-
-    private void ButtonMoveToPrevLine_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (ViewModel.SelectedComponentSettings != null) 
-            ViewModel.SelectedComponentSettings.RelativeLineNumber--;
-    }
-
-    private void ButtonMoveToNextLine_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (ViewModel.SelectedComponentSettings != null)
-            ViewModel.SelectedComponentSettings.RelativeLineNumber++;
-    }
-
-    private void ComponentsSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        SettingsService.Settings.PropertyChanged += OnSettingsOnPropertyChanged;
-    }
-
-    private void ComponentsSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        SettingsService.Settings.PropertyChanged -= OnSettingsOnPropertyChanged;
-    }
-
-    private void ContainerComponentsSource_OnFilter(object sender, FilterEventArgs e)
-    {
-        if (e.Item is not ComponentInfo info)
-        {
-            return;
-        }
-
-        e.Accepted = info.IsComponentContainer;
-    }
-
-    [RelayCommand]
-    private void OpenContextMenu(FrameworkElement element)
-    {
-        if (element.ContextMenu == null)
-        {
-            return;
-        }
-
-        //element.ContextMenu.DataContext = this;
-        element.ContextMenu.IsOpen = true;
-    }
-
-    [RelayCommand]
-    private void CreateContainerComponent(ComponentInfo container)
-    {
-        if (ViewModel.SelectedComponentSettings == null)
-        {
-            return;
-        }
-
-        var selected = ViewModel.SelectedComponentSettings;
-        var list = ComponentsService.CurrentComponents.Contains(selected)
-            ? ComponentsService.CurrentComponents
-            : ViewModel.SelectedComponentContainerChildren;
-        var index = list.IndexOf(ViewModel.SelectedComponentSettings);
-
-        if (index == -1)
-        {
-            return;
-        }
-
-        index = Math.Min(list.Count - 1, index);
-        var newComp = new ComponentSettings()
-        {
-            Id = container.Guid.ToString(),
-        };
-        if (container.ComponentType?.BaseType != null)
-        {
-            newComp.Settings =
-                Services.ComponentsService.LoadComponentSettings(newComp, container.ComponentType.BaseType);
-        }
-        list.Insert(index, newComp);
-        if (selected == ViewModel.SelectedComponentSettingsMain)
-        {
-            ViewModel.SelectedComponentSettingsMain = newComp;
-        }
-        else
-        {
-            ViewModel.SelectedComponentSettingsChild = newComp;
-        }
-        SetCurrentSelectedComponentContainer(newComp);
-        list.Remove(selected);
-        newComp.Children?.Add(selected);
-        ViewModel.SelectedComponentSettings = newComp;
-    }
-
-    [RelayCommand]
-    private void DuplicateComponent(ComponentSettings settings)
-    {
-        var list = ComponentsService.CurrentComponents.Contains(settings)
-            ? ComponentsService.CurrentComponents
-            : ViewModel.SelectedComponentContainerChildren;
-        var index = list.IndexOf(settings);
-        if (index == -1)
-        {
-            return;
-        }
-        index = Math.Min(list.Count - 1, index);
-
-        var newSettings = ConfigureFileHelper.CopyObject(settings);
-        list.Insert(index, newSettings);
-        if (settings == ViewModel.SelectedComponentSettingsMain)
-        {
-            ViewModel.SelectedComponentSettingsMain = newSettings;
-        }
-        else
-        {
-            ViewModel.SelectedComponentSettingsChild = newSettings;
-        }
-        ViewModel.SelectedComponentSettings = newSettings;
-    }
-
-    private void MenuItemDuplicateComponent_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (ViewModel.SelectedComponentSettings != null)
-        {
-            DuplicateComponent(ViewModel.SelectedComponentSettings);
         }
     }
 }

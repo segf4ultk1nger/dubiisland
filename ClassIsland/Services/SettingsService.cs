@@ -136,8 +136,8 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
         if (Settings.LastAppVersion < Version.Parse("1.4.1.0"))  // 从 1.4.1.0 以前的版本升级
         {
             var componentsService = App.GetService<IComponentsService>();
-            componentsService.CurrentComponents.Clear();
-            var island = componentsService.CurrentComponents;
+            componentsService.CurrentComponents.Lines.Clear();
+            var line = new MainWindowLineSettings();
             var miniInfo = Settings.SelectedMiniInfoProvider?.ToUpper() switch
             {
                 // 日期
@@ -175,10 +175,10 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
             };
             if (Settings.ShowDate)
             {
-                island.Add(miniInfo);
+                line.Children.Add(miniInfo);
             }
 
-            island.Add(new ComponentSettings()
+            line.Children.Add(new ComponentSettings()
             {
                 Id = "1DB2017D-E374-4BC6-9D57-0B4ADF03A6B8",
                 Settings = new LessonControlSettings()
@@ -189,6 +189,7 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
                     ShowExtraInfoOnTimePoint = Settings.ShowExtraInfoOnTimePoint
                 }
             });
+            componentsService.CurrentComponents.Lines.Add(line);
             Settings.ShowComponentsMigrateTip = true;
             Settings.IsMigratedFromv1_4 = true;
             Logger.LogInformation("成功迁移了 1.4.1.0 以前的设置。");

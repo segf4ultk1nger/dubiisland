@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -25,18 +26,21 @@ public class ComponentsService : ObservableRecipient, IComponentsService
 {
     public static readonly string ComponentSettingsPath = Path.Combine(App.AppConfigPath, "ComponentLayouts/");
 
-    private ComponentSettingsList _currentComponents = new();
+    private ComponentProfile _currentComponents = new();
     private IReadOnlyList<string> _componentConfigs = new List<string>();
 
-    public static ComponentSettingsList DefaultComponents { get; } = new()
+    public static ComponentProfile DefaultComponentProfile { get; } = new()
     {
-        new ComponentSettings
+        Lines =
         {
-            Id = "DF3F8295-21F6-482E-BADA-FA0E5F14BB66"
-        },
-        new ComponentSettings
-        {
-            Id = "1DB2017D-E374-4BC6-9D57-0B4ADF03A6B8"
+            new MainWindowLineSettings
+            {
+                Children =
+                {
+                    new ComponentSettings { Id = "DF3F8295-21F6-482E-BADA-FA0E5F14BB66" },
+                    new ComponentSettings { Id = "1DB2017D-E374-4BC6-9D57-0B4ADF03A6B8" }
+                }
+            }
         }
     };
 
@@ -107,20 +111,18 @@ public class ComponentsService : ObservableRecipient, IComponentsService
             {
                 return;
             }
-            CurrentComponents = FlattenComponentProfile(await ManagementService.Connection
+            CurrentComponents = await ManagementService.Connection
                 .SaveJsonAsync<ComponentProfile>(ManagementService.Manifest.ComponentsSource.Value!,
-                    Management.ManagementService.ManagementComponentsPath));
+                    Management.ManagementService.ManagementComponentsPath);
             ManagementService.Versions.ComponentsVersion = ManagementService.Manifest.ComponentsSource.Version;
         }
         catch (Exception e)
         {
             Logger.LogError(e, "无法从集控拉取组件配置");
-            CurrentComponents = FlattenComponentProfile(
-                ConfigureFileHelper.LoadConfig<ComponentProfile>(Management.ManagementService
-                    .ManagementComponentsPath));
+            CurrentComponents = ConfigureFileHelper.LoadConfig<ComponentProfile>(Management.ManagementService
+                .ManagementComponentsPath);
         }
         LoadConfig();
-    
     }
 
     private void LoadConfig()
@@ -130,25 +132,27 @@ public class ComponentsService : ObservableRecipient, IComponentsService
         {
             if (!File.Exists(SelectedConfigFullPath))
             {
-                CurrentComponents = ConfigureFileHelper.CopyObject(DefaultComponents);
+                CurrentComponents = ConfigureFileHelper.CopyObject(DefaultComponentProfile);
                 SaveConfig();
             }
             else if (File.ReadAllText(SelectedConfigFullPath).TrimStart().StartsWith("[", StringComparison.Ordinal))
             {
-                CurrentComponents = ConfigureFileHelper.LoadConfig<ComponentSettingsList>(SelectedConfigFullPath);
+                // 旧版平铺数组格式，迁移为单行 Lines 格式。
+                // ponytail: 旧数组里的多行（相对行号）信息会丢失，全部并入一行；如需保留再做两遍 JSON 解析。
+                CurrentComponents = BuildComponentProfile(
+                    ConfigureFileHelper.LoadConfig<ComponentSettingsList>(SelectedConfigFullPath));
                 migrated = true;
             }
             else
             {
-                var profile = ConfigureFileHelper.LoadConfig<ComponentProfile>(SelectedConfigFullPath);
-                CurrentComponents = FlattenComponentProfile(profile);
+                CurrentComponents = ConfigureFileHelper.LoadConfig<ComponentProfile>(SelectedConfigFullPath);
             }
         }
         
         CurrentConfigName = SettingsService.Settings.CurrentComponentConfig;
-        CurrentComponents.CollectionChanged += (s, e) => ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, BuildComponentProfile());
+        HookConfigChanges();
 
-        foreach (var i in CurrentComponents)
+        foreach (var i in CurrentComponents.Lines.SelectMany(x => x.Children))
         {
             if (!ComponentRegistryService.MigrationPairs.TryGetValue(new Guid(i.Id), out var targetGuid))
             {
@@ -170,42 +174,52 @@ public class ComponentsService : ObservableRecipient, IComponentsService
         }
     }
 
+    private void HookConfigChanges()
+    {
+        CurrentComponents.Lines.CollectionChanged -= OnLinesCollectionChanged;
+        CurrentComponents.Lines.CollectionChanged += OnLinesCollectionChanged;
+        foreach (var line in CurrentComponents.Lines)
+        {
+            HookLine(line);
+        }
+    }
+
+    private void HookLine(MainWindowLineSettings line)
+    {
+        line.Children.CollectionChanged -= OnConfigChanged;
+        line.Children.CollectionChanged += OnConfigChanged;
+        line.PropertyChanged -= OnConfigChanged;
+        line.PropertyChanged += OnConfigChanged;
+    }
+
+    private void OnLinesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (var line in e.NewItems.OfType<MainWindowLineSettings>())
+            {
+                HookLine(line);
+            }
+        }
+        SaveConfig();
+    }
+
+    private void OnConfigChanged(object? sender, EventArgs e) => SaveConfig();
+
     public void SaveConfig()
     {
-        ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, BuildComponentProfile());
+        ConfigureFileHelper.SaveConfig(CurrentConfigFullPath, CurrentComponents);
     }
 
-    private ComponentProfile BuildComponentProfile() => BuildComponentProfile(CurrentComponents);
-
+    /// <summary>把旧版平铺组件列表包装成单行的组件配置方案。</summary>
     internal static ComponentProfile BuildComponentProfile(IEnumerable<ComponentSettings> components)
-    {
-        var lines = components
-            .OrderBy(x => x.RelativeLineNumber)
-            .GroupBy(x => x.RelativeLineNumber)
-            .OrderBy(g => g.Key)
-            .Select(g => new MainWindowLineSettings
-            {
-                IsMainLine = g.Key == 0,
-                Children = new ObservableCollection<ComponentSettings>(g)
-            });
-        return new ComponentProfile { Lines = new ObservableCollection<MainWindowLineSettings>(lines) };
-    }
-
-    internal static ComponentSettingsList FlattenComponentProfile(ComponentProfile profile)
-    {
-        var flattened = new ComponentSettingsList();
-        var lineNumber = 0;
-        foreach (var line in profile.Lines)
+        => new()
         {
-            foreach (var child in line.Children)
+            Lines =
             {
-                child.RelativeLineNumber = lineNumber;
-                flattened.Add(child);
+                new MainWindowLineSettings { Children = new ObservableCollection<ComponentSettings>(components) }
             }
-            lineNumber++;
-        }
-        return flattened;
-    }
+        };
 
     public IReadOnlyList<string> ComponentConfigs
     {
@@ -226,7 +240,7 @@ public class ComponentsService : ObservableRecipient, IComponentsService
     public bool IsManagementMode { get; set; } = false;
 
 
-    public ComponentSettingsList CurrentComponents
+    public ComponentProfile CurrentComponents
     {
         get => _currentComponents;
         set

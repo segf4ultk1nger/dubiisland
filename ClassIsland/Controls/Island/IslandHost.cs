@@ -147,8 +147,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _renderer = new IslandRenderer(_context);
         _surface = new IslandSurface(_renderer);
 
+        HookComponentCollections();
         BuildComponents();
-        _componentsService.CurrentComponents.CollectionChanged += OnComponentsChanged;
         _componentsService.PropertyChanged += OnComponentsServicePropertyChanged;
 
         _topmostRecheckTimer.Tick += OnTopmostRecheckTick;
@@ -195,7 +195,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
     public void Dispose()
     {
-        _componentsService.CurrentComponents.CollectionChanged -= OnComponentsChanged;
+        UnhookComponentCollections();
         _componentsService.PropertyChanged -= OnComponentsServicePropertyChanged;
         _settingsService.Settings.PropertyChanged -= OnSettingsChanged;
         _themeService.ThemeUpdated -= OnThemeUpdated;
@@ -322,22 +322,57 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private void BuildComponents()
     {
         _renderer.Clear();
-        foreach (var settings in _componentsService.CurrentComponents)
+        var lines = _componentsService.CurrentComponents.Lines;
+        for (var lineIndex = 0; lineIndex < lines.Count; lineIndex++)
         {
-            var component = IslandComponentFactory.Create(settings, _context);
-            if (component != null)
+            foreach (var settings in lines[lineIndex].Children)
+            {
+                var component = IslandComponentFactory.Create(settings, _context);
+                if (component == null)
+                    continue;
+                component.LineNumber = lineIndex;
                 _renderer.Add(component);
+            }
         }
     }
 
-    private void OnComponentsChanged(object? sender, NotifyCollectionChangedEventArgs e) => BuildComponents();
+    /// <summary>订阅顶层行与各行的组件集合变化，用于重建组件树。</summary>
+    private void HookComponentCollections()
+    {
+        var lines = _componentsService.CurrentComponents.Lines;
+        lines.CollectionChanged -= OnLinesChanged;
+        lines.CollectionChanged += OnLinesChanged;
+        foreach (var line in lines)
+        {
+            line.Children.CollectionChanged -= OnChildrenChanged;
+            line.Children.CollectionChanged += OnChildrenChanged;
+        }
+    }
+
+    private void UnhookComponentCollections()
+    {
+        var lines = _componentsService.CurrentComponents.Lines;
+        lines.CollectionChanged -= OnLinesChanged;
+        foreach (var line in lines)
+        {
+            line.Children.CollectionChanged -= OnChildrenChanged;
+        }
+    }
+
+    private void OnLinesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        HookComponentCollections();
+        BuildComponents();
+    }
+
+    private void OnChildrenChanged(object? sender, NotifyCollectionChangedEventArgs e) => BuildComponents();
 
     private void OnComponentsServicePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(IComponentsService.CurrentComponents))
         {
-            _componentsService.CurrentComponents.CollectionChanged -= OnComponentsChanged;
-            _componentsService.CurrentComponents.CollectionChanged += OnComponentsChanged;
+            UnhookComponentCollections();
+            HookComponentCollections();
             BuildComponents();
         }
     }

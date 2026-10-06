@@ -45,7 +45,6 @@ public class ComponentSettings : ObservableRecipient
     private bool _isFixedWidthEnabled = false;
     private double _fixedWidth = 200;
     private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Stretch;
-    private int _relativeLineNumber = 0;
     private bool _isVisible = true;
     private double _lastWidthCache = 100;
 
@@ -343,20 +342,6 @@ public class ComponentSettings : ObservableRecipient
     #endregion
 
     #region Layouts
-
-    /// <summary>
-    /// 相对行号
-    /// </summary>
-    public int RelativeLineNumber
-    {
-        get => _relativeLineNumber;
-        set
-        {
-            if (value == _relativeLineNumber) return;
-            _relativeLineNumber = value;
-            OnPropertyChanged();
-        }
-    }
 
     /// <summary>
     /// 是否启用最小宽度

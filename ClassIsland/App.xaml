@@ -35,7 +35,6 @@
                 <Setter Property="ColorPalettesTabHeader" Value="调色板" />
                 <Setter Property="AdvancedTabHeader" Value="自定义颜色" />
             </Style>
-            <converters:MainWindowIsMainLineConverter x:Key="MainWindowIsMainLineConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </ci:AppBase>

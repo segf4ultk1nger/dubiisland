@@ -154,10 +154,6 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
     private void SettingsOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         UpdateTheme();
-        if (e.PropertyName == nameof(Settings.RelativeLineNumber))
-        {
-            RaiseEvent(new RoutedEventArgs(ComponentVisibilityChangedEvent));
-        }
     }
 
     private void UpdateTheme()
