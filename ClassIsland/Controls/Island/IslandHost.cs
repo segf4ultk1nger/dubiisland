@@ -1145,7 +1145,9 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
             _appliedWindowRect = windowRect;
         }
 
-        _surface.Redraw(); // 对齐/尺寸变化后立即按新锚点重绘
+        // 按刚落定的窗口尺寸重绘：SetWindowPos 后 RenderSize 要等下一次布局才更新，直接 Redraw() 会用过期尺寸
+        // 对齐，导致居中的岛先偏移一帧再被纠正（动画结算时的闪烁）。这里显式传入刚算出的窗口尺寸。
+        _surface.Redraw(new Size(widthPx / _dpiX, heightPx / _dpiY)); // 对齐/尺寸变化后立即按新锚点重绘
         _renderDirty = false;
     }
 

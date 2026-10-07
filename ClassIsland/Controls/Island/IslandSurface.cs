@@ -70,9 +70,14 @@ public sealed class IslandSurface : FrameworkElement
     }
 
     /// <summary>按当前尺寸重绘（内容按对齐锚点贴向停靠边，预留余量落在朝向屏幕内的一侧）。</summary>
-    public void Redraw()
+    public void Redraw() => Redraw(RenderSize);
+
+    /// <summary>
+    ///     按指定尺寸重绘。用于窗口尺寸刚被 SetWindowPos 改变、WPF 尚未刷新 <see cref="FrameworkElement.RenderSize"/>
+    ///     的瞬间：若此时用过期的 RenderSize 做对齐，居中/贴边内容会先偏移一帧、再被布局层纠正，表现为闪烁。
+    /// </summary>
+    public void Redraw(Size size)
     {
-        var size = RenderSize;
         if (size.Width <= 0 || size.Height <= 0)
             return;
 
