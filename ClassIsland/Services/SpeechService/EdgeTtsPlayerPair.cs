@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-using Edge_tts_sharp.Utils;
+using ClassIsland.EdgeTts.Utils;
 
 namespace ClassIsland.Services.SpeechService;
 

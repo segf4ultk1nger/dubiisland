@@ -9,8 +9,8 @@ using ClassIsland.Core.Abstractions.Services.SpeechService;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Shared.Abstraction.Services;
 
-using Edge_tts_sharp;
-using Edge_tts_sharp.Model;
+using ClassIsland.EdgeTts;
+using ClassIsland.EdgeTts.Model;
 
 using Microsoft.Extensions.Logging;
 
@@ -28,7 +28,7 @@ public class EdgeTtsService : ISpeechService
 
     private SettingsService SettingsService { get; } = App.GetService<SettingsService>();
 
-    private List<eVoice> Voices { get; } = EdgeTts.GetVoice();
+    private List<eVoice> Voices { get; } = EdgeTtsClient.GetVoice();
 
     private Queue<EdgeTtsPlayInfo> PlayingQueue { get; } = new();
 
@@ -86,7 +86,7 @@ public class EdgeTtsService : ISpeechService
                     {
                         Text = text
                     };
-                    EdgeTts.Invoke(options, voice, (Action<List<byte>>)(binary =>
+                    EdgeTtsClient.Invoke(options, voice, (Action<List<byte>>)(binary =>
                     {
                         if (completeHandle.IsCancellationRequested)
                             return;

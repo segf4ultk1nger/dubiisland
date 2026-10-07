@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Edge_tts_sharp.Model;
-using Edge_tts_sharp;
+using ClassIsland.EdgeTts.Model;
+using ClassIsland.EdgeTts;
 using System.Collections.Generic;
 using ClassIsland.Models;
 using ClassIsland.Shared.Abstraction.Models.Notification;
@@ -57,7 +57,7 @@ public class NotificationSettingsViewModel : ObservableRecipient
     }
 
     public List<eVoice> EdgeVoices { get; } =
-        EdgeTts.GetVoice().FindAll(i => i.Locale.Contains("zh-CN"));
+        EdgeTtsClient.GetVoice().FindAll(i => i.Locale.Contains("zh-CN"));
 
     // 现有的测试语音文本属性
     private string _testSpeechText = "风带来了故事的种子，时间使之发芽。";

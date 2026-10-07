@@ -13,8 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClassIsland.Services;
-using Edge_tts_sharp;
-using Edge_tts_sharp.Model;
+using ClassIsland.EdgeTts;
+using ClassIsland.EdgeTts.Model;
 
 namespace ClassIsland.Controls.SpeechProviderSettingsControls;
 
@@ -26,7 +26,7 @@ public partial class EdgeTtsSpeechServiceSettingsControl
     public SettingsService SettingsService { get; }
 
     public List<eVoice> EdgeVoices { get; } =
-        EdgeTts.GetVoice().FindAll(i => i.Locale.Contains("zh-CN"));
+        EdgeTtsClient.GetVoice().FindAll(i => i.Locale.Contains("zh-CN"));
 
     public EdgeTtsSpeechServiceSettingsControl(SettingsService settingsService)
     {

@@ -73,6 +73,8 @@
         <PackageReference Include="NAudio.Asio" Version="2.2.1" PrivateAssets="all" ExcludeAssets="all" />
         <PackageReference Include="NAudio.Midi" Version="2.2.1" PrivateAssets="all" ExcludeAssets="all" />
         <PackageReference Include="NAudio.WinForms" Version="2.2.1" PrivateAssets="all" ExcludeAssets="all" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+        <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
         <PackageReference Include="Net.Codecrete.QrCodeGenerator" Version="2.0.6" />
         <PackageReference Include="RawInput.Sharp" Version="0.1.3" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
@@ -124,7 +126,6 @@
     <ItemGroup>
         <ProjectReference Include="..\ClassIsland.Core\ClassIsland.Core.csproj" />
         <ProjectReference Include="..\ClassIsland.Shared\ClassIsland.Shared.csproj" />
-        <ProjectReference Include="..\vendors\EdgeTtsSharp\Edge_tts_sharp\Edge_tts_sharp.csproj" />
         <ProjectReference Include="..\vendors\System.Device.Location\System.Device.Location.csproj" />
         <ProjectReference Include="..\Libraries\Squircle\Squircle.csproj" />
         <ProjectReference Include="..\Libraries\UiAccess\IccEvolved.UiAccess\IccEvolved.UiAccess.csproj" />
@@ -162,6 +163,9 @@
 
     <!-- 自解压 UIAccess 组件：把 Helper 及其依赖的 IccEvolved.UiAccess.dll 内嵌进主程序，启动时解压到应用目录。 -->
     <ItemGroup>
+        <EmbeddedResource Include="EdgeTts\Source\VoiceList.json">
+            <LogicalName>ClassIsland.EdgeTts.Source.VoiceList.json</LogicalName>
+        </EmbeddedResource>
         <EmbeddedResource Include="..\Libraries\UiAccess\IccEvolved.UiAccess.Helper\bin\$(UiAccessHelperConfig)\net472\IccEvolved.UiAccess.Helper.exe">
             <LogicalName>ClassIsland.UiAccess.IccEvolved.UiAccess.Helper.exe</LogicalName>
         </EmbeddedResource>

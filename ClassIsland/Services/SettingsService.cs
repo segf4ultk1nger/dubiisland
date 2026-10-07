@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Text.Json.Serialization;
 using ClassIsland.Core.Abstractions.Services.SpeechService;
-using Edge_tts_sharp.Model;
+using ClassIsland.EdgeTts.Model;
 
 namespace ClassIsland.Services;
 
