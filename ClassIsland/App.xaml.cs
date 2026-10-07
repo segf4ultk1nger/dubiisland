@@ -456,6 +456,7 @@ public partial class App : AppBase, IAppHost
 
         FileFolderService.CreateFolders();
         PluginService.ProcessPluginsInstall();
+        DiagnosticService.Checkpoint("预处理（文件夹/插件安装）");
         bool isSystemSpeechSystemExist = false;
 
         IAppHost.Host = Microsoft.Extensions.Hosting.Host.
@@ -614,6 +615,7 @@ public partial class App : AppBase, IAppHost
                     PluginService.InitializePlugins(context, services);
                 }
             }).Build();
+        DiagnosticService.Checkpoint("Host 构建完成（含插件加载）");
         AppBase.CurrentLifetime = ApplicationLifetime.Starting;
         Logger = GetService<ILogger<App>>();
         Logger.LogInformation("ClassIsland {}", AppVersionLong);
@@ -637,8 +639,10 @@ public partial class App : AppBase, IAppHost
         CommandManager.RegisterClassCommandBinding(typeof(Window), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
         CommandManager.RegisterClassCommandBinding(typeof(Page), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
         await GetService<IManagementService>().SetupManagement();
+        DiagnosticService.Checkpoint("集控初始化");
         await GetService<SettingsService>().LoadSettingsAsync();
         Settings = GetService<SettingsService>().Settings;
+        DiagnosticService.Checkpoint("加载设置");
         Settings.IsSystemSpeechSystemExist = isSystemSpeechSystemExist;
         Settings.IsNetworkConnect = InternetGetConnectedState(out var _);
         Settings.DiagnosticStartupCount++;
@@ -658,22 +662,27 @@ public partial class App : AppBase, IAppHost
             }
         });
         ThreadedUiDispatcher = threadedUiDispatcherAwaiter.Result;
+        DiagnosticService.Checkpoint("AsyncBox 调度器就绪（含忙等）");
         Logger.LogInformation("初始化应用。");
 
         IThemeService.IsTransientDisabled = Settings.IsTransientDisabled;
         IThemeService.IsWaitForTransientDisabled = Settings.IsWaitForTransientDisabled;
         if (Settings.IsSplashEnabled && !ApplicationCommand.Quiet)
         {
-            ThemeService.FreezeApplicationResources();
+            // 默认不冻结应用资源：见 ThemeService.FreezeApplicationResources 的说明（省约 0.3s 启动）。
+            //ThemeService.FreezeApplicationResources();
+            DiagnosticService.Checkpoint("冻结应用资源");
             ThreadedUiDispatcher.Invoke(() =>
             {
                 GetService<SplashWindowBase>().Show();
             });
+            DiagnosticService.Checkpoint("显示闪屏");
         }
         GetService<ISplashService>().CurrentProgress = 30;
         GetService<ISplashService>().SetDetailedStatus("正在启动挂起检查服务");
 
         GetService<IHangService>();
+        DiagnosticService.Checkpoint("挂起检查服务");
 
         GetService<ISplashService>().SetDetailedStatus("正在创建任务栏图标");
         try
@@ -685,10 +694,12 @@ public partial class App : AppBase, IAppHost
             Logger.LogError(ex, "创建任务栏图标失败。");
         }
 
+        DiagnosticService.Checkpoint("任务栏图标");
         GetService<ISplashService>().CurrentProgress = 45;
 
         GetService<ISplashService>().SetDetailedStatus("正在加载档案");
         await GetService<IProfileService>().LoadProfileAsync();
+        DiagnosticService.Checkpoint("加载档案");
         GetService<IWeatherService>();
         GetService<IExactTimeService>();
         await GetService<IComponentsService>().LoadManagementConfig();
@@ -697,6 +708,7 @@ public partial class App : AppBase, IAppHost
         IAppHost.GetService<IPluginMarketService>().LoadPluginSource();
 
         GetService<ThemeApplyService>();
+        DiagnosticService.Checkpoint("启动后台服务 + 应用主题");
         Logger.LogInformation("正在初始化MainWindow。");
         GetService<ISplashService>().SetDetailedStatus("正在启动主界面所需的服务");
         GetService<ISplashService>().CurrentProgress = 55;
@@ -723,6 +735,7 @@ public partial class App : AppBase, IAppHost
         {
             Logger.LogError(ex, "初始化自绘主界面 IslandHost 失败。");
         }
+        DiagnosticService.Checkpoint("创建主界面（MainWindow/IslandHost）");
         if (Settings.UseSelfDrawnIsland)
         {
             // 自绘模式下没有 MainWindow.OnContentRendered 触发启动完成链，这里主动触发。

@@ -80,13 +80,22 @@ public class ThemeService : IHostedService, IThemeService
                 new Uri("pack://application:,,,/ClassIsland;component/Themes/DarkTheme.xaml")
         };
         Application.Current.Resources.MergedDictionaries[0] = resource;
-        FreezeApplicationResources();
+        // 默认不冻结应用资源：见 FreezeApplicationResources 的说明（省约 0.3s 启动）。跨线程共享资源出问题时再启用。
+        //FreezeApplicationResources();
     }
 
     /// <summary>
     /// Splash is created on the AsyncBox dispatcher. Shared brushes must be frozen
     /// on the main thread first, or that dispatcher seals them and MainWindow cannot use them.
     /// </summary>
+    /// <remarks>
+    /// 目前**未启用**（两处调用点均已注释）。本方法会遍历并强制物化整个应用资源树后再逐个 Freeze，
+    /// 实测占用启动约 0.4–0.5s，其中几乎全部是物化延迟资源（Style/ControlTemplate）的开销；只冻结 Brush
+    /// 同样无改善（实测 466ms）。禁用后启动省下约 0.3s，闪屏、设置窗口、主题切换、通知特效独立 UI 线程
+    /// 均正常。若后续在第二 UI 线程（闪屏 / <c>NotificationUseStandaloneEffectUiThread</c> 的特效窗口）
+    /// 与主线程之间出现共享资源跨线程异常，再启用调用点；届时更优做法是**只按 key 精确冻结真正共享的画笔**，
+    /// 而不是遍历整棵资源树。
+    /// </remarks>
     public static void FreezeApplicationResources()
     {
         if (Application.Current == null)

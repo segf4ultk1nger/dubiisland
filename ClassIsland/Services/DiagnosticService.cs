@@ -26,6 +26,7 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
     AppLogService appLogService)
 {
     private static Stopwatch _startupStopwatch = new();
+    private static long _lastCheckpointMs;
 
     private FileFolderService FileFolderService { get; } = fileFolderService;
 
@@ -72,7 +73,28 @@ public class DiagnosticService(SettingsService settingsService, FileFolderServic
 
     public static void BeginStartup()
     {
+        _lastCheckpointMs = 0;
         _startupStopwatch.Start();
+    }
+
+    /// <summary>记录自上一个阶段检查点以来的耗时，用于定位启动瓶颈。</summary>
+    public static void Checkpoint(string name)
+    {
+        var total = _startupStopwatch.ElapsedMilliseconds;
+        var delta = total - _lastCheckpointMs;
+        _lastCheckpointMs = total;
+        var text = $"[STARTUP] {name}: +{delta}ms (累计 {total}ms)";
+        var logger = ClassIsland.Shared.IAppHost.TryGetService<ILoggerFactory>()?.CreateLogger("Startup");
+        if (logger != null)
+        {
+            logger.LogInformation("{Text}", text);
+        }
+        else
+        {
+            // Host 尚未构建时没有日志服务，退回控制台/调试输出。
+            Console.WriteLine(text);
+            System.Diagnostics.Debug.WriteLine(text);
+        }
     }
 
     public static void EndStartup()
