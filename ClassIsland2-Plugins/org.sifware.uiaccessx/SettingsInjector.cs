@@ -482,6 +482,16 @@ internal static class SettingsInjector
 
     private static void DisableSelfAndRestart()
     {
+        // 先清理：取消管理员自启、复位本插件配置。
+        try
+        {
+            UiAccessX.ResetForDisable();
+        }
+        catch
+        {
+            // 忽略。
+        }
+
         try
         {
             var info = IPluginService.LoadedPlugins.FirstOrDefault(x =>

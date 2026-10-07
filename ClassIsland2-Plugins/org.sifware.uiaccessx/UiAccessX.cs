@@ -105,6 +105,25 @@ internal static class UiAccessX
         }
     }
 
+    /// <summary>
+    /// 禁用本插件前的清理：取消管理员自启计划任务，并复位插件自身配置（删除 settings.json 与重启守卫标记）。
+    /// </summary>
+    public static void ResetForDisable()
+    {
+        try
+        {
+            AdminStartup.SetEnabled(false);
+        }
+        catch
+        {
+            // 忽略。
+        }
+
+        TryDelete(SettingsPath);
+        TryDelete(RelaunchFlagPath);
+        Settings = new UiAccessXSettings();
+    }
+
     private static UiAccessXSettings LoadSettings()
     {
         try
