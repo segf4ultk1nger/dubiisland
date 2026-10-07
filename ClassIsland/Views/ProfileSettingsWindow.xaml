@@ -545,7 +545,7 @@
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="课表群" Style="{StaticResource Headline5TextBlock}"/>
                     <TextBlock TextWrapping="Wrap" Margin="0 6 0 0">
-                        您可以通过课表群对课表进行分组，并灵活地启用一批课表。<ci:NavHyperlink CommandParameter="https://docs.classisland.tech/app/profile/classplan#%E8%AF%BE%E8%A1%A8%E7%BE%A4">了解更多…</ci:NavHyperlink>
+                        您可以通过课表群对课表进行分组，并灵活地启用一批课表。
                     </TextBlock>
                     <StackPanel>
                         <StackPanel.Style>
@@ -2570,11 +2570,6 @@
                                         <Run Text="不信任"/>
                                     </TextBlock>
                                 </ToggleButton>
-                                <ToggleButton ToolTip="查看档案编辑帮助。" Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}" CommandParameter="https://docs.classisland.tech/app/profile/" IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
-                                    <TextBlock>
-                                        <Run Text="帮助"/>
-                                    </TextBlock>
-                                </ToggleButton>
                                 <Grid>
                                     <ToggleButton ToolTip="导入或导出档案…" Click="ButtonImportFromFile_OnClick" IsEnabled="{Binding ViewModel.IsOfflineEditor, Converter={StaticResource BooleanToBooleanReConverter}, Mode=OneWay}">
                                         <TextBlock>
@@ -2595,10 +2590,6 @@
                                                 <MenuItem Header="从 CSES 导入…"
                                                           Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.FileCodeLine}}"
                                                           Click="MenuItemImportFromCses_OnClick" />
-                                                <MenuItem Header="从其它课表软件导入…"
-                                                          Icon="{controls1:RemixIcon Kind={x:Static remix:PackIconRemixIconKind.Apps2Line}}"
-                                                          Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
-                                                          CommandParameter="https://migrate.classisland.tech/" />
                                                 <MenuItem Header="从 ClassIsland 档案导入…"
                                                           Click="MenuItemImportFromClassIslandProfile_OnClick">
                                                     <MenuItem.Icon>

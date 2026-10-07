@@ -26,11 +26,6 @@ public partial class TrayContextMenu : ResourceDictionary
         App.GetService<SettingsWindowNew>().Open("about");
     }
 
-    private void MenuItemHelps_OnClick(object sender, RoutedEventArgs e)
-    {
-        App.GetService<IUriNavigationService>().Navigate(new Uri("https://docs.classisland.tech/app/"));
-    }
-
     private void MenuItemSwitchMainWindowVisibility_OnClick(object sender, RoutedEventArgs e)
     {
         ViewModel.Settings.IsMainWindowVisible = !ViewModel.Settings.IsMainWindowVisible;

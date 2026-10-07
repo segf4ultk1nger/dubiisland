@@ -9,7 +9,7 @@
 ClassIsland 是一款在 Windows 桌面上显示课表、提醒等信息的工具。<br/>
 LegacyIsland 在 1.7 的基础上继续开发，并向下兼容 Windows 7 SP1。
 
-[官网](https://sfkgr.me/a/legacyisland) · [文档](https://docs.classisland.tech) · [SIFWARE QQ 群](https://qm.qq.com/q/5Szl0Vtqa4)
+[官网](https://sfkgr.me/a/legacyisland) · [SIFWARE QQ 群](https://qm.qq.com/q/5Szl0Vtqa4)
 
 </div>
 
@@ -34,7 +34,7 @@ LegacyIsland 在 1.7 的基础上继续开发，并向下兼容 Windows 7 SP1。
 
 ## 开发
 
-作者使用 Rider，参考[配置 ClassIsland 开发环境](https://docs.classisland.tech/dev/get-started/devlopment.html)（本项目目标框架为 net472）。
+作者使用 Rider（本项目目标框架为 net472）。
 
 ## 致谢与许可
 

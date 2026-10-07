@@ -58,15 +58,6 @@
                             <TextBlock Text="加入管理" />
                         </Grid>
                     </Button>
-                    <Separator Margin="0 -0.5" Opacity="0.5"/>
-                    <Button Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
-                            CommandParameter="https://docs.classisland.tech/management/">
-                        <Grid>
-                            <TextBlock Text="了解更多" />
-                            <ciCore:IconText Kind="{x:Static ciCore:IconGlyphs.ExternalLink}" HorizontalAlignment="Right"
-                                                     VerticalAlignment="Center"/>
-                        </Grid>
-                    </Button>
 
                 </StackPanel>
             </Border>

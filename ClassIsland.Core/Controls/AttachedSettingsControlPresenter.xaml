@@ -127,13 +127,6 @@
                                 <WrapPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal"
                                            Margin="4 0 4 4">
                                     <Button HorizontalAlignment="Left"
-                                            Content="{local:GlyphIcon {x:Static local:IconGlyphs.HelpCircleOutline}}"
-                                            ToolTip="附加设置帮助…"
-                                            Margin="4 0 0 0"
-                                            Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
-                                            CommandParameter="https://docs.classisland.tech/app/advanced#%E9%99%84%E5%8A%A0%E8%AE%BE%E7%BD%AE"
-                                            Style="{StaticResource MahApps.Styles.Button.Flat}" />
-                                    <Button HorizontalAlignment="Left"
                                             Content="{local:GlyphIcon {x:Static local:IconGlyphs.Refresh}}"
                                             ToolTip="刷新"
                                             Margin="4 0 0 0"

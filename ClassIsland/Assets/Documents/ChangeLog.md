@@ -4,25 +4,17 @@
 
 ## 直接禁用课程
 
-![档案编辑 UI](http://res.classisland.tech/screenshots/changelogs/1.7/1.7.0.0/1.png)
-
 ClassIsland 现在可以直接禁用某个课程表中的某些课程，无需复制和编辑时间表，同时不影响原时间表和其它课表。禁用后的课程对应的时间点及其前后的课间休息时间点和分割线也会被一起禁用。
 
 ## 主题
-
-![主题市场](https://res.classisland.tech/screenshots/changelogs/1.7/1.6.3.0/2.png)
 
 ClassIsland 已将主题系统集成到应用中，并加入了主题市场，以便用户分享和下载主题。您可以在[【应用设置】->【主题】](classisland://app/settings/classisland.themes)中了解更多信息。
 
 ## 导出到表格
 
-![导出到表格](https://res.classisland.tech/screenshots/changelogs/1.7/1.6.3.0/1.png)
-
 ClassIsland 现在支持将课表内容导出到 Excel 表格，以便打印和分发。您可以在【导出到表格】工具中选择要导出的课表，并进行基本的编辑操作。
 
 ## 新提醒 API
-
-![提醒设置](https://res.classisland.tech/screenshots/changelogs/1.7/1.6.2.0/1.png)
 
 加入了新版提醒 API，具体变化如下：
 

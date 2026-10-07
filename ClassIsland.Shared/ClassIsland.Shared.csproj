@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageTags>classisland</PackageTags>
+    <PackageTags>legacyisland</PackageTags>
     <Description>LegacyIsland 的核心共享库。</Description>
 	  <LangVersion>preview</LangVersion>
 	  <Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>

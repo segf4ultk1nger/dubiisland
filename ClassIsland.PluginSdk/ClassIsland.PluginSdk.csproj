@@ -5,12 +5,12 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>12</LangVersion>
-		<Title>ClassIsland Plugin SDK</Title>
+		<Title>LegacyIsland Plugin SDK</Title>
 		<Configurations>Debug;Release;Debug_MSIX;Release_MSIX</Configurations>
 	</PropertyGroup>
 
 	<PropertyGroup>
-	  <PackageTags>classisland;plugin;addin;wpf;material design</PackageTags>
+	  <PackageTags>legacyisland;plugin;addin;wpf;material design</PackageTags>
 	  <Description>用于开发应用 LegacyIsland 插件的 SDK。</Description>
 	</PropertyGroup>
 
