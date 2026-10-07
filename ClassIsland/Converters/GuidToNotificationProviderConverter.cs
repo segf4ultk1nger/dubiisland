@@ -8,6 +8,8 @@ namespace ClassIsland.Converters;
 
 public class GuidToNotificationProviderConverter : IValueConverter
 {
+    private static INotificationHostService? _service;
+
     public object? Convert(object? value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value == null)
@@ -15,11 +17,8 @@ public class GuidToNotificationProviderConverter : IValueConverter
             return null;
         }
         var id = (string)value;
-        var l = (from i in App.GetService<INotificationHostService>().NotificationProviders
-            where i.ProviderGuid.ToString() == id
-            select i)
-            .ToList();
-        return l.FirstOrDefault();
+        _service ??= App.GetService<INotificationHostService>();
+        return _service.NotificationProviders.FirstOrDefault(i => i.ProviderGuid.ToString() == id);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

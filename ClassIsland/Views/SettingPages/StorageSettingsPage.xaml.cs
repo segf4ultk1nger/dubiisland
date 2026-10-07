@@ -31,6 +31,8 @@ public partial class StorageSettingsPage
     public ILogger<StorageSettingsPage> Logger { get; }
     public IManagementService ManagementService { get; }
 
+    private bool _storageScanStarted;
+
     public StorageSettingsPage(FileFolderService fileFolderService, SettingsService settingsService, ILogger<StorageSettingsPage> logger, IManagementService managementService)
     {
         FileFolderService = fileFolderService;
@@ -39,6 +41,16 @@ public partial class StorageSettingsPage
         ManagementService = managementService;
         DataContext = this;
         InitializeComponent();
+        Loaded += StorageSettingsPage_OnLoaded;
+    }
+
+    private void StorageSettingsPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_storageScanStarted)
+        {
+            return;
+        }
+        _storageScanStarted = true;
         _ = ViewModel.RefreshStorageInfoAsync();
     }
 
