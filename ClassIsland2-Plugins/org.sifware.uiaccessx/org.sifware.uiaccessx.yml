@@ -1,0 +1,10 @@
+repoOwner: segf4ultk1nger
+repoName: dubiisland
+assetsRoot: main/ClassIsland2-Plugins/org.sifware.uiaccessx
+artifactName: org.sifware.uiaccessx.cipx
+tagPattern: 1.*.*.*
+version: 1.0.0.0
+apiVersion: 2.0.0.0
+author: SIFWARE, Dubi906w
+supportedOSPlatforms:
+  - Windows
