@@ -418,6 +418,32 @@
                     </ComboBox>
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
+            <!-- 动画质量 -->
+            <controls1:SettingsCard Header="动画质量"
+                                    Description="自绘岛几何补间的丰富程度。低配设备建议选「精简」。"
+                                    SearchTags="动画 性能 低配 流畅 animation performance">
+                <controls1:SettingsCard.Switcher>
+                    <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
+                              Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                              MinWidth="180" MinHeight="32" FontSize="14" VerticalAlignment="Center"
+                              HorizontalContentAlignment="Left"
+                              SelectedValuePath="Tag"
+                              SelectedValue="{Binding SettingsService.Settings.IslandAnimationQuality}">
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>0</sys:Int32></ComboBoxItem.Tag>
+                            <TextBlock Text="精简" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>1</sys:Int32></ComboBoxItem.Tag>
+                            <TextBlock Text="标准" />
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <ComboBoxItem.Tag><sys:Int32>2</sys:Int32></ComboBoxItem.Tag>
+                            <TextBlock Text="丰富" />
+                        </ComboBoxItem>
+                    </ComboBox>
+                </controls1:SettingsCard.Switcher>
+            </controls1:SettingsCard>
             <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
             <controls1:SettingsCard Header="应用主题"

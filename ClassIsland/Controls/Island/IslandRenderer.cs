@@ -19,10 +19,14 @@ public sealed class IslandRenderer
     private readonly List<IIslandComponent> _components = new();
     private readonly List<IslandLine> _lines = new();
     private readonly Dictionary<int, FadeState> _fades = new();
+    private readonly List<(int Line, double Width, double Top, double Height)> _feedBuffer = new();
 
     private Brush _backgroundBrush = Brushes.Black;
     private double _contentHeight;
     private double _contentWidth;
+
+    /// <summary>几何补间引擎（预览等无动画场景可为 null，此时直接使用目标几何）。</summary>
+    public IslandLayoutAnimator? Animator { get; set; }
 
     /// <summary>是否显示提醒遮罩。</summary>
     public bool IsMaskVisible { get; set; }
@@ -165,6 +169,16 @@ public sealed class IslandRenderer
             _contentWidth += _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
         }
 
+        _feedBuffer.Clear();
+        foreach (var line in _lines)
+        {
+            _feedBuffer.Add((line.LineNumber,
+                line.Width + _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin,
+                line.Top, line.Height));
+        }
+
+        Animator?.Feed(_feedBuffer);
+
         return new Size(_contentWidth, _contentHeight);
     }
 
@@ -203,8 +217,11 @@ public sealed class IslandRenderer
                 drawingContext.PushOpacity(opacity);
 
             var lineWidth = line.Width + left + right;
-            var lineX = (bounds.Width - lineWidth) * hAlign;
-            var lineRect = new Rect(lineX, line.Top, lineWidth, line.Height);
+            var displayWidth = Animator?.GetWidth(line.LineNumber, lineWidth) ?? lineWidth;
+            var top = Animator?.GetTop(line.LineNumber, line.Top) ?? line.Top;
+            var height = Animator?.GetHeight(line.LineNumber, line.Height) ?? line.Height;
+            var lineX = (bounds.Width - displayWidth) * hAlign;
+            var lineRect = new Rect(lineX, top, displayWidth, height);
             if (lineRect.Width > 0 && lineRect.Height > 0)
             {
                 drawingContext.DrawGeometry(_backgroundBrush, null, CreateCornerGeometry(lineRect));
@@ -226,13 +243,27 @@ public sealed class IslandRenderer
                 drawingContext.PushOpacity(opacity);
 
             var lineWidth = line.Width + left + right;
+            var displayWidth = Animator?.GetWidth(line.LineNumber, lineWidth) ?? lineWidth;
+            var top = Animator?.GetTop(line.LineNumber, line.Top) ?? line.Top;
+            var height = Animator?.GetHeight(line.LineNumber, line.Height) ?? line.Height;
+            var lineX = (bounds.Width - displayWidth) * hAlign;
+            var pillRect = new Rect(lineX, top, displayWidth, height);
+            // 仅在几何增长期（显示尺寸 < 目标尺寸）裁剪内容：内容按目标排布，会超出正在生长的 pill。
+            // 静止/收缩期内容本就在 pill 内，不裁剪，保持与补间引入前完全一致的绘制。
+            var clipped = displayWidth < lineWidth - 0.5 || height < line.Height - 0.5;
+            if (clipped)
+                drawingContext.PushClip(CreateCornerGeometry(pillRect));
+
             var x = (bounds.Width - lineWidth) * hAlign + left;
             for (var i = 0; i < line.Components.Length; i++)
             {
-                var slot = new Rect(x, line.Top, line.Sizes[i].Width, line.Height);
+                var slot = new Rect(x, top, line.Sizes[i].Width, line.Height);
                 line.Components[i].Render(drawingContext, slot, _context);
                 x += slot.Width;
             }
+
+            if (clipped)
+                drawingContext.Pop();
 
             if (faded)
                 drawingContext.Pop();

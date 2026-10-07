@@ -41,15 +41,25 @@ public sealed class IslandSurface : FrameworkElement
 
     protected override Visual GetVisualChild(int index) => _visual;
 
-    /// <summary>测量内容所需尺寸（已含窗口缩放与过冲预留），供 HwndSource 决定窗口大小。</summary>
-    public Size MeasureContent(Size availableSize)
+    /// <summary>
+    ///     一次性测量：返回目标内容尺寸（DIP，供停靠/定位）与窗口尺寸
+    ///     （已含缩放、出现动画过冲与几何补间预留，供 HwndSource 决定窗口大小）。
+    /// </summary>
+    public (Size Target, Size Window) MeasureForWindow(Size availableSize)
     {
         var scale = _renderer.Scale;
         _contentAvailableWidth = availableSize.Width / scale;
         var natural = _renderer.Measure(new Size(_contentAvailableWidth, double.PositiveInfinity));
         var overshoot = WindowOvershootScale <= 0 ? 1.0 : WindowOvershootScale;
-        return new Size(natural.Width * scale * overshoot, natural.Height * scale * overshoot);
+        var reservedW = Math.Max(natural.Width, _renderer.Animator?.ReservedWidth ?? 0);
+        var reservedH = Math.Max(natural.Height, _renderer.Animator?.ReservedHeight ?? 0);
+        return (
+            new Size(natural.Width * scale, natural.Height * scale),
+            new Size(reservedW * scale * overshoot, reservedH * scale * overshoot));
     }
+
+    /// <summary>测量窗口所需尺寸（已含窗口缩放与过冲/补间预留），供 HwndSource 决定窗口大小。</summary>
+    public Size MeasureContent(Size availableSize) => MeasureForWindow(availableSize).Window;
 
     protected override Size MeasureOverride(Size availableSize) => MeasureContent(availableSize);
 

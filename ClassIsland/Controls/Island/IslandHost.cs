@@ -53,6 +53,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private readonly IslandContext _context;
     private readonly IslandRenderer _renderer;
     private readonly IslandSurface _surface;
+    private readonly IslandLayoutAnimator _layoutAnimator = new();
     private readonly DispatcherTimer _topmostRecheckTimer = new();
 
     private HwndSource? _source;
@@ -66,6 +67,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private bool _isVisible;
     private bool _forceLayered;
     private bool _renderDirty;
+    private bool _layoutAnimating;
     private (int Left, int Top, int Width, int Height)? _appliedWindowRect;
 
     private AnimSpec? _animSpec;
@@ -150,6 +152,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
             AccentColor = themeService.PrimaryColor
         };
         _renderer = new IslandRenderer(_context);
+        _renderer.Animator = _layoutAnimator;
+        _layoutAnimator.Enabled = Settings.IslandAnimationQuality > 0;
         _surface = new IslandSurface(_renderer);
 
         HookComponentCollections();
@@ -648,6 +652,14 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         if (_renderer.TickFades(args.RenderingTime.TotalSeconds))
             active = true;
 
+        var nowSeconds = args.RenderingTime.TotalSeconds;
+        var layoutAnimating = _layoutAnimator.Tick(nowSeconds);
+        if (layoutAnimating)
+            active = true;
+        else if (_layoutAnimating)
+            _renderDirty = true; // 结算：下一帧把窗口收缩回目标尺寸
+        _layoutAnimating = layoutAnimating;
+
         if (_renderDirty)
         {
             _renderDirty = false;
@@ -657,6 +669,9 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         {
             _surface.Redraw();
         }
+
+        if (_layoutAnimator.IsAnimating)
+            active = true;
 
         if (!active)
             StopRenderingHook();
@@ -959,6 +974,13 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
                 _renderDirty = true;
                 EnsureRenderingHook();
                 return;
+            case nameof(Settings.IslandAnimationQuality):
+                _layoutAnimator.Enabled = Settings.IslandAnimationQuality > 0;
+                if (!_layoutAnimator.Enabled)
+                    _layoutAnimator.Settle();
+                _renderDirty = true;
+                EnsureRenderingHook();
+                return;
         }
 
         RefreshTheme();
@@ -1063,14 +1085,13 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _surface.VerticalAlign = vAlign;
         _surface.RenderTransformOrigin = new Point(hAlign, vAlign);
 
-        var overshoot = _surface.WindowOvershootScale <= 0 ? 1.0 : _surface.WindowOvershootScale;
         var available = new Size(screen.WorkingArea.Width / _dpiX, double.PositiveInfinity);
-        var reserved = _surface.MeasureContent(available);
-        var contentWidth = reserved.Width / overshoot;
-        var contentHeight = reserved.Height / overshoot;
+        var measured = _surface.MeasureForWindow(available);
+        var contentWidth = measured.Target.Width;
+        var contentHeight = measured.Target.Height;
 
-        var widthPx = (int)Math.Ceiling(reserved.Width * _dpiX);
-        var heightPx = (int)Math.Ceiling(reserved.Height * _dpiY);
+        var widthPx = (int)Math.Ceiling(measured.Window.Width * _dpiX);
+        var heightPx = (int)Math.Ceiling(measured.Window.Height * _dpiY);
         var contentWidthPx = (int)Math.Ceiling(contentWidth * _dpiX);
         var contentHeightPx = (int)Math.Ceiling(contentHeight * _dpiY);
         if (widthPx <= 0 || heightPx <= 0)

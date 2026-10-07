@@ -193,6 +193,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _isIslandShowAnimationEnabled = true;
     private bool _isIslandHideAnimationEnabled = true;
     private int _islandMaskAnimationStyle = 0;
+    private int _islandAnimationQuality = 1;
     private bool _isMemoryTrimEnabled = false;
     private int _toolWindowDestructionPolicy = 0;
     private int _toolWindowDestructionCustomSeconds = 300;
@@ -2047,6 +2048,18 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _islandMaskAnimationStyle) return;
             _islandMaskAnimationStyle = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>自绘岛动画质量：0=精简（仅显隐/遮罩动画），1=标准（几何补间），2=丰富（额外形变）。默认 1。</summary>
+    public int IslandAnimationQuality
+    {
+        get => _islandAnimationQuality;
+        set
+        {
+            if (value == _islandAnimationQuality) return;
+            _islandAnimationQuality = value;
             OnPropertyChanged();
         }
     }
