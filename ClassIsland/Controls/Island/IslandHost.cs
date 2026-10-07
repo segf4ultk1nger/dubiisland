@@ -154,6 +154,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _renderer = new IslandRenderer(_context);
         _renderer.Animator = _layoutAnimator;
         _layoutAnimator.Enabled = Settings.IslandAnimationQuality > 0;
+        _layoutAnimator.Jelly = Settings.IslandAnimationQuality >= 2;
         _surface = new IslandSurface(_renderer);
 
         HookComponentCollections();
@@ -976,6 +977,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
                 return;
             case nameof(Settings.IslandAnimationQuality):
                 _layoutAnimator.Enabled = Settings.IslandAnimationQuality > 0;
+                _layoutAnimator.Jelly = Settings.IslandAnimationQuality >= 2;
                 if (!_layoutAnimator.Enabled)
                     _layoutAnimator.Settle();
                 _renderDirty = true;

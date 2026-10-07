@@ -15,6 +15,8 @@ public sealed class IslandLayoutAnimator
     private const double ReserveFactor = 1.15;
     private const double Epsilon = 0.0001;
     private const double ChangeThreshold = 0.01;
+    private const double MaxJellySquash = 0.08;
+    private const double JellyCoupling = 0.5;
 
     // 缓动函数无状态，可共享复用，避免每次目标变化都分配。
     private static readonly BackEase GrowEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.4 };
@@ -26,6 +28,9 @@ public sealed class IslandLayoutAnimator
 
     /// <summary>是否启用几何补间（精简档关闭）。</summary>
     public bool Enabled { get; set; } = true;
+
+    /// <summary>是否启用纵向果冻形变（仅丰富档开启）。</summary>
+    public bool Jelly { get; set; }
 
     /// <summary>任一通道 Current 与 Target 不一致时为 true。</summary>
     public bool IsAnimating { get; private set; }
@@ -110,6 +115,29 @@ public sealed class IslandLayoutAnimator
     /// <summary>取该行补间中的高度；未启用或无该行时返回 fallback。</summary>
     public double GetHeight(int line, double fallback)
         => Enabled && _lines.TryGetValue(line, out var state) ? state.Height.Current : fallback;
+
+    /// <summary>该行当前的纵向形变缩放（果冻，1=无形变）。未启用/非果冻/无该行时为 1。</summary>
+    public double GetJellyScaleY(int line)
+    {
+        if (!Enabled || !Jelly || !_lines.TryGetValue(line, out var state))
+            return 1.0;
+        return 1.0 + SquashOf(state);
+    }
+
+    private static double SquashOf(LineState state)
+    {
+        var w = state.Width;
+        var span = w.Target - w.From;
+        if (Math.Abs(span) < ChangeThreshold)
+            return 0;
+        var progress = (w.Current - w.From) / span;
+        if (progress <= 0 || progress >= 1)
+            return 0; // 只在补间进行中；结束时 progress==1 -> 0
+        var bump = Math.Sin(Math.PI * progress); // 中段峰值，两端为 0
+        var amount = Math.Min(MaxJellySquash,
+            Math.Abs(span) / Math.Max(1.0, Math.Max(w.From, w.Target)) * JellyCoupling);
+        return -Math.Sign(span) * amount * bump; // 变宽 -> 纵向压扁；变窄 -> 纵向拉长
+    }
 
     /// <summary>全部对齐目标并清零预留。</summary>
     public void Settle()

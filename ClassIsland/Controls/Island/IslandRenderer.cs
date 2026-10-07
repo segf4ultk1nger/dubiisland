@@ -220,12 +220,19 @@ public sealed class IslandRenderer
             var displayWidth = Animator?.GetWidth(line.LineNumber, lineWidth) ?? lineWidth;
             var top = Animator?.GetTop(line.LineNumber, line.Top) ?? line.Top;
             var height = Animator?.GetHeight(line.LineNumber, line.Height) ?? line.Height;
+            var centerY = top + height / 2;
+            var jellyY = Animator?.GetJellyScaleY(line.LineNumber) ?? 1.0;
+            var jelly = Math.Abs(jellyY - 1.0) > 0.0001;
             var lineX = (bounds.Width - displayWidth) * hAlign;
             var lineRect = new Rect(lineX, top, displayWidth, height);
+            if (jelly)
+                drawingContext.PushTransform(new ScaleTransform(1, jellyY, 0, centerY));
             if (lineRect.Width > 0 && lineRect.Height > 0)
             {
                 drawingContext.DrawGeometry(_backgroundBrush, null, CreateCornerGeometry(lineRect));
             }
+            if (jelly)
+                drawingContext.Pop();
 
             if (faded)
                 drawingContext.Pop();
@@ -246,8 +253,13 @@ public sealed class IslandRenderer
             var displayWidth = Animator?.GetWidth(line.LineNumber, lineWidth) ?? lineWidth;
             var top = Animator?.GetTop(line.LineNumber, line.Top) ?? line.Top;
             var height = Animator?.GetHeight(line.LineNumber, line.Height) ?? line.Height;
+            var centerY = top + height / 2;
+            var jellyY = Animator?.GetJellyScaleY(line.LineNumber) ?? 1.0;
+            var jelly = Math.Abs(jellyY - 1.0) > 0.0001;
             var lineX = (bounds.Width - displayWidth) * hAlign;
             var pillRect = new Rect(lineX, top, displayWidth, height);
+            if (jelly)
+                drawingContext.PushTransform(new ScaleTransform(1, jellyY, 0, centerY));
             // 仅在几何增长期（显示尺寸 < 目标尺寸）裁剪内容：内容按目标排布，会超出正在生长的 pill。
             // 静止/收缩期内容本就在 pill 内，不裁剪，保持与补间引入前完全一致的绘制。
             var clipped = displayWidth < lineWidth - 0.5 || height < line.Height - 0.5;
@@ -263,6 +275,8 @@ public sealed class IslandRenderer
             }
 
             if (clipped)
+                drawingContext.Pop();
+            if (jelly)
                 drawingContext.Pop();
 
             if (faded)
