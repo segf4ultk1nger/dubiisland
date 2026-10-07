@@ -38,6 +38,15 @@ internal static class SettingsInjector
         _started = true;
         Control.LoadedEvent.AddClassHandler<SettingsPageBase>((page, _) => Inject(page));
         Control.LoadedEvent.AddClassHandler<Window>((window, _) => InjectWindowMenu(window));
+        // 编辑模式的外观抽屉里也有一份「界面缩放」，同样放宽上限。
+        Control.LoadedEvent.AddClassHandler<SettingsExpander>((expander, _) =>
+        {
+            if (string.Equals(expander.Header as string, "界面缩放", StringComparison.Ordinal)
+                && expander.Footer is Slider slider)
+            {
+                slider.Maximum = 8;
+            }
+        });
     }
 
     private static void Inject(SettingsPageBase page)
@@ -155,12 +164,6 @@ internal static class SettingsInjector
 
     private static void InjectAppearance(SettingsPageBase page)
     {
-        // 放宽「界面缩放」上限（内置默认 2.5）。
-        if (FindExpander(page, "界面缩放")?.Footer is Slider scaleSlider)
-        {
-            scaleSlider.Maximum = 8;
-        }
-
         var expander = FindExpander(page, "分体主界面");
         if (expander == null)
         {
