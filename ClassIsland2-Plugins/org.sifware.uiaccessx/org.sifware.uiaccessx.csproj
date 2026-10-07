@@ -59,4 +59,13 @@
     </None>
   </ItemGroup>
 
+  <!-- 插件包只需 dll / deps.json / manifest / 资源：pdb 与 runtimeconfig.json 是宿主运行时的产物，打进去纯属垃圾。
+       （deps.json 必须保留：ClassIsland 用 AssemblyDependencyResolver 依据它解析插件依赖。） -->
+  <Target Name="CleanCipxPayload" BeforeTargets="CreateCipx" Condition="'$(CreateCipx)' == 'true'">
+    <ItemGroup>
+      <CipxJunk Include="$(OutputPath)*.pdb;$(OutputPath)*.runtimeconfig.json" />
+    </ItemGroup>
+    <Delete Files="@(CipxJunk)" />
+  </Target>
+
 </Project>
