@@ -121,6 +121,12 @@ internal static class SettingsInjector
 
     private static void InjectAppearance(SettingsPageBase page)
     {
+        // 放宽「界面缩放」上限（内置默认 2.5）。
+        if (FindExpander(page, "界面缩放")?.Footer is Slider scaleSlider)
+        {
+            scaleSlider.Maximum = 8;
+        }
+
         var expander = FindExpander(page, "分体主界面");
         if (expander == null)
         {
