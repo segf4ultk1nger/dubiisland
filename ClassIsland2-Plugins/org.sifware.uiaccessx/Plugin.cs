@@ -20,5 +20,8 @@ public class Plugin : PluginBase
 
         // 运行期把主界面岛的圆角渲染为超椭圆（若已在设置中开启）。
         Squircle.SquircleRenderer.Start();
+
+        // 按设置屏蔽 Windows 10 触摸边缘手势。
+        EdgeGestureUtil.Start();
     }
 }

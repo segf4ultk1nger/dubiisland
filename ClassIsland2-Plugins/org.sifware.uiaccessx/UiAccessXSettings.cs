@@ -11,4 +11,7 @@ public sealed class UiAccessXSettings
 
     /// <summary>超椭圆平滑度：0 为普通圆角，越大越接近超椭圆。</summary>
     public double SquircleSmoothing { get; set; } = 0.6;
+
+    /// <summary>是否屏蔽 Windows 10 自带的触摸边缘手势。</summary>
+    public bool BlockEdgeGestures { get; set; }
 }

@@ -8,8 +8,11 @@
 - 以管理员身份重启 ClassIsland 和以管理员身份开机启动（来自 LegacyIsland）
 - 主界面的超椭圆圆角支持（来自 LegacyIsland）
 - 修改主界面缩放上限至 8.00x（来自 LegacyIsland）
+- 屏蔽 Windows10 的触摸边缘手势（来自 InkCanvasForClass）
 
 超级置顶在设置页面的“主页面”，“窗口”的“窗口层级”的折叠菜单中
+
+其他设置自己去找，总找得到的。
 
 ## 许可
 

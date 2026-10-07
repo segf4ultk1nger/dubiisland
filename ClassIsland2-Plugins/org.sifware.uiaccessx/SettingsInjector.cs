@@ -91,6 +91,40 @@ internal static class SettingsInjector
                 UiAccessX.Settings.EnableUiAccess = v;
                 UiAccessX.SaveSettings();
             }));
+
+        // 在窗口页末尾追加「屏蔽边缘触摸手势」。
+        var parent = page.GetLogicalDescendants()
+            .OfType<Panel>()
+            .FirstOrDefault(p => p.Children.Contains(expander));
+        parent?.Children.Add(MakeEdgeGestureExpander());
+    }
+
+    private static SettingsExpander MakeEdgeGestureExpander()
+    {
+        var toggle = new ToggleSwitch
+        {
+            IsChecked = UiAccessX.Settings.BlockEdgeGestures,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        toggle.PropertyChanged += (_, e) =>
+        {
+            if (e.Property != ToggleSwitch.IsCheckedProperty)
+            {
+                return;
+            }
+
+            UiAccessX.Settings.BlockEdgeGestures = toggle.IsChecked == true;
+            UiAccessX.SaveSettings();
+            EdgeGestureUtil.Apply(toggle.IsChecked == true);
+        };
+
+        return new SettingsExpander
+        {
+            IconSource = new FluentIconSource("\uE94D"),
+            Header = "屏蔽边缘触摸手势",
+            Description = "启用后 ClassIsland 可以帮您屏蔽 Windows10 自带的触摸边缘手势。",
+            Footer = toggle
+        };
     }
 
     private static void InjectGeneralAutoStart(SettingsPageBase page)
