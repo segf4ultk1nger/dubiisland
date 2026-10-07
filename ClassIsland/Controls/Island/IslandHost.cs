@@ -65,6 +65,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private int _contentHeightPx;
     private bool _isVisible;
     private bool _forceLayered;
+    private bool _renderDirty;
+    private (int Left, int Top, int Width, int Height)? _appliedWindowRect;
 
     private AnimSpec? _animSpec;
     private TimeSpan? _animStart;
@@ -239,6 +241,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         source.AddHook(WndProc);
         _source = source;
         _hwnd = source.Handle;
+        _appliedWindowRect = null;
 
         if (!compatible)
         {
@@ -645,7 +648,15 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         if (_renderer.TickFades(args.RenderingTime.TotalSeconds))
             active = true;
 
-        _renderer.Invalidate();
+        if (_renderDirty)
+        {
+            _renderDirty = false;
+            UpdateWindowPos(); // 合并本帧内所有失效，只全量重排+重绘一次
+        }
+        else if (active)
+        {
+            _surface.Redraw();
+        }
 
         if (!active)
             StopRenderingHook();
@@ -937,6 +948,19 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
     private void OnSettingsChanged(object? sender, PropertyChangedEventArgs e)
     {
+        // 高频滑块（透明度/缩放）只做各自必需的工作，避免每次拖动都全量重算主题+窗口+样式。
+        switch (e.PropertyName)
+        {
+            case nameof(Settings.Opacity):
+                _renderer.RefreshStyles();
+                _renderer.Invalidate();
+                return;
+            case nameof(Settings.Scale):
+                _renderDirty = true;
+                EnsureRenderingHook();
+                return;
+        }
+
         RefreshTheme();
         UpdateWindowPos();
         ApplyWindowStyles();
@@ -965,7 +989,11 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
     private void OnThemeUpdated(object? sender, ThemeUpdatedEventArgs e) => RefreshTheme();
 
-    private void OnRendererInvalidated(object? sender, EventArgs e) => UpdateWindowPos();
+    private void OnRendererInvalidated(object? sender, EventArgs e)
+    {
+        _renderDirty = true;
+        EnsureRenderingHook();
+    }
 
     /// <summary>把主题色、前景色、主题背景色同步给渲染上下文，并重建画笔。</summary>
     private void RefreshTheme()
@@ -1085,10 +1113,17 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         var padY = (heightPx - contentHeightPx) * vAlign;
         _windowLeftPx = (int)Math.Round(left);
         _windowTopPx = (int)Math.Round(top);
-        SetWindowPos((HWND)_hwnd, HWND.Null, (int)Math.Round(left - padX), (int)Math.Round(top - padY),
-            widthPx, heightPx, SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+
+        var windowRect = ((int)Math.Round(left - padX), (int)Math.Round(top - padY), widthPx, heightPx);
+        if (_appliedWindowRect != windowRect)
+        {
+            SetWindowPos((HWND)_hwnd, HWND.Null, windowRect.Item1, windowRect.Item2,
+                widthPx, heightPx, SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+            _appliedWindowRect = windowRect;
+        }
 
         _surface.Redraw(); // 对齐/尺寸变化后立即按新锚点重绘
+        _renderDirty = false;
     }
 
     /// <summary>按隐藏规则（可见性、上课/全屏/最大化/规则集）决定是否显示窗口。</summary>

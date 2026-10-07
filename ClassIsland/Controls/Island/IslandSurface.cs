@@ -19,7 +19,6 @@ public sealed class IslandSurface : FrameworkElement
     public IslandSurface(IslandRenderer renderer)
     {
         _renderer = renderer;
-        _renderer.Invalidated += OnRendererInvalidated;
         AddVisualChild(_visual);
         AddLogicalChild(_visual);
     }
@@ -83,6 +82,4 @@ public sealed class IslandSurface : FrameworkElement
         using var drawingContext = _visual.RenderOpen();
         _renderer.Render(drawingContext, new Rect(natural));
     }
-
-    private void OnRendererInvalidated(object? sender, EventArgs e) => Redraw();
 }
