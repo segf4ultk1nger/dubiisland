@@ -341,8 +341,11 @@ public partial class App : AppBase, IAppHost
         //    Resources["HarmonyOsSans"] = FindResource("BackendFontFamily");
         //}
 
-        PresentationTraceSources.DataBindingSource.Listeners.Add(new BindingFailureTraceListener(this));
-        PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning;
+        // 已注释：全局绑定追踪。给 PresentationTraceSources.DataBindingSource 挂监听器会把 Switch 级别设为
+        // Warning，WPF 绑定引擎随之对每条绑定额外记账并处理绑定失败，内存/开销随绑定数量增长；本 app 绑定极多，
+        // 对空闲基线有实际影响。仅在排查绑定问题时临时启用（BindingFailureTraceListener 保留）。
+        //PresentationTraceSources.DataBindingSource.Listeners.Add(new BindingFailureTraceListener(this));
+        //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning;
 
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("zh-CN");
         Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-CN");
@@ -622,7 +625,6 @@ public partial class App : AppBase, IAppHost
             Stop();
         });
         lifetime.ApplicationStopped.Register(() => Logger.LogInformation("App stopped."));
-        lifetime.ApplicationStopping.Register(Stop);
         if (ApplicationCommand.Verbose)
         {
             AppDomain.CurrentDomain.FirstChanceException += (o, args) => Logger.LogTrace(args.Exception, "发生内部异常");
@@ -1041,7 +1043,21 @@ public partial class App : AppBase, IAppHost
             AppStopping?.Invoke(this, EventArgs.Empty);
             IAppHost.Host?.Services.GetService<ILessonsService>()?.StopMainTimer();
             GetService<ScriptRuntimeService>()?.Shutdown();
-            IAppHost.Host?.StopAsync(TimeSpan.FromSeconds(5));
+            // 不能在 UI 线程同步调用 Host.StopAsync：本方法常由 Host 自身的 ApplicationStopping 回调触发，
+            // 此时 StopApplication() 已在其调用线程执行 CancellationTokenSource.Cancel()，若 UI 线程再次同步
+            // 调用 Host.StopAsync 会再次进入 Cancel() 并与之互等死锁。放到后台线程，让 UI 线程继续走到 Current.Shutdown()。
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    if (IAppHost.Host != null)
+                        await IAppHost.Host.StopAsync(TimeSpan.FromSeconds(5));
+                }
+                catch
+                {
+                    // 停止失败不阻塞退出流程。
+                }
+            });
             IAppHost.Host?.Services.GetService<SettingsService>()?.SaveSettings("停止当前应用程序。");
             IAppHost.Host?.Services.GetService<IProfileService>()?.SaveProfile();
             Current.Shutdown();
