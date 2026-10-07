@@ -205,6 +205,30 @@ public partial class App : AppBase, IAppHost
         }
     }
 
+    /// <summary>
+    /// 启动早期轻量读取 Settings.json 的 <see cref="Settings.IsSplashEnabled"/>，用于在加载完整设置前决定是否显示闪屏。
+    /// 文件不存在或解析失败时按默认 <c>true</c>（与 <see cref="Settings"/> 默认值一致）。
+    /// </summary>
+    private static bool PeekIsSplashEnabled()
+    {
+        try
+        {
+            var path = Path.Combine(AppRootFolderPath, "Settings.json");
+            if (!File.Exists(path))
+            {
+                return true;
+            }
+
+            using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(path));
+            return !document.RootElement.TryGetProperty(nameof(Settings.IsSplashEnabled), out var property)
+                   || property.ValueKind != System.Text.Json.JsonValueKind.False;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
     static App()
     {
         DependencyPropertyHelper.ForceOverwriteDependencyPropertyDefaultValue(ToolTipService.InitialShowDelayProperty,
@@ -459,6 +483,10 @@ public partial class App : AppBase, IAppHost
         DiagnosticService.Checkpoint("预处理（文件夹/插件安装）");
         bool isSystemSpeechSystemExist = false;
 
+        // 尽早创建 AsyncBox 专用 UI 线程（闪屏用），与 Host 构建/后续启动工作并行，省去后面的等待。
+        var threadedUiDispatcherAwaiter =
+            AsyncBox.RelatedAsyncDispatchers.GetOrAdd(Dispatcher, dispatcher => UIDispatcher.RunNewAsync("AsyncBox"));
+
         IAppHost.Host = Microsoft.Extensions.Hosting.Host.
             CreateDefaultBuilder().
             UseContentRoot(AppContext.BaseDirectory).
@@ -638,11 +666,30 @@ public partial class App : AppBase, IAppHost
 #endif
         CommandManager.RegisterClassCommandBinding(typeof(Window), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
         CommandManager.RegisterClassCommandBinding(typeof(Page), new CommandBinding(UriNavigationCommands.UriNavigationCommand, UriNavigationCommandExecuted));
+        // AsyncBox 专用 UI 线程已在启动早期并行创建，这里直接等待就绪。
+        ThreadedUiDispatcher = await threadedUiDispatcherAwaiter;
+        Logger.LogInformation("初始化应用。");
+
+        // 尽早显示闪屏（首屏）：用轻量读取设置里的开关做门控，避免为了一个开关先加载完整设置；
+        // 集控初始化与设置加载都挪到闪屏之后，让用户更快看到首屏。
+        if (!ApplicationCommand.Quiet && PeekIsSplashEnabled())
+        {
+            // 默认不冻结应用资源：见 ThemeService.FreezeApplicationResources 的说明（省约 0.3s 启动）。
+            //ThemeService.FreezeApplicationResources();
+            ThreadedUiDispatcher.Invoke(() =>
+            {
+                GetService<SplashWindowBase>().Show();
+            });
+            DiagnosticService.Checkpoint("显示闪屏");
+        }
+
         await GetService<IManagementService>().SetupManagement();
         DiagnosticService.Checkpoint("集控初始化");
         await GetService<SettingsService>().LoadSettingsAsync();
         Settings = GetService<SettingsService>().Settings;
         DiagnosticService.Checkpoint("加载设置");
+        // 设置已加载：刷新闪屏自定义文本（自定义 logo 由绑定自动更新）。
+        GetService<ISplashService>().ResetSplashText();
         Settings.IsSystemSpeechSystemExist = isSystemSpeechSystemExist;
         Settings.IsNetworkConnect = InternetGetConnectedState(out var _);
         Settings.DiagnosticStartupCount++;
@@ -652,37 +699,13 @@ public partial class App : AppBase, IAppHost
             Settings.DiagnosticMemoryKillCount++;
             Settings.DiagnosticLastMemoryKillTime = DateTime.Now;
         }
-        //OverrideFocusVisualStyle();
-        var threadedUiDispatcherAwaiter =
-            AsyncBox.RelatedAsyncDispatchers.GetOrAdd(Dispatcher, dispatcher => UIDispatcher.RunNewAsync("AsyncBox"));
-        await Task.Run(() =>
-        {
-            while (!threadedUiDispatcherAwaiter.IsCompleted)
-            {
-            }
-        });
-        ThreadedUiDispatcher = threadedUiDispatcherAwaiter.Result;
-        DiagnosticService.Checkpoint("AsyncBox 调度器就绪（含忙等）");
-        Logger.LogInformation("初始化应用。");
 
         IThemeService.IsTransientDisabled = Settings.IsTransientDisabled;
         IThemeService.IsWaitForTransientDisabled = Settings.IsWaitForTransientDisabled;
-        if (Settings.IsSplashEnabled && !ApplicationCommand.Quiet)
-        {
-            // 默认不冻结应用资源：见 ThemeService.FreezeApplicationResources 的说明（省约 0.3s 启动）。
-            //ThemeService.FreezeApplicationResources();
-            DiagnosticService.Checkpoint("冻结应用资源");
-            ThreadedUiDispatcher.Invoke(() =>
-            {
-                GetService<SplashWindowBase>().Show();
-            });
-            DiagnosticService.Checkpoint("显示闪屏");
-        }
         GetService<ISplashService>().CurrentProgress = 30;
         GetService<ISplashService>().SetDetailedStatus("正在启动挂起检查服务");
 
         GetService<IHangService>();
-        DiagnosticService.Checkpoint("挂起检查服务");
 
         GetService<ISplashService>().SetDetailedStatus("正在创建任务栏图标");
         try
@@ -694,7 +717,6 @@ public partial class App : AppBase, IAppHost
             Logger.LogError(ex, "创建任务栏图标失败。");
         }
 
-        DiagnosticService.Checkpoint("任务栏图标");
         GetService<ISplashService>().CurrentProgress = 45;
 
         GetService<ISplashService>().SetDetailedStatus("正在加载档案");
@@ -706,9 +728,10 @@ public partial class App : AppBase, IAppHost
         _ = GetService<WallpaperPickingService>().GetWallpaperAsync();
         _ = IAppHost.Host.StartAsync();
         IAppHost.GetService<IPluginMarketService>().LoadPluginSource();
+        DiagnosticService.Checkpoint("后台服务启动 + 插件源");
 
         GetService<ThemeApplyService>();
-        DiagnosticService.Checkpoint("启动后台服务 + 应用主题");
+        DiagnosticService.Checkpoint("应用主题（ThemeApplyService）");
         Logger.LogInformation("正在初始化MainWindow。");
         GetService<ISplashService>().SetDetailedStatus("正在启动主界面所需的服务");
         GetService<ISplashService>().CurrentProgress = 55;
