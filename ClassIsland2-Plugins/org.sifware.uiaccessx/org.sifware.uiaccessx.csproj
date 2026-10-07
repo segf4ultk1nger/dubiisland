@@ -24,6 +24,9 @@
     <PackageReference Include="ClassIsland.PluginSdk" Version="$(ClassIslandPluginSdkVersion)">
       <ExcludeAssets>runtime; native</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Obfuscar" Version="2.2.50">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +69,38 @@
       <CipxJunk Include="$(OutputPath)*.pdb;$(OutputPath)*.runtimeconfig.json" />
     </ItemGroup>
     <Delete Files="@(CipxJunk)" />
+  </Target>
+  <!-- 打包前用 Obfuscar 混淆插件程序集（仅打包时执行，日常 Debug/Release 构建不受影响）。
+       Obfuscar 包只提供 $(Obfuscar)（Obfuscar.Console.exe 路径），且插件输出里没有它依赖的
+       ClassIsland.Core/Avalonia 等程序集，所以这里按本次编译的 @(ReferencePath) 生成配置，
+       把这些引用目录作为 AssemblySearchPath 喂给 Obfuscar 以建立继承关系表。 -->
+  <Target Name="ObfuscatePlugin" BeforeTargets="CreateCipx" Condition="'$(CreateCipx)' == 'true'">
+    <!-- 上一次打包可能已把 bin 里的 dll 混淆过；先从未混淆的 obj 编译产物恢复，避免重复混淆。 -->
+    <Copy SourceFiles="$(IntermediateOutputPath)org.sifware.uiaccessx.dll"
+          DestinationFiles="$(OutputPath)org.sifware.uiaccessx.dll"
+          OverwriteReadOnlyFiles="true" />
+    <ItemGroup>
+      <_ObfuscarRefDir Include="@(ReferencePath->'%(RootDir)%(Directory)')" />
+    </ItemGroup>
+    <ItemGroup>
+      <_ObfuscarLine Include="&lt;?xml version=&quot;1.0&quot;?&gt;" />
+      <_ObfuscarLine Include="&lt;Obfuscator&gt;" />
+      <_ObfuscarLine Include="  &lt;Var name=&quot;InPath&quot; value=&quot;$(MSBuildProjectDirectory)\$(OutputPath)&quot; /&gt;" />
+      <_ObfuscarLine Include="  &lt;Var name=&quot;OutPath&quot; value=&quot;$(MSBuildProjectDirectory)\$(IntermediateOutputPath)obfuscated&quot; /&gt;" />
+      <!-- 保留公共 API：插件入口 PluginBase 虚方法重写靠公共成员名被宿主调用，重命名会破坏加载。 -->
+      <_ObfuscarLine Include="  &lt;Var name=&quot;KeepPublicApi&quot; value=&quot;true&quot; /&gt;" />
+      <_ObfuscarLine Include="  &lt;Var name=&quot;HidePrivateApi&quot; value=&quot;true&quot; /&gt;" />
+      <_ObfuscarLine Include="@(_ObfuscarRefDir->'  &lt;AssemblySearchPath path=&quot;%(Identity)&quot; /&gt;')" />
+      <_ObfuscarLine Include="  &lt;Module file=&quot;$(MSBuildProjectDirectory)\$(OutputPath)org.sifware.uiaccessx.dll&quot; /&gt;" />
+      <_ObfuscarLine Include="&lt;/Obfuscator&gt;" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(IntermediateOutputPath)obfuscar.generated.xml" Lines="@(_ObfuscarLine)" Overwrite="true" />
+    <MakeDir Directories="$(IntermediateOutputPath)obfuscated" />
+    <Exec Command="&quot;$(Obfuscar)&quot; &quot;$(MSBuildProjectDirectory)\$(IntermediateOutputPath)obfuscar.generated.xml&quot;" />
+    <!-- 原地会锁住输入程序集，所以混淆到独立目录再拷回输出目录。 -->
+    <Copy SourceFiles="$(IntermediateOutputPath)obfuscated\org.sifware.uiaccessx.dll"
+          DestinationFiles="$(OutputPath)org.sifware.uiaccessx.dll"
+          OverwriteReadOnlyFiles="true" />
   </Target>
 
 </Project>
