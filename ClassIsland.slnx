@@ -1,0 +1,46 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Debug_MSIX" />
+    <BuildType Name="Release" />
+    <BuildType Name="Release_MSIX" />
+    <Platform Name="Any CPU" />
+    <Platform Name="ARM" />
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Libraries/">
+    <Project Path="Libraries/Squircle/Squircle.csproj">
+      <BuildType Solution="Debug_MSIX|*" Project="Debug" />
+      <BuildType Solution="Release_MSIX|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Libraries/UiAccess/">
+    <Project Path="Libraries/UiAccess/IccEvolved.UiAccess.Helper/IccEvolved.UiAccess.Helper.csproj">
+      <BuildType Solution="Debug_MSIX|*" Project="Debug" />
+      <BuildType Solution="Release_MSIX|*" Project="Debug" />
+    </Project>
+    <Project Path="Libraries/UiAccess/IccEvolved.UiAccess/IccEvolved.UiAccess.csproj">
+      <BuildType Solution="Debug_MSIX|*" Project="Debug" />
+      <BuildType Solution="Release_MSIX|*" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/SolutionFiles/">
+    <File Path="AssemblyInfo.cs" />
+    <File Path="GeneratePackage.props" />
+    <File Path="Global.props" />
+  </Folder>
+  <Project Path="ClassIsland.Core/ClassIsland.Core.csproj" />
+  <Project Path="ClassIsland.PluginSdk/ClassIsland.PluginSdk.csproj" />
+  <Project Path="ClassIsland.SettingsSearchGenerator/ClassIsland.SettingsSearchGenerator.csproj">
+    <BuildType Solution="Debug_MSIX|*" Project="Debug" />
+    <BuildType Solution="Release_MSIX|*" Project="Debug" />
+  </Project>
+  <Project Path="ClassIsland.Shared/ClassIsland.Shared.csproj" />
+  <Project Path="ClassIsland/ClassIsland.csproj" />
+  <Project Path="vendors/System.Device.Location/System.Device.Location.csproj">
+    <BuildType Solution="Debug_MSIX|*" Project="Debug" />
+    <BuildType Solution="Release_MSIX|*" Project="Release" />
+  </Project>
+</Solution>
