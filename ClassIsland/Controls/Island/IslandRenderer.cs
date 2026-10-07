@@ -235,12 +235,11 @@ public sealed class IslandRenderer
 
         _compFeedBuffer.Clear();
         var feedLeft = _context.Settings.MainWindowLeftMargin;
-        var feedRight = _context.Settings.MainWindowRightMargin;
-        var feedHAlign = HorizontalAlign;
         foreach (var line in _lines)
         {
-            var lineWidth = line.Width + feedLeft + feedRight;
-            var cx = (_contentWidth - lineWidth) * feedHAlign + feedLeft;
+            // 只送行内相对坐标（重排补间用）；行整体在内容区内的停靠对齐偏移在绘制时另行叠加，
+            // 不进入补间——否则停靠位置变化时补间会追一个持续移动的目标，表现为内容延迟。
+            var cx = feedLeft;
             for (var i = 0; i < line.Components.Length; i++)
             {
                 if (line.Components[i].MotionKey is { } key)
@@ -380,11 +379,13 @@ public sealed class IslandRenderer
             if (clipped)
                 drawingContext.PushClip(CreateCornerGeometry(pillRect));
 
-            var x = (bounds.Width - lineWidth) * hAlign + left;
+            var lineOffset = (bounds.Width - lineWidth) * hAlign;
+            var x = left;
             for (var i = 0; i < line.Components.Length; i++)
             {
                 var key = line.Components[i].MotionKey;
-                var displayX = key is null ? x : Animator?.GetComponentX(key, x) ?? x;
+                var relX = key is null ? x : Animator?.GetComponentX(key, x) ?? x;
+                var displayX = lineOffset + relX;
                 var compOpacity = key is null ? 1.0 : Animator?.GetComponentOpacity(key) ?? 1.0;
                 var compScale = key is null ? 1.0 : Animator?.GetComponentScale(key) ?? 1.0;
                 var slot = new Rect(displayX, top, line.Sizes[i].Width, line.Height);

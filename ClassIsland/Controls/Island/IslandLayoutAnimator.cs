@@ -105,7 +105,7 @@ public sealed class IslandLayoutAnimator
         RecomputeReserved();
     }
 
-    /// <summary>批量送入组件目标 X（内容自然坐标）。对同一批重复调用幂等。</summary>
+    /// <summary>批量送入组件目标 X（行内相对坐标，不含整行停靠对齐偏移）。对同一批重复调用幂等。</summary>
     public void FeedComponents(IReadOnlyList<(ComponentSettings Key, double X)> targets)
     {
         _presentComponents.Clear();
