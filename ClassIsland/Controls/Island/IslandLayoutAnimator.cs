@@ -36,6 +36,9 @@ public sealed class IslandLayoutAnimator
     private readonly List<ComponentSettings> _removedComponents = new();
     private bool _motionPrimed;
 
+    private readonly Channel _contentWidth = new();
+    private bool _contentWidthPrimed;
+
     /// <summary>是否启用几何补间（精简档关闭）。</summary>
     public bool Enabled { get; set; } = true;
 
@@ -153,6 +156,30 @@ public sealed class IslandLayoutAnimator
         RecomputeReserved();
     }
 
+    /// <summary>送入岛内容目标宽度（含提醒遮罩/overlay 撑大的部分）。首帧直接落位。</summary>
+    public void FeedContentWidth(double width)
+    {
+        if (!_contentWidthPrimed)
+        {
+            _contentWidth.Current = _contentWidth.From = _contentWidth.Target = width;
+            _contentWidthPrimed = true;
+        }
+        else if (!Enabled)
+        {
+            SetDirect(_contentWidth, width);
+        }
+        else
+        {
+            UpdateChannel(_contentWidth, width);
+        }
+
+        RecomputeReserved();
+    }
+
+    /// <summary>取补间中的内容宽度；未启用或未初始化时返回 fallback。</summary>
+    public double GetContentWidth(double fallback)
+        => Enabled && _contentWidthPrimed ? _contentWidth.Current : fallback;
+
     /// <summary>推进补间，返回是否仍在动。</summary>
     public bool Tick(double nowSeconds)
     {
@@ -173,6 +200,9 @@ public sealed class IslandLayoutAnimator
             animating |= Step(state.Opacity, nowSeconds);
             animating |= Step(state.Scale, nowSeconds);
         }
+
+        if (_contentWidthPrimed)
+            animating |= Step(_contentWidth, nowSeconds);
 
         RecomputeReserved();
         return animating;
@@ -241,6 +271,8 @@ public sealed class IslandLayoutAnimator
             SettleChannel(state.Opacity);
             SettleChannel(state.Scale);
         }
+
+        SettleChannel(_contentWidth);
 
         IsAnimating = false;
         ReservedWidth = 0;
@@ -330,6 +362,9 @@ public sealed class IslandLayoutAnimator
             }
         }
 
+        if (!IsAnimating && _contentWidthPrimed && _contentWidth.NeedsTick)
+            IsAnimating = true;
+
         if (!Enabled || !IsAnimating)
         {
             ReservedWidth = 0;
@@ -346,7 +381,9 @@ public sealed class IslandLayoutAnimator
                 Math.Max(state.Top.From + state.Height.From, state.Top.Target + state.Height.Target));
         }
 
-        ReservedWidth = ReserveFactor * maxWidth;
+        var contentMax = _contentWidthPrimed ? Math.Max(_contentWidth.From, _contentWidth.Target) : 0;
+
+        ReservedWidth = ReserveFactor * Math.Max(maxWidth, contentMax);
         ReservedHeight = ReserveFactor * maxHeight;
     }
 

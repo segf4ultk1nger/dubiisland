@@ -25,6 +25,8 @@ public sealed class IslandRenderer
     private Brush _backgroundBrush = Brushes.Black;
     private double _contentHeight;
     private double _contentWidth;
+    private double _cachedMaskWidth = -1;
+    private double _cachedOverlayWidth = -1;
 
     /// <summary>几何补间引擎（预览等无动画场景可为 null，此时直接使用目标几何）。</summary>
     public IslandLayoutAnimator? Animator { get; set; }
@@ -33,19 +35,67 @@ public sealed class IslandRenderer
     public bool IsMaskVisible { get; set; }
 
     /// <summary>提醒遮罩文本。</summary>
-    public string MaskText { get; set; } = "";
+    public string MaskText
+    {
+        get => _maskText;
+        set
+        {
+            if (_maskText == value)
+                return;
+            _maskText = value;
+            _cachedMaskWidth = -1;
+        }
+    }
+
+    private string _maskText = "";
 
     /// <summary>提醒遮罩左图标（Segoe MDL2 字形，空则不画）。</summary>
-    public string MaskLeftIcon { get; set; } = "";
+    public string MaskLeftIcon
+    {
+        get => _maskLeftIcon;
+        set
+        {
+            if (_maskLeftIcon == value)
+                return;
+            _maskLeftIcon = value;
+            _cachedMaskWidth = -1;
+        }
+    }
+
+    private string _maskLeftIcon = "";
 
     /// <summary>提醒遮罩右图标（Segoe MDL2 字形，空则不画）。</summary>
-    public string MaskRightIcon { get; set; } = "";
+    public string MaskRightIcon
+    {
+        get => _maskRightIcon;
+        set
+        {
+            if (_maskRightIcon == value)
+                return;
+            _maskRightIcon = value;
+            _cachedMaskWidth = -1;
+        }
+    }
+
+    private string _maskRightIcon = "";
 
     /// <summary>是否显示提醒 overlay。</summary>
     public bool IsOverlayVisible { get; set; }
 
     /// <summary>提醒 overlay 文本。</summary>
-    public string OverlayText { get; set; } = "";
+    public string OverlayText
+    {
+        get => _overlayText;
+        set
+        {
+            if (_overlayText == value)
+                return;
+            _overlayText = value;
+            _cachedOverlayWidth = -1;
+        }
+    }
+
+    private string _overlayText = "";
 
     /// <summary>是否使用 ClassIsland 2 Fluent 的平行四边形遮罩。</summary>
     public bool UseSlantedMask { get; set; }
@@ -164,11 +214,14 @@ public sealed class IslandRenderer
         }
 
         _contentHeight = y;
-        _contentWidth = desiredWidth;
-        if (_lines.Count > 0)
-        {
-            _contentWidth += _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
-        }
+        var left = _context.Settings.MainWindowLeftMargin;
+        var right = _context.Settings.MainWindowRightMargin;
+        var required = _lines.Count > 0 ? desiredWidth + left + right : 0;
+        if (IsMaskVisible)
+            required = Math.Max(required, MaskRequiredWidth);
+        if (IsOverlayVisible && !string.IsNullOrEmpty(OverlayText))
+            required = Math.Max(required, OverlayRequiredWidth);
+        _contentWidth = required;
 
         _feedBuffer.Clear();
         foreach (var line in _lines)
@@ -198,6 +251,8 @@ public sealed class IslandRenderer
 
         Animator?.FeedComponents(_compFeedBuffer);
 
+        Animator?.FeedContentWidth(_contentWidth);
+
         return new Size(_contentWidth, _contentHeight);
     }
 
@@ -217,6 +272,44 @@ public sealed class IslandRenderer
         2 or 5 => 1.0,
         _ => 0.0
     };
+
+    private const double MaskScaleSafety = 1.12; // 遮罩内容有 1.1 的缩放动画，留一点余量
+
+    private double MaskRequiredWidth
+    {
+        get
+        {
+            if (_cachedMaskWidth >= 0)
+                return _cachedMaskWidth;
+            const double gap = 8;
+            var total = 0.0;
+            if (!string.IsNullOrEmpty(MaskLeftIcon))
+                total += MakeIcon(MaskLeftIcon, _context.EmphasizedFontSize + 2, Brushes.White).Width + gap;
+            if (!string.IsNullOrEmpty(MaskText))
+                total += MakeText(MaskText, _context.EmphasizedFontSize, Brushes.White, FontWeights.Bold).Width;
+            if (!string.IsNullOrEmpty(MaskRightIcon))
+                total += gap + MakeIcon(MaskRightIcon, _context.EmphasizedFontSize + 2, Brushes.White).Width;
+            _cachedMaskWidth = total <= 0
+                ? 0
+                : total * MaskScaleSafety + _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
+            return _cachedMaskWidth;
+        }
+    }
+
+    private double OverlayRequiredWidth
+    {
+        get
+        {
+            if (_cachedOverlayWidth >= 0)
+                return _cachedOverlayWidth;
+            _cachedOverlayWidth = string.IsNullOrEmpty(OverlayText)
+                ? 0
+                : MakeText(OverlayText, _context.BodyFontSize, new SolidColorBrush(_context.ForegroundColor),
+                      FontWeights.Normal).Width
+                  + _context.Settings.MainWindowLeftMargin + _context.Settings.MainWindowRightMargin;
+            return _cachedOverlayWidth;
+        }
+    }
 
     public void Render(DrawingContext drawingContext, Rect bounds)
     {
@@ -323,6 +416,9 @@ public sealed class IslandRenderer
         if (contentOpaque)
             drawingContext.Pop();
 
+        var displayContentWidth = Animator?.GetContentWidth(_contentWidth) ?? _contentWidth;
+        var contentX = (bounds.Width - displayContentWidth) * hAlign;
+
         // 3) overlay 正文。
         if (IsOverlayVisible && !string.IsNullOrEmpty(OverlayText))
         {
@@ -332,7 +428,7 @@ public sealed class IslandRenderer
             var text = MakeText(OverlayText, _context.BodyFontSize, new SolidColorBrush(_context.ForegroundColor),
                 FontWeights.Normal);
             drawingContext.DrawText(text, new Point(
-                Math.Max(0, (bounds.Width - text.Width) / 2),
+                contentX + Math.Max(0, (displayContentWidth - text.Width) / 2),
                 Math.Max(0, (_contentHeight - text.Height) / 2)));
             if (overlayOpaque)
                 drawingContext.Pop();
@@ -341,14 +437,15 @@ public sealed class IslandRenderer
         // 4) 遮罩（底色层 + 内容层）。底色层始终不透明，只做位移/分区展开；内容层单独淡入。
         if (IsMaskVisible)
         {
-            drawingContext.PushClip(CreateCornerGeometry(new Rect(0, 0, bounds.Width, _contentHeight)));
+            var maskRect = new Rect(contentX, 0, displayContentWidth, _contentHeight);
+            drawingContext.PushClip(CreateCornerGeometry(maskRect));
             var accent = new SolidColorBrush(_context.AccentColor);
             if (UseSlantedMask)
-                DrawSlantedMask(drawingContext, bounds, accent);
+                DrawSlantedMask(drawingContext, maskRect, accent);
             else
                 drawingContext.DrawGeometry(accent, null,
-                    CreateCornerGeometry(new Rect(0, MaskOffsetY, bounds.Width, _contentHeight)));
-            DrawMaskContent(drawingContext, bounds);
+                    CreateCornerGeometry(new Rect(contentX, MaskOffsetY, displayContentWidth, _contentHeight)));
+            DrawMaskContent(drawingContext, maskRect);
             drawingContext.Pop();
         }
     }
@@ -363,7 +460,7 @@ public sealed class IslandRenderer
         if (scaled)
         {
             drawingContext.PushTransform(new ScaleTransform(MaskContentScale, MaskContentScale,
-                bounds.Width / 2, _contentHeight / 2));
+                bounds.X + bounds.Width / 2, _contentHeight / 2));
         }
 
         var centerY = _contentHeight / 2 + (UseSlantedMask ? 0 : MaskOffsetY);
@@ -381,7 +478,7 @@ public sealed class IslandRenderer
         var total = (leftIcon?.Width ?? 0) + (leftIcon != null ? gap : 0)
                     + (text?.Width ?? 0)
                     + (rightIcon != null ? gap : 0) + (rightIcon?.Width ?? 0);
-        var x = Math.Max(0, (bounds.Width - total) / 2);
+        var x = bounds.X + Math.Max(0, (bounds.Width - total) / 2);
         if (leftIcon != null)
         {
             drawingContext.DrawText(leftIcon, new Point(x, centerY - leftIcon.Height / 2));
@@ -438,10 +535,10 @@ public sealed class IslandRenderer
             if (currentWidth < 0.0001)
                 continue;
 
-            var p1 = new Point(center - currentWidth / 2, 0);
-            var p2 = new Point(center + currentWidth / 2, 0);
-            var p3 = new Point(center + currentWidth / 2 - offset, h);
-            var p4 = new Point(center - currentWidth / 2 - offset, h);
+            var p1 = new Point(bounds.X + center - currentWidth / 2, 0);
+            var p2 = new Point(bounds.X + center + currentWidth / 2, 0);
+            var p3 = new Point(bounds.X + center + currentWidth / 2 - offset, h);
+            var p4 = new Point(bounds.X + center - currentWidth / 2 - offset, h);
 
             var geometry = new StreamGeometry();
             using (var g = geometry.Open())
