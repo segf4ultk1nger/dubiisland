@@ -621,6 +621,7 @@ public partial class App : AppBase, IAppHost
                 services.AddAttachedSettingsControl<WeatherNotificationAttachedSettingsControl>();
                 // 认证提供方
                 services.AddAuthorizeProvider<PasswordAuthorizeProvider>();
+                services.AddAuthorizeProvider<TotpAuthorizeProvider>();
                 // 语音提供方
                 services.AddSpeechProvider<SystemSpeechService>();
                 services.AddSpeechProvider<EdgeTtsService, EdgeTtsSpeechServiceSettingsControl>();

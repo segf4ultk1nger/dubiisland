@@ -7,6 +7,7 @@
         xmlns:ci="http://classisland.tech/schemas/xaml/core"
         xmlns:registry="clr-namespace:ClassIsland.Core.Services.Registry;assembly=ClassIsland.Core"
         xmlns:controls="clr-namespace:ClassIsland.Controls"
+        xmlns:converters="clr-namespace:ClassIsland.Converters"
         xmlns:dd="urn:gong-wpf-dragdrop"
         mc:Ignorable="d"
         Height="500" Width="500"
@@ -26,6 +27,9 @@
     <ci:MyWindow.CommandBindings>
         <CommandBinding Command="{x:Static ci:AuthorizeProviderControlBase.CompleteAuthorizeCommand}" Executed="CommandBindingCompleteAuthorize_OnExecuted"></CommandBinding>
     </ci:MyWindow.CommandBindings>
+    <ci:MyWindow.Resources>
+        <converters:RemixIconKindConverter x:Key="RemixIconKindConverter"/>
+    </ci:MyWindow.Resources>
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -62,7 +66,7 @@
                       SelectedItem="{Binding ViewModel.SelectedAuthorizeProviderInfo}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <ci:IconText Kind="{Binding IconKind}" Text="{Binding Name}"/>
+                        <ciCore:RemixIconText Kind="{Binding Id, Converter={StaticResource RemixIconKindConverter}}" Text="{Binding Name}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
@@ -99,9 +103,9 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <ciCore:IconText IconSize="20" Grid.Column="0" Grid.Row="0"
+                        <ciCore:RemixIconText IconSize="20" Grid.Column="0" Grid.Row="0"
                                                  Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                                 Kind="{Binding ProviderInfo.IconKind}"
+                                                 Kind="{Binding ProviderInfo.Id, Converter={StaticResource RemixIconKindConverter}}"
                                                  VerticalAlignment="Center"
                                                  HorizontalAlignment="Center"
                                                  Margin="0 0 8 0"/>

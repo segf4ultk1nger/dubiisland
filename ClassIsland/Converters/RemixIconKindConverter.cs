@@ -26,6 +26,8 @@ public class RemixIconKindConverter : IValueConverter
             "storage" => PackIconRemixIconKind.Database2Fill,
             "privacy" => PackIconRemixIconKind.ShieldCheckFill,
             "security" => PackIconRemixIconKind.ShieldKeyholeFill,
+            "classisland.authProviders.password" => PackIconRemixIconKind.LockPasswordFill,
+            "classisland.authProviders.totp" => PackIconRemixIconKind.ShieldKeyholeFill,
             "classisland.plugins" => PackIconRemixIconKind.Puzzle2Fill,
             "about" => PackIconRemixIconKind.Information2Fill,
             _ => PackIconRemixIconKind.Settings4Fill

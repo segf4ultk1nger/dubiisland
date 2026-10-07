@@ -13,7 +13,7 @@ namespace ClassIsland.Controls.AuthorizeProvider;
 /// <summary>
 /// PasswordAuthorizeProvider.xaml 的交互逻辑
 /// </summary>
-[AuthorizeProviderInfo("classisland.authProviders.password", "密码", IconGlyphs.Password)]
+[AuthorizeProviderInfo("classisland.authProviders.password", "密码", "")]
 public partial class PasswordAuthorizeProvider
 {
     public static readonly DependencyProperty AuthorizeFailedProperty = DependencyProperty.Register(
