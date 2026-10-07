@@ -521,6 +521,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<IUriNavigationService, UriNavigationService>();
                 services.AddHostedService<MemoryWatchDogService>();
                 services.AddHostedService<InjectionGuardService>();
+                services.AddHostedService<ProcessGuardService>();
                 services.AddSingleton<IPluginService, PluginService>();
                 services.AddSingleton<IPluginMarketService, PluginMarketService>();
                 services.AddSingleton<IConditionPulseService, ConditionPulseService>();

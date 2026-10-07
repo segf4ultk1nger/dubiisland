@@ -73,6 +73,17 @@
                              Description="同时处理 Class Widgets 等同类软件。"
                              IsOn="{Binding SettingsService.Settings.ProcessGuardKillThirdParty, Mode=TwoWay}"
                              Margin="0 0 0 6" />
+            <ci:SettingsCard
+                             Header="监控的进程名"
+                             Description="以英文分号分隔；可省略 .exe 后缀。"
+                             Margin="0 0 0 6">
+                <ci:SettingsCard.Switcher>
+                    <TextBox MinWidth="220"
+                             VerticalAlignment="Center"
+                             Text="{Binding SettingsService.Settings.ProcessGuardProcessNames, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
 
             <Separator Margin="0 16 0 8" />
             <TextBlock Text="注入防护" Style="{StaticResource SettingsSectionHeaderStyle}" />
@@ -91,6 +102,17 @@
                              Description="通过进程缓解策略关闭扩展点注入。"
                              IsOn="{Binding SettingsService.Settings.IsExtensionPointDisableEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
+            <ci:SettingsCard
+                             Header="注入检测规则"
+                             Description="以英文分号分隔的模块名或路径关键字；留空仅使用内置规则。"
+                             Margin="0 0 0 6">
+                <ci:SettingsCard.Switcher>
+                    <TextBox MinWidth="220"
+                             VerticalAlignment="Center"
+                             Text="{Binding SettingsService.Settings.InjectionGuardRules, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                </ci:SettingsCard.Switcher>
+            </ci:SettingsCard>
 
             <Separator Margin="0 16 0 8" />
             <TextBlock Text="伪装" Style="{StaticResource SettingsSectionHeaderStyle}" />
