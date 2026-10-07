@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="ClassIsland.Core.Controls.SettingsControl"
+             x:Name="Root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -39,20 +40,20 @@
         <StackPanel>
 
             <TextBlock TextWrapping="Wrap" 
-                       Text="{Binding Header, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                       Text="{Binding Header, Mode=OneWay, ElementName=Root}"
                        Style="{StaticResource HeaderTextBlockStyle}">
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Margin="0 1 0 0" 
                        Opacity="0.75"
-                       Text="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}">
+                       Text="{Binding Description, Mode=OneWay, ElementName=Root}">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock" BasedOn="{StaticResource DescriptionTextBlockStyle}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                            <DataTrigger Binding="{Binding Description, Mode=OneWay, ElementName=Root}"
                                          Value="">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                            <DataTrigger Binding="{Binding Description, Mode=OneWay, ElementName=Root}"
                                          Value="{x:Null}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
@@ -63,7 +64,7 @@
 
             <!-- switcher -->
             <ContentPresenter
-                Visibility="{Binding HasSwitcher, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"
+                Visibility="{Binding HasSwitcher, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, ElementName=Root}"
                 Margin="0 8 0 0"
                 MinHeight="32"
                 HorizontalAlignment="Left"
@@ -71,12 +72,12 @@
                 <ContentPresenter.Style>
                     <Style TargetType="ContentPresenter">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Switcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}" 
+                            <DataTrigger Binding="{Binding Switcher, Mode=OneWay, ElementName=Root}" 
                                          Value="{x:Null}">
                                 <Setter Property="Content" Value="{StaticResource ToggleButton}"/>
                             </DataTrigger>
                         </Style.Triggers>
-                        <Setter Property="Content" Value="{Binding Switcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:SettingsControl}}}"/>
+                        <Setter Property="Content" Value="{Binding Switcher, Mode=OneWay, ElementName=Root}"/>
                     </Style>
                 </ContentPresenter.Style>
             </ContentPresenter>

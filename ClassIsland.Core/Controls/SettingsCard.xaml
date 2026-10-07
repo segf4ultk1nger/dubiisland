@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="ClassIsland.Core.Controls.SettingsCard"
+             x:Name="Root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,11 +16,11 @@
     <Border HorizontalAlignment="Stretch" VerticalAlignment="Center" TextElement.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" Padding="12 10 16 10">
         <controls1:SettingsControl 
             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
-            Header="{Binding Header, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
-            Description="{Binding Description, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
-            IconGlyph="{Binding IconGlyph, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
-            IsOn="{Binding IsOn, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
-            Switcher="{Binding Switcher, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"
-            HasSwitcher="{Binding HasSwitcher, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls1:SettingsCard}}}"/>
+            Header="{Binding Header, Mode=OneWay, ElementName=Root}"
+            Description="{Binding Description, Mode=OneWay, ElementName=Root}"
+            IconGlyph="{Binding IconGlyph, Mode=OneWay, ElementName=Root}"
+            IsOn="{Binding IsOn, Mode=TwoWay, ElementName=Root}"
+            Switcher="{Binding Switcher, Mode=TwoWay, ElementName=Root}"
+            HasSwitcher="{Binding HasSwitcher, Mode=OneWay, ElementName=Root}"/>
     </Border>
 </UserControl>
