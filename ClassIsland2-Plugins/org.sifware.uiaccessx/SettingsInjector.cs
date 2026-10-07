@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Layout;
@@ -7,6 +8,7 @@ using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Controls;
 using ClassIsland.Core.Controls.NavHyperlink;
 using FluentAvalonia.UI.Controls;
+using Org.Sifware.UiAccessX.Squircle;
 
 namespace Org.Sifware.UiAccessX;
 
@@ -60,6 +62,9 @@ internal static class SettingsInjector
                 case "about":
                     InjectAbout(page);
                     break;
+                case "appearance":
+                    InjectAppearance(page);
+                    break;
             }
         }
         catch
@@ -112,6 +117,85 @@ internal static class SettingsInjector
 
         panel.Children.Add(MakeAdminAutoStartButton());
         expander.Footer = panel;
+    }
+
+    private static void InjectAppearance(SettingsPageBase page)
+    {
+        var expander = FindExpander(page, "分体主界面");
+        if (expander == null)
+        {
+            return;
+        }
+
+        var toggle = new ToggleSwitch
+        {
+            IsChecked = UiAccessX.Settings.IsSquircleEnabled,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        var smoothing = new NumericUpDown
+        {
+            Value = (decimal)UiAccessX.Settings.SquircleSmoothing,
+            Minimum = 0m,
+            Maximum = 1m,
+            Increment = 0.05m,
+            FormatString = "0.00",
+            Width = 125,
+            Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            IsEnabled = toggle.IsChecked == true
+        };
+        ToolTip.SetTip(smoothing, "平滑度：0 为普通圆角，越大越接近超椭圆。");
+
+        toggle.PropertyChanged += (_, e) =>
+        {
+            if (e.Property != ToggleSwitch.IsCheckedProperty)
+            {
+                return;
+            }
+
+            UiAccessX.Settings.IsSquircleEnabled = toggle.IsChecked == true;
+            smoothing.IsEnabled = toggle.IsChecked == true;
+            UiAccessX.SaveSettings();
+            SquircleRenderer.Refresh();
+        };
+
+        smoothing.PropertyChanged += (_, e) =>
+        {
+            if (e.Property != NumericUpDown.ValueProperty)
+            {
+                return;
+            }
+
+            UiAccessX.Settings.SquircleSmoothing = (double)(smoothing.Value ?? 0.6m);
+            UiAccessX.SaveSettings();
+            SquircleRenderer.Refresh();
+        };
+
+        var footer = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        footer.Children.Add(toggle);
+        footer.Children.Add(smoothing);
+
+        // 在「分体主界面」下方另起一项（而不是塞进它的展开内容里）。
+        var parent = page.GetLogicalDescendants()
+            .OfType<Panel>()
+            .FirstOrDefault(p => p.Children.Contains(expander));
+        if (parent == null)
+        {
+            return;
+        }
+
+        var index = parent.Children.IndexOf(expander);
+        parent.Children.Insert(index + 1, new SettingsExpander
+        {
+            IconSource = new FluentIconSource("\uEF31"),
+            Header = "超椭圆圆角",
+            Description = "使用 Figma 风格的平滑圆角（squircle），设为 0.6 最果味。",
+            Footer = footer
+        });
     }
 
     private static void InjectAbout(SettingsPageBase page)
