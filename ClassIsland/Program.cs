@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using ClassIsland.Core;
 using ClassIsland.Core.Converters;
 using ClassIsland.Core.Enums;
+using ClassIsland.Helpers;
 using ClassIsland.Services;
 using ClassIsland.Shared.Helpers;
 using ClassIsland.Shared.JsonConverters;
@@ -31,6 +32,13 @@ internal static class Program
     [STAThread]
     private static void Main(string[] args)
     {
+        // 伪装进程名：设置开启时从改名后的 exe 副本重启自身。必须在互斥量创建前执行，
+        // 否则子进程会看到互斥量已被占用而误判为重复启动。任意失败则按原样正常启动。
+        if (TryRelaunchAsDisguisedProcess(args))
+        {
+            return;
+        }
+
         ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         // 自解压 UIAccess 组件到应用目录，供超级置顶使用（失败则忽略，按“无 Helper”正常启动）。
         ExtractUiAccessPayload();
@@ -79,6 +87,95 @@ internal static class Program
             {
                 // ignored
             }
+        }
+    }
+
+    /// <summary>
+    /// 伪装进程名：当设置为开启且当前进程名与伪装名不一致时，把自身复制为伪装名的 exe 并重启。
+    /// 成功启动子进程后返回 true（调用方应立即结束本进程）；未启用或失败时返回 false，按原样启动。
+    /// </summary>
+    private static bool TryRelaunchAsDisguisedProcess(string[] args)
+    {
+        try
+        {
+            var settingsPath = Path.Combine(AppContext.BaseDirectory, "Settings.json");
+            if (!File.Exists(settingsPath))
+            {
+                settingsPath = Path.Combine(Environment.CurrentDirectory, "Settings.json");
+            }
+
+            if (!File.Exists(settingsPath))
+            {
+                return false;
+            }
+
+            bool enabled;
+            string disguisedName;
+            try
+            {
+                using var document = JsonDocument.Parse(File.ReadAllText(settingsPath));
+                var root = document.RootElement;
+                if (root.ValueKind != JsonValueKind.Object)
+                {
+                    return false;
+                }
+
+                enabled = root.TryGetProperty("IsRandomProcessNameEnabled", out var enabledElement) &&
+                          enabledElement.ValueKind == JsonValueKind.True;
+                disguisedName = root.TryGetProperty("DisguisedProcessName", out var nameElement) &&
+                                nameElement.ValueKind == JsonValueKind.String
+                    ? nameElement.GetString() ?? ""
+                    : "";
+            }
+            catch
+            {
+                return false;
+            }
+
+            if (!enabled || !DisguiseHelper.IsValidProcessName(disguisedName))
+            {
+                return false;
+            }
+
+            var selfPath = FrameworkCompat.ProcessPath;
+            var dir = string.IsNullOrEmpty(selfPath) ? null : Path.GetDirectoryName(selfPath);
+            if (string.IsNullOrEmpty(dir))
+            {
+                return false;
+            }
+
+            // 已是伪装副本：不再重启，避免无限循环。
+            if (string.Equals(Path.GetFileNameWithoutExtension(selfPath), disguisedName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var target = Path.Combine(dir, disguisedName + ".exe");
+            if (string.Equals(target, selfPath, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            File.Copy(selfPath, target, overwrite: true);
+            // 重命名后的 exe 需要同名的 .config（程序集绑定重定向），否则 CLR 会因缺少配置而崩溃。
+            var configSource = selfPath + ".config";
+            if (File.Exists(configSource))
+            {
+                File.Copy(configSource, target + ".config", overwrite: true);
+            }
+
+            Process.Start(new ProcessStartInfo(target)
+            {
+                Arguments = FrameworkCompat.JoinArguments(args),
+                WorkingDirectory = dir
+            });
+            return true;
+        }
+        catch
+        {
+            // 复制/启动失败：按原进程继续正常启动。
+            return false;
         }
     }
 

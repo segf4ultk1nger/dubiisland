@@ -35,6 +35,7 @@ using ClassIsland.Services.Management;
 using ClassIsland.Services.NotificationProviders;
 using ClassIsland.Services.Scripting;
 using ClassIsland.Services.SpeechService;
+using ClassIsland.Helpers;
 using ClassIsland.Helpers.Native;
 using ClassIsland.Views;
 using ClassIsland.Views.SettingPages;
@@ -715,6 +716,16 @@ public partial class App : AppBase, IAppHost
             {
                 Logger?.LogWarning(ex, "禁用扩展点注入失败。");
             }
+        }
+        // 伪装：首次启用时为窗口标题/进程名生成随机值。进程名需立即写盘，下次启动生效。
+        if (Settings.IsRandomWindowTitleEnabled && string.IsNullOrEmpty(Settings.DisguisedWindowTitle))
+        {
+            Settings.DisguisedWindowTitle = DisguiseHelper.GenerateRandomName();
+        }
+        if (Settings.IsRandomProcessNameEnabled && string.IsNullOrEmpty(Settings.DisguisedProcessName))
+        {
+            Settings.DisguisedProcessName = DisguiseHelper.GenerateRandomName();
+            GetService<SettingsService>().SaveSettings("生成伪装进程名");
         }
         // 设置已加载：刷新闪屏自定义文本（自定义 logo 由绑定自动更新）。
         GetService<ISplashService>().ResetSplashText();

@@ -635,6 +635,12 @@ public partial class MainWindow : Window, INotificationVisualHost
             ? WINDOW_DISPLAY_AFFINITY.WDA_EXCLUDEFROMCAPTURE
             : WINDOW_DISPLAY_AFFINITY.WDA_NONE);
 
+        if (ViewModel.Settings.IsRandomWindowTitleEnabled &&
+            !string.IsNullOrEmpty(ViewModel.Settings.DisguisedWindowTitle))
+        {
+            Title = ViewModel.Settings.DisguisedWindowTitle;
+        }
+
         UpdateWindowLayer();
 
         ResourceLoaderBorder.Resources[nameof(SettingsService.Settings.MainWindowSecondaryFontSize)] =
