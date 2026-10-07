@@ -1183,6 +1183,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _isVisible = visible;
         if (visible)
         {
+            if (Settings.IsIslandShowAnimationEnabled)
+                _layoutAnimator.BeginComponentEnter(); // 显示时组件逐个入场
             UpdateWindowPos();
             ApplyWindowStyles();
             if (Settings.IsIslandShowAnimationEnabled)

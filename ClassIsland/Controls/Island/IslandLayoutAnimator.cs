@@ -39,6 +39,7 @@ public sealed class IslandLayoutAnimator
     private readonly HashSet<ComponentSettings> _presentComponents = new();
     private readonly List<ComponentSettings> _removedComponents = new();
     private bool _motionPrimed;
+    private bool _forceEnter;
 
     private readonly Channel _contentWidth = new();
     private bool _contentWidthPrimed;
@@ -107,6 +108,13 @@ public sealed class IslandLayoutAnimator
         RecomputeReserved();
     }
 
+    /// <summary>让下一次 <see cref="FeedComponents"/> 的所有组件重新入场（用于岛显示时的逐个入场）。</summary>
+    public void BeginComponentEnter()
+    {
+        _forceEnter = true;
+        _components.Clear();
+    }
+
     /// <summary>批量送入组件目标 X（行内相对坐标，不含整行停靠对齐偏移）。对同一批重复调用幂等。</summary>
     public void FeedComponents(IReadOnlyList<(ComponentSettings Key, double X)> targets)
     {
@@ -119,7 +127,7 @@ public sealed class IslandLayoutAnimator
             if (!_components.TryGetValue(key, out var state))
             {
                 state = new ComponentState { X = new Channel { Current = x, From = x, Target = x } };
-                if (_motionPrimed && Enabled)
+                if ((_motionPrimed || _forceEnter) && Enabled)
                 {
                     // 逐个错峰：同一批同时入场的新组件依次延后，单独新增则不延迟。
                     var delay = enterIndex++ * ComponentEnterStagger;
@@ -164,6 +172,7 @@ public sealed class IslandLayoutAnimator
             _components.Remove(key);
 
         _motionPrimed = true;
+        _forceEnter = false;
         RecomputeReserved();
     }
 
