@@ -664,6 +664,9 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
             _renderDirty = true; // 结算：下一帧把窗口收缩回目标尺寸
         _layoutAnimating = layoutAnimating;
 
+        if (_layoutAnimator.IsDockAnimating)
+            _renderDirty = true; // 停靠对齐逐帧重定位窗口
+
         if (_renderDirty)
         {
             _renderDirty = false;
@@ -996,6 +999,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
             UpdateNotification();
         if (_renderer.UpdateFadeTargets())
             EnsureRenderingHook();
+        if (_layoutAnimator.IsAnimating)
+            EnsureRenderingHook();
     }
 
     private void OnTopmostRecheckTick(object? sender, EventArgs e)
@@ -1085,7 +1090,10 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         if (screen == null)
             return;
 
-        var (hAlign, vAlign) = GetDockingAlign();
+        var (settingsH, settingsV) = GetDockingAlign();
+        _layoutAnimator.FeedDockAlign(settingsH, settingsV);
+        var hAlign = _layoutAnimator.GetDockHAlign(settingsH);
+        var vAlign = _layoutAnimator.GetDockVAlign(settingsV);
         _surface.HorizontalAlign = hAlign;
         _surface.VerticalAlign = vAlign;
         _surface.RenderTransformOrigin = new Point(hAlign, vAlign);
@@ -1111,32 +1119,12 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
 
         var offsetAreaTop = Settings.IsIgnoreWorkAreaEnabled ? screen.Bounds.Top : screen.WorkingArea.Top;
         var offsetAreaBottom = Settings.IsIgnoreWorkAreaEnabled ? screen.Bounds.Bottom : screen.WorkingArea.Bottom;
-        var centerX = (double)(screen.WorkingArea.Left + screen.WorkingArea.Right) / 2;
+        var offsetAreaHeight = offsetAreaBottom - offsetAreaTop;
 
-        double left = screen.WorkingArea.Left, top = offsetAreaTop;
-        switch (Settings.WindowDockingLocation)
-        {
-            case 1: // 中上
-                left = centerX - (double)contentWidthPx / 2;
-                break;
-            case 2: // 右上
-                left = screen.WorkingArea.Right - contentWidthPx;
-                break;
-            case 3: // 左下
-                top = offsetAreaBottom - contentHeightPx;
-                break;
-            case 4: // 中下
-                left = centerX - (double)contentWidthPx / 2;
-                top = offsetAreaBottom - contentHeightPx;
-                break;
-            case 5: // 右下
-                left = screen.WorkingArea.Right - contentWidthPx;
-                top = offsetAreaBottom - contentHeightPx;
-                break;
-        }
-
-        left += Settings.WindowDockingOffsetX;
-        top += Settings.WindowDockingOffsetY;
+        var left = screen.WorkingArea.Left + (screen.WorkingArea.Width - (double)contentWidthPx) * hAlign
+                   + Settings.WindowDockingOffsetX;
+        var top = offsetAreaTop + (offsetAreaHeight - (double)contentHeightPx) * vAlign
+                  + Settings.WindowDockingOffsetY;
 
         // 内容锚点（供命中测试用）保持为内容左上角；窗口左上角再按对齐把预留推到屏幕内一侧。
         var padX = (widthPx - contentWidthPx) * hAlign;

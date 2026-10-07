@@ -265,8 +265,10 @@ public sealed class IslandRenderer
         return line.Top + line.Height;
     }
 
-    /// <summary>行背景在内容区内的水平对齐（0=左 0.5=中 1=右），跟随全局停靠位置。</summary>
-    private double HorizontalAlign => _context.Settings.WindowDockingLocation switch
+    /// <summary>行背景在内容区内的水平对齐（0=左 0.5=中 1=右），跟随停靠位置（补间期间取动画值）。</summary>
+    private double HorizontalAlign => Animator?.GetDockHAlign(SettingsHAlign) ?? SettingsHAlign;
+
+    private double SettingsHAlign => _context.Settings.WindowDockingLocation switch
     {
         1 or 4 => 0.5,
         2 or 5 => 1.0,

@@ -21,12 +21,14 @@ public sealed class IslandLayoutAnimator
     private const double ComponentMoveDuration = 0.3;
     private const double ComponentEnterDuration = 0.22;
     private const double ComponentScaleFrom = 0.9;
+    private const double DockDuration = 0.35;
 
     // 缓动函数无状态，可共享复用，避免每次目标变化都分配。
     private static readonly BackEase GrowEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.4 };
     private static readonly BackEase ShrinkEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.2 };
     private static readonly CubicEase MoveEase = new() { EasingMode = EasingMode.EaseOut };
     private static readonly CubicEase EnterEase = new() { EasingMode = EasingMode.EaseOut };
+    private static readonly CubicEase DockEase = new() { EasingMode = EasingMode.EaseInOut };
 
     private readonly Dictionary<int, LineState> _lines = new();
     private readonly HashSet<int> _presentLines = new();
@@ -38,6 +40,10 @@ public sealed class IslandLayoutAnimator
 
     private readonly Channel _contentWidth = new();
     private bool _contentWidthPrimed;
+
+    private readonly Channel _dockH = new();
+    private readonly Channel _dockV = new();
+    private bool _dockPrimed;
 
     /// <summary>是否启用几何补间（精简档关闭）。</summary>
     public bool Enabled { get; set; } = true;
@@ -180,6 +186,36 @@ public sealed class IslandLayoutAnimator
     public double GetContentWidth(double fallback)
         => Enabled && _contentWidthPrimed ? _contentWidth.Current : fallback;
 
+    /// <summary>送入停靠对齐目标（0/0.5/1）；停靠位置变化时缓动，否则保持。</summary>
+    public void FeedDockAlign(double hAlign, double vAlign)
+    {
+        if (!_dockPrimed)
+        {
+            _dockH.Current = _dockH.From = _dockH.Target = hAlign;
+            _dockV.Current = _dockV.From = _dockV.Target = vAlign;
+            _dockPrimed = true;
+        }
+        else if (!Enabled)
+        {
+            SetDirect(_dockH, hAlign);
+            SetDirect(_dockV, vAlign);
+        }
+        else
+        {
+            SetTarget(_dockH, hAlign, DockDuration, DockEase);
+            SetTarget(_dockV, vAlign, DockDuration, DockEase);
+        }
+
+        RecomputeReserved();
+    }
+
+    /// <summary>停靠对齐补间中（窗口需逐帧重定位）。</summary>
+    public bool IsDockAnimating => _dockPrimed && (_dockH.NeedsTick || _dockV.NeedsTick);
+
+    public double GetDockHAlign(double fallback) => Enabled && _dockPrimed ? _dockH.Current : fallback;
+
+    public double GetDockVAlign(double fallback) => Enabled && _dockPrimed ? _dockV.Current : fallback;
+
     /// <summary>推进补间，返回是否仍在动。</summary>
     public bool Tick(double nowSeconds)
     {
@@ -203,6 +239,12 @@ public sealed class IslandLayoutAnimator
 
         if (_contentWidthPrimed)
             animating |= Step(_contentWidth, nowSeconds);
+
+        if (_dockPrimed)
+        {
+            animating |= Step(_dockH, nowSeconds);
+            animating |= Step(_dockV, nowSeconds);
+        }
 
         RecomputeReserved();
         return animating;
@@ -273,6 +315,8 @@ public sealed class IslandLayoutAnimator
         }
 
         SettleChannel(_contentWidth);
+        SettleChannel(_dockH);
+        SettleChannel(_dockV);
 
         IsAnimating = false;
         ReservedWidth = 0;
@@ -365,7 +409,13 @@ public sealed class IslandLayoutAnimator
         if (!IsAnimating && _contentWidthPrimed && _contentWidth.NeedsTick)
             IsAnimating = true;
 
-        if (!Enabled || !IsAnimating)
+        // 预留只在几何/宽度补间时需要；停靠对齐补间仅移动窗口，不预留，故单独记录。
+        var reserveActive = IsAnimating;
+
+        if (!IsAnimating && _dockPrimed && (_dockH.NeedsTick || _dockV.NeedsTick))
+            IsAnimating = true;
+
+        if (!Enabled || !reserveActive)
         {
             ReservedWidth = 0;
             ReservedHeight = 0;
