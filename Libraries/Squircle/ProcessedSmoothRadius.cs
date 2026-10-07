@@ -14,6 +14,7 @@ namespace Squircle
     public sealed class ProcessedSmoothRadius
     {
         private static readonly ConcurrentDictionary<SmoothCoreKey, ProcessedSmoothRadius> Cache = new();
+        private const int MaxCacheSize = 1024;
 
         private ProcessedSmoothRadius(
             double a,
@@ -116,7 +117,12 @@ namespace Squircle
                 circularSectionLength,
                 new SmoothCornerRadius(cornerRadius, cornerSmoothing));
 
-            if (useCache) Cache[key] = result;
+            if (useCache)
+            {
+                if (Cache.Count >= MaxCacheSize)
+                    Cache.Clear(); // 容量上限，避免不同尺寸长期累积
+                Cache[key] = result;
+            }
 
             return result;
         }

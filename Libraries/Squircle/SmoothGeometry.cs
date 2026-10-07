@@ -13,6 +13,7 @@ namespace Squircle
     public static class SmoothGeometry
     {
         private static readonly ConcurrentDictionary<GeometryKey, StreamGeometry> Cache = new();
+        private const int MaxCacheSize = 1024;
 
         /// <summary>
         ///     Creates a smooth-cornered <see cref="StreamGeometry" /> inside <paramref name="rect" />.
@@ -49,7 +50,12 @@ namespace Squircle
             else
             {
                 geometry = BuildLocal(radius, width, height);
-                if (useCache) Cache[key] = geometry;
+                if (useCache)
+                {
+                    if (Cache.Count >= MaxCacheSize)
+                        Cache.Clear(); // 容量上限，避免不同尺寸长期累积
+                    Cache[key] = geometry;
+                }
             }
 
             if (rect.X == 0 && rect.Y == 0) return geometry;

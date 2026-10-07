@@ -29,6 +29,7 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
     private SettingsService SettingsService { get; }
 
     private static readonly string DesktopWindowClassName = "Progman";
+    private const int WallpaperProcessingMaxDimension = 512;
     private ObservableCollection<Color> _wallpaperColorPlatte = new();
     private BitmapImage _wallpaperImage = new();
     private bool _isWorking = false;
@@ -173,6 +174,18 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
         }
     }
 
+    /// <summary>把图等比缩到最长边不超过 <paramref name="maxDimension"/>，用于取色与预览，避免全分辨率处理。</summary>
+    private static Bitmap Downscale(Bitmap source, int maxDimension)
+    {
+        var longest = Math.Max(source.Width, source.Height);
+        if (longest <= maxDimension)
+            return (Bitmap)source.Clone();
+        var scale = (double)maxDimension / longest;
+        return new Bitmap(source,
+            Math.Max(1, (int)(source.Width * scale)),
+            Math.Max(1, (int)(source.Height * scale)));
+    }
+
     public static Bitmap? GetScreenShot(string className)
     {
         var win = NativeWindowHelper.FindWindowByClass(className);
@@ -197,7 +210,7 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
                 return null;
             else
             {
-                var image = Image.FromFile(path);
+                using var image = Image.FromFile(path);
                 var m = 1.0;
                 if (image.Width > image.Height)
                 {
@@ -256,17 +269,20 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
                     return;
                 }
 
+                // 全屏截图可达数十 MB，仅用于缩放后取色与预览，避免全分辨率处理与常驻。
+                using var scaled = Downscale(bitmap, WallpaperProcessingMaxDimension);
+
                 double dpiX = 1, dpiY = 1;
                 DpiHelper.GetCurrentDpi(out dpiX, out dpiY);
-                WallpaperImage = BitmapConveters.ConvertToBitmapImage(bitmap, bitmap.Width);
+                WallpaperImage = BitmapConveters.ConvertToBitmapImage(scaled, scaled.Width);
 
                 if (SettingsService.Settings.UseExperimentColorPickingMethod)
                 {
-                    NewColorPickingImpl(bitmap);
+                    NewColorPickingImpl(scaled);
                 }
                 else
                 {
-                    OldColorPickingImpl(bitmap);
+                    OldColorPickingImpl(scaled);
                 }
             });
 
@@ -286,7 +302,6 @@ public sealed class WallpaperPickingService : IHostedService, INotifyPropertyCha
             }
         
             IsWorking = false;
-            GC.Collect();
         }
         catch (Exception e)
         {

@@ -10,7 +10,13 @@ namespace ClassIsland;
 public class ColorOctTreeNode
 {
     public int LeafNum = 0;
-    public List<ColorOctTreeNode>[] ToReduce = Enumerable.Repeat(new List<ColorOctTreeNode>(), 8).ToArray();
+    public List<ColorOctTreeNode>[] ToReduce =
+    {
+        new List<ColorOctTreeNode>(), new List<ColorOctTreeNode>(),
+        new List<ColorOctTreeNode>(), new List<ColorOctTreeNode>(),
+        new List<ColorOctTreeNode>(), new List<ColorOctTreeNode>(),
+        new List<ColorOctTreeNode>(), new List<ColorOctTreeNode>()
+    };
 
     public ColorOctTreeNode?[] Children = new ColorOctTreeNode?[8] {null, null , null , null , null , null , null , null };
     public bool IsLeaf = false;
