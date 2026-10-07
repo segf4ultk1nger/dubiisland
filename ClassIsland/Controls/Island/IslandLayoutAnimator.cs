@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Media.Animation;
+using ClassIsland.Core.Models.Components;
 
 namespace ClassIsland.Controls.Island;
 
@@ -17,14 +18,23 @@ public sealed class IslandLayoutAnimator
     private const double ChangeThreshold = 0.01;
     private const double MaxJellySquash = 0.08;
     private const double JellyCoupling = 0.5;
+    private const double ComponentMoveDuration = 0.3;
+    private const double ComponentEnterDuration = 0.22;
+    private const double ComponentScaleFrom = 0.9;
 
     // 缓动函数无状态，可共享复用，避免每次目标变化都分配。
     private static readonly BackEase GrowEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.4 };
     private static readonly BackEase ShrinkEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.2 };
+    private static readonly CubicEase MoveEase = new() { EasingMode = EasingMode.EaseOut };
+    private static readonly CubicEase EnterEase = new() { EasingMode = EasingMode.EaseOut };
 
     private readonly Dictionary<int, LineState> _lines = new();
     private readonly HashSet<int> _presentLines = new();
     private readonly List<int> _removedLines = new();
+    private readonly Dictionary<ComponentSettings, ComponentState> _components = new();
+    private readonly HashSet<ComponentSettings> _presentComponents = new();
+    private readonly List<ComponentSettings> _removedComponents = new();
+    private bool _motionPrimed;
 
     /// <summary>是否启用几何补间（精简档关闭）。</summary>
     public bool Enabled { get; set; } = true;
@@ -86,6 +96,63 @@ public sealed class IslandLayoutAnimator
         RecomputeReserved();
     }
 
+    /// <summary>批量送入组件目标 X（内容自然坐标）。对同一批重复调用幂等。</summary>
+    public void FeedComponents(IReadOnlyList<(ComponentSettings Key, double X)> targets)
+    {
+        _presentComponents.Clear();
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var (key, x) = targets[i];
+            _presentComponents.Add(key);
+            if (!_components.TryGetValue(key, out var state))
+            {
+                state = new ComponentState { X = new Channel { Current = x, From = x, Target = x } };
+                if (_motionPrimed && Enabled)
+                {
+                    state.Opacity = new Channel
+                    {
+                        Current = 0, From = 0, Target = 1,
+                        StartSeconds = -1, Duration = ComponentEnterDuration, Easing = EnterEase
+                    };
+                    state.Scale = new Channel
+                    {
+                        Current = ComponentScaleFrom, From = ComponentScaleFrom, Target = 1,
+                        StartSeconds = -1, Duration = ComponentEnterDuration, Easing = EnterEase
+                    };
+                }
+                else
+                {
+                    state.Opacity = new Channel { Current = 1, From = 1, Target = 1 };
+                    state.Scale = new Channel { Current = 1, From = 1, Target = 1 };
+                }
+
+                _components[key] = state;
+                continue;
+            }
+
+            if (!Enabled)
+            {
+                SetDirect(state.X, x);
+                continue;
+            }
+
+            SetTarget(state.X, x, ComponentMoveDuration, MoveEase);
+        }
+
+        _removedComponents.Clear();
+        foreach (var key in _components.Keys)
+        {
+            if (!_presentComponents.Contains(key))
+                _removedComponents.Add(key);
+        }
+
+        foreach (var key in _removedComponents)
+            _components.Remove(key);
+
+        _motionPrimed = true;
+        RecomputeReserved();
+    }
+
     /// <summary>推进补间，返回是否仍在动。</summary>
     public bool Tick(double nowSeconds)
     {
@@ -98,6 +165,13 @@ public sealed class IslandLayoutAnimator
             animating |= Step(state.Width, nowSeconds);
             animating |= Step(state.Top, nowSeconds);
             animating |= Step(state.Height, nowSeconds);
+        }
+
+        foreach (var state in _components.Values)
+        {
+            animating |= Step(state.X, nowSeconds);
+            animating |= Step(state.Opacity, nowSeconds);
+            animating |= Step(state.Scale, nowSeconds);
         }
 
         RecomputeReserved();
@@ -115,6 +189,18 @@ public sealed class IslandLayoutAnimator
     /// <summary>取该行补间中的高度；未启用或无该行时返回 fallback。</summary>
     public double GetHeight(int line, double fallback)
         => Enabled && _lines.TryGetValue(line, out var state) ? state.Height.Current : fallback;
+
+    /// <summary>取组件补间中的 X；未启用或无该组件时返回 fallback。</summary>
+    public double GetComponentX(ComponentSettings key, double fallback)
+        => Enabled && _components.TryGetValue(key, out var state) ? state.X.Current : fallback;
+
+    /// <summary>取组件补间中的不透明度；未启用或无该组件时为 1。</summary>
+    public double GetComponentOpacity(ComponentSettings key)
+        => Enabled && _components.TryGetValue(key, out var state) ? state.Opacity.Current : 1.0;
+
+    /// <summary>取组件补间中的缩放；未启用或无该组件时为 1。</summary>
+    public double GetComponentScale(ComponentSettings key)
+        => Enabled && _components.TryGetValue(key, out var state) ? state.Scale.Current : 1.0;
 
     /// <summary>该行当前的纵向形变缩放（果冻，1=无形变）。未启用/非果冻/无该行时为 1。</summary>
     public double GetJellyScaleY(int line)
@@ -149,6 +235,13 @@ public sealed class IslandLayoutAnimator
             SettleChannel(state.Height);
         }
 
+        foreach (var state in _components.Values)
+        {
+            SettleChannel(state.X);
+            SettleChannel(state.Opacity);
+            SettleChannel(state.Scale);
+        }
+
         IsAnimating = false;
         ReservedWidth = 0;
         ReservedHeight = 0;
@@ -156,15 +249,20 @@ public sealed class IslandLayoutAnimator
 
     private static void UpdateChannel(Channel channel, double value)
     {
+        var grow = value > channel.Current;
+        SetTarget(channel, value, grow ? GrowDuration : ShrinkDuration, grow ? GrowEase : ShrinkEase);
+    }
+
+    private static void SetTarget(Channel channel, double value, double duration, IEasingFunction easing)
+    {
         if (Math.Abs(channel.Target - value) < ChangeThreshold)
             return;
 
-        var grow = value > channel.Current;
         channel.From = channel.Current;
         channel.Target = value;
         channel.StartSeconds = -1;
-        channel.Duration = grow ? GrowDuration : ShrinkDuration;
-        channel.Easing = grow ? GrowEase : ShrinkEase;
+        channel.Duration = duration;
+        channel.Easing = easing;
     }
 
     private static void SetDirect(Channel channel, double value)
@@ -220,6 +318,18 @@ public sealed class IslandLayoutAnimator
             }
         }
 
+        if (!IsAnimating)
+        {
+            foreach (var state in _components.Values)
+            {
+                if (state.X.NeedsTick || state.Opacity.NeedsTick || state.Scale.NeedsTick)
+                {
+                    IsAnimating = true;
+                    break;
+                }
+            }
+        }
+
         if (!Enabled || !IsAnimating)
         {
             ReservedWidth = 0;
@@ -256,5 +366,12 @@ public sealed class IslandLayoutAnimator
         public Channel Width = new();
         public Channel Top = new();
         public Channel Height = new();
+    }
+
+    private sealed class ComponentState
+    {
+        public Channel X = new();
+        public Channel Opacity = new();
+        public Channel Scale = new();
     }
 }

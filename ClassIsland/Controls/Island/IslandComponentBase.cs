@@ -71,6 +71,8 @@ public abstract class IslandComponentBase : IIslandComponent, IIslandComponentCl
 
     public int LineNumber { get; set; }
 
+    public ComponentSettings? MotionKey => Component;
+
     public virtual bool IsVisible => Component.IsVisible && !_hidByRule;
 
     public event EventHandler? Invalidated;

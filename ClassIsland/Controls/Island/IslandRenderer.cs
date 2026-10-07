@@ -20,6 +20,7 @@ public sealed class IslandRenderer
     private readonly List<IslandLine> _lines = new();
     private readonly Dictionary<int, FadeState> _fades = new();
     private readonly List<(int Line, double Width, double Top, double Height)> _feedBuffer = new();
+    private readonly List<(ComponentSettings Key, double X)> _compFeedBuffer = new();
 
     private Brush _backgroundBrush = Brushes.Black;
     private double _contentHeight;
@@ -179,6 +180,24 @@ public sealed class IslandRenderer
 
         Animator?.Feed(_feedBuffer);
 
+        _compFeedBuffer.Clear();
+        var feedLeft = _context.Settings.MainWindowLeftMargin;
+        var feedRight = _context.Settings.MainWindowRightMargin;
+        var feedHAlign = HorizontalAlign;
+        foreach (var line in _lines)
+        {
+            var lineWidth = line.Width + feedLeft + feedRight;
+            var cx = (_contentWidth - lineWidth) * feedHAlign + feedLeft;
+            for (var i = 0; i < line.Components.Length; i++)
+            {
+                if (line.Components[i].MotionKey is { } key)
+                    _compFeedBuffer.Add((key, cx));
+                cx += line.Sizes[i].Width;
+            }
+        }
+
+        Animator?.FeedComponents(_compFeedBuffer);
+
         return new Size(_contentWidth, _contentHeight);
     }
 
@@ -269,9 +288,27 @@ public sealed class IslandRenderer
             var x = (bounds.Width - lineWidth) * hAlign + left;
             for (var i = 0; i < line.Components.Length; i++)
             {
-                var slot = new Rect(x, top, line.Sizes[i].Width, line.Height);
+                var key = line.Components[i].MotionKey;
+                var displayX = key is null ? x : Animator?.GetComponentX(key, x) ?? x;
+                var compOpacity = key is null ? 1.0 : Animator?.GetComponentOpacity(key) ?? 1.0;
+                var compScale = key is null ? 1.0 : Animator?.GetComponentScale(key) ?? 1.0;
+                var slot = new Rect(displayX, top, line.Sizes[i].Width, line.Height);
+
+                var pushOpacity = compOpacity < 0.999;
+                if (pushOpacity)
+                    drawingContext.PushOpacity(compOpacity);
+                var pushScale = Math.Abs(compScale - 1.0) > 0.0001;
+                if (pushScale)
+                    drawingContext.PushTransform(new ScaleTransform(compScale, compScale,
+                        slot.X + slot.Width / 2, slot.Y + slot.Height / 2));
+
                 line.Components[i].Render(drawingContext, slot, _context);
-                x += slot.Width;
+
+                if (pushScale)
+                    drawingContext.Pop();
+                if (pushOpacity)
+                    drawingContext.Pop();
+                x += line.Sizes[i].Width;
             }
 
             if (clipped)

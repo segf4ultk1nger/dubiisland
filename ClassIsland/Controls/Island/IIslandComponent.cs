@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
+using ClassIsland.Core.Models.Components;
 
 namespace ClassIsland.Controls.Island;
 
@@ -9,6 +10,9 @@ namespace ClassIsland.Controls.Island;
 /// </summary>
 public interface IIslandComponent
 {
+    /// <summary>跨重建保持稳定的标识（组件配置对象），用于跟踪补间状态。</summary>
+    ComponentSettings? MotionKey { get; }
+
     /// <summary>所在行号（组件配置中行的索引，由宿主在构建时设置）。</summary>
     int LineNumber { get; set; }
 
