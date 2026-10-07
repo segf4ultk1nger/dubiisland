@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ClassIsland.Core;
+using ClassIsland.Core.Abstractions.Services;
 using IccEvolved.UiAccess;
 
 namespace Org.Sifware.UiAccessX;
@@ -12,6 +13,18 @@ internal static class UiAccessX
     private const string SettingsFileName = "settings.json";
     private const string RelaunchFlagName = "uiaccess-relaunch.flag";
     private const int RelaunchGuardSeconds = 20;
+
+    /// <summary>本插件自身的 ID。</summary>
+    public const string PluginId = "org.sifware.uiaccessx";
+
+    private const string GrantUiAccessPluginId = "grantUiAccess";
+    private const string StartUpAsAdminPluginId = "classisland.startUpAsAdmin";
+
+    /// <summary>存在其它提供 UIAccess 的插件（启用中）。命中时本插件的 UIA 功能失效并隐藏相关设置。</summary>
+    public static bool HasConflictUiAccess { get; private set; }
+
+    /// <summary>存在其它管理管理员自启的插件（启用中）。命中时隐藏并自动取消本插件的管理员自启。</summary>
+    public static bool HasConflictAdminStartup { get; private set; }
 
     public static string ConfigFolder { get; private set; } = "";
     public static UiAccessXSettings Settings { get; private set; } = new();
@@ -45,6 +58,20 @@ internal static class UiAccessX
         }
 
         Settings = LoadSettings();
+
+        DetectConflicts();
+        if (HasConflictUiAccess && Settings.EnableUiAccess)
+        {
+            // 已有其它插件负责 UIAccess：让位，关掉本插件已保存的 UIA 意图。
+            Settings.EnableUiAccess = false;
+            SaveSettings();
+        }
+
+        if (HasConflictAdminStartup)
+        {
+            // 已有其它插件管理管理员自启：自动取消本插件的计划任务。
+            AdminStartup.SetEnabled(false);
+        }
 
         if (OperatingSystem.IsWindows())
         {
@@ -94,6 +121,38 @@ internal static class UiAccessX
         }
 
         return new UiAccessXSettings();
+    }
+
+    /// <summary>
+    /// 扫描已启用的插件，判断是否与其它 UIAccess / 管理员自启插件冲突。
+    /// 插件发现阶段会把所有清单写入 <see cref="IPluginService.LoadedPlugins"/>，因此在 Initialize 时即可读到全部插件（无需考虑加载顺序）。
+    /// </summary>
+    private static void DetectConflicts()
+    {
+        try
+        {
+            foreach (var plugin in IPluginService.LoadedPlugins)
+            {
+                if (!plugin.IsEnabled)
+                {
+                    continue;
+                }
+
+                var id = plugin.Manifest.Id;
+                if (string.Equals(id, GrantUiAccessPluginId, StringComparison.OrdinalIgnoreCase))
+                {
+                    HasConflictUiAccess = true;
+                }
+                else if (string.Equals(id, StartUpAsAdminPluginId, StringComparison.OrdinalIgnoreCase))
+                {
+                    HasConflictAdminStartup = true;
+                }
+            }
+        }
+        catch
+        {
+            // 忽略：读取插件列表失败时按无冲突处理。
+        }
     }
 
     public static bool IsUiAccessRunning() =>

@@ -4,9 +4,12 @@ using Avalonia.Controls.Documents;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using ClassIsland.Core;
 using ClassIsland.Core.Abstractions.Controls;
+using ClassIsland.Core.Abstractions.Services;
 using ClassIsland.Core.Controls;
 using ClassIsland.Core.Controls.NavHyperlink;
+using ClassIsland.Shared;
 using FluentAvalonia.UI.Controls;
 using Org.Sifware.UiAccessX.Squircle;
 
@@ -74,6 +77,9 @@ internal static class SettingsInjector
                 case "appearance":
                     InjectAppearance(page);
                     break;
+                case "classisland.plugins":
+                    InjectPluginsPage(page);
+                    break;
             }
         }
         catch
@@ -90,16 +96,20 @@ internal static class SettingsInjector
             return;
         }
 
-        expander.Items.Add(MakeToggleItem(
-            "\uEF4F",
-            "UIAccess 超级置顶",
-            "启用后 ClassIsland 可置于开始菜单和系统界面之上。开启后会尝试重启至管理员身份运行 ClassIsland。",
-            () => UiAccessX.Settings.EnableUiAccess,
-            v =>
-            {
-                UiAccessX.Settings.EnableUiAccess = v;
-                UiAccessX.SaveSettings();
-            }));
+        // 已有其它插件提供 UIAccess 时，不注入本插件的 UIA 开关（功能已让位）。
+        if (!UiAccessX.HasConflictUiAccess)
+        {
+            expander.Items.Add(MakeToggleItem(
+                "\uEF4F",
+                "UIAccess 超级置顶",
+                "启用后 ClassIsland 可置于开始菜单和系统界面之上。开启后会尝试重启至管理员身份运行 ClassIsland。",
+                () => UiAccessX.Settings.EnableUiAccess,
+                v =>
+                {
+                    UiAccessX.Settings.EnableUiAccess = v;
+                    UiAccessX.SaveSettings();
+                }));
+        }
 
         // 在窗口页末尾追加「屏蔽边缘触摸手势」。
         var parent = page.GetLogicalDescendants()
@@ -138,6 +148,12 @@ internal static class SettingsInjector
 
     private static void InjectGeneralAutoStart(SettingsPageBase page)
     {
+        // 已有其它插件管理管理员自启：不注入本插件的管理员自启按钮。
+        if (UiAccessX.HasConflictAdminStartup)
+        {
+            return;
+        }
+
         var expander = FindExpander(page, "开机自启");
         if (expander == null)
         {
@@ -384,5 +400,109 @@ internal static class SettingsInjector
             : "以管理员身份重新启动 ClassIsland。");
         item.Click += (_, _) => AdminStartup.RestartAsAdmin();
         return item;
+    }
+
+    private static bool _selfRemovalHooked;
+
+    private static void InjectPluginsPage(SettingsPageBase page)
+    {
+        RemoveSelfFromPluginList();
+        InjectDisableSelfMenuItem(page);
+    }
+
+    /// <summary>
+    /// 把本插件从插件市场/本地合并列表（<see cref="IPluginMarketService.MergedPlugins"/>）中真正剔除，
+    /// 这样列表项数量会归零，原生「还没有安装任何插件」占位会自动出现（而非留一片空白）。
+    /// </summary>
+    private static void RemoveSelfFromPluginList()
+    {
+        try
+        {
+            var market = IAppHost.TryGetService<IPluginMarketService>();
+            if (market == null)
+            {
+                return;
+            }
+
+            void Remove()
+            {
+                if (market.MergedPlugins.ContainsKey(UiAccessX.PluginId))
+                {
+                    market.MergedPlugins.Remove(UiAccessX.PluginId);
+                }
+            }
+
+            Remove();
+
+            // 刷新插件源可能把本插件重新合并进来，挂一次监听持续剔除。
+            if (!_selfRemovalHooked)
+            {
+                _selfRemovalHooked = true;
+                market.MergedPlugins.CollectionChanged += (_, _) => Remove();
+            }
+        }
+        catch
+        {
+            // 忽略。
+        }
+    }
+
+    private static void InjectDisableSelfMenuItem(Control page)
+    {
+        foreach (var button in page.GetLogicalDescendants().OfType<Button>())
+        {
+            if (button.Flyout is not MenuFlyout flyout)
+            {
+                continue;
+            }
+
+            var target = flyout.Items.OfType<MenuItem>().FirstOrDefault(x =>
+                (x.Header as string)?.Contains("管理插件源", StringComparison.Ordinal) == true);
+            if (target == null)
+            {
+                continue;
+            }
+
+            flyout.Items.Insert(flyout.Items.IndexOf(target), CreateDisableSelfMenuItem());
+            return;
+        }
+    }
+
+    private static MenuItem CreateDisableSelfMenuItem()
+    {
+        var item = new MenuItem
+        {
+            Header = "禁用 UIAccessX 并重启",
+            Icon = new FluentIcon("\uE0B5")
+        };
+        ToolTip.SetTip(item, "取消隐藏并禁用本插件，然后自动重启 ClassIsland 以生效。");
+        item.Click += (_, _) => DisableSelfAndRestart();
+        return item;
+    }
+
+    private static void DisableSelfAndRestart()
+    {
+        try
+        {
+            var info = IPluginService.LoadedPlugins.FirstOrDefault(x =>
+                string.Equals(x.Manifest.Id, UiAccessX.PluginId, StringComparison.Ordinal));
+            if (info is { IsLocal: true })
+            {
+                info.IsEnabled = false;
+            }
+        }
+        catch
+        {
+            // 忽略。
+        }
+
+        try
+        {
+            AppBase.Current.Restart();
+        }
+        catch
+        {
+            // 忽略。
+        }
     }
 }
