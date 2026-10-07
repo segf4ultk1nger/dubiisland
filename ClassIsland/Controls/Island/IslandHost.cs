@@ -68,6 +68,8 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private bool _forceLayered;
     private bool _renderDirty;
     private bool _layoutAnimating;
+    private double _windowCapacityW;
+    private double _windowCapacityH;
     private (int Left, int Top, int Width, int Height)? _appliedWindowRect;
 
     private AnimSpec? _animSpec;
@@ -640,6 +642,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
                 _hideAnimActive = false;
                 _hideAnimStart = null;
                 ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
+                _windowCapacityW = _windowCapacityH = 0; // 已隐藏，复位窗口容量，下次显示按目标尺寸重建
             }
             else
             {
@@ -1092,8 +1095,12 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         var contentWidth = measured.Target.Width;
         var contentHeight = measured.Target.Height;
 
-        var widthPx = (int)Math.Ceiling(measured.Window.Width * _dpiX);
-        var heightPx = (int)Math.Ceiling(measured.Window.Height * _dpiY);
+        // 窗口尺寸只增不减：几何补间结算时若收缩窗口，DWM 会重新合成这扇带透明玻璃的窗口，
+        // 表现为岛偏移闪烁一帧（居中停靠时窗口原点还会随之移动）。改为容量只增，隐藏时在 SetVisible 复位。
+        _windowCapacityW = Math.Max(_windowCapacityW, measured.Window.Width);
+        _windowCapacityH = Math.Max(_windowCapacityH, measured.Window.Height);
+        var widthPx = (int)Math.Ceiling(_windowCapacityW * _dpiX);
+        var heightPx = (int)Math.Ceiling(_windowCapacityH * _dpiY);
         var contentWidthPx = (int)Math.Ceiling(contentWidth * _dpiX);
         var contentHeightPx = (int)Math.Ceiling(contentHeight * _dpiY);
         if (widthPx <= 0 || heightPx <= 0)
@@ -1241,6 +1248,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
                 _hideAnimActive = false;
                 _hideAnimStart = null;
                 ShowWindow((HWND)_hwnd, SHOW_WINDOW_CMD.SW_HIDE);
+                _windowCapacityW = _windowCapacityH = 0; // 已隐藏，复位窗口容量
             }
         }
     }
