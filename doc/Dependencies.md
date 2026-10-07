@@ -24,7 +24,6 @@
 - [NAudio](https://github.com/naudio/NAudio)
 - [Octokit](https://github.com/octokit/octokit.net)
 - [RawInput.Sharp](https://github.com/mfakane/rawinput-sharp)
-- [Sentry](https://github.com/getsentry/sentry-dotnet)
 - [unvell.ReoGridWPF](https://github.com/unvell/ReoGrid)
 - [VirtualizingWrapPanel](https://github.com/sbaeumlisberger/VirtualizingWrapPanel)
 - [WPF](https://github.com/dotnet/Wpf)
