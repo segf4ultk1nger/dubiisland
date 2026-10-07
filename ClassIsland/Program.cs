@@ -249,7 +249,9 @@ internal static class Program
             AllocConsole();
         }
 
-        var mutex = new Mutex(true, "ClassIsland.Lock", out var createNew);
+        var mutex = new Mutex(true, "LegacyIsland.Lock", out var createNew);
+        var legacyClassIslandMutex = new Mutex(true, "ClassIsland.Lock", out var legacyClassIslandCreateNew);
+        createNew = createNew && legacyClassIslandCreateNew;
 
         if (!createNew)
         {
@@ -258,6 +260,7 @@ internal static class Program
                 try
                 {
                     mutex?.WaitOne();
+                    legacyClassIslandMutex?.WaitOne();
                 }
                 catch
                 {
@@ -287,7 +290,7 @@ internal static class Program
             };
         }
 
-        if (Environment.GetEnvironmentVariable("ClassIsland_ProcessPriority") is string priorityStr && uint.TryParse(priorityStr, out uint priority))
+        if (Environment.GetEnvironmentVariable("LegacyIsland_ProcessPriority") is string priorityStr && uint.TryParse(priorityStr, out uint priority))
         {
             SetProcessPriority(priority);
         }
@@ -297,6 +300,7 @@ internal static class Program
         var app = new App()
         {
             Mutex = mutex,
+            LegacyMutex = legacyClassIslandMutex,
             IsMutexCreateNew = createNew
         };
         app.InitializeComponent();
@@ -307,7 +311,7 @@ internal static class Program
         {
             try
             {
-                using var client = new NamedPipeClientStream(".", "ClassIsland.Uri", PipeDirection.Out);
+                using var client = new NamedPipeClientStream(".", "LegacyIsland.Uri", PipeDirection.Out);
                 client.Connect(2000);
                 using var writer = new StreamWriter(client, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), 1024, leaveOpen: true)
                 {

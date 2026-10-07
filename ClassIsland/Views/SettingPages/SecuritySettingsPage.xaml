@@ -52,7 +52,7 @@
                     HorizontalAlignment="Left"
                     Margin="0 0 0 6"
                     Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
-                    CommandParameter="classisland://app/settings/management.credentials?ci_keepHistory=true">
+                    CommandParameter="legacyisland://app/settings/management.credentials?ci_keepHistory=true">
                 <ciCore:RemixIconText Kind="{x:Static remix:PackIconRemixIconKind.ShieldKeyholeLine}" Text="管理认证方式与凭据" />
             </Button>
 

@@ -220,7 +220,7 @@
             </controls1:SettingsCard>
             <!-- 注册 Url 协议 -->
             <controls1:SettingsCard Header="注册 Url 协议"
-                                    Description="允许第三方应用或网页通过 classisland:// 调用本应用功能。"
+                                    Description="允许第三方应用或网页通过 legacyisland:// 调用本应用功能。"
                                     IsOn="{Binding SettingsService.Settings.IsUrlProtocolRegistered, Mode=TwoWay}" />
             <!-- 超级置顶（UIAccess） -->
             <controls1:SettingsCard Header="使用超级置顶"
@@ -388,7 +388,7 @@
                         <Button Style="{StaticResource MahApps.Styles.Button.Flat}"
                                 HorizontalAlignment="Left"
                                 Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
-                                CommandParameter="classisland://app/settings/components"
+                                CommandParameter="legacyisland://app/settings/components"
                                 Margin="0 4 0 0">
                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.ExternalLink}" Text="前往【组件】页面" />
                         </Button>

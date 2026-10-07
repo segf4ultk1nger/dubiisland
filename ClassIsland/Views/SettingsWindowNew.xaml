@@ -171,7 +171,7 @@
                     <Separator/>
                     <MenuItem Header="集控选项…"
                               Command="{x:Static commands:UriNavigationCommands.UriNavigationCommand}"
-                              CommandParameter="classisland://app/settings/management?ci_keepHistory=true">
+                              CommandParameter="legacyisland://app/settings/management?ci_keepHistory=true">
                         <MenuItem.Icon><remix:PackIconRemixIcon Kind="SuitcaseFill" Width="16" Height="16"/></MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="加入管理…"

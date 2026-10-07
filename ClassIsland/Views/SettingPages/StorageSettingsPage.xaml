@@ -49,7 +49,7 @@
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" HorizontalAlignment="Left"
                             Margin="24 6 0 0" Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             Command="{x:Static ci:UriNavigationCommands.UriNavigationCommand}"
-                            CommandParameter="classisland://app/config-errors">
+                            CommandParameter="legacyisland://app/config-errors">
                         <controls1:IconText Kind="{x:Static controls1:IconGlyphs.OpenInNew}" Text="详细信息…"/>
                     </Button>
                 </StackPanel>

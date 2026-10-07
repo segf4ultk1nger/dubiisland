@@ -508,10 +508,10 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     public bool IsAutoStartEnabled
     {
         get => File.Exists(
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "ClassIsland.lnk"));
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "LegacyIsland.lnk"));
         set
         {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "ClassIsland.lnk");
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "LegacyIsland.lnk");
             try
             {
                 if (value)
@@ -1824,7 +1824,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private bool _corruptPluginsDisabledLastSession = false;
     private ObservableDictionary<string, NotificationSettings> _notificationChannelsNotifySettings = new();
     private string _selectedSpeechProvider = "classisland.speech.edgeTts";
-    private string _weatherIconId = "classisland.weatherIcons.materialDesign";
+    private string _weatherIconId = "legacyisland.weatherIcons.materialDesign";
     private bool _isRollingComponentWarningVisible = true;
 
     public bool IsIgnoreWorkAreaEnabled

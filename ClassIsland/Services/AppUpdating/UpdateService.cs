@@ -294,7 +294,7 @@ public class UpdateService : IHostedService, INotifyPropertyChanged
 
     private void UpdateNotificationClickedCallback()
     {
-        IAppHost.GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/update"));
+        IAppHost.GetService<IUriNavigationService>().NavigateWrapped(new Uri("legacyisland://app/settings/update"));
     }
 
     private bool IsNewerVersion(bool isForce, bool isCancel, Version verCode)

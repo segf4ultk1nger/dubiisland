@@ -86,6 +86,7 @@ public partial class App : AppBase, IAppHost
     
     private CrashWindow? CrashWindow;
     public Mutex? Mutex { get; set; }
+    public Mutex? LegacyMutex { get; set; }
     public bool IsMutexCreateNew { get; set; } = false;
     private ILogger<App>? Logger { get; set; }
     //public static IHost? Host;
@@ -97,7 +98,7 @@ public partial class App : AppBase, IAppHost
         "./";
 #endif
     public static readonly string AppDataFolderPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ClassIsland");
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LegacyIsland");
 
     public static readonly string AppLogFolderPath = Path.Combine(AppRootFolderPath, "Logs");
 
@@ -605,7 +606,7 @@ public partial class App : AppBase, IAppHost
                     builder.AddConsoleFormatter<ClassIslandConsoleFormatter, ConsoleFormatterOptions>();
                     builder.AddConsole(console =>
                     {
-                        console.FormatterName = "classisland";
+                        console.FormatterName = "legacyisland";
                     });
                     var debug = false;
 #if DEBUG
@@ -635,13 +636,13 @@ public partial class App : AppBase, IAppHost
                 {
                     Source = new Uri("pack://application:,,,/ClassIsland;component/Controls/WeatherIcons/DefaultWeatherIconTemplate.xaml")
                 };
-                services.AddWeatherIconTemplate("classisland.weatherIcons.materialDesign", "默认（图标集）",
+                services.AddWeatherIconTemplate("legacyisland.weatherIcons.materialDesign", "默认（图标集）",
                     (DataTemplate)defaultWeatherIconTemplateDictionary["DefaultWeatherIconTemplate"]!);
                 var simpleTextWeatherIconTemplateDictionary = new ResourceDictionary()
                 {
                     Source = new Uri("pack://application:,,,/ClassIsland;component/Controls/WeatherIcons/SimpleTextWeatherIconTemplate.xaml")
                 };
-                services.AddWeatherIconTemplate("classisland.weatherIcons.simpleText", "纯文本",
+                services.AddWeatherIconTemplate("legacyisland.weatherIcons.simpleText", "纯文本",
                     (DataTemplate)simpleTextWeatherIconTemplateDictionary["SimpleTextWeatherIconTemplate"]!);
 
                 // Plugins
@@ -826,7 +827,7 @@ public partial class App : AppBase, IAppHost
         if (ApplicationCommand.UpdateDeleteTarget != null)
         {
             GetService<SettingsService>().Settings.LastUpdateStatus = UpdateStatus.UpToDate;
-            GetService<ITaskBarIconService>().ShowNotification("更新完成。", $"应用已更新到版本{AppVersion}。点击此处以查看更新日志。", clickedCallback:() => uriNavigationService.NavigateWrapped(new Uri("classisland://app/settings/update")));
+            GetService<ITaskBarIconService>().ShowNotification("更新完成。", $"应用已更新到版本{AppVersion}。点击此处以查看更新日志。", clickedCallback:() => uriNavigationService.NavigateWrapped(new Uri("legacyisland://app/settings/update")));
         }
     }
 
@@ -857,12 +858,12 @@ public partial class App : AppBase, IAppHost
         File.Delete(Path.Combine(AppRootFolderPath, ".startup-count"));
         if (ConfigureFileHelper.Errors.FirstOrDefault(x => x.Critical) != null)
         {
-            GetService<ITaskBarIconService>().ShowNotification("配置文件损坏", "LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。点击此消息以查看详细信息和从过往备份中恢复配置文件。", clickedCallback:() => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/config-errors")));
+            GetService<ITaskBarIconService>().ShowNotification("配置文件损坏", "LegacyIsland 部分配置文件已损坏且无法加载，这些配置文件已恢复至默认值。点击此消息以查看详细信息和从过往备份中恢复配置文件。", clickedCallback:() => GetService<IUriNavigationService>().NavigateWrapped(new Uri("legacyisland://app/config-errors")));
         }
         if (Settings.CorruptPluginsDisabledLastSession)
         {
             Settings.CorruptPluginsDisabledLastSession = false;
-            GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "LegacyIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/classisland.plugins")));
+            GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "LegacyIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("legacyisland://app/settings/classisland.plugins")));
         }
         // 启动期被抑制的设置变更合并为一次写盘。
         var settingsService = GetService<SettingsService>();
@@ -980,7 +981,7 @@ public partial class App : AppBase, IAppHost
                 try
                 {
                     server = new NamedPipeServerStream(
-                        "ClassIsland.Uri",
+                        "LegacyIsland.Uri",
                         PipeDirection.In,
                         NamedPipeServerStream.MaxAllowedServerInstances,
                         PipeTransmissionMode.Byte,
@@ -1107,6 +1108,7 @@ public partial class App : AppBase, IAppHost
     {
         var app = (App)Application.Current;
         app.Mutex?.ReleaseMutex();
+        app.LegacyMutex?.ReleaseMutex();
     }
 
     public override void Stop()

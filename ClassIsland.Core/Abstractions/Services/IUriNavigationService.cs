@@ -10,7 +10,7 @@ public interface IUriNavigationService : IPublicUriNavigationService
     /// <summary>
     /// ClassIsland 内部的 uri 协议名
     /// </summary>
-    public static string UriScheme { get; } = "classisland";
+    public static string UriScheme { get; } = "legacyisland";
 
     /// <summary>
     /// ClassIsland 应用导航主机名
