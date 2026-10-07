@@ -87,6 +87,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
     private static readonly Dictionary<int, Dictionary<string, AnimSpec>> AnimSpecsByStyle = BuildAllAnimSpecs();
 
     private const double ShowScaleMin = 0.89;
+    private const double SquashStretchMargin = 0.09; // 停靠位移挤压拉伸所需的窗口透明余量
     private const double ShowAnimatedDuration = 0.47;
     private const double ShowFadePortion = 0.78;
     private const double HideAnimatedDuration = 0.13;
@@ -244,7 +245,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         _surface.RenderTransform = new ScaleTransform(1, 1);
         // 窗口始终按弹性过冲峰值预留（内容居中，四周留一条透明边）。这样出现动画全程窗口尺寸完全不变，
         // 不会因改窗口尺寸而闪烁；峰值 scale 也不被裁。
-        _surface.WindowOvershootScale = ShowMaxScale;
+        _surface.WindowOvershootScale = ShowMaxScale + SquashStretchMargin;
         source.AddHook(WndProc);
         _source = source;
         _hwnd = source.Handle;

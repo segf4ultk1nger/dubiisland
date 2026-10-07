@@ -90,6 +90,23 @@ public sealed class IslandSurface : FrameworkElement
         var y = (size.Height - contentHeight) * VerticalAlign;
 
         var transform = new TransformGroup();
+        var stretch = _renderer.Animator?.GetMotionStretch() ?? 0;
+        if (Math.Abs(stretch) > 0.0001)
+        {
+            // 限制形变幅度不超过窗口已预留的透明余量，避免被窗口边缘裁切。
+            var capX = Math.Max(0, size.Width - contentWidth) / contentWidth;
+            var capY = Math.Max(0, size.Height - contentHeight) / contentHeight;
+            var cap = Math.Min(capX, capY);
+            var d = stretch > cap ? cap : stretch < -cap ? -cap : stretch;
+            if (Math.Abs(d) > 0.0001)
+            {
+                // 以停靠对齐点为锚点：贴边时向屏幕内拉伸，不出屏、也不越出窗口预留。
+                transform.Children.Add(new ScaleTransform(
+                    1 + d, 1 - d,
+                    natural.Width * HorizontalAlign, natural.Height * VerticalAlign));
+            }
+        }
+
         transform.Children.Add(new ScaleTransform(scale, scale));
         transform.Children.Add(new TranslateTransform(x, y));
         _visual.Transform = transform;

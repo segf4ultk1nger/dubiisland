@@ -22,6 +22,7 @@ public sealed class IslandLayoutAnimator
     private const double ComponentEnterDuration = 0.22;
     private const double ComponentScaleFrom = 0.9;
     private const double DockDuration = 0.35;
+    private const double MotionStretchAmount = 0.07; // 停靠位移时沿运动方向的最大拉伸比例（丰富档）
 
     // 缓动函数无状态，可共享复用，避免每次目标变化都分配。
     private static readonly BackEase GrowEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.4 };
@@ -295,6 +296,28 @@ public sealed class IslandLayoutAnimator
         var amount = Math.Min(MaxJellySquash,
             Math.Abs(span) / Math.Max(1.0, Math.Max(w.From, w.Target)) * JellyCoupling);
         return -Math.Sign(span) * amount * bump; // 变宽 -> 纵向压扁；变窄 -> 纵向拉长
+    }
+
+    /// <summary>
+    ///     停靠位移期间的整体挤压拉伸量（正=沿水平方向拉伸、竖直压扁；负=反之），供窗口内已预留的透明余量内做形变。
+    ///     未启用/非丰富档/无位移时为 0。
+    /// </summary>
+    public double GetMotionStretch()
+    {
+        if (!Enabled || !Jelly || !_dockPrimed)
+            return 0;
+        return DockBump(_dockH) - DockBump(_dockV);
+    }
+
+    private static double DockBump(Channel c)
+    {
+        var span = c.Target - c.From;
+        if (Math.Abs(span) < ChangeThreshold)
+            return 0;
+        var progress = (c.Current - c.From) / span;
+        if (progress <= 0 || progress >= 1)
+            return 0; // 只在补间进行中；结束时归零
+        return MotionStretchAmount * Math.Sin(2 * Math.PI * progress); // 前段拉伸、后段回弹
     }
 
     /// <summary>全部对齐目标并清零预留。</summary>
