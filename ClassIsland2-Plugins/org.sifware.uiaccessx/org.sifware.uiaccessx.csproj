@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Configurations>Debug;Release</Configurations>
+    <!-- 打包 .cipx 需要 PowerShell 7 (pwsh)；未安装时保持 false，直接引用 bin 输出文件夹即可调试。
+         发布时用 dotnet build -c Release -p:CreateCipx=true。 -->
+    <CreateCipx Condition="'$(CreateCipx)' == ''">false</CreateCipx>
+    <RootNamespace>Org.Sifware.UiAccessX</RootNamespace>
+    <AssemblyName>org.sifware.uiaccessx</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <ClassIslandPluginSdkVersion>2.1.0.1</ClassIslandPluginSdkVersion>
+    <!-- 提权 Helper 是 net472，需要单独构建；Debug 用 Debug 输出，其余用 Release。 -->
+    <UiAccessHelperConfig Condition="'$(Configuration)' == 'Debug'">Debug</UiAccessHelperConfig>
+    <UiAccessHelperConfig Condition="'$(UiAccessHelperConfig)' == ''">Release</UiAccessHelperConfig>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClassIsland.PluginSdk" Version="$(ClassIslandPluginSdkVersion)">
+      <ExcludeAssets>runtime; native</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 应用侧复用现有 IccEvolved.UiAccess 源码（netstandard2.0 目标）。 -->
+    <ProjectReference Include="..\..\Libraries\UiAccess\IccEvolved.UiAccess\IccEvolved.UiAccess.csproj" />
+    <!-- Helper 仅作为构建依赖，其输出由下面的 Content 拷贝到 UiAccessHelper 子目录。 -->
+    <ProjectReference Include="..\..\Libraries\UiAccess\IccEvolved.UiAccess.Helper\IccEvolved.UiAccess.Helper.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- 把 net472 的 Helper 和它依赖的同名 DLL 放到 UiAccessHelper 子目录，避免与插件自身的 netstandard 版 DLL 冲突。 -->
+  <ItemGroup>
+    <Content Include="..\..\Libraries\UiAccess\IccEvolved.UiAccess.Helper\bin\$(UiAccessHelperConfig)\net472\IccEvolved.UiAccess.Helper.exe"
+             Link="UiAccessHelper\IccEvolved.UiAccess.Helper.exe"
+             CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\Libraries\UiAccess\IccEvolved.UiAccess\bin\$(UiAccessHelperConfig)\net472\IccEvolved.UiAccess.dll"
+             Link="UiAccessHelper\IccEvolved.UiAccess.dll"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="manifest.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
