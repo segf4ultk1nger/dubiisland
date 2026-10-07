@@ -23,7 +23,6 @@
 - [Microsoft.Windows.CsWin32](https://github.com/microsoft/CsWin32)
 - [NAudio](https://github.com/naudio/NAudio)
 - [Octokit](https://github.com/octokit/octokit.net)
-- [Pastel](https://github.com/silkfire/Pastel)
 - [RawInput.Sharp](https://github.com/mfakane/rawinput-sharp)
 - [Sentry](https://github.com/getsentry/sentry-dotnet)
 - [unvell.ReoGridWPF](https://github.com/unvell/ReoGrid)
