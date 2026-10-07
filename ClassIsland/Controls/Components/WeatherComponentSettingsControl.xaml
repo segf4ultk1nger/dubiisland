@@ -8,27 +8,9 @@
                         xmlns:controls="clr-namespace:ClassIsland.Core.Abstractions.Controls;assembly=ClassIsland.Core"
                         xmlns:controls2="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core"
                         xmlns:componentSettings="clr-namespace:ClassIsland.Models.ComponentSettings"
-                        xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
-                        xmlns:ci="http://classisland.tech/schemas/xaml/core"
                         mc:Ignorable="d" 
                         d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:WeatherComponentSettingsControl}}">
-        <Border Background="#204169e1" CornerRadius="4" Margin="0 0 0 6">
-            <DockPanel Margin="8 6">
-                <remix:PackIconRemixIcon Kind="InformationLine" Width="20" Height="20"
-                                         VerticalAlignment="Center" Margin="0 0 4 0"/>
-                <TextBlock TextWrapping="Wrap"
-                           VerticalAlignment="Center"
-                           Margin="4 0 0 0" >
-                    <Run>本页面仅包含</Run><Bold>组件设置</Bold>
-                    <Run>要调整显示天气的城市，请转到</Run>
-                    <ci:NavHyperlink 
-                        CommandParameter="classisland://app/settings/weather">
-                        【天气】</ci:NavHyperlink>
-                    <Run>选项卡。</Run>
-                </TextBlock>
-            </DockPanel>
-        </Border>
         <controls2:SettingsCard Header="显示天气信息"
                                 Description="显示当前天气信息摘要。">
             <controls2:SettingsCard.Switcher>
