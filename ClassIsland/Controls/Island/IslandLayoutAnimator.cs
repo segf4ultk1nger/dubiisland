@@ -21,7 +21,7 @@ public sealed class IslandLayoutAnimator
     private const double ComponentMoveDuration = 0.3;
     private const double ComponentEnterDuration = 0.22;
     private const double ComponentScaleFrom = 0.9;
-    private const double DockDuration = 0.45;
+    private const double DockDuration = 0.36;
     private const double MotionStretchAmount = 0.07; // 停靠位移时沿运动方向的最大拉伸比例（丰富档）
 
     // 缓动函数无状态，可共享复用，避免每次目标变化都分配。
@@ -29,7 +29,7 @@ public sealed class IslandLayoutAnimator
     private static readonly BackEase ShrinkEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.2 };
     private static readonly CubicEase MoveEase = new() { EasingMode = EasingMode.EaseOut };
     private static readonly CubicEase EnterEase = new() { EasingMode = EasingMode.EaseOut };
-    private static readonly BackEase DockEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 1.0 };
+    private static readonly BackEase DockEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.5 };
 
     private readonly Dictionary<int, LineState> _lines = new();
     private readonly HashSet<int> _presentLines = new();
