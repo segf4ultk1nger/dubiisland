@@ -85,30 +85,12 @@
                                         </Style>
                                     </remix:PackIconRemixIcon.Style>
                                 </remix:PackIconRemixIcon>
-                                <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5">
-                                    <remix:PackIconRemixIcon.Style>
-                                        <Style TargetType="remix:PackIconRemixIcon">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ViewModel.IsScanningStorage}" Value="True">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </remix:PackIconRemixIcon.Style>
+                                <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
+                                                         Visibility="{Binding ViewModel.IsScanningStorage, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                         Style="{StaticResource LoadingSpinnerStyle}">
                                     <remix:PackIconRemixIcon.RenderTransform>
                                         <RotateTransform />
                                     </remix:PackIconRemixIcon.RenderTransform>
-                                    <remix:PackIconRemixIcon.Triggers>
-                                        <EventTrigger RoutedEvent="Loaded">
-                                            <BeginStoryboard>
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                                                                     From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
-                                                </Storyboard>
-                                            </BeginStoryboard>
-                                        </EventTrigger>
-                                    </remix:PackIconRemixIcon.Triggers>
                                 </remix:PackIconRemixIcon>
                             </Grid>
                         </Button>
@@ -282,20 +264,11 @@
                         </Button>
                         <remix:PackIconRemixIcon Kind="Loader4Fill" Width="16" Height="16" Margin="8 0 0 0"
                                                  VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5"
-                                                 Visibility="{Binding ViewModel.IsBackingUp, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                 Visibility="{Binding ViewModel.IsBackingUp, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                 Style="{StaticResource LoadingSpinnerStyle}">
                             <remix:PackIconRemixIcon.RenderTransform>
                                 <RotateTransform />
                             </remix:PackIconRemixIcon.RenderTransform>
-                            <remix:PackIconRemixIcon.Triggers>
-                                <EventTrigger RoutedEvent="Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                                                             From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </remix:PackIconRemixIcon.Triggers>
                         </remix:PackIconRemixIcon>
                         <remix:PackIconRemixIcon Kind="CheckFill" Foreground="#34C759" Width="16" Height="16" Margin="8 0 0 0"
                                                  VerticalAlignment="Center" ToolTip="备份成功。"

@@ -5,6 +5,7 @@
          xmlns:behaviors="clr-namespace:ClassIsland.Behaviors"
          xmlns:converters="clr-namespace:ClassIsland.Converters"
          xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+         xmlns:remix="clr-namespace:MahApps.Metro.IconPacks;assembly=MahApps.Metro.IconPacks.RemixIcon"
          Startup="App_OnStartup"
          ShutdownMode="OnExplicitShutdown"
          DispatcherUnhandledException="App_OnDispatcherUnhandledException">
@@ -34,6 +35,23 @@
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="ColorPalettesTabHeader" Value="调色板" />
                 <Setter Property="AdvancedTabHeader" Value="自定义颜色" />
+            </Style>
+            <Style x:Key="LoadingSpinnerStyle" TargetType="remix:PackIconRemixIcon">
+                <Style.Triggers>
+                    <Trigger Property="IsVisible" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard x:Name="Spin">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                     From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <StopStoryboard BeginStoryboardName="Spin" />
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Application.Resources>
