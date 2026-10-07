@@ -35,6 +35,7 @@ using ClassIsland.Services.Management;
 using ClassIsland.Services.NotificationProviders;
 using ClassIsland.Services.Scripting;
 using ClassIsland.Services.SpeechService;
+using ClassIsland.Helpers.Native;
 using ClassIsland.Views;
 using ClassIsland.Views.SettingPages;
 using Microsoft.Extensions.DependencyInjection;
@@ -519,6 +520,7 @@ public partial class App : AppBase, IAppHost
                 services.AddSingleton<ILessonsService, LessonsService>();
                 services.AddSingleton<IUriNavigationService, UriNavigationService>();
                 services.AddHostedService<MemoryWatchDogService>();
+                services.AddHostedService<InjectionGuardService>();
                 services.AddSingleton<IPluginService, PluginService>();
                 services.AddSingleton<IPluginMarketService, PluginMarketService>();
                 services.AddSingleton<IConditionPulseService, ConditionPulseService>();
@@ -698,6 +700,21 @@ public partial class App : AppBase, IAppHost
         await GetService<SettingsService>().LoadSettingsAsync();
         Settings = GetService<SettingsService>().Settings;
         DiagnosticService.Checkpoint("加载设置");
+        // 扩展点注入禁用是进程级一次性缓解策略，必须在后续任何扩展点被使用前设置，
+        // 因此放在设置加载完成（能读到开关）之后、其余启动流程之前。
+        if (Settings.IsExtensionPointDisableEnabled)
+        {
+            try
+            {
+                Logger?.LogInformation(InjectionGuardNative.TryDisableExtensionPoints()
+                    ? "已禁用扩展点注入。"
+                    : "禁用扩展点注入失败。");
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogWarning(ex, "禁用扩展点注入失败。");
+            }
+        }
         // 设置已加载：刷新闪屏自定义文本（自定义 logo 由绑定自动更新）。
         GetService<ISplashService>().ResetSplashText();
         Settings.IsSystemSpeechSystemExist = isSystemSpeechSystemExist;
