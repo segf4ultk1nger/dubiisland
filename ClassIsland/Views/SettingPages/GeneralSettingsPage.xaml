@@ -88,6 +88,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="自定义启动图标（留空将加载默认图标）"
                                                    VerticalAlignment="Center" />
@@ -117,7 +118,13 @@
                     <TextBlock Text="在启动屏幕显示详细的状态信息" VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Background="#22FF0000" Margin="0 6 0 0" Visibility="{Binding ManagementService.Policy.DisableSplashCustomize, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                            Margin="0 4 0 0" Orientation="Horizontal">
+                    <mah:ToggleSwitch IsOn="{Binding SettingsService.Settings.ShowSplashVersionInfo}" OnContent="开" OffContent="关" MinWidth="0" Margin="0 0 6 0"/>
+                    <TextBlock Text="在启动屏幕显示版本号信息" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Background="#22FF0000" Margin="0 6 0 0" Visibility="{Binding ManagementService.Policy.DisableSplashCustomize, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid TextElement.FontSize="13">
                         <DockPanel Margin="8 4 4 4">
                             <controls1:IconText Kind="{x:Static controls1:IconGlyphs.Forbid}"
@@ -130,7 +137,7 @@
                     </Grid>
                 </Border>
 
-                <Button Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0"
+                <Button Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0"
                         Margin="0 6 0 0" Style="{StaticResource MahApps.Styles.Button.Flat}"
                         HorizontalAlignment="Left" Click="ButtonRefreshSplashPreview_OnClick">
                     <ci:IconText Kind="{x:Static controls1:IconGlyphs.EyeOutline}" Text="预览"/>

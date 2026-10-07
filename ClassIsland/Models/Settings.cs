@@ -225,6 +225,7 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private ObservableCollection<Guid> _trustedProfileIds = [];
     private bool _isNonExactCountdownEnabled = false;
     private bool _showDetailedStatusOnSplash = false;
+    private bool _showSplashVersionInfo = true;
 
 
     public void NotifyPropertyChanged(string propertyName)
@@ -811,6 +812,20 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _showDetailedStatusOnSplash) return;
             _showDetailedStatusOnSplash = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 是否在启动加载界面显示版本号信息。
+    /// </summary>
+    public bool ShowSplashVersionInfo
+    {
+        get => _showSplashVersionInfo;
+        set
+        {
+            if (value == _showSplashVersionInfo) return;
+            _showSplashVersionInfo = value;
             OnPropertyChanged();
         }
     }

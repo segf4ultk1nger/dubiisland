@@ -14,7 +14,6 @@
                   WindowStyle="None"
                   ResizeMode="NoResize"
                   Topmost="True"
-                  AllowsTransparency="True"
                   ShowInTaskbar="False"
                   Background="{x:Null}"
                   FontFamily="{StaticResource HarmonyOsSans}"
@@ -24,6 +23,6 @@
                   TextOptions.TextRenderingMode="Auto"   
                   ShowActivated="False"
                   Closed="SplashWindow_OnClosed"
-                  Height="100" Width="400">
+                  Height="140" Width="440">
     <controls:SplashControl Loaded="FrameworkElement_OnLoaded"/>
 </ci:SplashWindowBase>
