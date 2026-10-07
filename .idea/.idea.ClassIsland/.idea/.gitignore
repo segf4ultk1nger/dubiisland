@@ -11,3 +11,10 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# AI 助手 / 插件 / 本地状态
+/CopilotChatHistory.xml
+/MarsCodeWorkspaceAppSettings.xml
+/material_theme_project_new.xml
+/protoeditor.xml
+/indexLayout.xml
+/misc.xml
