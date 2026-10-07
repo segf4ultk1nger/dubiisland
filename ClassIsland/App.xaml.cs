@@ -59,6 +59,7 @@ using ClassIsland.Core.Helpers;
 using ClassIsland.Core.Models.Logging;
 using ClassIsland.Services.Metadata;
 using ClassIsland.Shared.Helpers;
+using ClassIsland.Shared.Models.Profile;
 using Microsoft.Extensions.Logging.Console;
 using Walterlv.Threading;
 using Walterlv.Windows;
@@ -683,6 +684,13 @@ public partial class App : AppBase, IAppHost
             DiagnosticService.Checkpoint("显示闪屏");
         }
 
+        // 后台预热 Profile 的 JSON 元数据：Profile 在集控/设置之后才加载，后台构建元数据可与前面的加载并行，
+        // 省下首次反序列化的反射/JIT 开销。不预热 Settings（紧随其后立即反序列化，预热只会与其抢 SerializerOptions 锁）。
+        _ = Task.Run(ConfigureFileHelper.WarmupConfig<Profile>);
+
+        // 启动期暂停设置自动保存：下面一系列属性变更（SpeechSource、LastAppVersion、启动计数等）会合并到启动完成后一次写盘。
+        GetService<SettingsService>().IsAutoSaveSuspended = true;
+
         await GetService<IManagementService>().SetupManagement();
         DiagnosticService.Checkpoint("集控初始化");
         await GetService<SettingsService>().LoadSettingsAsync();
@@ -826,6 +834,11 @@ public partial class App : AppBase, IAppHost
             Settings.CorruptPluginsDisabledLastSession = false;
             GetService<ITaskBarIconService>().ShowNotification("已自动禁用异常插件", "LegacyIsland 已自动禁用导致上次崩溃的插件。您可以在排除问题后前往【应用设置】->【插件】中重新启用这些插件，或在【应用设置】->【基本】中调整是否自动禁用异常插件。", clickedCallback: () => GetService<IUriNavigationService>().NavigateWrapped(new Uri("classisland://app/settings/classisland.plugins")));
         }
+        // 启动期被抑制的设置变更合并为一次写盘。
+        var settingsService = GetService<SettingsService>();
+        settingsService.IsAutoSaveSuspended = false;
+        settingsService.SaveSettings("启动完成");
+
         if (Settings.IsSplashEnabled)
         {
             App.GetService<ISplashService>().EndSplash();

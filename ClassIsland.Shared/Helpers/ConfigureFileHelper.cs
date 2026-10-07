@@ -118,6 +118,23 @@ public class ConfigureFileHelper
     }
 
     /// <summary>
+    /// 后台预热指定配置类型的 JSON 元数据，把首次反序列化的反射/JIT 一次性开销提前到启动其他阶段并行完成。
+    /// 必须与 <see cref="LoadConfig{T}"/> 使用同一个 <see cref="SerializerOptions"/> 实例才能命中元数据缓存。
+    /// </summary>
+    /// <typeparam name="T">配置文件类型</typeparam>
+    public static void WarmupConfig<T>()
+    {
+        try
+        {
+            JsonSerializer.Deserialize<T>("{}", SerializerOptions);
+        }
+        catch
+        {
+            // 预热失败不影响启动。
+        }
+    }
+
+    /// <summary>
     /// 保存配置文件，并自动创建备份
     /// </summary>
     /// <typeparam name="T">配置文件类型</typeparam>

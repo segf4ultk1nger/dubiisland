@@ -38,6 +38,12 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
 
     public bool WillMigrateProfileTrustedState { get; set; } = false;
 
+    /// <summary>
+    /// 启动期间暂停自动保存。启动过程中对设置的多次属性变更会合并到启动完成后的单次写盘，
+    /// 避免每次变更都整份序列化并物理落盘。
+    /// </summary>
+    public bool IsAutoSaveSuspended { get; set; }
+
     private async Task LoadManagementSettingsAsync()
     {
         if (!ManagementService.Manifest.DefaultSettingsSource.IsNewerAndNotNull(ManagementService.Versions
@@ -298,6 +304,8 @@ public class SettingsService(ILogger<SettingsService> Logger, IManagementService
 
         if (typeof(Settings).GetProperty(propertyName)
                             .GetCustomAttribute<JsonIgnoreAttribute>() != null)
+            return;
+        if (IsAutoSaveSuspended)
             return;
         SaveSettings(propertyName);
     }
