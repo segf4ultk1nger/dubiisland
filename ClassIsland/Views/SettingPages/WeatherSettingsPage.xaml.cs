@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services;
@@ -225,16 +226,31 @@ public partial class WeatherSettingsPage : SettingsPageBase
         if (scrollable <= 0.5)
         {
             // 内容不足一屏，无需滚动。
-            FakeScrollBar.Visibility = Visibility.Collapsed;
+            if (FakeScrollBar.Visibility != Visibility.Collapsed)
+            {
+                FakeScrollBar.Visibility = Visibility.Collapsed;
+            }
+
             return;
         }
 
-        FakeScrollBar.Visibility = Visibility.Visible;
+        if (FakeScrollBar.Visibility != Visibility.Visible)
+        {
+            FakeScrollBar.Visibility = Visibility.Visible;
+        }
+
         var thumbHeight = Math.Max(28, trackHeight * viewport / extent);
         var maxTop = trackHeight - thumbHeight;
         var top = maxTop * (RootScroll.VerticalOffset / scrollable);
-        FakeScrollThumb.Height = thumbHeight;
-        FakeScrollThumb.Margin = new Thickness(0, top, 2, 0);
+        if (double.IsNaN(FakeScrollThumb.Height) || Math.Abs(FakeScrollThumb.Height - thumbHeight) > double.Epsilon)
+        {
+            FakeScrollThumb.Height = thumbHeight;
+        }
+
+        if (FakeScrollThumb.RenderTransform is TranslateTransform translate)
+        {
+            translate.Y = top;
+        }
     }
 
     private void FakeScrollThumb_OnMouseDown(object sender, MouseButtonEventArgs e)

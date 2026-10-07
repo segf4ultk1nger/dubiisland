@@ -620,11 +620,16 @@
                 Panel.ZIndex="999" Background="Transparent" Margin="0 4"
                 SizeChanged="FakeScrollBar_OnSizeChanged">
             <Border x:Name="FakeScrollThumb" Width="6" HorizontalAlignment="Right" MinHeight="28"
+                    Margin="0 0 2 0"
                     Background="{DynamicResource MahApps.Brushes.ThemeForeground}" Opacity="0.35"
                     CornerRadius="4" VerticalAlignment="Top" Cursor="SizeNS"
                     MouseLeftButtonDown="FakeScrollThumb_OnMouseDown"
                     MouseMove="FakeScrollThumb_OnMouseMove"
-                    MouseLeftButtonUp="FakeScrollThumb_OnMouseUp" />
+                    MouseLeftButtonUp="FakeScrollThumb_OnMouseUp">
+                <Border.RenderTransform>
+                    <TranslateTransform />
+                </Border.RenderTransform>
+            </Border>
         </Border>
     </Grid>
 </controls:SettingsPageBase>
