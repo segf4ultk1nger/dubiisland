@@ -75,35 +75,6 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         ViewModel.IsTreeVisible = !ViewModel.IsCompact || ViewModel.SelectedNode == null;
         _layoutReady = true;
         ApplyTreeLayout();
-        SchedulePrewarmComponentSettings();
-    }
-
-    /// <summary>空闲时预热所有组件的设置控件，避免首次选中时套模板卡顿。</summary>
-    private void SchedulePrewarmComponentSettings()
-    {
-        var all = ComponentsService.CurrentComponents.Lines
-            .SelectMany(line => line.Children ?? Enumerable.Empty<ComponentSettings>());
-        foreach (var component in EnumerateComponentSettings(all))
-        {
-            var target = component;
-            Dispatcher.BeginInvoke(new System.Action(() => ComponentPresenter.Prewarm(target, PrewarmHost)),
-                DispatcherPriority.ApplicationIdle);
-        }
-    }
-
-    private static IEnumerable<ComponentSettings> EnumerateComponentSettings(IEnumerable<ComponentSettings> source)
-    {
-        foreach (var component in source)
-        {
-            yield return component;
-            if (component.Children != null)
-            {
-                foreach (var child in EnumerateComponentSettings(component.Children))
-                {
-                    yield return child;
-                }
-            }
-        }
     }
 
     private void ComponentsSettingsPage_OnUnloaded(object sender, RoutedEventArgs e)

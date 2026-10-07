@@ -127,37 +127,6 @@ public partial class ComponentPresenter : UserControl, INotifyPropertyChanged
     /// </summary>
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<ComponentSettings, ComponentBase> SettingsControlCache = new();
 
-    /// <summary>
-    /// 预热：提前创建设置控件并在 <paramref name="host"/> 里测量一遍以套好模板，写入缓存，
-    /// 使首次选中组件时不再阻塞。仅应在空闲（如 ApplicationIdle）时调用。
-    /// </summary>
-    public static void Prewarm(ComponentSettings settings, System.Windows.Controls.ContentControl host)
-    {
-        if (settings == null || SettingsControlCache.TryGetValue(settings, out _))
-        {
-            return;
-        }
-
-        var content = IAppHost.GetService<IComponentsService>().GetComponent(settings, true);
-        if (content == null)
-        {
-            return;
-        }
-
-        try
-        {
-            host.Content = content;
-            host.UpdateLayout();
-            host.Content = null;
-        }
-        catch
-        {
-            // 预热失败无所谓，正式选中时会正常创建。
-        }
-
-        SettingsControlCache.Add(settings, content);
-    }
-
     private object? _presentingContent;
 
     public ComponentSettings? Settings

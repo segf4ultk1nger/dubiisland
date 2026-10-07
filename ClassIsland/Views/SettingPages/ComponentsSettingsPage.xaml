@@ -716,8 +716,5 @@
                 <ContentControl Content="{Binding ViewModel.SelectedNode}"/>
             </Border>
         </Grid>
-
-        <!-- 隐藏宿主：空闲时把组件设置控件在这里测量一遍，预热模板，避免首次选中卡顿。 -->
-        <ContentControl x:Name="PrewarmHost" Grid.RowSpan="4" Visibility="Hidden" IsHitTestVisible="False"/>
     </Grid>
 </controls:SettingsPageBase>
