@@ -713,7 +713,25 @@
                           Background="Transparent" ResizeBehavior="PreviousAndNext"/>
 
             <Border Grid.Column="2">
-                <ContentControl Content="{Binding ViewModel.SelectedNode}"/>
+                <Grid>
+                    <ContentControl Content="{Binding ViewModel.SelectedNode}"/>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ViewModel.SelectedNode}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <remix:PackIconRemixIcon Kind="GhostFill" Width="48" Height="48"
+                                                 HorizontalAlignment="Center" Opacity="0.4"/>
+                        <TextBlock Text="请在左侧选择组件!" HorizontalAlignment="Center" Margin="0 10 0 0"
+                                   Opacity="0.6"/>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Grid>
     </Grid>
