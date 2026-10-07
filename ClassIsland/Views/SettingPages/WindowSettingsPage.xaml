@@ -17,7 +17,7 @@
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
-      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextFormattingMode="Display"
       TextOptions.TextRenderingMode="Auto"
       Title="窗口"
       d:DataContext="{d:DesignInstance local:WindowSettingsPage}" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">

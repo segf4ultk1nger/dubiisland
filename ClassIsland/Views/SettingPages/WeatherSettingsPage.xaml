@@ -23,7 +23,7 @@
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
-      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextFormattingMode="Display"
       TextOptions.TextRenderingMode="Auto">
 
     <controls:SettingsPageBase.Resources>

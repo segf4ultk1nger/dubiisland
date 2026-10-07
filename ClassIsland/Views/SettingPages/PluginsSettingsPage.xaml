@@ -24,7 +24,7 @@
       FontFamily="{StaticResource HarmonyOsSans}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="14"
-      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextFormattingMode="Display"
       TextOptions.TextRenderingMode="Auto"
       Loaded="PluginsSettingsPage_OnLoaded"
       Unloaded="PluginsSettingsPage_OnUnloaded" xmlns:ciCore="clr-namespace:ClassIsland.Core.Controls;assembly=ClassIsland.Core">
