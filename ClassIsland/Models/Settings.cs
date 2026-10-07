@@ -52,6 +52,21 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
     private int _windowTopmostRecheckIntervalMs = 500;
     private bool _isScreenRecordingModeEnabled = false;
     private bool _isWindowCaptureBlockingEnabled = false;
+    private bool _isSecurityAccessControlEnabled = false;
+    private int _securityMaxAuthAttempts = 5;
+    private int _securityLockoutSeconds = 300;
+    private bool _isProcessGuardEnabled = false;
+    private bool _processGuardNotifyOnly = true;
+    private string _processGuardProcessNames = "ClassIsland;ClassIsland.Desktop;ClassIsland.App";
+    private bool _processGuardKillThirdParty = false;
+    private bool _isInjectionGuardEnabled = false;
+    private bool _injectionGuardUnloadEnabled = false;
+    private bool _isExtensionPointDisableEnabled = false;
+    private string _injectionGuardRules = "";
+    private bool _isRandomWindowTitleEnabled = false;
+    private bool _isRandomProcessNameEnabled = false;
+    private string _disguisedWindowTitle = "";
+    private string _disguisedProcessName = "";
     private bool _isMouseClickingEnabled = false;
     private bool _hideOnFullscreen = false;
     private bool _isUiAccessEnabled = false;
@@ -1931,6 +1946,171 @@ public class Settings : ObservableRecipient, ILessonControlSettings, INotificati
         {
             if (value == _isWindowCaptureBlockingEnabled) return;
             _isWindowCaptureBlockingEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsSecurityAccessControlEnabled
+    {
+        get => _isSecurityAccessControlEnabled;
+        set
+        {
+            if (value == _isSecurityAccessControlEnabled) return;
+            _isSecurityAccessControlEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int SecurityMaxAuthAttempts
+    {
+        get => _securityMaxAuthAttempts;
+        set
+        {
+            if (value == _securityMaxAuthAttempts) return;
+            _securityMaxAuthAttempts = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int SecurityLockoutSeconds
+    {
+        get => _securityLockoutSeconds;
+        set
+        {
+            if (value == _securityLockoutSeconds) return;
+            _securityLockoutSeconds = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsProcessGuardEnabled
+    {
+        get => _isProcessGuardEnabled;
+        set
+        {
+            if (value == _isProcessGuardEnabled) return;
+            _isProcessGuardEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ProcessGuardNotifyOnly
+    {
+        get => _processGuardNotifyOnly;
+        set
+        {
+            if (value == _processGuardNotifyOnly) return;
+            _processGuardNotifyOnly = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string ProcessGuardProcessNames
+    {
+        get => _processGuardProcessNames;
+        set
+        {
+            if (value == _processGuardProcessNames) return;
+            _processGuardProcessNames = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool ProcessGuardKillThirdParty
+    {
+        get => _processGuardKillThirdParty;
+        set
+        {
+            if (value == _processGuardKillThirdParty) return;
+            _processGuardKillThirdParty = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsInjectionGuardEnabled
+    {
+        get => _isInjectionGuardEnabled;
+        set
+        {
+            if (value == _isInjectionGuardEnabled) return;
+            _isInjectionGuardEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool InjectionGuardUnloadEnabled
+    {
+        get => _injectionGuardUnloadEnabled;
+        set
+        {
+            if (value == _injectionGuardUnloadEnabled) return;
+            _injectionGuardUnloadEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsExtensionPointDisableEnabled
+    {
+        get => _isExtensionPointDisableEnabled;
+        set
+        {
+            if (value == _isExtensionPointDisableEnabled) return;
+            _isExtensionPointDisableEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string InjectionGuardRules
+    {
+        get => _injectionGuardRules;
+        set
+        {
+            if (value == _injectionGuardRules) return;
+            _injectionGuardRules = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsRandomWindowTitleEnabled
+    {
+        get => _isRandomWindowTitleEnabled;
+        set
+        {
+            if (value == _isRandomWindowTitleEnabled) return;
+            _isRandomWindowTitleEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsRandomProcessNameEnabled
+    {
+        get => _isRandomProcessNameEnabled;
+        set
+        {
+            if (value == _isRandomProcessNameEnabled) return;
+            _isRandomProcessNameEnabled = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string DisguisedWindowTitle
+    {
+        get => _disguisedWindowTitle;
+        set
+        {
+            if (value == _disguisedWindowTitle) return;
+            _disguisedWindowTitle = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string DisguisedProcessName
+    {
+        get => _disguisedProcessName;
+        set
+        {
+            if (value == _disguisedProcessName) return;
+            _disguisedProcessName = value;
             OnPropertyChanged();
         }
     }
