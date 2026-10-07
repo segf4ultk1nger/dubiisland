@@ -50,6 +50,10 @@ public partial class PluginsSettingsPage : SettingsPageBase
 
     private CancellationTokenSource DocumentLoadingCancellationTokenSource { get; set; } = new();
 
+    private static readonly HttpClient HttpClient = new();
+
+    private readonly Dictionary<string, FlowDocument> _readmeDocumentCache = new();
+
     public PluginsSettingsPage(IPluginService pluginService, IPluginMarketService pluginMarketService, SettingsService settingsService, ILogger<PluginsSettingsPage> logger)
     {
         InitializeComponent();
@@ -74,6 +78,11 @@ public partial class PluginsSettingsPage : SettingsPageBase
         }
         var path = System.IO.Path.Combine(ViewModel.SelectedPluginInfo.PluginFolderPath,
             ViewModel.SelectedPluginInfo.Manifest.Readme);
+        if (_readmeDocumentCache.TryGetValue(path, out var cachedDocument))
+        {
+            ViewModel.ReadmeDocument = cachedDocument;
+            return;
+        }
         var uri = new Uri(path, UriKind.RelativeOrAbsolute);
 
         string document;
@@ -85,7 +94,7 @@ public partial class PluginsSettingsPage : SettingsPageBase
             ViewModel.IsLoadingDocument = true;
             document = uri.Scheme switch
             {
-                "https" or "http" => await new HttpClient().GetStringAsync(uri,
+                "https" or "http" => await HttpClient.GetStringAsync(uri,
                     DocumentLoadingCancellationTokenSource.Token),
                 "file" => await FrameworkCompat.ReadAllTextAsync(path, DocumentLoadingCancellationTokenSource.Token),
                 _ => ""
@@ -104,7 +113,9 @@ public partial class PluginsSettingsPage : SettingsPageBase
             ViewModel.IsLoadingDocument = false;
         }
 
-        ViewModel.ReadmeDocument = MarkdownConvertHelper.ConvertMarkdown(document);
+        var readmeDocument = MarkdownConvertHelper.ConvertMarkdown(document);
+        _readmeDocumentCache[path] = readmeDocument;
+        ViewModel.ReadmeDocument = readmeDocument;
     }
 
     private async void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

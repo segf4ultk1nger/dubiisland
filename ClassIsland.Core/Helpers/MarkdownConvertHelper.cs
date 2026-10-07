@@ -33,7 +33,7 @@ public static class MarkdownConvertHelper
         _markdownEngine ??= CreateEngine(app);
         var fd = _markdownEngine.Transform(document);
         fd.FontFamily = app?.FindResource("HarmonyOsSans") as FontFamily;
-        fd.IsOptimalParagraphEnabled = true;
+        fd.IsOptimalParagraphEnabled = false;
         return fd;
     }
 

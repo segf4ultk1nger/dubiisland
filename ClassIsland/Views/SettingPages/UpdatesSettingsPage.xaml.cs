@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Abstractions.Services.Management;
@@ -29,6 +30,9 @@ public partial class UpdatesSettingsPage : SettingsPageBase
     public IManagementService ManagementService { get; }
 
     public UpdateSettingsViewModel ViewModel { get; } = new();
+
+    private string? _cachedChangeLogsKey;
+    private FlowDocument? _cachedChangeLogsDocument;
 
     public static readonly DependencyProperty IsEasterEggTriggeredProperty =
     DependencyProperty.Register(nameof(IsEasterEggTriggered), typeof(bool), typeof(UpdatesSettingsPage),
@@ -71,7 +75,16 @@ public partial class UpdatesSettingsPage : SettingsPageBase
 
     private void UpdateCache()
     {
-        ViewModel.CurrentMarkdownDocument = MarkdownConvertHelper.ConvertMarkdown(UpdateService.SelectedVersionInfo.ChangeLogs);
+        var key = UpdateService.SelectedVersionInfo.Version;
+        if (key == _cachedChangeLogsKey && _cachedChangeLogsDocument != null)
+        {
+            ViewModel.CurrentMarkdownDocument = _cachedChangeLogsDocument;
+            return;
+        }
+
+        _cachedChangeLogsDocument = MarkdownConvertHelper.ConvertMarkdown(UpdateService.SelectedVersionInfo.ChangeLogs);
+        _cachedChangeLogsKey = key;
+        ViewModel.CurrentMarkdownDocument = _cachedChangeLogsDocument;
     }
 
     private void RefreshDescription()
