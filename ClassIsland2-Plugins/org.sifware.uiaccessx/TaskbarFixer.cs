@@ -1,33 +1,39 @@
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 
 namespace Org.Sifware.UiAccessX;
 
 /// <summary>
-/// 修复 UIAccess 下「顶层效果窗口」等带 WS_EX_TOOLWINDOW 的窗口错误出现在任务栏的问题。
-/// 通过 WinEvent 钩住本进程窗口的创建/显示，并用 ITaskbarList::DeleteTab 强制移出任务栏。
+/// 修复 UIAccess 下「本该不在任务栏」的窗口（顶层效果窗口、托盘菜单、进过编辑模式的主窗口等）出现在任务栏的问题。
+/// <para>
+/// 只靠 owner / <c>WS_EX_TOOLWINDOW</c> 改完，shell 往往不会重算任务栏按钮，必须再 <c>ITaskbarList::DeleteTab</c> 推一把；
+/// 只靠 DeleteTab 又得先猜哪些窗口该摘（旧实现按 <c>WS_EX_TOOLWINDOW</c> 猜，会漏掉带 <c>WS_EX_APPWINDOW</c> 的效果窗口）。
+/// 所以这里融合两者：以 Avalonia 的 <c>ShowInTaskbar == false</c> 精确挑窗口，再补上 Avalonia 本应做的隐藏 owner，
+/// 最后用 DeleteTab 强制 shell 刷新。
+/// </para>
 /// </summary>
 [SupportedOSPlatform("windows")]
 internal static class TaskbarFixer
 {
-    private const uint EVENT_OBJECT_CREATE = 0x8000;
-    private const uint EVENT_OBJECT_SHOW = 0x8002;
-    private const int OBJID_WINDOW = 0;
-    private const uint WINEVENT_OUTOFCONTEXT = 0x0000;
-
+    private const int GWLP_HWNDPARENT = -8;
     private const int GWL_EXSTYLE = -20;
     private const long WS_EX_TOOLWINDOW = 0x00000080;
-    private const uint COINIT_APARTMENTTHREADED = 0x2;
+    private const long WS_EX_APPWINDOW = 0x00040000;
 
-    private static readonly int OwnPid = Environment.ProcessId;
+    private const uint SWP_NOSIZE = 0x0001;
+    private const uint SWP_NOMOVE = 0x0002;
+    private const uint SWP_NOACTIVATE = 0x0010;
+    private const uint SWP_FRAMECHANGED = 0x0020;
 
-    private static WinEventProc? _winEventProc;
-    private static IntPtr _createHook;
-    private static IntPtr _showHook;
-    private static DispatcherTimer? _sweepTimer;
-    private static ITaskbarList? _taskbar;
     private static bool _started;
+    private static IntPtr _offscreenOwner;
+    private static ITaskbarList? _taskbar;
+    private static DispatcherTimer? _timer;
 
     public static void Start()
     {
@@ -37,100 +43,123 @@ internal static class TaskbarFixer
         }
 
         _started = true;
-        _winEventProc = OnWinEvent;
 
-        _createHook = SetWinEventHook(EVENT_OBJECT_CREATE, EVENT_OBJECT_CREATE, IntPtr.Zero, _winEventProc, 0, 0,
-            WINEVENT_OUTOFCONTEXT);
-        _showHook = SetWinEventHook(EVENT_OBJECT_SHOW, EVENT_OBJECT_SHOW, IntPtr.Zero, _winEventProc, 0, 0,
-            WINEVENT_OUTOFCONTEXT);
+        Control.LoadedEvent.AddClassHandler<Window>((window, _) =>
+        {
+            Fix(window);
+            // 托盘菜单等窗口会被复用，每次重新 Show 后再修一遍。
+            window.Opened += (_, _) => Fix(window);
+        });
+        Window.ShowInTaskbarProperty.Changed.AddClassHandler<Window>((window, _) => Fix(window));
 
-        // 兜底扫描：任务栏可能在控件样式变化后重新加回标签。
-        _sweepTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-        _sweepTimer.Tick += (_, _) => Sweep();
-        _sweepTimer.Start();
+        // 托盘菜单是短命窗口，Loaded 即修；主窗口进过编辑模式后可能被 shell 重新加回来，定期兜底。
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _timer.Tick += (_, _) => FixAll();
+        _timer.Start();
 
-        Sweep();
+        FixAll();
     }
 
-    public static void Stop()
+    private static void FixAll()
     {
-        if (!_started)
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
 
-        _sweepTimer?.Stop();
-        _sweepTimer = null;
-
-        if (_createHook != IntPtr.Zero)
+        foreach (var window in desktop.Windows)
         {
-            UnhookWinEvent(_createHook);
-            _createHook = IntPtr.Zero;
+            Fix(window);
         }
-
-        if (_showHook != IntPtr.Zero)
-        {
-            UnhookWinEvent(_showHook);
-            _showHook = IntPtr.Zero;
-        }
-
-        _started = false;
     }
 
-    private static void OnWinEvent(IntPtr hWinEventHook, uint @event, IntPtr hwnd, int idObject, int idChild,
-        uint dwEventThread, uint dwmsEventTime)
+    private static void Fix(Window window)
     {
-        if (idObject != OBJID_WINDOW || idChild != 0 || hwnd == IntPtr.Zero)
-        {
-            return;
-        }
-
-        RemoveFromTaskbarIfToolWindow(hwnd);
-    }
-
-    private static void Sweep()
-    {
-        if (!OperatingSystem.IsWindows())
-        {
-            return;
-        }
-
         try
         {
-            EnumWindows((hwnd, _) =>
+            var hwnd = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            if (hwnd == IntPtr.Zero)
             {
-                RemoveFromTaskbarIfToolWindow(hwnd);
-                return true;
-            }, IntPtr.Zero);
-        }
-        catch
-        {
-            // 枚举失败时忽略，等待下一次扫描。
-        }
-    }
+                return;
+            }
 
-    private static void RemoveFromTaskbarIfToolWindow(IntPtr hwnd)
-    {
-        try
-        {
-            GetWindowThreadProcessId(hwnd, out var pid);
-            if (pid != OwnPid)
+            if (window.ShowInTaskbar)
             {
                 return;
             }
 
             var exStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE).ToInt64();
+            var changed = false;
+
             if ((exStyle & WS_EX_TOOLWINDOW) == 0)
             {
-                return;
+                exStyle |= WS_EX_TOOLWINDOW;
+                changed = true;
             }
 
-            GetTaskbar()?.DeleteTab(hwnd);
+            if ((exStyle & WS_EX_APPWINDOW) != 0)
+            {
+                exStyle &= ~WS_EX_APPWINDOW;
+                changed = true;
+            }
+
+            if (changed)
+            {
+                SetWindowLongPtr(hwnd, GWL_EXSTYLE, new IntPtr(exStyle));
+            }
+
+            var owner = GetOffscreenOwner();
+            if (owner != IntPtr.Zero && GetWindowLongPtr(hwnd, GWLP_HWNDPARENT) == IntPtr.Zero)
+            {
+                SetWindowLongPtr(hwnd, GWLP_HWNDPARENT, owner);
+                changed = true;
+            }
+
+            if (changed)
+            {
+                SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0,
+                    SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+            }
+
+            // owner / 扩展样式改完 shell 未必重算，DeleteTab 推一把（对已摘掉的窗口无副作用）。
+            try
+            {
+                GetTaskbar()?.DeleteTab(hwnd);
+            }
+            catch
+            {
+                // 忽略。
+            }
         }
         catch
         {
             // 忽略单个窗口失败。
         }
+    }
+
+    /// <summary>取 Avalonia 的隐藏窗口句柄（复用它自己的窗口，避免再造一个）。</summary>
+    private static IntPtr GetOffscreenOwner()
+    {
+        if (_offscreenOwner != IntPtr.Zero)
+        {
+            return _offscreenOwner;
+        }
+
+        try
+        {
+            var type = Type.GetType("Avalonia.Win32.OffscreenParentWindow, Avalonia.Win32");
+            var value = type?.GetProperty("Handle", BindingFlags.Public | BindingFlags.Static)?.GetValue(null);
+            if (value is IntPtr handle)
+            {
+                _offscreenOwner = handle;
+            }
+        }
+        catch
+        {
+            // 忽略，下次再试。
+        }
+
+        return _offscreenOwner;
     }
 
     private static ITaskbarList? GetTaskbar()
@@ -140,34 +169,14 @@ internal static class TaskbarFixer
             return _taskbar;
         }
 
-        try
-        {
-            _ = CoInitializeEx(IntPtr.Zero, COINIT_APARTMENTTHREADED);
-            var clsid = new Guid("56FDF344-FD6D-11d0-958A-006097C9A090");
-            var comType = Type.GetTypeFromCLSID(clsid);
-            if (comType == null)
-            {
-                return null;
-            }
-
-            _taskbar = (ITaskbarList?)Activator.CreateInstance(comType);
-            _taskbar?.HrInit();
-        }
-        catch
-        {
-            _taskbar = null;
-        }
-
+        var taskbar = (ITaskbarList)new CTaskbarList();
+        taskbar.HrInit();
+        _taskbar = taskbar;
         return _taskbar;
     }
 
-    private delegate void WinEventProc(IntPtr hWinEventHook, uint @event, IntPtr hwnd, int idObject, int idChild,
-        uint dwEventThread, uint dwmsEventTime);
-
-    private delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
-
     [ComImport]
-    [Guid("56FDF342-FD6D-11d0-958A-006097C9A090")]
+    [Guid("56FDF342-FD6D-11D0-958A-006097C9A090")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     private interface ITaskbarList
     {
@@ -182,18 +191,12 @@ internal static class TaskbarFixer
         void SetActiveAlt(IntPtr hwnd);
     }
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc,
-        WinEventProc lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
-
-    [DllImport("user32.dll")]
-    private static extern bool UnhookWinEvent(IntPtr hWinEventHook);
-
-    [DllImport("user32.dll")]
-    private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-
-    [DllImport("user32.dll")]
-    private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+    [ComImport]
+    [Guid("56FDF344-FD6D-11D0-958A-006097C9A090")]
+    [ClassInterface(ClassInterfaceType.None)]
+    private class CTaskbarList
+    {
+    }
 
     [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
     private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
@@ -201,9 +204,21 @@ internal static class TaskbarFixer
     [DllImport("user32.dll", EntryPoint = "GetWindowLongW")]
     private static extern int GetWindowLong32(IntPtr hWnd, int nIndex);
 
-    [DllImport("ole32.dll")]
-    private static extern int CoInitializeEx(IntPtr pvReserved, uint dwCoInit);
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
+    private static extern IntPtr SetWindowLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongW")]
+    private static extern int SetWindowLong32(IntPtr hWnd, int nIndex, int dwNewLong);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
+        uint uFlags);
 
     private static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex) =>
         IntPtr.Size == 8 ? GetWindowLongPtr64(hWnd, nIndex) : new IntPtr(GetWindowLong32(hWnd, nIndex));
+
+    private static IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong) =>
+        IntPtr.Size == 8
+            ? SetWindowLongPtr64(hWnd, nIndex, dwNewLong)
+            : new IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32()));
 }
