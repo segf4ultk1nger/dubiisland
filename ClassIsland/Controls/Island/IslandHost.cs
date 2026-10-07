@@ -1184,7 +1184,9 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
         if (visible)
         {
             if (Settings.IsIslandShowAnimationEnabled)
-                _layoutAnimator.BeginComponentEnter(); // 显示时组件逐个入场
+                _layoutAnimator.BeginShowEnter(); // 显示时各行依次出现、组件逐个入场
+            else
+                _layoutAnimator.ResetComponents();
             UpdateWindowPos();
             ApplyWindowStyles();
             if (Settings.IsIslandShowAnimationEnabled)
@@ -1226,6 +1228,7 @@ public sealed class IslandHost : IDisposable, INotificationVisualHost
             {
                 // 出现动画中被打断 → 从当前视觉续接；否则从静止态收起
                 (_hideFromScale, _hideFromOpacity) = _showAnimActive ? GetVisual() : (1.0, 1.0);
+                _layoutAnimator.BeginComponentExit(); // 内容先退，壳随后再收
                 _showAnimActive = false;
                 _showAnimStart = null;
                 _hideAnimActive = true;

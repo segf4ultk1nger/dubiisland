@@ -324,7 +324,7 @@ public sealed class IslandRenderer
         var hAlign = HorizontalAlign;
         foreach (var line in _lines)
         {
-            var opacity = GetLineOpacity(line.LineNumber);
+            var opacity = GetLineOpacity(line.LineNumber) * (Animator?.GetLineEntryOpacity(line.LineNumber) ?? 1.0);
             var faded = opacity < 0.999;
             if (faded)
                 drawingContext.PushOpacity(opacity);
@@ -357,7 +357,7 @@ public sealed class IslandRenderer
             drawingContext.PushOpacity(ContentOpacity);
         foreach (var line in _lines)
         {
-            var opacity = GetLineOpacity(line.LineNumber);
+            var opacity = GetLineOpacity(line.LineNumber) * (Animator?.GetLineEntryOpacity(line.LineNumber) ?? 1.0);
             var faded = opacity < 0.999;
             if (faded)
                 drawingContext.PushOpacity(opacity);

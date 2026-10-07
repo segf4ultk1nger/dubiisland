@@ -11,17 +11,21 @@ namespace ClassIsland.Controls.Island;
 /// </summary>
 public sealed class IslandLayoutAnimator
 {
-    private const double GrowDuration = 0.6;
-    private const double ShrinkDuration = 0.8;
+    private const double GrowDuration = 0.45;
+    private const double ShrinkDuration = 0.55;
     private const double ReserveFactor = 1.15;
     private const double Epsilon = 0.0001;
     private const double ChangeThreshold = 0.01;
     private const double MaxJellySquash = 0.08;
     private const double JellyCoupling = 0.5;
     private const double ComponentMoveDuration = 0.3;
-    private const double ComponentEnterDuration = 0.22;
+    private const double ComponentEnterDuration = 0.16;
     private const double ComponentScaleFrom = 0.9;
     private const double ComponentEnterStagger = 0.03; // 多个新组件依次入场的错峰间隔
+    private const double ComponentEnterBaseDelay = 0.08; // 岛显示时内容整体延后于壳入场
+    private const double ComponentExitDuration = 0.08; // 岛隐藏时内容先于壳快速淡出
+    private const double LineEnterDuration = 0.18; // 每行（岛）入场淡入时长
+    private const double LineEnterStagger = 0.06; // 多行依次入场的错峰间隔
     private const double DockDuration = 0.36;
     private const double MotionStretchAmount = 0.07; // 停靠位移时沿运动方向的最大拉伸比例（丰富档）
 
@@ -73,26 +77,39 @@ public sealed class IslandLayoutAnimator
             _presentLines.Add(line);
             if (!_lines.TryGetValue(line, out var state))
             {
-                _lines[line] = new LineState
+                state = new LineState
                 {
                     Width = new Channel { Current = width, From = width, Target = width },
                     Top = new Channel { Current = top, From = top, Target = top },
                     Height = new Channel { Current = height, From = height, Target = height }
                 };
-                continue;
+                _lines[line] = state;
             }
-
-            if (!Enabled)
+            else if (!Enabled)
             {
                 SetDirect(state.Width, width);
                 SetDirect(state.Top, top);
                 SetDirect(state.Height, height);
-                continue;
+            }
+            else
+            {
+                UpdateChannel(state.Width, width);
+                UpdateChannel(state.Top, top);
+                UpdateChannel(state.Height, height);
             }
 
-            UpdateChannel(state.Width, width);
-            UpdateChannel(state.Top, top);
-            UpdateChannel(state.Height, height);
+            // 岛显示时各行（岛）依次淡入。
+            if (_forceEnter && Enabled)
+            {
+                var op = state.Opacity;
+                op.Current = 0;
+                op.From = 0;
+                op.Target = 1;
+                op.StartSeconds = -1;
+                op.Delay = i * LineEnterStagger;
+                op.Duration = LineEnterDuration;
+                op.Easing = EnterEase;
+            }
         }
 
         _removedLines.Clear();
@@ -108,11 +125,41 @@ public sealed class IslandLayoutAnimator
         RecomputeReserved();
     }
 
-    /// <summary>让下一次 <see cref="FeedComponents"/> 的所有组件重新入场（用于岛显示时的逐个入场）。</summary>
-    public void BeginComponentEnter()
+    /// <summary>岛显示时：下一次喂入让各行依次淡入、各组件重新逐个入场。</summary>
+    public void BeginShowEnter()
     {
         _forceEnter = true;
         _components.Clear();
+    }
+
+    /// <summary>岛隐藏时让内容先于壳快速淡出。</summary>
+    public void BeginComponentExit()
+    {
+        if (!Enabled)
+            return;
+        foreach (var state in _components.Values)
+        {
+            state.Opacity.From = state.Opacity.Current;
+            state.Opacity.Target = 0;
+            state.Opacity.StartSeconds = -1;
+            state.Opacity.Delay = 0;
+            state.Opacity.Duration = ComponentExitDuration;
+            state.Opacity.Easing = EnterEase;
+        }
+
+        RecomputeReserved();
+    }
+
+    /// <summary>把所有组件的不透明度/缩放立即归位（关闭显示动画时用，避免残留出场态）。</summary>
+    public void ResetComponents()
+    {
+        foreach (var state in _components.Values)
+        {
+            SetDirect(state.Opacity, 1);
+            SetDirect(state.Scale, 1);
+        }
+
+        RecomputeReserved();
     }
 
     /// <summary>批量送入组件目标 X（行内相对坐标，不含整行停靠对齐偏移）。对同一批重复调用幂等。</summary>
@@ -129,8 +176,8 @@ public sealed class IslandLayoutAnimator
                 state = new ComponentState { X = new Channel { Current = x, From = x, Target = x } };
                 if ((_motionPrimed || _forceEnter) && Enabled)
                 {
-                    // 逐个错峰：同一批同时入场的新组件依次延后，单独新增则不延迟。
-                    var delay = enterIndex++ * ComponentEnterStagger;
+                    // 逐个错峰：同一批同时入场的新组件依次延后，单独新增则不延迟；岛显示时整体再延后一点（壳先内容后）。
+                    var delay = (_forceEnter ? ComponentEnterBaseDelay : 0) + enterIndex++ * ComponentEnterStagger;
                     state.Opacity = new Channel
                     {
                         Current = 0, From = 0, Target = 1,
@@ -242,6 +289,7 @@ public sealed class IslandLayoutAnimator
             animating |= Step(state.Width, nowSeconds);
             animating |= Step(state.Top, nowSeconds);
             animating |= Step(state.Height, nowSeconds);
+            animating |= Step(state.Opacity, nowSeconds);
         }
 
         foreach (var state in _components.Values)
@@ -275,6 +323,10 @@ public sealed class IslandLayoutAnimator
     /// <summary>取该行补间中的高度；未启用或无该行时返回 fallback。</summary>
     public double GetHeight(int line, double fallback)
         => Enabled && _lines.TryGetValue(line, out var state) ? state.Height.Current : fallback;
+
+    /// <summary>取该行入场补间中的不透明度；未启用或无该行时为 1。</summary>
+    public double GetLineEntryOpacity(int line)
+        => Enabled && _lines.TryGetValue(line, out var state) ? state.Opacity.Current : 1.0;
 
     /// <summary>取组件补间中的 X；未启用或无该组件时返回 fallback。</summary>
     public double GetComponentX(ComponentSettings key, double fallback)
@@ -341,6 +393,7 @@ public sealed class IslandLayoutAnimator
             SettleChannel(state.Width);
             SettleChannel(state.Top);
             SettleChannel(state.Height);
+            SettleChannel(state.Opacity);
         }
 
         foreach (var state in _components.Values)
@@ -432,7 +485,8 @@ public sealed class IslandLayoutAnimator
         IsAnimating = false;
         foreach (var state in _lines.Values)
         {
-            if (state.Width.NeedsTick || state.Top.NeedsTick || state.Height.NeedsTick)
+            if (state.Width.NeedsTick || state.Top.NeedsTick || state.Height.NeedsTick ||
+                state.Opacity.NeedsTick)
             {
                 IsAnimating = true;
                 break;
@@ -499,6 +553,7 @@ public sealed class IslandLayoutAnimator
         public Channel Width = new();
         public Channel Top = new();
         public Channel Height = new();
+        public Channel Opacity = new() { Current = 1, From = 1, Target = 1 };
     }
 
     private sealed class ComponentState
