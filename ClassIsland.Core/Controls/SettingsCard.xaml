@@ -18,7 +18,6 @@
             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
             Header="{Binding Header, Mode=OneWay, ElementName=Root}"
             Description="{Binding Description, Mode=OneWay, ElementName=Root}"
-            IconGlyph="{Binding IconGlyph, Mode=OneWay, ElementName=Root}"
             IsOn="{Binding IsOn, Mode=TwoWay, ElementName=Root}"
             Switcher="{Binding Switcher, Mode=TwoWay, ElementName=Root}"
             HasSwitcher="{Binding HasSwitcher, Mode=OneWay, ElementName=Root}"/>

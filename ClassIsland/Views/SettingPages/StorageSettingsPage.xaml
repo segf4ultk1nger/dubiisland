@@ -201,7 +201,7 @@
 
             <TextBlock Text="备份" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 启用自动备份 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}" Header="启用自动备份"
+            <controls1:SettingsCard Header="启用自动备份"
                                     Description="每隔一段时间自动备份档案和配置文件。"
                                     IsOn="{Binding SettingsService.Settings.IsAutoBackupEnabled, Mode=TwoWay}"
                                     Margin="0 0 0 6" />
@@ -209,7 +209,7 @@
             <!-- 自动备份子选项（启用时显示） -->
             <StackPanel Margin="0 0 0 6"
                         Visibility="{Binding SettingsService.Settings.IsAutoBackupEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockAutoOutline}" Header="自动备份间隔"
+                <controls1:SettingsCard Header="自动备份间隔"
                                         Description="自动备份时的间隔天数。"
                                         Margin="0 0 0 6">
                     <controls1:SettingsCard.Switcher>
@@ -222,7 +222,7 @@
                         </StackPanel>
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ArchiveArrowUpOutline}" Header="自动备份上限"
+                <controls1:SettingsCard Header="自动备份上限"
                                         Description="自动备份数量上限；达到后覆盖最旧备份，0 为无上限。"
                                         Margin="0 0 0 6">
                     <controls1:SettingsCard.Switcher>
@@ -232,7 +232,7 @@
                                            Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="上次成功自动备份"
+                <controls1:SettingsCard Header="上次成功自动备份"
                                         Description="最近一次自动备份成功的时间。">
                     <controls1:SettingsCard.Switcher>
                         <TextBlock Text="{Binding SettingsService.Settings.LastAutoBackupTime, ConverterCulture=zh-cn}"
@@ -242,7 +242,7 @@
             </StackPanel>
 
             <!-- 手动备份 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BackupRestore}" Header="手动备份"
+            <controls1:SettingsCard Header="手动备份"
                                     Description="备份 Config/、Profiles/ 和 Settings.json，不会被自动清除。"
                                     Margin="0 0 0 6">
                 <controls1:SettingsCard.Switcher>
@@ -278,7 +278,7 @@
             </controls1:SettingsCard>
 
             <!-- 恢复备份 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Restore}" Header="恢复备份"
+            <controls1:SettingsCard Header="恢复备份"
                                     Description="重启到恢复模式并恢复到指定的备份。">
                 <controls1:SettingsCard.Switcher>
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"
@@ -293,7 +293,7 @@
             </controls1:SettingsCard>
 
             <TextBlock Text="打开目录" Style="{StaticResource SettingsSectionHeaderStyle}" />
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FolderOpenOutline}" Header="打开目录"
+            <controls1:SettingsCard Header="打开目录"
                                     Description="在文件资源管理器中打开应用的相关文件夹。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -323,7 +323,7 @@
             </controls1:SettingsCard>
 
             <TextBlock Text="重置" Style="{StaticResource SettingsSectionHeaderStyle}" />
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Refresh}" Header="重置所有设置"
+            <controls1:SettingsCard Header="重置所有设置"
                                     Description="将所有设置恢复为默认值，不会删除档案和备份。重置后应用会重启。">
                 <controls1:SettingsCard.Switcher>
                     <Button Style="{StaticResource MahApps.Styles.Button.Flat}" MinHeight="32"

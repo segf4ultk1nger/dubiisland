@@ -104,7 +104,7 @@
             </UniformGrid>
 
             <!-- 动画缩放 -->
-            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.BugOutline}"
+            <controls2:SettingsControl
                                        Header="动画缩放"
                                        Description="主界面缩放动画播放倍速。"
                                        Margin="0 13 0 0">
@@ -117,7 +117,7 @@
             </controls2:SettingsControl>
 
             <!-- 时间流速 -->
-            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.ClockFast}"
+            <controls2:SettingsControl
                                        Header="时间流速"
                                        Description="持续调整时间偏移，控制时间流速。"
                                        Margin="0 13 0 0">
@@ -160,7 +160,6 @@
                 </Expander.Resources>
                 <Expander.Header>
                     <ci:SettingsControl HasSwitcher="False"
-                                        IconGlyph="{x:Static controls2:IconGlyphs.Bomb}"
                                         Header="危险操作"
                                         Description="没事别按。"/>
                 </Expander.Header>

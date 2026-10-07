@@ -38,7 +38,7 @@
                      mah:TextBoxHelper.Watermark="提醒显示内容"
                      Padding="8"
                      Text="{Binding Settings.NotificationMsg}"/>
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}" Header="放学提醒显示持续时长" Margin="0 6 0 0" Description="显示放学提醒的时长。">
+            <ci:SettingsCard Header="放学提醒显示持续时长" Margin="0 6 0 0" Description="显示放学提醒的时长。">
                 <ci:SettingsCard.Switcher>
                     <ci:NumbericTextBox MaxValue="3600" MinValue="3"
                                    Text="{Binding Settings.NotificationMsgDuration, Converter={StaticResource IntToStringConverter}}"

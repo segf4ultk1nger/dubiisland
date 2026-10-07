@@ -46,14 +46,14 @@
                            Visibility="{Binding ProviderSettings.IsSettingsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                 <!-- 启用提醒语音 -->
-                <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.TextToSpeech}"
+                <controls2:SettingsCard
                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                         Header="启用提醒语音"
                                         Description="发出提醒时用语音播报提醒内容。"
                                         IsOn="{Binding ProviderSettings.IsSpeechEnabled, Mode=TwoWay}" />
 
                 <!-- 启用提醒强调特效 -->
-                <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
+                <controls2:SettingsCard
                                         Margin="0 6 0 0"
                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                         Header="启用提醒强调特效"
@@ -67,7 +67,7 @@
                               IsExpanded="{Binding ProviderSettings.IsNotificationSoundEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
-                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.VolumeHigh}"
+                            <controls2:SettingsControl
                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                        Header="启用提醒音效"
                                                        Description="发出提醒时播放音效。"
@@ -77,8 +77,7 @@
                         <StackPanel Margin="36 0 48 12"
                                     IsEnabled="{Binding ProviderSettings.IsNotificationSoundEnabled}">
                             <!-- 自定义音效 -->
-                            <controls2:SettingsControl
-                                IconGlyph="{x:Static controls2:IconGlyphs.FileMusicOutline}" Header="自定义音效"
+                            <controls2:SettingsControl Header="自定义音效"
                                 Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                 Description="自定义音效，留空禁用；超出提醒时长的部分会被截断。">
                                 <controls2:SettingsControl.Switcher>
@@ -101,7 +100,7 @@
                     </Expander>
                 </Border>
                 <!-- 置顶提醒 -->
-                <controls2:SettingsCard IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
+                <controls2:SettingsCard
                                         Margin="0 6 0 0"
                                         Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                         Header="置顶提醒"
@@ -137,7 +136,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- 提醒开关 -->
-                <controls2:SettingsCard Grid.Row="0" IconGlyph="{x:Static controls2:IconGlyphs.BellNotificationOutline}"
+                <controls2:SettingsCard Grid.Row="0"
                                         Margin="0 0 0 6"
                                         Header="启用提醒"
                                         IsOn="{Binding SettingsService.Settings.IsNotificationEnabled, Mode=TwoWay}"
@@ -279,7 +278,7 @@
                                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                               Margin="0 0 0 0">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.TextToSpeech}"
+                                            <controls2:SettingsControl
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许启用提醒语音"
                                                                        Description="发出提醒时用语音播报提醒内容。"
@@ -378,7 +377,7 @@
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationEffect, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}"
+                                            <controls2:SettingsControl
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许启用提醒强调特效"
                                                                        Description="发出提醒时播放全屏强调特效。"
@@ -393,7 +392,7 @@
                                                       Margin="0 0 0 6" />
                                             
                                             <!-- 提醒特效渲染精度 -->
-                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersOutline}" Header="提醒特效渲染精度"
+                                            <controls2:SettingsControl Header="提醒特效渲染精度"
                                                                        Margin="0 0 0 6"
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Description="提醒特效渲染精度，越低越流畅。">
@@ -409,7 +408,7 @@
                                             </controls2:SettingsControl>
 
                                             <!-- 在独立线程上呈现特效 -->
-                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.ViewQuiltOutline}" Header="在独立线程上呈现特效"
+                                            <controls2:SettingsControl Header="在独立线程上呈现特效"
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        IsOn="{Binding SettingsService.Settings.NotificationUseStandaloneEffectUiThread, Mode=TwoWay}"
                                                                        Description="用独立 UI 线程呈现特效，可能提升流畅性；异常时关闭。">
@@ -424,7 +423,7 @@
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationSound, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.VolumeHigh}"
+                                            <controls2:SettingsControl
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许启用提醒音效"
                                                                        Description="发出提醒时播放音效。"
@@ -465,8 +464,7 @@
                                                     />
 
                                             <!-- 自定义音效 -->
-                                            <controls2:SettingsControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                                                                       IconGlyph="{x:Static controls2:IconGlyphs.FileMusicOutline}" Header="自定义音效"
+                                            <controls2:SettingsControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Header="自定义音效"
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Description="自定义音效，留空禁用；超出提醒时长的部分会被截断。">
                                                 <controls2:SettingsControl.Switcher>
@@ -496,7 +494,7 @@
                                               IsExpanded="{Binding SettingsService.Settings.AllowNotificationTopmost, Mode=OneWay}"
                                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                                         <Expander.Header>
-                                            <controls2:SettingsControl IconGlyph="{x:Static controls2:IconGlyphs.LayersPlus}"
+                                            <controls2:SettingsControl
                                                                        Margin="-12 0"
                                                                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                        Header="允许置顶提醒"

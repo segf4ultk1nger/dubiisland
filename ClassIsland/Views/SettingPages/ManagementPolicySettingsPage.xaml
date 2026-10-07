@@ -41,25 +41,25 @@
             </Border>
             <TextBlock Text="档案" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 禁止编辑档案 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.FileDocumentEditOutline}"
+            <ci:SettingsCard
                              Header="禁止编辑档案"
                              Description="用户不能编辑档案，【从 Excel 导入】亦禁用；临时换课和临时课表不受影响。"
                              IsOn="{Binding ManagementService.Policy.DisableProfileEditing, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 禁止修改课表 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.FileChartOutline}"
+            <ci:SettingsCard
                            Header="禁止编辑课表"
                            Description="用户不能创建、删除、编辑课表，【从 Excel 导入】亦禁用；临时换课和临时课表不受影响。"
                            IsOn="{Binding ManagementService.Policy.DisableProfileClassPlanEditing, Mode=TwoWay}"
                            Margin="0 0 0 6" />
             <!-- 禁止编辑时间表 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Timetable}"
+            <ci:SettingsCard
                              Header="禁止编辑时间表"
                              Description="用户不能创建、删除、编辑时间表，【从 Excel 导入】亦禁用。"
                              IsOn="{Binding ManagementService.Policy.DisableProfileTimeLayoutEditing, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 禁止编辑科目 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.BookOutline}"
+            <ci:SettingsCard
                              Header="禁止编辑科目"
                              Description="用户不能创建、删除、编辑科目。"
                              IsOn="{Binding ManagementService.Policy.DisableProfileSubjectsEditing, Mode=TwoWay}"
@@ -69,19 +69,19 @@
             <TextBlock Text="应用设置" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
             <!-- 禁止编辑应用设置 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
+            <ci:SettingsCard
                              Header="禁止编辑应用设置"
                              Description="用户不能调整应用设置，已调整的设置不受影响。"
                              IsOn="{Binding ManagementService.Policy.DisableSettingsEditing, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 禁止自定义启动加载界面 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.RocketLaunchOutline}"
+            <ci:SettingsCard
                              Header="禁止自定义启动加载界面"
                              Description="用户不能自定义启动界面，已有自定义设置会被清除。"
                              IsOn="{Binding ManagementService.Policy.DisableSplashCustomize, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 禁用调试菜单 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.BugOutline}"
+            <ci:SettingsCard
                              Header="禁用调试菜单"
                              Description="用户不能进入调试页面。"
                              IsOn="{Binding ManagementService.Policy.DisableDebugMenu, Mode=TwoWay}"
@@ -91,13 +91,13 @@
             <TextBlock Text="杂项" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
             <!-- 允许退出集控 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.WorkOutline}"
+            <ci:SettingsCard
                              Header="允许退出集控"
                              Description="是否允许用户主动退出集控。"
                              IsOn="{Binding ManagementService.Policy.AllowExitManagement, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             <!-- 禁用彩蛋 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.EggEaster}"
+            <ci:SettingsCard
                              Header="禁用彩蛋"
                              Description="禁用界面中的彩蛋。"
                              IsOn="{Binding ManagementService.Policy.DisableEasterEggs, Mode=TwoWay}"

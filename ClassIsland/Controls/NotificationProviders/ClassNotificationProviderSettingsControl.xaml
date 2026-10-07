@@ -51,7 +51,7 @@
                               IsExpanded="{Binding Settings.IsClassOnPreparingNotificationEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockEnd}"
+                            <controls1:SettingsControl
                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在课前准备时发出提醒"
                                                       Description="课前一段时间发出醒目提醒，提示准备上课。"
@@ -64,7 +64,7 @@
                             <CheckBox Content="启用语音" Margin="0 0 0 6"
                                       IsChecked="{Binding Settings.IsSpeechEnabledOnClassPreparing}"/>
                             <!-- 室内课程课前提醒时间 -->
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAlertOutline}" Header="室内课程课前提醒时间"
+                            <controls1:SettingsControl Header="室内课程课前提醒时间"
                                                       Description="室内课程课前指定时间发出上课提醒。"
                                                       IsCompact="True"
                                                       Margin="0 0 0 6">
@@ -79,7 +79,7 @@
                                 </controls1:SettingsControl.Switcher>
                             </controls1:SettingsControl>
                             <!-- 室外课程课前提醒时间 -->
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockAlertOutline}" Header="室外课程课前提醒时间"
+                            <controls1:SettingsControl Header="室外课程课前提醒时间"
                                                       Description="室外课程课前指定时间发出上课提醒。"
                                                       IsCompact="True"
                                                       Margin="0 0 0 6">
@@ -126,7 +126,7 @@
                               IsExpanded="{Binding Settings.IsClassOnNotificationEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.BookOutline}"
+                            <controls1:SettingsControl
                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在上课时发出提醒"
                                                       Description="上课时发出醒目提醒，提示已上课。"
@@ -154,7 +154,7 @@
                               IsExpanded="{Binding Settings.IsClassOffNotificationEnabled, Mode=OneWay}"
                               TextBlock.Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}">
                         <Expander.Header>
-                            <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}"
+                            <controls1:SettingsControl
                                                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                       Header="在下课时发出提醒"
                                                       Description="下课时发出醒目提醒，提示已下课。"
@@ -177,7 +177,7 @@
                     </Expander>
                 </Border>
                 <!-- 显示教科任老师名字 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Teacher}"
+                <controls1:SettingsCard
                                        Header="显示科任老师名字"
                                        Description="显示课程提醒时展示并播报科任老师名字。"
                                        IsOn="{Binding Settings.ShowTeacherName, Mode=TwoWay}"

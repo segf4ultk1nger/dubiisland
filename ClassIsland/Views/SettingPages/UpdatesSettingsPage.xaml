@@ -652,7 +652,7 @@
                         <!-- 更新通道 -->
                         <Border Margin="0 6 0 0" Style="{StaticResource UpdateEnabledStyle}">
                             <StackPanel Margin="12">
-                                <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.DownloadOutline}"
+                                <controls1:SettingsControl
                                                            Header="更新通道"
                                                            Description="控制应用的更新目标版本。">
                                     <controls1:SettingsControl.Switcher>
@@ -686,7 +686,7 @@
                         <Border Margin="0 6 0 0" Style="{StaticResource UpdateEnabledStyle}">
                             <Expander Background="Transparent" IsExpanded="True">
                                 <Expander.Header>
-                                    <controls1:SettingsControl IconGlyph="{x:Static controls1:IconGlyphs.Web}"
+                                    <controls1:SettingsControl
                                                                Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                                                Header="更新镜像源" HasSwitcher="False"
                                                                Description="从指定镜像源下载更新，可缓解部分网络环境更新受阻问题。"
@@ -776,7 +776,6 @@
                                             Margin="0 4 0 0" />
                                     <Separator Margin="0 4" />
                                     <controls1:SettingsControl IsCompact="True"
-                                                               IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}"
                                                                Header="自动选择镜像源"
                                                                Description="自动选择延迟最低的镜像源。"
                                                                IsOn="{Binding SettingsService.Settings.IsAutoSelectUpgradeMirror, Mode=TwoWay}" />

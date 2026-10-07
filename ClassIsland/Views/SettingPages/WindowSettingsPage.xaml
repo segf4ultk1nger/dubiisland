@@ -220,7 +220,7 @@
             </StackPanel>
 
             <!-- 指针移入淡化 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveDown}"
+            <ci:SettingsCard
                              Header="指针移入淡化"
                              Description="鼠标移入或触屏点击主界面时淡化主界面。"
                              IsOn="{Binding SettingsService.Settings.IsMouseInFadingEnabled, Mode=TwoWay}"
@@ -255,14 +255,14 @@
                 </Border>
 
                 <!-- 使用原始输入 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Input}"
+                <ci:SettingsCard
                                  Header="使用原始输入"
                                  Description="解决触摸屏定位偏移的问题，不支持时禁用。"
                                  IsOn="{Binding SettingsService.Settings.UseRawInput, Mode=TwoWay}"
                                  Margin="0 0 0 6" />
 
                 <!-- 触屏点击后自动恢复 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.ClockOutline}"
+                <ci:SettingsCard
                                  Visibility="{Binding SettingsService.Settings.UseRawInput, Converter={StaticResource BooleanToVisibilityConverter}}"
                                  Header="触屏点击后自动恢复时间"
                                  Description="触屏点击主界面后自动恢复显示；0为禁用。"
@@ -284,35 +284,35 @@
                 </ci:SettingsCard>
 
                 <!-- 反转指针移入淡化 -->
-                <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.MouseMoveUp}"
+                <ci:SettingsCard
                                  Header="反转指针移入淡化"
                                  Description="默认淡化主界面，仅鼠标移入时显示；不影响隐藏。"
                                  IsOn="{Binding SettingsService.Settings.IsMouseInFadingReversed, Mode=TwoWay}" />
             </StackPanel>
 
             <!-- 兼容透明模式 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
+            <ci:SettingsCard
                              Header="兼容透明模式"
                              Description="改用 AllowTransparency 实现透明，占用更高，不支持全屏提醒特效。"
                              IsOn="{Binding SettingsService.Settings.IsCompatibleWindowTransparentEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
             
             <!-- 使用原始屏幕尺寸 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.DockWindow}"
+            <ci:SettingsCard
                                    Header="使用屏幕尺寸而非工作区尺寸"
                                    Description="开启后会直接使用整个屏幕区域参与布局。不会为任务栏预留空间。"
                                    IsOn="{Binding SettingsService.Settings.IsIgnoreWorkAreaEnabled, Mode=TwoWay}"
                                    Margin="0 0 0 6" />
 
             <!-- 录制模式 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CameraTimer}"
+            <ci:SettingsCard
                              Header="录制模式"
                              Description="启用后 LegacyIsland 将会允许其他软件被单独选取录制，将会导致主窗口显示在任务栏中。"
                              IsOn="{Binding SettingsService.Settings.IsScreenRecordingModeEnabled, Mode=TwoWay}"
                              Margin="0 0 0 6" />
 
             <!-- 阻止截图 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.Monitor}"
+            <ci:SettingsCard
                              Header="阻止截图"
                              IsEnabled="{Binding ViewModel.IsWindowCaptureBlockingSupported}"
                              Description="开启后，其他应用无法截取到 LegacyIsland 主窗口，需 Windows 10 2004+"
@@ -323,7 +323,7 @@
             <TextBlock Text="实验性" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
             <!-- 自绘主界面 -->
-            <ci:SettingsCard IconGlyph="{x:Static ciCore:IconGlyphs.CogOutline}"
+            <ci:SettingsCard
                              Header="自绘主界面"
                              Description="用纯自绘渲染器绘制主界面，替代 XAML 主界面。实验性功能，可能不稳定。"
                              IsOn="{Binding SettingsService.Settings.UseSelfDrawnIsland, Mode=TwoWay}"

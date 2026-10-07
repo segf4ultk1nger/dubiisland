@@ -256,7 +256,7 @@
         <StackPanel Style="{StaticResource SettingsPageStackPanelStyle}" Tag="CanPolicyDisable">
             <TextBlock Text="主界面" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 界面缩放 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ZoomInOutline}" Header="界面缩放"
+            <controls1:SettingsCard Header="界面缩放"
                                     Description="主界面的缩放大小。"
                                     SearchTags="缩放 大小 比例 尺寸 scale zoom size">
                 <controls1:SettingsCard.Switcher>
@@ -274,7 +274,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!--背景颜色-->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatColorFill}"
+            <controls1:SettingsCard
                                     Header="背景颜色"
                                     Description="主界面背景颜色，禁用时随主题自动选择。"
                                     Margin="0 0 0 6">
@@ -290,7 +290,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 背景不透明度 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.SquareTransparent}" Header="背景不透明度"
+            <controls1:SettingsCard Header="背景不透明度"
                                     Description="主界面背景的不透明度。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -307,7 +307,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 圆角半径 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BorderRoundCorners}" Header="圆角半径"
+            <controls1:SettingsCard Header="圆角半径"
                                     Description="主界面圆角半径，最大时左右边缘为半圆。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -324,7 +324,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 超椭圆圆角 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.BorderRoundCorners}" Header="超椭圆圆角"
+            <controls1:SettingsCard Header="超椭圆圆角"
                                     Description="使用 Figma 里面类似的平滑圆角，设为 0.6 最果味。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -339,7 +339,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 行间隔 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Margin}" Header="行间隔"
+            <controls1:SettingsCard Header="行间隔"
                                     Description="主界面行间间隔。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -356,7 +356,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 界面边距 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ArrowLeftRight}" Header="界面边距"
+            <controls1:SettingsCard Header="界面边距"
                                     Description="主界面内容与左右边缘的边距。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -378,7 +378,7 @@
             <!-- 动画 -->
             <TextBlock Text="动画" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 显示动画 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AnimationPlayOutline}" Header="显示动画"
+            <controls1:SettingsCard Header="显示动画"
                                     Description="主界面出现时播放缩放 + 淡入动画。">
                 <controls1:SettingsCard.Switcher>
                     <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0"
@@ -386,7 +386,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 隐藏动画 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.EyeOffOutline}" Header="隐藏动画"
+            <controls1:SettingsCard Header="隐藏动画"
                                     Description="主界面隐藏时播放缩放 + 淡出动画。">
                 <controls1:SettingsCard.Switcher>
                     <mah:ToggleSwitch VerticalAlignment="Center" OnContent="开" OffContent="关" MinWidth="0"
@@ -394,7 +394,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 遮罩动画样式 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AnimationPlayOutline}" Header="遮罩动画样式"
+            <controls1:SettingsCard Header="遮罩动画样式"
                                     Description="自绘岛提醒遮罩出现/消失时的动画效果。">
                 <controls1:SettingsCard.Switcher>
                     <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
@@ -420,7 +420,7 @@
             </controls1:SettingsCard>
             <TextBlock Text="主题" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 应用主题 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ThemeLightDark}" Header="应用主题"
+            <controls1:SettingsCard Header="应用主题"
                                                            Description="控制应用的明暗主题。"
                                                            SearchTags="主题 明暗 深色 浅色 黑暗 dark light theme">
                 <controls1:SettingsCard.Switcher>
@@ -451,7 +451,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 主题色来源 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteSwatchOutline}" Header="主题色来源"
+            <controls1:SettingsCard Header="主题色来源"
                                                            Description="控制应用选取主题色的途径。">
                 <controls1:SettingsCard.Switcher>
                     <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
@@ -511,7 +511,7 @@
                     </Style>
                 </StackPanel.Style>
                 <!-- 第一主题色 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteOutline}" Header="第一主题色"
+                <controls1:SettingsCard Header="第一主题色"
                                                                Description="应用主要显示的主题颜色。">
                     <controls1:SettingsCard.Switcher>
                         <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
@@ -519,7 +519,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 第二主题色 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.PaletteOutline}" Header="第二主题色"
+                <controls1:SettingsCard Header="第二主题色"
                                                                Description="应用次要显示的主题颜色。">
                     <controls1:SettingsCard.Switcher>
                         <mah:ColorPicker Style="{StaticResource AppColorPickerStyle}"
@@ -549,11 +549,11 @@
                     </StackPanel>
                 </Border>
                 <!-- 启用自动提取主题色 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.RefreshAuto}" Header="自动提取主题色"
+                <controls1:SettingsCard Header="自动提取主题色"
                                         Description="每分钟刷新一次壁纸主题色，适用于动态壁纸。"
                                         IsOn="{Binding SettingsService.Settings.IsWallpaperAutoUpdateEnabled, Mode=TwoWay}" />
                 <!-- 自动提取主题色间隔 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔"
+                <controls1:SettingsCard Header="自动提取主题色间隔"
                                         Description="自动提取壁纸主题色的间隔，不宜低于 10 秒。"
                                         Margin="0 0 0 6">
                     <controls1:SettingsCard.Style>
@@ -578,16 +578,16 @@
                 </controls1:SettingsCard>
 
                 <!-- 兼容模式 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.CogOutline}" Header="启用兼容模式"
+                <controls1:SettingsCard Header="启用兼容模式"
                                                                Description="从注册表而非桌面句柄提取壁纸；不兼容动态壁纸。"
                                                                IsOn="{Binding SettingsService.Settings.IsFallbackModeEnabled, Mode=TwoWay}" />
 
                 <!-- 实验性取色算法 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FlaskOutline}" Header="实验性取色算法"
+                <controls1:SettingsCard Header="实验性取色算法"
                                         Description="使用实验性取色算法，取色性能更好。"
                                         IsOn="{Binding SettingsService.Settings.UseExperimentColorPickingMethod, Mode=TwoWay}" />
                 <!-- 壁纸层窗口类名 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.WindowMaximize}" Header="壁纸层窗口类名"
+                <controls1:SettingsCard Header="壁纸层窗口类名"
                                         Visibility="{Binding SettingsService.Settings.IsFallbackModeEnabled, Mode=OneWay, Converter={StaticResource InverseBoolToVisConverter}}"
                                         Description="壁纸窗口类名，默认 Progman；动态壁纸需填对应软件的窗口类名。">
                     <controls1:SettingsCard.Switcher>
@@ -607,7 +607,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 取色亮度波峰 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰"
+                <controls1:SettingsCard Header="取色亮度波峰"
                                         Visibility="{Binding SettingsService.Settings.UseExperimentColorPickingMethod, Converter={StaticResource InverseBoolToVisConverter}}"
                                         Description="取色时亮度越接近此值的颜色权重越高；默认值 0.6。">
                     <controls1:SettingsCard.Switcher>
@@ -640,7 +640,7 @@
                     </StackPanel>
                 </Border>
                 <!-- 自动提取主题色间隔 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ClockOutline}" Header="自动提取主题色间隔"
+                <controls1:SettingsCard Header="自动提取主题色间隔"
                                         Description="自动提取屏幕主题色的间隔，建议 10 秒左右。">
                     <controls1:SettingsCard.Switcher>
                         <StackPanel Orientation="Horizontal">
@@ -653,7 +653,7 @@
                     </controls1:SettingsCard.Switcher>
                 </controls1:SettingsCard>
                 <!-- 取色亮度波峰 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.ChartBellCurve}" Header="取色亮度波峰"
+                <controls1:SettingsCard Header="取色亮度波峰"
                                         Description="取色时亮度越接近此值的颜色权重越高；默认值 0.6。">
                     <controls1:SettingsCard.Switcher>
                         <mah:NumericUpDown Value="{Binding SettingsService.Settings.TargetLightValue}"
@@ -665,7 +665,7 @@
             </StackPanel>
             <TextBlock Text="字体" Style="{StaticResource SettingsSectionHeaderStyle}" />
             <!-- 自定义字体 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatFont}" Header="自定义字体"
+            <controls1:SettingsCard Header="自定义字体"
                                     Description="自定义主界面显示课表的字体。">
                 <controls1:SettingsCard.Switcher>
                     <StackPanel Orientation="Horizontal">
@@ -709,7 +709,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 自定义字重 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatLineWeight}" Header="自定义字重"
+            <controls1:SettingsCard Header="自定义字重"
                                     Description="主界面字体字重，需字体支持。">
                 <controls1:SettingsCard.Switcher>
                     <ComboBox Style="{StaticResource MahApps.Styles.ComboBox}"
@@ -742,7 +742,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 字体大小 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FontSize}" Header="字体大小"
+            <controls1:SettingsCard Header="字体大小"
                                     Description="调整主界面上各类字体的大小。">
                 <controls1:SettingsCard.Switcher>
                     <Grid MaxWidth="520">
@@ -781,7 +781,7 @@
                 </controls1:SettingsCard.Switcher>
             </controls1:SettingsCard>
             <!-- 字体颜色 -->
-            <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FormatColorFill}"
+            <controls1:SettingsCard
                                     Header="字体颜色"
                                     Description="调整字体颜色，将覆盖主题默认值。"
                                     Margin="0 0 0 6">

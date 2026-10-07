@@ -7,19 +7,12 @@ namespace ClassIsland.Core.Controls;
 /// </summary>
 public partial class SettingsCard : UserControl
 {
-    public static readonly DependencyProperty IconGlyphProperty = DependencyProperty.Register(nameof(IconGlyph), typeof(string), typeof(SettingsCard), new PropertyMetadata(IconGlyphs.SimpleIcons));
     public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(SettingsCard), new PropertyMetadata(""));
     public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(nameof(Description), typeof(string), typeof(SettingsCard), new PropertyMetadata(""));
     public static readonly DependencyProperty SearchTagsProperty = DependencyProperty.Register(nameof(SearchTags), typeof(string), typeof(SettingsCard), new PropertyMetadata(""));
     public static readonly DependencyProperty SwitcherProperty = DependencyProperty.Register(nameof(Switcher), typeof(object), typeof(SettingsCard), new PropertyMetadata(null));
     public static readonly DependencyProperty HasSwitcherProperty = DependencyProperty.Register(nameof(HasSwitcher), typeof(bool), typeof(SettingsCard), new PropertyMetadata(true));
     public static readonly DependencyProperty IsOnProperty = DependencyProperty.Register(nameof(IsOn), typeof(bool), typeof(SettingsCard), new PropertyMetadata(false));
-
-    public string IconGlyph
-    {
-        get => (string)GetValue(IconGlyphProperty);
-        set => SetValue(IconGlyphProperty, value);
-    }
 
     public string Header
     {

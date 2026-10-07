@@ -423,7 +423,7 @@
                 <TextBlock Text="设置" Style="{StaticResource SettingsSectionHeaderStyle}" />
 
                 <!-- 定位方式 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.Earth}"
+                <controls1:SettingsCard
                                         Header="定位方式"
                                         Description="设置查询天气的位置及定位方式。"
                                         Margin="0 0 0 6">
@@ -445,7 +445,7 @@
                 </controls1:SettingsCard>
 
                 <!-- 城市 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.HomeCityOutline}"
+                <controls1:SettingsCard
                                         Header="城市"
                                         Description="选择用于天气查询的城市。"
                                         Margin="0 0 0 6">
@@ -479,7 +479,7 @@
                 </controls1:SettingsCard>
 
                 <!-- 坐标 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.MapOutline}"
+                <controls1:SettingsCard
                                         Header="坐标"
                                         Description="输入用于获取天气信息的经纬坐标。"
                                         Margin="0 0 0 6">
@@ -558,7 +558,7 @@
                 </controls1:SettingsCard>
 
                 <!-- 自动获取位置 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.AutoMode}"
+                <controls1:SettingsCard
                                         Header="自动获取位置"
                                         Description="每次启动应用时自动更新位置。"
                                         IsOn="{Binding SettingsService.Settings.AutoRefreshWeatherLocation, Mode=TwoWay}"
@@ -576,7 +576,7 @@
                 </controls1:SettingsCard>
 
                 <!-- 排除的气象预警 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.FilterOutline}"
+                <controls1:SettingsCard
                                         Header="排除的气象预警"
                                         Description="包含以下字符串的预警不显示，一行一条。"
                                         Margin="0 0 0 6">
@@ -592,7 +592,7 @@
                 </controls1:SettingsCard>
 
                 <!-- 天气图标包 -->
-                <controls1:SettingsCard IconGlyph="{x:Static controls1:IconGlyphs.WeatherPartlyCloudy}"
+                <controls1:SettingsCard
                                         Header="天气图标包"
                                         Description="调整天气类型图标的显示外观。"
                                         Margin="0 0 0 6">
