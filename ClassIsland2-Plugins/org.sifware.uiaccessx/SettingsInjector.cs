@@ -1,8 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
+using Avalonia.Media;
 using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Controls;
+using ClassIsland.Core.Controls.NavHyperlink;
 using FluentAvalonia.UI.Controls;
 
 namespace Org.Sifware.UiAccessX;
@@ -12,7 +15,8 @@ namespace Org.Sifware.UiAccessX;
 /// <list type="bullet">
 /// <item>主界面 &gt; 窗口 &gt; “窗口层级”下追加 UIAccess 开关；</item>
 /// <item>通用 &gt; 基本 &gt; “开机自启”右侧追加管理员自启按钮；</item>
-/// <item>设置窗口右上角菜单“重启到恢复模式”上方追加“以管理员身份重启”。</item>
+/// <item>设置窗口右上角菜单“重启到恢复模式”上方追加“以管理员身份重启”；</item>
+/// <item>关于 &gt; 鸣谢 文末追加一行 LegacyIsland 推广。</item>
 /// </list>
 /// 依赖内置设置页的可视结构（<c>SettingsExpander.Header</c> 文案），若上游改版导致找不到目标，注入会自动跳过，不会影响其他功能。
 /// </summary>
@@ -53,6 +57,9 @@ internal static class SettingsInjector
                 case "general":
                     InjectGeneralAutoStart(page);
                     break;
+                case "about":
+                    InjectAbout(page);
+                    break;
             }
         }
         catch
@@ -72,7 +79,7 @@ internal static class SettingsInjector
         expander.Items.Add(MakeToggleItem(
             "\uEF4F",
             "UIAccess 超级置顶",
-            "启用后 ClassIsland 可获得 UIAccess 权限，显示在 UWP 全屏应用与系统界面之上（超级置顶）。开启后启动时会自动以管理员身份重启一次。",
+            "启用后 ClassIsland 可置于开始菜单和系统界面之上。开启后会尝试重启至管理员身份运行 ClassIsland。",
             () => UiAccessX.Settings.EnableUiAccess,
             v =>
             {
@@ -105,6 +112,37 @@ internal static class SettingsInjector
 
         panel.Children.Add(MakeAdminAutoStartButton());
         expander.Footer = panel;
+    }
+
+    private static void InjectAbout(SettingsPageBase page)
+    {
+        var textBlock = page.GetLogicalDescendants()
+            .OfType<TextBlock>()
+            .FirstOrDefault(x => (x.Inlines?.Text ?? "").Contains("感谢其他使用的第三方库"));
+        if (textBlock?.Inlines is not { } inlines)
+        {
+            return;
+        }
+
+        var link = new NavHyperlink
+        {
+            NavTarget = "https://gitlab.com/dubi906w/dubiisland",
+            Content = "LegacyIsland"
+        };
+        TextElement.SetFontWeight(link, FontWeight.Bold);
+
+        inlines.Add(new LineBreak());
+        inlines.Add(new Run
+        {
+            Text = "如果你想使用 ClassIsland 1.x 版本，不妨来试试 SIFWARE 的 ",
+            FontWeight = FontWeight.Bold
+        });
+        inlines.Add(new InlineUIContainer(link));
+        inlines.Add(new Run
+        {
+            Text = "？比原版 1.x 更好用更流畅！",
+            FontWeight = FontWeight.Bold
+        });
     }
 
     private static SettingsExpander? FindExpander(SettingsPageBase page, string header) =>
@@ -154,7 +192,12 @@ internal static class SettingsInjector
     private static void UpdateAdminAutoStartButton(Button button)
     {
         var registered = AdminStartup.IsRegistered();
-        button.Content = registered ? "取消管理员自启" : "以管理员身份自启";
+        button.Content = new IconText
+        {
+            // 按钮为“自启”动作：shield_task；按钮为“取消”动作：shield_prohibited
+            Glyph = registered ? "\uEF69" : "\uEF6F",
+            Text = registered ? "取消管理员自启" : "以管理员身份自启"
+        };
         ToolTip.SetTip(button, registered
             ? "已创建计划任务，登录时将以最高权限启动（无 UAC 弹窗）。点击移除。"
             : "创建计划任务，在登录时以管理员身份启动 ClassIsland（无需密码，无 UAC 弹窗）。");
@@ -202,12 +245,16 @@ internal static class SettingsInjector
 
     private static MenuItem CreateRestartAsAdminMenuItem()
     {
+        var elevated = UiAccessX.IsElevated();
         var item = new MenuItem
         {
             Header = "以管理员身份重启",
             Icon = new FluentIcon("\uE0B5"),
-            IsEnabled = !UiAccessX.IsElevated()
+            IsEnabled = !elevated
         };
+        ToolTip.SetTip(item, elevated
+            ? "当前已以管理员身份运行。"
+            : "以管理员身份重新启动 ClassIsland。");
         item.Click += (_, _) => AdminStartup.RestartAsAdmin();
         return item;
     }
