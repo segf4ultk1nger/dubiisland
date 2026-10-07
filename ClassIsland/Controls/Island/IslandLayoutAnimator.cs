@@ -21,6 +21,7 @@ public sealed class IslandLayoutAnimator
     private const double ComponentMoveDuration = 0.3;
     private const double ComponentEnterDuration = 0.22;
     private const double ComponentScaleFrom = 0.9;
+    private const double ComponentEnterStagger = 0.03; // 多个新组件依次入场的错峰间隔
     private const double DockDuration = 0.36;
     private const double MotionStretchAmount = 0.07; // 停靠位移时沿运动方向的最大拉伸比例（丰富档）
 
@@ -29,7 +30,7 @@ public sealed class IslandLayoutAnimator
     private static readonly BackEase ShrinkEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.2 };
     private static readonly CubicEase MoveEase = new() { EasingMode = EasingMode.EaseOut };
     private static readonly CubicEase EnterEase = new() { EasingMode = EasingMode.EaseOut };
-    private static readonly BackEase DockEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.5 };
+    private static readonly BackEase DockEase = new() { EasingMode = EasingMode.EaseOut, Amplitude = 0.1 };
 
     private readonly Dictionary<int, LineState> _lines = new();
     private readonly HashSet<int> _presentLines = new();
@@ -110,6 +111,7 @@ public sealed class IslandLayoutAnimator
     public void FeedComponents(IReadOnlyList<(ComponentSettings Key, double X)> targets)
     {
         _presentComponents.Clear();
+        var enterIndex = 0;
         for (var i = 0; i < targets.Count; i++)
         {
             var (key, x) = targets[i];
@@ -119,15 +121,17 @@ public sealed class IslandLayoutAnimator
                 state = new ComponentState { X = new Channel { Current = x, From = x, Target = x } };
                 if (_motionPrimed && Enabled)
                 {
+                    // 逐个错峰：同一批同时入场的新组件依次延后，单独新增则不延迟。
+                    var delay = enterIndex++ * ComponentEnterStagger;
                     state.Opacity = new Channel
                     {
                         Current = 0, From = 0, Target = 1,
-                        StartSeconds = -1, Duration = ComponentEnterDuration, Easing = EnterEase
+                        StartSeconds = -1, Delay = delay, Duration = ComponentEnterDuration, Easing = EnterEase
                     };
                     state.Scale = new Channel
                     {
                         Current = ComponentScaleFrom, From = ComponentScaleFrom, Target = 1,
-                        StartSeconds = -1, Duration = ComponentEnterDuration, Easing = EnterEase
+                        StartSeconds = -1, Delay = delay, Duration = ComponentEnterDuration, Easing = EnterEase
                     };
                 }
                 else
@@ -360,6 +364,7 @@ public sealed class IslandLayoutAnimator
         channel.From = channel.Current;
         channel.Target = value;
         channel.StartSeconds = -1;
+        channel.Delay = 0;
         channel.Duration = duration;
         channel.Easing = easing;
     }
@@ -385,7 +390,14 @@ public sealed class IslandLayoutAnimator
 
         if (channel.StartSeconds < 0)
             channel.StartSeconds = nowSeconds;
-        var t = channel.Duration <= 0 ? 1 : (nowSeconds - channel.StartSeconds) / channel.Duration;
+        var t = channel.Duration <= 0
+            ? 1
+            : (nowSeconds - channel.StartSeconds - channel.Delay) / channel.Duration;
+        if (t <= 0)
+        {
+            channel.Current = channel.From; // 错峰延迟期内停在起点
+            return true;
+        }
         if (t >= 1)
         {
             channel.Current = channel.Target;
@@ -403,6 +415,7 @@ public sealed class IslandLayoutAnimator
         channel.Current = channel.Target;
         channel.From = channel.Target;
         channel.StartSeconds = -1;
+        channel.Delay = 0;
     }
 
     private void RecomputeReserved()
@@ -466,6 +479,7 @@ public sealed class IslandLayoutAnimator
         public double From;
         public double Target;
         public double StartSeconds = -1;
+        public double Delay;
         public double Duration;
         public IEasingFunction? Easing;
         public bool NeedsTick => Math.Abs(Current - Target) > Epsilon;
