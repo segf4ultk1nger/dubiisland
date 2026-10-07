@@ -64,6 +64,12 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
         if (args.PropertyName == nameof(SettingsService.Settings.CurrentComponentConfig))
         {
             ViewModel.SelectedNode = null;
+            // 紧凑模式下选中被清空后应回到组件树，避免属性面板留空白。
+            if (ViewModel.IsCompact && !ViewModel.IsTreeVisible)
+            {
+                ViewModel.IsTreeVisible = true;
+                ApplyTreeLayout();
+            }
         }
     }
 
@@ -101,7 +107,10 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
     }
 
     private void TreeComponents_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        => _suppressCompactHide = false;
+    {
+        _suppressCompactHide = false;
+        _deferredCompactHide = false; // 清掉上一次可能残留的延迟收树（如拖拽丢到树外未收到抬手）
+    }
 
     private void TreeComponents_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
@@ -663,6 +672,11 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             return;
         }
 
+        // 集合变更（尤其跨父级的 Remove）会让 WPF TreeView 同步重选，必须先抑制紧凑模式的收树，
+        // 否则抬手后会误判为点击、收起组件树并跳进属性面板。
+        _deferredCompactHide = false;
+        _suppressCompactHide = true;
+
         if (ReferenceEquals(sourceList, targetList))
         {
             var oldIndex = sourceList.IndexOf(settings);
@@ -682,9 +696,7 @@ public partial class ComponentsSettingsPage : SettingsPageBase, IDropTarget
             sourceList.Remove(settings);
             targetList.Insert(insertIndex, settings);
         }
-        // 拖拽排序结束后留在组件树里继续拖，而不是跳进属性面板；并抑制落点补选触发的收树。
-        _deferredCompactHide = false;
-        _suppressCompactHide = true;
+        // 拖拽排序结束后留在组件树里继续拖，而不是跳进属性面板。
         SetSelectedNode(settings, revealDetails: false);
     }
 
